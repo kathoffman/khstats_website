@@ -1,0 +1,1665 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>#rstats | KHstats</title>
+    <link>/tags/#rstats/</link>
+      <atom:link href="/tags/#rstats/index.xml" rel="self" type="application/rss+xml" />
+    <description>#rstats</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2019 21:13:14 -0500</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>#rstats</title>
+      <link>/tags/#rstats/</link>
+    </image>
+    
+    <item>
+      <title>Tips and Tricks from the New York R Conference</title>
+      <link>/post/nyrconf/testing/</link>
+      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
+      <guid>/post/nyrconf/testing/</guid>
+      <description>
+
+
+&lt;p&gt;In early May I attended the &lt;a href=&#34;https://www.rstats.nyc/&#34;&gt;New York R Conference&lt;/a&gt;. There were 24 speakers, including my coworker at Weill Cornell Medicine, Elizabeth Sweeney! Each person did a 20-minute presentation on some way they use R for their work and/or hobbies. There was a &lt;em&gt;ton&lt;/em&gt; of information, and even though not all of it was directly useful for my workflow as a statistical consultant in an academic setting, I really enjoyed being around so many people who love R.&lt;/p&gt;
+&lt;p&gt;I’ve linked some videos of my favorite talks and put together some the topics/packages/functions I found most intriguing or useful in my day-to-day work as a research biostatistician. (This was originally a presentation for my &lt;a href=&#34;https://wcm-computing-club.github.io/&#34;&gt;biostatistics team’s computing club&lt;/a&gt;.)&lt;/p&gt;
+&lt;div id=&#34;visualizing-data-with-naniar&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Visualizing data with &lt;code&gt;naniar&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;Brooke Watson, a data scientist at the American Civil Liberties Union, gave a great presentation on how she uses &lt;code&gt;R&lt;/code&gt; to defend immigrants. She shared several data wrangling tips. One new function for me was &lt;code&gt;naniar::vis_miss()&lt;/code&gt; to visualize your missing data quickly.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;tidyverse&amp;quot;)
+#install.packages(&amp;quot;naniar&amp;quot;)
+library(tidyverse)
+library(naniar)
+vis_miss(airquality) # a base R data set&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/nyrconf/testing_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;It returns a &lt;code&gt;ggplot2&lt;/code&gt; object so you can edit titles, colors, etc. if necessary. You can also add a clustering argument to make it easier to see patterns of missingness in your data.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;vis_miss(airquality, cluster=T) +
+  labs(title=&amp;quot;Missingness in the airquality data set&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/nyrconf/testing_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;checking-out-data-differences-with-daff&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Checking out data differences with &lt;code&gt;daff&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;Brooke also gave a demo for a neat package to check if and where differences in two data sets are occurring.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;daff)
+library(daff)
+dat1 &amp;lt;- data.frame(A = c(1:3), B = c(T,F,T))
+dat2 &amp;lt;- data.frame(A = c(1:4), C = c(&amp;quot;apple&amp;quot;,NA,NA,&amp;quot;banana&amp;quot;))
+my_diff &amp;lt;- diff_data(dat1, dat2)
+my_diff&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Daff Comparison: &amp;#39;dat1&amp;#39; vs. &amp;#39;dat2&amp;#39; 
+##       +++    ---  
+## @@  A C      B    
+## +   1 apple  TRUE 
+##     2 &amp;lt;NA&amp;gt;   FALSE
+##     3 &amp;lt;NA&amp;gt;   TRUE 
+## +++ 4 banana &amp;lt;NA&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- {{ --&gt;
+&lt;!-- &lt;figure src = &#34;diff_screenshot.png&#34; title=&#34;A caption&#34; lightbox=&#34;true&#34;&gt; --&gt;
+&lt;!-- }} --&gt;
+&lt;p&gt;I thought this would be useful for when you receive new data sets from investigators and want to make sure column names, patients, etc. haven’t changed. Check out the full documentation &lt;a href=&#34;https://github.com/edwindj/daff&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;gohelverse&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Gohelverse&lt;/h1&gt;
+&lt;p&gt;Noam Ross shared code for editable figures using David Gohel’s &lt;code&gt;officer&lt;/code&gt; and &lt;code&gt;rvg&lt;/code&gt; packages. I shared some &lt;a href=&#34;https://github.com/hoffmakl/reporting/blob/master/vg.R&#34;&gt;example code&lt;/a&gt; for my team on github after I saw him present it at an R-Ladies event in the fall. Essentially you can run some pretty simple lines of code to output figures (base R, &lt;code&gt;ggplot2&lt;/code&gt;, or otherwise) as editable figures in Powerpoint. Noam reminded us that whoever you give these figures to will now be able to edit &lt;em&gt;anything&lt;/em&gt;, even data points, so keep that in mind before you freely give away editable figures… :)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;rvg&amp;quot;)
+#install.packages(&amp;quot;officer&amp;quot;)
+library(rvg)
+library(officer)
+
+#sample data
+dat &amp;lt;- data.frame(x = rnorm(100, 10),
+                  y = rnorm(100, 100),
+                  z = rnorm(100, 1))
+
+#make an empty ppt
+read_pptx() %&amp;gt;% 
+  #add a slide, must specify the slide layout and layout name
+  add_slide(layout=&amp;quot;Title and Content&amp;quot;, master=&amp;quot;Office Theme&amp;quot;) %&amp;gt;%
+  #specify what you want on the slide (code = ...)
+  #type=&amp;quot;body&amp;quot; means the plots going in the body part of the layout
+  #width and height are in inches
+  ph_with_vg(code = plot(dat$x, dat$y, main=&amp;quot;Edit me!&amp;quot;, pch=16), type=&amp;quot;body&amp;quot;, width=6, height=4) %&amp;gt;%
+  #output your ppt (target argument is just the file destination/name)
+  print(target=&amp;quot;plot.pptx&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;/Users/katherinehoffman/Desktop/basic/content/post/nyrconf/plot.pptx&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;going-from-rmarkdown-to-word-and-back-again-with-redoc&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Going from RMarkdown to Word, and back again with &lt;code&gt;redoc&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;Noam also shared his new package, &lt;code&gt;redoc&lt;/code&gt;, which allows you to reload an Rmd-generated word file back into R as a modified Rmd file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/redoc.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This is part of his goal to decrease the pain of “the valley of heartbreak.” &lt;img src=&#34;/img/valleyofheartbreak.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Installation command is:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#remotes::install_github(&amp;quot;noamross/redoc&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You may need to update several packages to get it to run correctly, but after that the main commands are just &lt;code&gt;redoc&lt;/code&gt; and &lt;code&gt;dedoc&lt;/code&gt;. To see for yourself, try running my &lt;a href=&#34;https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd&#34;&gt;github code&lt;/a&gt;, making some changes to your word doc, and reloading back into &lt;code&gt;Rmarkdown&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;pipelines-in-drake&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Pipelines in &lt;code&gt;drake&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&#34;/img/drake.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This could definitely be an entire computing club presentation… but for long projects that you have to redo with new data often, &lt;code&gt;drake&lt;/code&gt; is becoming really popular. Amanda Dobbyn gave an awesome presentation and you can see her slides &lt;a href=&#34;https://aedobbyn.github.io/nyr-2019/#1&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Another super informative bookdown guide by the authors can be found &lt;a href=&#34;https://ropenscilabs.github.io/drake-manual/&#34;&gt;here&lt;/a&gt;.
+Essentially their motto is “what gets done stays done” so that you are not redoing work you’ve already done in order to update your results. Yet, you’re still redoing what needs to be done in a reproducible way!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/drake_pipeline.png&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;git-merge-conflicts&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Git merge conflicts&lt;/h1&gt;
+&lt;p&gt;I went to a whole-day workshop on Git so if you’re interested in talking more about this let me know. &lt;em&gt;BUT&lt;/em&gt; the biggest thing I learned was that if you are ever using Git and find your code has strange characters like &amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; HEAD followed by ======== and a long set of letters/numbers, this means you have a merge conflict. It’s meant to be a flag so you know where to fix the differences in your two files you’re trying to version control! I spent days struggling with this problem before, so I thought I’d pass the message along in case anyone runs into it someday. :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;talks-to-check-out&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Talks to check out&lt;/h1&gt;
+&lt;p&gt;When the talks are released, I’ll make a post on slack, and when they are, I highly recommend:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?time_continue=4&amp;amp;v=33BzunEXEIE&#34;&gt;Emily Robinson’s&lt;/a&gt; accessible instructions for how to make a package with &lt;code&gt;usethis&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/embed/g2bQJIth1-I&#34;&gt;Jaqueline Nolis’&lt;/a&gt; &lt;strong&gt;really funny&lt;/strong&gt; talk on how neural nets aren’t actually hard at all&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/embed/ZmbrsbYwRWw&#34;&gt;Andrew Gelman’s&lt;/a&gt; discussion on “solving all your statistical problems with p-values” (but he’s a Bayesian, ha ha)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-bonus&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A bonus!&lt;/h1&gt;
+&lt;p&gt;This was not from the New York R Conference but I saw it on &lt;a href=&#34;https://twitter.com/OppenheimerEvan/status/1132092898760114184&#34;&gt;Twitter&lt;/a&gt; while making this presentation for my computing club and it made me quite happy…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;genius&amp;quot;)
+library(genius)
+genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 53 x 3
+##    track_title  line lyric                                           
+##    &amp;lt;chr&amp;gt;       &amp;lt;int&amp;gt; &amp;lt;chr&amp;gt;                                           
+##  1 Hey Jude        1 Hey Jude, don&amp;#39;t make it bad                     
+##  2 Hey Jude        2 Take a sad song and make it better              
+##  3 Hey Jude        3 Remember to let her into your heart             
+##  4 Hey Jude        4 Then you can start to make it better            
+##  5 Hey Jude        5 Hey Jude, don&amp;#39;t be afraid                       
+##  6 Hey Jude        6 You were made to go out and get her             
+##  7 Hey Jude        7 The minute you let her under your skin          
+##  8 Hey Jude        8 Then you begin to make it better                
+##  9 Hey Jude        9 And anytime you feel the pain, hey Jude, refrain
+## 10 Hey Jude       10 Don&amp;#39;t carry the world upon your shoulders       
+## # … with 43 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;takeaways&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Takeaways&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;You can check out tweets from the conference by searching the hashtag #rstatsnyc on Twitter&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Check out the &lt;a href=&#34;https://www.meetup.com/rladies-newyork/&#34;&gt;R-Ladies NYC meetups&lt;/a&gt; and &lt;a href=&#34;https://www.meetup.com/nyhackr/&#34;&gt;New York R meetups&lt;/a&gt;!&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A Day in the Life of a Biostatistician</title>
+      <link>/post/ditl_kat/ditl-biostats/</link>
+      <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
+      <guid>/post/ditl_kat/ditl-biostats/</guid>
+      <description>
+
+
+&lt;p&gt;It seems fitting that my first blog post is on a topic that I tried and failed to find via Google search a few years ago.&lt;/p&gt;
+&lt;p&gt;I’ll back up for a second. A few years ago I was a recent college graduate, and trying hard to “figure out my life.” My major was biochemistry, which is one of those degrees where 99%* of people just keep on going to school.&lt;/p&gt;
+&lt;p&gt;I was working full-time night-shift at a hospital as a patient care technician. The key word in that sentence is “night-shift” which meant that even on my days off, I didn’t sleep at night, but all my friends and family did. So, I was often alone and awake, with a lot of time to think about my future… and surf the web for potential careers.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/sadcat.png&#34; width=&#34;340px&#34; height=&#34;450px&#34; alt=&#34;cat&#34;&gt;&lt;/p&gt;
+&lt;p&gt;I knew I wanted a job in healthcare, but I was confused as to where in medicine would be a good fit for me. I could visualize very clearly what my days at work would look like if I were to become a physician, or a physician assistant, or a registered nurse (all careers I developed lengthy pros and cons lists for).&lt;/p&gt;
+&lt;p&gt;However, there was another career involving medicine that I was drawn to but didn’t know enough about. “Biostatistics” was a class biochemistry majors took at my university, but I had been exempted because I took AP Statistics in high school.&lt;/p&gt;
+&lt;p&gt;To me, biostatistics seemed to be the application of some high school-level math to biological problems. I had no concept of what a degree in biostatistics, and much less a career as a biostatistician, could entail. Endless Google searches with some variant of “what does a biostatistician do” and even “day in the life of a biostatistician” had not given me a very good picture of what I would actually be doing as a biostatistician.&lt;/p&gt;
+&lt;p&gt;I ultimately lucked out during a conversation with a professor during my senior year of college. I was rambling about my many life plans and he mentioned his cousin was the chair of a well-known Biostatistics program. He encouraged me to email her my questions about biostatistics, and I am so grateful she took time to respond with detailed answers. Her description of life as a biostatistician was enough for me to choose going to graduate school for an MS in biostatistics over medical school/physician assistant school/second-degree nursing.&lt;/p&gt;
+&lt;p&gt;I feel wholeheartedly that although I would have enjoyed my life as an MD/PA/RN, biostatistics is the right career for me. So, in honor of my confused younger self, and as a way of paying it forward, I’ve dedicated this topic for my very first blog post!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/maz.png&#34; alt=&#34;ma&#34;width=&#34;400px&#34; height=&#34;400px&#34; &gt;&lt;/p&gt;
+&lt;p&gt;A full disclaimer - what follows is a day in the life of one masters-level, academic research-focused biostatistician and I cannot make claims about the careers of statisticians in industry or pharmaceuticals or hospitals or government. In addition, here’s a bit more background before I get into the granular details of my work:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;My official job description is to assist investigators (i.e. physicians or PhD-level researchers with a scientific question) throughout all stages of the scientific research process. This means helping with study design, data collection, data cleaning (also known as getting the data in the right form for analysis and making sure nothing is obviously incorrect), data visualization, statistical analysis, reporting and explaining my results, and writing methods and results sections for scientific papers. You will soon see that on any given day I am working on multiple projects at various stages of this process.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;I will mention R/Rstudio a bit. For those who are not familiar with it, &lt;a href=&#34;https://www.r-project.org/&#34;&gt;R&lt;/a&gt; is an open-source (which means anyone can help contribute) programming language that is well-equipped for statistical analysis. It’s arguably very similar to &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt;, which is a more widely used language, but statisticians tend to use R more because its statistical packages are very well-developed. During grad school I used Python because I worked in a computational biology lab, and I learned &lt;a href=&#34;https://www.sas.com/en_us/home.html&#34;&gt;SAS&lt;/a&gt; (another statistical programming language) in some of my classes, but R is what I prefer these days. &lt;a href=&#34;https://www.rstudio.com/&#34;&gt;Rstudio&lt;/a&gt; is a platform that makes it more user friendly to use R.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;So, without further ado! An average day**:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/desk.png&#34; width=&#34;500px&#34; height=&#34;375px&#34; alt=&#34;desky&#34;&gt;&lt;/p&gt;
+&lt;p&gt;9:30AM - I arrive at my office and spend a few minutes chatting with my coworkers. To set the scene for you, I have a fairly spacious cubicle within a group of five other cubicles. I sit next to another research biostatistician, two health informatics professionals, and two clinical trial grant specialists. I’m actually not completely sure what that last pair’s title is, but I know their primary task is to make sure several multi-million dollar clinical trial grants stay funded (woah). Everyone I sit by is young and goofy, but very driven, making for a fun office environment.&lt;/p&gt;
+&lt;p&gt;9:45AM - I check and answer new emails from researchers I collaborate on projects with. I send my availability for a meeting to a group of doctors who want to go over the results of a recent analysis I did on Body Mass Index and death rates in the Intensive Care Unit. In a different thread of emails, I thank several researchers from another university for clarifying their methods and sending me code for an analysis similar to one I will soon work on.&lt;/p&gt;
+&lt;p&gt;10:00AM - I open a manuscript draft for a paper I received yesterday. It’s from a group of residents and medical students I worked with a few months ago. Their study looks at the association between blood levels of a certain biomarker and the time to death in cancer patients. My role in the analysis was to examine the associations between several biomarkers such as phosphorus, phosphate, and calcitriol. I then fit a regression model, just like y=mx+b, but with way more math. For this analysis I used a model for when your y is a time to an event (death, in this case), fittingly called a survival model. After adjusting for confounding factors like age, which affects both tumor progression and biomarker levels, there was a significant association between the biomarker and time to death in cancer patients.&lt;/p&gt;
+&lt;p&gt;The researchers have asked for my assistance in writing the methods section. The methods section of a scientific article is the steps the scientists took to analyze data explicitly written out for anyone looking to review or learn about their work. I read through their current draft of the paper carefully, make some edits, and send it back. They are hoping to submit this paper to a peer-reviewed journal within a few weeks.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/KM.png&#34; width=&#34;650px&#34; height=&#34;500px&#34; alt=&#34;kmplot&#34;&gt;&lt;/p&gt;
+&lt;p&gt;10:45AM - I have a weekly meeting a few blocks from my office with a neurologist I spend a large portion of my time working with. She is a leader in the field of Alzheimer’s research, and I find it very rewarding to work on her data and be a small part of a growing body of research in the field. I am “contracted” out to her research as I am to all of the researchers I work with—it’s how my institution budgets funding for grants. One of the faculty-level biostatisticians in my department—which means he has a PhD and specializes in certain statistical methods—is also part of this contract, and some days, like today, he joins me at these meetings.&lt;/p&gt;
+&lt;p&gt;11:00AM - This week’s meeting is pretty straightforward. We discuss how we can improve one of the neurologist’s National Institute of Health grants from a statistics standpoint. The statistical methods for this project can get complicated, in part because we are looking at the brain scans of women in different stages of menopause over time, and we have to consider age as a confounding factor. We want to convey to the reviewers of our grant how we plan to do this. Since this is a methods-focused meeting, I mostly listen and take notes along with two neurology research coordinators that also attend these weekly meetings. When the meeting concludes I have for less work than usual - I only need to make a few graphs representing our study design and past results for inclusion to the grant.&lt;/p&gt;
+&lt;p&gt;12:00PM - I head to lunch with a group of coworkers. They have gotten food from a nearby salad place, and we sit in one of our favorite buildings on campus and eat together. Our jokes oscillate from incredibly nerdy to pretty stupid. One of my coworkers points out that our hair is styled the same way for the third day in a row.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/katalan.gif&#34; alt=&#34;Alt Text&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Alt Text&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;12:45PM - I get back to my desk and type up my handwritten notes from the neurology meeting and put them in that project’s “Notes” folder. It’s important to me that I keep track of all my meetings electronically - I fear losing my notebooks or someone else having to decipher my cursive should I ever have to pass off a project.&lt;/p&gt;
+&lt;p&gt;1:00PM - I start to make a plan for a different analysis I’m working on. This project is something new for me - it involves a protein assay and data for 1000+ different protein expression levels. The researcher I’m working with wants to know which proteins are over- and under-expressed in people with a specific autoimmune disorder and a certain type of lung disease. I’ve recently spoken to some bioinformaticians and have a clearer idea of the analysis I need to do. I draw out a little map of the code organization I think would be the most efficient for this analysis and open up Rstudio.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/notes.jpg&#34; width=&#34;400px&#34; height=&#34;350px&#34; alt=&#34;notes&#34;&gt;&lt;/p&gt;
+&lt;p&gt;1:30PM - I get to work writing up functions, which is just a fancy programming way of saying your code can do the same thing to multiple data sets (or subsets of patients, as is the case of this protein expression study I’m doing). Sometimes it takes a bit longer to write my functions than it would if I were to just copy and paste my code several different times, but the final code is much more readable and less prone to errors. By the time I’m done working, I have some interactive plots showing the significant and non-significant results. When you hover over them, they show what protein corresponds to which point on the graph. They look like this, except this is not the real data we used in her study.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/volcano.gif&#34; alt=&#34;Alt Text&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Alt Text&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;I use Rstudio and its amazing Rmarkdown tool to craft a draft report to the researcher, and I save it with today’s date in my “Reports” folder for that project. The report so far includes unadjusted and adjusted models of all the protein expressions using very small p-values to account for the 1000+ statistical comparisons we’re making. I show the results in various plots such as the one above (called a “volcano plot” for its shape).&lt;/p&gt;
+&lt;p&gt;I have also started writing code for models to determine which proteins are most different, or uniquely expressed, between subgroups of patients. Tomorrow, I will use a technique common in machine learning, called clustering, to see if these protein expressions can correctly classify subgroups of patients. The goal is to find a minimum group of proteins to identify patients of interest who have both the autoimmune disorder and the lung disease my collaborator is interested in. One way this research could be impactful is that it may help determine which proteins pharmaceuticals should develop drugs to target.&lt;/p&gt;
+&lt;p&gt;I close the report; I will continue working on this analysis tomorrow.&lt;/p&gt;
+&lt;p&gt;4:45PM - It’s time for my last meeting of the day. I head to another floor of my office building and get my laptop set up in a conference room. I await the arrival of several doctors. It will be my first time meeting most of them, and our task today is to discuss the data collection process for a future study involving both genetic mutation data from tumor biopsies and clinical data from electronic health records on thousands of patients with lung cancer.&lt;/p&gt;
+&lt;p&gt;5:00PM - The doctors arrive and, after introductions, we talk about the current stage of the project and what the goals are. We discuss the timing of starting chart reviews of patients, how we will upload the information to a database efficiently, and what might be the best way to condense the highly detailed genetics data into useful information for an analysis. Our solution will likely involve a series of iterative searches through the columns containing genetic information.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/redcap.png&#34; alt=&#34;ma&#34;width=&#34;600px&#34; height=&#34;425px&#34; &gt;&lt;/p&gt;
+&lt;p&gt;6:00PM - The meeting ends, and I go back to my desk to record more handwritten notes. I log the hours I spent on each project that day into Toggl, which is the time-tracking application our team uses. This is so we know how much time we’re spending on each project, and is as much for our own sake as it is anyone else’s. I update my to-do list, which is a giant color-coded excel spreadsheet, and eat a few chocolate covered raisins as my reward for a productive day.&lt;/p&gt;
+&lt;p&gt;6:30PM - I leave work! I typically have some kind of activity, like happy hour (see my cute cubicle buddies below), a sports game, or Spanish class that I’m heading off to. Some days I attend coding workshops hosted by groups such as R-ladies. On nights when I’m feeling especially nerdy, I’ll go home and read a statistics paper or sift through the #rstats tips on twitter.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/coworkers.jpg&#34; width=&#34;500px&#34; height=&#34;375px&#34; alt=&#34;cowies&#34;&gt;&lt;/p&gt;
+&lt;p&gt;…So, there you have it. One average daily experience as an early career masters-level statistician. All in all, I have a fantastic work-life balance and overall work environment. Every day I get to learn more about science, medicine, statistics, and the intersection of these wonderful ideas. Although it varies quite a bit, approximately 10% of each day involves writing, 20% interacting with other researchers, and the rest of it is spent thinking critically and finding answers to problems I am passionate about.&lt;/p&gt;
+&lt;p&gt;I hope if there are any 22, 42, or 14 year-olds out there considering a career in biostatistics and struggling to figure out what on earth we actually do, that you find this post and it lessens your confusion! Feel free to reach out to me if you have questions.&lt;/p&gt;
+&lt;p&gt;All the best,&lt;/p&gt;
+&lt;p&gt;Kat&lt;/p&gt;
+&lt;p&gt;*Not a real statistic.&lt;/p&gt;
+&lt;p&gt;**Exact details and diseases of the studies I am currently working on have been generalized or altered to protect the research interests of my collaborators.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Data Wrangling with dplyr</title>
+      <link>/tutorial/dplyr/data-wrangling/</link>
+      <pubDate>Tue, 05 Mar 2019 21:13:14 -0500</pubDate>
+      <guid>/tutorial/dplyr/data-wrangling/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div id=&#34;a-presentation-for-weill-cornell-medicines-biostatistics-computing-club&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;A Presentation for Weill Cornell Medicine’s Biostatistics Computing Club&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/img/dplyr_image.jpg&#34; /&gt;
+&lt;em&gt;Image courtesy of Allison Horst’s Twitter: &lt;span class=&#34;citation&#34;&gt;@allison_horst&lt;/span&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;div id=&#34;why-dplyr&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Why dplyr?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Powerful but efficient&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Consistent syntax&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Fast&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Function chaining&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Works well with entire tidyverse suite&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;Efficiency*&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Simple syntax&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Function chaining&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Ability to analyze external databases&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Works well with other packages in tidyverse suite
+&lt;ol style=&#34;list-style-type: lower-alpha&#34;&gt;
+&lt;li&gt;ggplot2&lt;/li&gt;
+&lt;li&gt;tidyr&lt;/li&gt;
+&lt;li&gt;stringr&lt;/li&gt;
+&lt;li&gt;forcats&lt;/li&gt;
+&lt;li&gt;purrr&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;*if you start dealing with data sets with &amp;gt; 1 million rows, data.table will be much faster&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data(&amp;quot;iris&amp;quot;)
+library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ────────────── tidyverse 1.2.1 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ───────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tibbles&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Tibbles&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;An “update” to the data.frame object class in R&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Updates relevant for using dplyr:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Vectors of length 1 are automatically recycled&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Newly created vectors can be referenced in the same line of code&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Other perks: only the first 10 lines print to the screen so your console doesn’t get overloaded&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Read more about tibbles here: &lt;a href=&#34;https://r4ds.had.co.nz/tibbles.html&#34; class=&#34;uri&#34;&gt;https://r4ds.had.co.nz/tibbles.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;dplyr automatically converts objects to tbl_df (tibble data frame) objects&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;piping&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Piping&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;%&amp;gt;%&lt;/code&gt; operator from &lt;code&gt;library(magitrr)&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Use &lt;code&gt;%&amp;gt;%&lt;/code&gt; to send an object (typically a dataframe) to the next function&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The function you pipe to will use the object in front of the &lt;code&gt;%&amp;gt;%&lt;/code&gt; as its first argument&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% head() # equivalent to head(iris)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% head(n=3) # equivalent to head(iris, n=3)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;If you don’t want it to be the first argument, use &lt;code&gt;.&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% lm(Sepal.Width ~ Sepal.Length, data=.)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:
+## lm(formula = Sepal.Width ~ Sepal.Length, data = .)
+## 
+## Coefficients:
+##  (Intercept)  Sepal.Length  
+##      3.41895      -0.06188&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Shortcut for &lt;code&gt;%&amp;gt;%&lt;/code&gt; is CTRL + SHIFT + M (or CMD + SHIFT + M for OSX)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A function that takes a data frame as the first argument, eg. &lt;code&gt;head()&lt;/code&gt;, is called a &lt;strong&gt;verb&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The entire tidyverse suite operates under the verb function structure, making piping especially convenient&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;main-verbs&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Main verbs&lt;/h1&gt;
+&lt;div id=&#34;arrange&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;arrange()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Sort data frame by column(s), lowest to highest&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;arrange(iris, Petal.Length) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           4.6         3.6          1.0         0.2  setosa
+## 2           4.3         3.0          1.1         0.1  setosa
+## 3           5.8         4.0          1.2         0.2  setosa
+## 4           5.0         3.2          1.2         0.2  setosa
+## 5           4.7         3.2          1.3         0.2  setosa
+## 6           5.4         3.9          1.3         0.4  setosa
+## 7           5.5         3.5          1.3         0.2  setosa
+## 8           4.4         3.0          1.3         0.2  setosa
+## 9           5.0         3.5          1.3         0.3  setosa
+## 10          4.5         2.3          1.3         0.3  setosa
+## 11          4.4         3.2          1.3         0.2  setosa
+## 12          5.1         3.5          1.4         0.2  setosa
+## 13          4.9         3.0          1.4         0.2  setosa
+## 14          5.0         3.6          1.4         0.2  setosa
+## 15          4.6         3.4          1.4         0.3  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;If you specify a variable of class factor or character, you will rearrange the rows to alphabetical order&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Use &lt;code&gt;desc()&lt;/code&gt; if you want the opposite order&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;arrange(iris, desc(Species), # sort z to a since species is a factor
+        Sepal.Width) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+## 1           6.0         2.2          5.0         1.5 virginica
+## 2           4.9         2.5          4.5         1.7 virginica
+## 3           6.7         2.5          5.8         1.8 virginica
+## 4           5.7         2.5          5.0         2.0 virginica
+## 5           6.3         2.5          5.0         1.9 virginica
+## 6           7.7         2.6          6.9         2.3 virginica
+## 7           6.1         2.6          5.6         1.4 virginica
+## 8           5.8         2.7          5.1         1.9 virginica
+## 9           6.4         2.7          5.3         1.9 virginica
+## 10          6.3         2.7          4.9         1.8 virginica
+## 11          5.8         2.7          5.1         1.9 virginica
+## 12          5.8         2.8          5.1         2.4 virginica
+## 13          5.6         2.8          4.9         2.0 virginica
+## 14          7.7         2.8          6.7         2.0 virginica
+## 15          6.2         2.8          4.8         1.8 virginica&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;mutate&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;mutate()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Add a new variable (while preserving all existing variables)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mutate(iris, logSepLength = log(Sepal.Length)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species logSepLength
+## 1           5.1         3.5          1.4         0.2  setosa     1.629241
+## 2           4.9         3.0          1.4         0.2  setosa     1.589235
+## 3           4.7         3.2          1.3         0.2  setosa     1.547563
+## 4           4.6         3.1          1.5         0.2  setosa     1.526056
+## 5           5.0         3.6          1.4         0.2  setosa     1.609438
+## 6           5.4         3.9          1.7         0.4  setosa     1.686399
+## 7           4.6         3.4          1.4         0.3  setosa     1.526056
+## 8           5.0         3.4          1.5         0.2  setosa     1.609438
+## 9           4.4         2.9          1.4         0.2  setosa     1.481605
+## 10          4.9         3.1          1.5         0.1  setosa     1.589235
+## 11          5.4         3.7          1.5         0.2  setosa     1.686399
+## 12          4.8         3.4          1.6         0.2  setosa     1.568616
+## 13          4.8         3.0          1.4         0.1  setosa     1.568616
+## 14          4.3         3.0          1.1         0.1  setosa     1.458615
+## 15          5.8         4.0          1.2         0.2  setosa     1.757858&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;There’s also &lt;code&gt;transmute()&lt;/code&gt; which deletes the old column(s) you use to make the new column&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% transmute(Length_diff = Sepal.Length - Petal.Length,
+                   Width_diff = Sepal.Width - Petal.Width) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Length_diff Width_diff
+## 1          3.7        3.3
+## 2          3.5        2.8
+## 3          3.4        3.0
+## 4          3.1        2.9
+## 5          3.6        3.4
+## 6          3.7        3.5
+## 7          3.2        3.1
+## 8          3.5        3.2
+## 9          3.0        2.7
+## 10         3.4        3.0
+## 11         3.9        3.5
+## 12         3.2        3.2
+## 13         3.4        2.9
+## 14         3.2        2.9
+## 15         4.6        3.8&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;filter&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;filter()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Return rows matching specified conditions&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Use with &lt;code&gt;&amp;gt;&lt;/code&gt;, &lt;code&gt;&amp;gt;=&lt;/code&gt;, &lt;code&gt;&amp;lt;&lt;/code&gt;, &lt;code&gt;&amp;lt;=&lt;/code&gt;, &lt;code&gt;|&lt;/code&gt;, &lt;code&gt;!&lt;/code&gt;, &lt;code&gt;%in%&lt;/code&gt;, &lt;code&gt;==&lt;/code&gt;, and &lt;code&gt;!=&lt;/code&gt;. Separating conditions by &lt;code&gt;,&lt;/code&gt; represents the &lt;code&gt;&amp;amp;&lt;/code&gt; argument.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% filter(Sepal.Length &amp;gt;= 2) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           5.1         3.5          1.4         0.2  setosa
+## 2           4.9         3.0          1.4         0.2  setosa
+## 3           4.7         3.2          1.3         0.2  setosa
+## 4           4.6         3.1          1.5         0.2  setosa
+## 5           5.0         3.6          1.4         0.2  setosa
+## 6           5.4         3.9          1.7         0.4  setosa
+## 7           4.6         3.4          1.4         0.3  setosa
+## 8           5.0         3.4          1.5         0.2  setosa
+## 9           4.4         2.9          1.4         0.2  setosa
+## 10          4.9         3.1          1.5         0.1  setosa
+## 11          5.4         3.7          1.5         0.2  setosa
+## 12          4.8         3.4          1.6         0.2  setosa
+## 13          4.8         3.0          1.4         0.1  setosa
+## 14          4.3         3.0          1.1         0.1  setosa
+## 15          5.8         4.0          1.2         0.2  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% filter(Petal.Length &amp;gt;= mean(Petal.Length)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 1           7.0         3.2          4.7         1.4 versicolor
+## 2           6.4         3.2          4.5         1.5 versicolor
+## 3           6.9         3.1          4.9         1.5 versicolor
+## 4           5.5         2.3          4.0         1.3 versicolor
+## 5           6.5         2.8          4.6         1.5 versicolor
+## 6           5.7         2.8          4.5         1.3 versicolor
+## 7           6.3         3.3          4.7         1.6 versicolor
+## 8           6.6         2.9          4.6         1.3 versicolor
+## 9           5.2         2.7          3.9         1.4 versicolor
+## 10          5.9         3.0          4.2         1.5 versicolor
+## 11          6.0         2.2          4.0         1.0 versicolor
+## 12          6.1         2.9          4.7         1.4 versicolor
+## 13          6.7         3.1          4.4         1.4 versicolor
+## 14          5.6         3.0          4.5         1.5 versicolor
+## 15          5.8         2.7          4.1         1.0 versicolor&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% filter(Species != &amp;quot;versicolor&amp;quot;) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           5.1         3.5          1.4         0.2  setosa
+## 2           4.9         3.0          1.4         0.2  setosa
+## 3           4.7         3.2          1.3         0.2  setosa
+## 4           4.6         3.1          1.5         0.2  setosa
+## 5           5.0         3.6          1.4         0.2  setosa
+## 6           5.4         3.9          1.7         0.4  setosa
+## 7           4.6         3.4          1.4         0.3  setosa
+## 8           5.0         3.4          1.5         0.2  setosa
+## 9           4.4         2.9          1.4         0.2  setosa
+## 10          4.9         3.1          1.5         0.1  setosa
+## 11          5.4         3.7          1.5         0.2  setosa
+## 12          4.8         3.4          1.6         0.2  setosa
+## 13          4.8         3.0          1.4         0.1  setosa
+## 14          4.3         3.0          1.1         0.1  setosa
+## 15          5.8         4.0          1.2         0.2  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% filter(Species %in% c(&amp;quot;versicolor&amp;quot;, &amp;quot;setosa&amp;quot;)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           5.1         3.5          1.4         0.2  setosa
+## 2           4.9         3.0          1.4         0.2  setosa
+## 3           4.7         3.2          1.3         0.2  setosa
+## 4           4.6         3.1          1.5         0.2  setosa
+## 5           5.0         3.6          1.4         0.2  setosa
+## 6           5.4         3.9          1.7         0.4  setosa
+## 7           4.6         3.4          1.4         0.3  setosa
+## 8           5.0         3.4          1.5         0.2  setosa
+## 9           4.4         2.9          1.4         0.2  setosa
+## 10          4.9         3.1          1.5         0.1  setosa
+## 11          5.4         3.7          1.5         0.2  setosa
+## 12          4.8         3.4          1.6         0.2  setosa
+## 13          4.8         3.0          1.4         0.1  setosa
+## 14          4.3         3.0          1.1         0.1  setosa
+## 15          5.8         4.0          1.2         0.2  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;select&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;select()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Keep only specified variables&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, Sepal.Length, Sepal.Width) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width
+## 1           5.1         3.5
+## 2           4.9         3.0
+## 3           4.7         3.2
+## 4           4.6         3.1
+## 5           5.0         3.6
+## 6           5.4         3.9
+## 7           4.6         3.4
+## 8           5.0         3.4
+## 9           4.4         2.9
+## 10          4.9         3.1
+## 11          5.4         3.7
+## 12          4.8         3.4
+## 13          4.8         3.0
+## 14          4.3         3.0
+## 15          5.8         4.0&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Specify variables to exclude with &lt;code&gt;-&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, -Species) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1           5.1         3.5          1.4         0.2
+## 2           4.9         3.0          1.4         0.2
+## 3           4.7         3.2          1.3         0.2
+## 4           4.6         3.1          1.5         0.2
+## 5           5.0         3.6          1.4         0.2
+## 6           5.4         3.9          1.7         0.4
+## 7           4.6         3.4          1.4         0.3
+## 8           5.0         3.4          1.5         0.2
+## 9           4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## 11          5.4         3.7          1.5         0.2
+## 12          4.8         3.4          1.6         0.2
+## 13          4.8         3.0          1.4         0.1
+## 14          4.3         3.0          1.1         0.1
+## 15          5.8         4.0          1.2         0.2&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Select a range of variables with &lt;code&gt;:&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, Sepal.Length:Petal.Length) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length
+## 1           5.1         3.5          1.4
+## 2           4.9         3.0          1.4
+## 3           4.7         3.2          1.3
+## 4           4.6         3.1          1.5
+## 5           5.0         3.6          1.4
+## 6           5.4         3.9          1.7
+## 7           4.6         3.4          1.4
+## 8           5.0         3.4          1.5
+## 9           4.4         2.9          1.4
+## 10          4.9         3.1          1.5
+## 11          5.4         3.7          1.5
+## 12          4.8         3.4          1.6
+## 13          4.8         3.0          1.4
+## 14          4.3         3.0          1.1
+## 15          5.8         4.0          1.2&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;If you select just one column, you will still get a dataframe. If you need a vector, use &lt;code&gt;pull()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pull(iris, Sepal.Length) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9 5.4 4.8 4.8 4.3 5.8&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;summarise&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;summarise()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Condenses data down to one value per group&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summarise(iris, mean(Petal.Length)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   mean(Petal.Length)
+## 1              3.758&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summarise(iris, sd_pl = sd(Petal.Length), var_pl = sd(Petal.Length)^2) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      sd_pl   var_pl
+## 1 1.765298 3.116278&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;group_by&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;group_by()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Invisibly groups data by specified column(s)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Use with other verbs to get grouped information&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% group_by(Species) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 15 x 5
+## # Groups:   Species [1]
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## 11          5.4         3.7          1.5         0.2 setosa 
+## 12          4.8         3.4          1.6         0.2 setosa 
+## 13          4.8         3            1.4         0.1 setosa 
+## 14          4.3         3            1.1         0.1 setosa 
+## 15          5.8         4            1.2         0.2 setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
+  group_by(Species) %&amp;gt;%
+  summarise(mean(Petal.Length), sd(Petal.Length)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 3 x 3
+##   Species    `mean(Petal.Length)` `sd(Petal.Length)`
+##   &amp;lt;fct&amp;gt;                     &amp;lt;dbl&amp;gt;              &amp;lt;dbl&amp;gt;
+## 1 setosa                     1.46              0.174
+## 2 versicolor                 4.26              0.470
+## 3 virginica                  5.55              0.552&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Data will remain grouped until you use &lt;code&gt;ungroup()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;rename&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;rename()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Give your columns new names. Syntax is newColumn = oldColumn.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% rename(sep_len = Sepal.Length) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    sep_len Sepal.Width Petal.Length Petal.Width Species
+## 1      5.1         3.5          1.4         0.2  setosa
+## 2      4.9         3.0          1.4         0.2  setosa
+## 3      4.7         3.2          1.3         0.2  setosa
+## 4      4.6         3.1          1.5         0.2  setosa
+## 5      5.0         3.6          1.4         0.2  setosa
+## 6      5.4         3.9          1.7         0.4  setosa
+## 7      4.6         3.4          1.4         0.3  setosa
+## 8      5.0         3.4          1.5         0.2  setosa
+## 9      4.4         2.9          1.4         0.2  setosa
+## 10     4.9         3.1          1.5         0.1  setosa
+## 11     5.4         3.7          1.5         0.2  setosa
+## 12     4.8         3.4          1.6         0.2  setosa
+## 13     4.8         3.0          1.4         0.1  setosa
+## 14     4.3         3.0          1.1         0.1  setosa
+## 15     5.8         4.0          1.2         0.2  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- * If you have weird characters in your column names, put ` signs around the old column name, not &#34; --&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;helper-functions&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Helper functions&lt;/h1&gt;
+&lt;div id=&#34;everything&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;everything()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Move columns to the front of your data&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, Species, everything()) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1   setosa          5.1         3.5          1.4         0.2
+## 2   setosa          4.9         3.0          1.4         0.2
+## 3   setosa          4.7         3.2          1.3         0.2
+## 4   setosa          4.6         3.1          1.5         0.2
+## 5   setosa          5.0         3.6          1.4         0.2
+## 6   setosa          5.4         3.9          1.7         0.4
+## 7   setosa          4.6         3.4          1.4         0.3
+## 8   setosa          5.0         3.4          1.5         0.2
+## 9   setosa          4.4         2.9          1.4         0.2
+## 10  setosa          4.9         3.1          1.5         0.1
+## 11  setosa          5.4         3.7          1.5         0.2
+## 12  setosa          4.8         3.4          1.6         0.2
+## 13  setosa          4.8         3.0          1.4         0.1
+## 14  setosa          4.3         3.0          1.1         0.1
+## 15  setosa          5.8         4.0          1.2         0.2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;starts_with&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;starts_with()&lt;/code&gt;&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, starts_with(&amp;quot;Petal&amp;quot;)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Petal.Length Petal.Width
+## 1           1.4         0.2
+## 2           1.4         0.2
+## 3           1.3         0.2
+## 4           1.5         0.2
+## 5           1.4         0.2
+## 6           1.7         0.4
+## 7           1.4         0.3
+## 8           1.5         0.2
+## 9           1.4         0.2
+## 10          1.5         0.1
+## 11          1.5         0.2
+## 12          1.6         0.2
+## 13          1.4         0.1
+## 14          1.1         0.1
+## 15          1.2         0.2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;ends_with&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;ends_with()&lt;/code&gt;&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, ends_with(&amp;quot;Length&amp;quot;)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Petal.Length
+## 1           5.1          1.4
+## 2           4.9          1.4
+## 3           4.7          1.3
+## 4           4.6          1.5
+## 5           5.0          1.4
+## 6           5.4          1.7
+## 7           4.6          1.4
+## 8           5.0          1.5
+## 9           4.4          1.4
+## 10          4.9          1.5
+## 11          5.4          1.5
+## 12          4.8          1.6
+## 13          4.8          1.4
+## 14          4.3          1.1
+## 15          5.8          1.2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;contains&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;contains()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Searches column names for a specified string&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, contains(&amp;quot;Wid&amp;quot;)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Width Petal.Width
+## 1          3.5         0.2
+## 2          3.0         0.2
+## 3          3.2         0.2
+## 4          3.1         0.2
+## 5          3.6         0.2
+## 6          3.9         0.4
+## 7          3.4         0.3
+## 8          3.4         0.2
+## 9          2.9         0.2
+## 10         3.1         0.1
+## 11         3.7         0.2
+## 12         3.4         0.2
+## 13         3.0         0.1
+## 14         3.0         0.1
+## 15         4.0         0.2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;matches&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;matches()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Searches column names for a specified regular expression&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(iris, matches(&amp;quot;wid|spec&amp;quot;)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Width Petal.Width Species
+## 1          3.5         0.2  setosa
+## 2          3.0         0.2  setosa
+## 3          3.2         0.2  setosa
+## 4          3.1         0.2  setosa
+## 5          3.6         0.2  setosa
+## 6          3.9         0.4  setosa
+## 7          3.4         0.3  setosa
+## 8          3.4         0.2  setosa
+## 9          2.9         0.2  setosa
+## 10         3.1         0.1  setosa
+## 11         3.7         0.2  setosa
+## 12         3.4         0.2  setosa
+## 13         3.0         0.1  setosa
+## 14         3.0         0.1  setosa
+## 15         4.0         0.2  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For more info on regex see &lt;a href=&#34;https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285&#34; title=&#34;here&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;row_number&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;row_number()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Specify which row number you want for your verb&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
+  group_by(Species) %&amp;gt;%
+  filter(row_number() == 1) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 3 x 5
+## # Groups:   Species [3]
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species   
+##          &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt;     
+## 1          5.1         3.5          1.4         0.2 setosa    
+## 2          7           3.2          4.7         1.4 versicolor
+## 3          6.3         3.3          6           2.5 virginica&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;n&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;n()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;References the number of rows in your data frame (or for each group in a &lt;code&gt;&#39;grouped_df&#39;&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
+  group_by(Species) %&amp;gt;%
+  filter(row_number() == n()) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 3 x 5
+## # Groups:   Species [3]
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species   
+##          &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt;     
+## 1          5           3.3          1.4         0.2 setosa    
+## 2          5.7         2.8          4.1         1.3 versicolor
+## 3          5.9         3            5.1         1.8 virginica&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;fancy-verbs&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Fancy verbs&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Scoped verbs take the additional arguments &lt;strong&gt;.predicate&lt;/strong&gt;, &lt;strong&gt;.funs&lt;/strong&gt;, and &lt;strong&gt;.vars&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;They end in &lt;code&gt;_at()&lt;/code&gt;, &lt;code&gt;_if()&lt;/code&gt; and &lt;code&gt;_all()&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Signify what function (&lt;strong&gt;.funs&lt;/strong&gt;) should be applied too &lt;code&gt;all&lt;/code&gt; variables, only &lt;code&gt;at&lt;/code&gt; certain variables (&lt;strong&gt;.vars&lt;/strong&gt;), or only &lt;code&gt;if&lt;/code&gt; variables meet a certain condition (&lt;strong&gt;.predicate&lt;/strong&gt;)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;ie. &lt;code&gt;mutate_at()&lt;/code&gt;, &lt;code&gt;mutate_if()&lt;/code&gt;, &lt;code&gt;mutate_all()&lt;/code&gt;, &lt;code&gt;summarise_if()&lt;/code&gt;, &lt;code&gt;summarise_at()&lt;/code&gt;, &lt;code&gt;summarise_all()&lt;/code&gt;, &lt;code&gt;select_if()&lt;/code&gt;, &lt;code&gt;select_at()&lt;/code&gt;, &lt;code&gt;rename_if()&lt;/code&gt;, &lt;code&gt;filter_all()&lt;/code&gt;, &lt;code&gt;arrange_all()&lt;/code&gt;, &lt;code&gt;group_by_at()&lt;/code&gt; …the list goes on!&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;A few examples (we will see more later)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% select_if(.predicate = is.numeric) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1           5.1         3.5          1.4         0.2
+## 2           4.9         3.0          1.4         0.2
+## 3           4.7         3.2          1.3         0.2
+## 4           4.6         3.1          1.5         0.2
+## 5           5.0         3.6          1.4         0.2
+## 6           5.4         3.9          1.7         0.4
+## 7           4.6         3.4          1.4         0.3
+## 8           5.0         3.4          1.5         0.2
+## 9           4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## 11          5.4         3.7          1.5         0.2
+## 12          4.8         3.4          1.6         0.2
+## 13          4.8         3.0          1.4         0.1
+## 14          4.3         3.0          1.1         0.1
+## 15          5.8         4.0          1.2         0.2&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% select_if(.predicate = is.numeric, .funs=funs(paste0(&amp;quot;num_&amp;quot;,.))) %&amp;gt;% head(n=15) # can also be used to rename&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    num_Sepal.Length num_Sepal.Width num_Petal.Length num_Petal.Width
+## 1               5.1             3.5              1.4             0.2
+## 2               4.9             3.0              1.4             0.2
+## 3               4.7             3.2              1.3             0.2
+## 4               4.6             3.1              1.5             0.2
+## 5               5.0             3.6              1.4             0.2
+## 6               5.4             3.9              1.7             0.4
+## 7               4.6             3.4              1.4             0.3
+## 8               5.0             3.4              1.5             0.2
+## 9               4.4             2.9              1.4             0.2
+## 10              4.9             3.1              1.5             0.1
+## 11              5.4             3.7              1.5             0.2
+## 12              4.8             3.4              1.6             0.2
+## 13              4.8             3.0              1.4             0.1
+## 14              4.3             3.0              1.1             0.1
+## 15              5.8             4.0              1.2             0.2&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% summarise_if(.predicate = is.numeric, .funs = funs(mean(., na.rm=T))) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     5.843333    3.057333        3.758    1.199333&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;% mutate_at(.vars = vars(c(&amp;quot;Sepal.Length&amp;quot;,&amp;quot;Petal.Length&amp;quot;)),
+                                         .funs = funs(scale)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1   -0.89767388         3.5    -1.335752         0.2  setosa
+## 2   -1.13920048         3.0    -1.335752         0.2  setosa
+## 3   -1.38072709         3.2    -1.392399         0.2  setosa
+## 4   -1.50149039         3.1    -1.279104         0.2  setosa
+## 5   -1.01843718         3.6    -1.335752         0.2  setosa
+## 6   -0.53538397         3.9    -1.165809         0.4  setosa
+## 7   -1.50149039         3.4    -1.335752         0.3  setosa
+## 8   -1.01843718         3.4    -1.279104         0.2  setosa
+## 9   -1.74301699         2.9    -1.335752         0.2  setosa
+## 10  -1.13920048         3.1    -1.279104         0.1  setosa
+## 11  -0.53538397         3.7    -1.279104         0.2  setosa
+## 12  -1.25996379         3.4    -1.222456         0.2  setosa
+## 13  -1.25996379         3.0    -1.335752         0.1  setosa
+## 14  -1.86378030         3.0    -1.505695         0.1  setosa
+## 15  -0.05233076         4.0    -1.449047         0.2  setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# z scores by Species for all numeric variables
+iris %&amp;gt;% group_by(Species) %&amp;gt;%
+  mutate_if(.predicate = is.numeric, .funs = funs(scale)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 15 x 5
+## # Groups:   Species [1]
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;        &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt;  
+##  1       0.267       0.190        -0.357      -0.436 setosa 
+##  2      -0.301      -1.13         -0.357      -0.436 setosa 
+##  3      -0.868      -0.601        -0.933      -0.436 setosa 
+##  4      -1.15       -0.865         0.219      -0.436 setosa 
+##  5      -0.0170      0.454        -0.357      -0.436 setosa 
+##  6       1.12        1.25          1.37        1.46  setosa 
+##  7      -1.15       -0.0739       -0.357       0.512 setosa 
+##  8      -0.0170     -0.0739        0.219      -0.436 setosa 
+##  9      -1.72       -1.39         -0.357      -0.436 setosa 
+## 10      -0.301      -0.865         0.219      -1.39  setosa 
+## 11       1.12        0.718         0.219      -0.436 setosa 
+## 12      -0.584      -0.0739        0.795      -0.436 setosa 
+## 13      -0.584      -1.13         -0.357      -1.39  setosa 
+## 14      -2.00       -1.13         -2.08       -1.39  setosa 
+## 15       2.25        1.51         -1.51       -0.436 setosa&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;I have never used any of the &lt;code&gt;group_by_*()&lt;/code&gt; but I imagine they’re useful when you have a large selection of identifiers/grouping variables that you can call easily with a predicate (for example, &lt;code&gt;is.factor&lt;/code&gt;). They can also be used with a &lt;strong&gt;.funs&lt;/strong&gt; argument as a shortcut to &lt;code&gt;group_by() %&amp;gt;% mutate()&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;miscellaneous-verbs&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Miscellaneous verbs&lt;/h1&gt;
+&lt;div id=&#34;lag&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;lag()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Makes a new column with the value of one row previously&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;lead&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;lead()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Makes a new column with the value of one row ahead&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- runif(5)
+cbind(ahead = lead(x), x, behind = lag(x))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          ahead         x    behind
+## [1,] 0.5677863 0.8123114        NA
+## [2,] 0.9943139 0.5677863 0.8123114
+## [3,] 0.9466897 0.9943139 0.5677863
+## [4,] 0.4742474 0.9466897 0.9943139
+## [5,]        NA 0.4742474 0.9466897&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Can choose a time column to order your new values by with the argument &lt;code&gt;&#39;order_by&#39;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- df &lt;- data.frame(year = 2000:2005, value = (0:5) ^ 2) --&gt;
+&lt;!-- df --&gt;
+&lt;!-- scrambled &lt;- df[sample(nrow(df)), ] --&gt;
+&lt;!-- scrambled --&gt;
+&lt;!-- right &lt;- mutate(scrambled, prev = lag(value, order_by = year)) --&gt;
+&lt;!-- arrange(right, year) --&gt;
+&lt;!-- ``` --&gt;
+&lt;ul&gt;
+&lt;li&gt;Lag and lead are very useful for longitudinal models&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;complete&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;complete()&lt;/code&gt;&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;incomplete_df &amp;lt;- data.frame(day = c(1,3,7,9), dose = c(0, 25, 40, 30)) %&amp;gt;% head(n=15)
+incomplete_df&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   day dose
+## 1   1    0
+## 2   3   25
+## 3   7   40
+## 4   9   30&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;complete(incomplete_df, day = full_seq(1:max(day), 1)) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 9 x 2
+##     day  dose
+##   &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     1     0
+## 2     2    NA
+## 3     3    25
+## 4     4    NA
+## 5     5    NA
+## 6     6    NA
+## 7     7    40
+## 8     8    NA
+## 9     9    30&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;fill&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;fill()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Fill in missing values with values before or after&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;incomplete_df %&amp;gt;%
+  complete(day = full_seq(1:max(day), 1)) %&amp;gt;%
+  fill(dose, .direction = &amp;quot;down&amp;quot;) %&amp;gt;% head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 9 x 2
+##     day  dose
+##   &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     1     0
+## 2     2     0
+## 3     3    25
+## 4     4    25
+## 5     5    25
+## 6     6    25
+## 7     7    40
+## 8     8    40
+## 9     9    30&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;drop_na&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;drop_na()&lt;/code&gt;&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;incomplete_df %&amp;gt;%
+  complete(day = full_seq(1:max(day), 1)) %&amp;gt;%
+  drop_na() %&amp;gt;% head(n=15) # when you have more variables, specify which columns you care about dropping NAs from&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 4 x 2
+##     day  dose
+##   &amp;lt;dbl&amp;gt; &amp;lt;dbl&amp;gt;
+## 1     1     0
+## 2     3    25
+## 3     7    40
+## 4     9    30&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;sample_frac&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;sample_frac()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Randomly sample a specified fraction of rows of a data frame&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat &amp;lt;- data.frame(id = sample(1:100, 20), meas = rnorm(20))
+mydat&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    id        meas
+## 1  21 -0.25035637
+## 2  87  0.50363037
+## 3  74 -0.11259234
+## 4  37 -0.72029892
+## 5  60  0.89484051
+## 6  56  1.65776866
+## 7  79  0.04188483
+## 8  19  0.78851069
+## 9  58 -0.12519381
+## 10 67 -0.45813272
+## 11 83 -1.61101945
+## 12 39 -0.77879913
+## 13 23 -0.42818335
+## 14 45  0.18212417
+## 15 71  1.11600361
+## 16 88  0.13316263
+## 17  2 -0.29647094
+## 18 42  0.24232759
+## 19 89 -0.56512105
+## 20 10  1.79038253&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat %&amp;gt;% sample_frac(size = .5)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    id        meas
+## 1  37 -0.72029892
+## 2   2 -0.29647094
+## 3  42  0.24232759
+## 4  39 -0.77879913
+## 5  19  0.78851069
+## 6  60  0.89484051
+## 7  74 -0.11259234
+## 8  79  0.04188483
+## 9  58 -0.12519381
+## 10 56  1.65776866&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat %&amp;gt;% sample_frac(size= .5, replace = T) # you can also add sampling weights&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    id        meas
+## 1  71  1.11600361
+## 2  79  0.04188483
+## 3  58 -0.12519381
+## 4  71  1.11600361
+## 5   2 -0.29647094
+## 6  83 -1.61101945
+## 7  10  1.79038253
+## 8  87  0.50363037
+## 9  21 -0.25035637
+## 10 58 -0.12519381&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;sample_n&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;sample_n()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Randomly sample a specified number of rows of a data frame&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat %&amp;gt;% sample_n(3)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id      meas
+## 1 42 0.2423276
+## 2 10 1.7903825
+## 3 19 0.7885107&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;joining-functions&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Joining functions&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- data.frame(id = c(&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;C&amp;quot;), val = 1:3)
+y &amp;lt;- data.frame(id = c(&amp;quot;A&amp;quot;,&amp;quot;B&amp;quot;,&amp;quot;D&amp;quot;), val = c(&amp;quot;T&amp;quot;,&amp;quot;F&amp;quot;,&amp;quot;T&amp;quot;))
+x&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val
+## 1  A   1
+## 2  B   2
+## 3  C   3&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;y&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val
+## 1  A   T
+## 2  B   F
+## 3  D   T&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;“Mutating” joins combine variables from the left and right hand sides ie. &lt;code&gt;full_join()&lt;/code&gt;, &lt;code&gt;inner_join()&lt;/code&gt;, &lt;code&gt;right_join()&lt;/code&gt;, and &lt;code&gt;left_join()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&#34;full_join&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;full_join()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Return all rows and columns&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;full_join(x, y, by = &amp;quot;id&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F
+## 3  C     3  &amp;lt;NA&amp;gt;
+## 4  D    NA     T&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;inner_join&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;inner_join()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Return all rows from &lt;code&gt;x&lt;/code&gt; that have a match in &lt;code&gt;y&lt;/code&gt;, and all columns from &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;inner_join(x, y, by = &amp;quot;id&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;left_join&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;left_join()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Return all rows from &lt;code&gt;x&lt;/code&gt; and all columns from &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;left_join(x, y, by = &amp;quot;id&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F
+## 3  C     3  &amp;lt;NA&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;right_join&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;right_join()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Return all rows from &lt;code&gt;x&lt;/code&gt; and all columns from &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;right_join(x, y, by = &amp;quot;id&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F
+## 3  D    NA     T&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;“Filtering” joins keep cases from the left hand side, ie. &lt;code&gt;semi_join()&lt;/code&gt; and &lt;code&gt;anti_join()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;semi_join&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;semi_join()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Return all rows in &lt;code&gt;x&lt;/code&gt; that have a match in &lt;code&gt;y&lt;/code&gt;, keeping only columns from &lt;code&gt;y&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;semi_join(x, y, by = &amp;quot;id&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val
+## 1  A   1
+## 2  B   2&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;anti_join&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;code&gt;anti_join()&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Return all rows from &lt;code&gt;x&lt;/code&gt; where there are not matching values in &lt;code&gt;y&lt;/code&gt;, keeping just the columns from &lt;code&gt;x&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;anti_join(x, y, by = &amp;quot;id&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id val
+## 1  C   3&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;incorporating-dplyr-into-your-workflow&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Incorporating dplyr into your workflow&lt;/h1&gt;
+&lt;div id=&#34;frequency-tables&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Frequency Tables&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(kableExtra)
+mtcars %&amp;gt;%
+  group_by(vs, am) %&amp;gt;%
+  summarise(n=n(), freq=n()/nrow(.)) %&amp;gt;%
+  kable(caption=&amp;quot;Frequency Table of vs and am&amp;quot;, format=&amp;quot;html&amp;quot;) %&amp;gt;%
+  kable_styling(c(&amp;quot;condensed&amp;quot;,&amp;quot;responsive&amp;quot;,&amp;quot;striped&amp;quot;,&amp;quot;hover&amp;quot;), full_width = F)&lt;/code&gt;&lt;/pre&gt;
+&lt;table class=&#34;table table-condensed table-responsive table-striped table-hover&#34; style=&#34;width: auto !important; margin-left: auto; margin-right: auto;&#34;&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-39&#34;&gt;Table 1: &lt;/span&gt;Frequency Table of vs and am
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+vs
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+am
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+n
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+freq
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+12
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37500
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.18750
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+7
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.21875
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+7
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.21875
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;comparegroups&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;compareGroups&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(compareGroups)
+iris %&amp;gt;%
+  mutate(Sepal.Length.Sq = Sepal.Length^2) %&amp;gt;%
+  compareGroups(Species ~ ., data = .) %&amp;gt;%
+  createTable() %&amp;gt;%
+  export2md() %&amp;gt;%
+  kable_styling(c(&amp;quot;condensed&amp;quot;,&amp;quot;responsive&amp;quot;,&amp;quot;striped&amp;quot;,&amp;quot;hover&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;table class=&#34;table table-striped table-condensed table table-condensed table-responsive table-striped table-hover&#34; style=&#34;width: auto !important; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;&#34;&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-40&#34;&gt;Table 2: &lt;/span&gt;Summary descriptives table by groups of `Species’
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+setosa
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+versicolor
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+virginica
+&lt;/th&gt;
+&lt;th style=&#34;text-align:center;&#34;&gt;
+p.overall
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;font-style: italic;border-bottom: 1px solid grey&#34;&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;font-style: italic;border-bottom: 1px solid grey&#34;&gt;
+N=50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;font-style: italic;border-bottom: 1px solid grey&#34;&gt;
+N=50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;font-style: italic;border-bottom: 1px solid grey&#34;&gt;
+N=50
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;font-style: italic;border-bottom: 1px solid grey&#34;&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Sepal.Length
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+5.01 (0.35)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+5.94 (0.52)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+6.59 (0.64)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+&amp;lt;0.001
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Sepal.Width
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+3.43 (0.38)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2.77 (0.31)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2.97 (0.32)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+&amp;lt;0.001
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Petal.Length
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1.46 (0.17)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+4.26 (0.47)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+5.55 (0.55)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+&amp;lt;0.001
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Petal.Width
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+0.25 (0.11)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+1.33 (0.20)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+2.03 (0.27)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+&amp;lt;0.001
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Sepal.Length.Sq
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+25.2 (3.55)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+35.5 (6.16)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+43.8 (8.44)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:center;&#34;&gt;
+&amp;lt;0.001
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;ggplotting&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;ggplotting&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
+  filter(Species != &amp;quot;setosa&amp;quot;) %&amp;gt;%
+  ggplot(aes(Sepal.Length, Petal.Width, col=Species)) +
+  geom_point()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-41-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;finding-columns-of-interest&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Finding columns of interest&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;When you have too many column names to look through manually, search for a string or pattern of strings&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;load(&amp;quot;dplyr_dat.Rdata&amp;quot;)
+length(names(brain))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1000&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;select(brain, matches(&amp;quot;pib.*parietal.*&amp;quot;)) %&amp;gt;% names() # regex is not case sensitive&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;PIB.PET_AAL__Parietal_Inf_L&amp;quot;        
+## [2] &amp;quot;PIB.PET_AAL__Parietal_Inf_R&amp;quot;        
+## [3] &amp;quot;PIB.PET_AAL__Parietal_Sup_L&amp;quot;        
+## [4] &amp;quot;PIB.PET_AAL__Parietal_Sup_R&amp;quot;        
+## [5] &amp;quot;PIB.PET_FS__ctx.lh.inferiorparietal&amp;quot;
+## [6] &amp;quot;PIB.PET_FS__ctx.lh.superiorparietal&amp;quot;
+## [7] &amp;quot;PIB.PET_FS__ctx.rh.inferiorparietal&amp;quot;
+## [8] &amp;quot;PIB.PET_FS__ctx.rh.superiorparietal&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- * Create summary measures using variables of interest --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- brain %&gt;% --&gt;
+&lt;!--   group_by(ID) %&gt;% --&gt;
+&lt;!--   transmute(PIB_Parietal = mean(c(PIB.PET_AAL__Parietal_Inf_L, --&gt;
+&lt;!--                                   PIB.PET_AAL__Parietal_Inf_R, --&gt;
+&lt;!--                                   PIB.PET_AAL__Parietal_Sup_L, --&gt;
+&lt;!--                                   PIB.PET_AAL__Parietal_Sup_R), na.rm=T)) %&gt;% --&gt;
+&lt;!--   arrange(PIB_Parietal) --&gt;
+&lt;!-- ``` --&gt;
+&lt;/div&gt;
+&lt;div id=&#34;missing-data-wrangling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Missing data wrangling&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Add a column flagging a value as missing and then replace the missing values with the mean of the other values&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;misdat &amp;lt;- data.frame(x1 = sample(c(1:3, NA), 13, replace=T),
+                     x2 = sample(c(-5:-2,NA), 13, replace=T))
+misdat&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    x1 x2
+## 1   3 -5
+## 2   1 -5
+## 3   1 -4
+## 4   2 NA
+## 5   1 -4
+## 6   2 -3
+## 7   1 NA
+## 8   2 -2
+## 9   2 -4
+## 10  1 -3
+## 11  2 -4
+## 12  1 -5
+## 13  2 NA&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;misdat %&amp;gt;%
+  mutate_all(.funs = funs(miss = ifelse(is.na(.), 1, 0))) %&amp;gt;%
+  mutate_all(.funs = funs(replace_na(., mean(., na.rm=T))))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    x1   x2 x1_miss x2_miss
+## 1   3 -5.0       0       0
+## 2   1 -5.0       0       0
+## 3   1 -4.0       0       0
+## 4   2 -3.9       0       1
+## 5   1 -4.0       0       0
+## 6   2 -3.0       0       0
+## 7   1 -3.9       0       1
+## 8   2 -2.0       0       0
+## 9   2 -4.0       0       0
+## 10  1 -3.0       0       0
+## 11  2 -4.0       0       0
+## 12  1 -5.0       0       0
+## 13  2 -3.9       0       1&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;longitudinal-data-wrangling-a&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Longitudinal data wrangling A&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Calculate the time since a patient was first admitted to the hospital&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;id &amp;lt;- c(1,1,1,2,2,2,2,3)
+admit &amp;lt;- as.Date(c(&amp;quot;2017-06-22&amp;quot;, &amp;quot;2017-07-13&amp;quot;, &amp;quot;2017-08-29&amp;quot;,
+                   &amp;quot;2017-04-01&amp;quot;, &amp;quot;2017-05-02&amp;quot;, &amp;quot;2017-11-14&amp;quot;, &amp;quot;2018-01-14&amp;quot;,
+                   &amp;quot;2019-01-01&amp;quot;))
+discharge &amp;lt;- as.Date(c(&amp;quot;2017-06-25&amp;quot;, &amp;quot;2017-07-31&amp;quot;, &amp;quot;2017-10-13&amp;quot;,
+                   &amp;quot;2017-04-02&amp;quot;, &amp;quot;2017-05-10&amp;quot;, &amp;quot;2017-11-18&amp;quot;, &amp;quot;2018-02-12&amp;quot;,
+                   &amp;quot;2019-01-05&amp;quot;))
+hosp_dat &amp;lt;- data.frame(id, admit, discharge)
+hosp_dat&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   id      admit  discharge
+## 1  1 2017-06-22 2017-06-25
+## 2  1 2017-07-13 2017-07-31
+## 3  1 2017-08-29 2017-10-13
+## 4  2 2017-04-01 2017-04-02
+## 5  2 2017-05-02 2017-05-10
+## 6  2 2017-11-14 2017-11-18
+## 7  2 2018-01-14 2018-02-12
+## 8  3 2019-01-01 2019-01-05&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hosp_dat %&amp;gt;%
+  group_by(id) %&amp;gt;%
+  mutate(days_since_init_admit = discharge - admit[1])&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 8 x 4
+## # Groups:   id [3]
+##      id admit      discharge  days_since_init_admit
+##   &amp;lt;dbl&amp;gt; &amp;lt;date&amp;gt;     &amp;lt;date&amp;gt;     &amp;lt;drtn&amp;gt;               
+## 1     1 2017-06-22 2017-06-25   3 days             
+## 2     1 2017-07-13 2017-07-31  39 days             
+## 3     1 2017-08-29 2017-10-13 113 days             
+## 4     2 2017-04-01 2017-04-02   1 days             
+## 5     2 2017-05-02 2017-05-10  39 days             
+## 6     2 2017-11-14 2017-11-18 231 days             
+## 7     2 2018-01-14 2018-02-12 317 days             
+## 8     3 2019-01-01 2019-01-05   4 days&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;longitudinal-data-wrangling-b&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Longitudinal data wrangling B&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Make a row for every patient for every month from the start of follow up to the end of follow up (get equally spaced time intervals)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Make another column containing the drugs the patient was on previously (for prediction or longitudinal models)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;load(&amp;quot;meds.Rdata&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;meds&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    PatientID Months_ImplantToVisit BB_yn ACE_yn ARB_yn
+## 1          1                     1     0      0      0
+## 2          1                     2     0      0      0
+## 3          2                     2     0      1      0
+## 4          2                     3     0      1      0
+## 5          2                     4     0      1      0
+## 6          2                     5     0      1      0
+## 7          2                     6     1      1      0
+## 8          2                     8     1      1      0
+## 9          2                    10     1      1      0
+## 10         2                    12     1      1      0
+## 11         2                    13     1      1      0
+## 12         2                    14     1      1      0
+## 13         2                    16     1      1      0
+## 14         3                     2     0      0      0
+## 15         3                     3     0      0      0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;meds %&amp;gt;%
+    group_by(PatientID) %&amp;gt;%
+    complete(Months_ImplantToVisit = full_seq(1:max(Months_ImplantToVisit), 1)) %&amp;gt;%
+    fill(ends_with(&amp;quot;_yn&amp;quot;)) %&amp;gt;%
+    fill(ends_with(&amp;quot;_yn&amp;quot;), .direction=&amp;quot;up&amp;quot;) -&amp;gt; meds1
+meds1&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 21 x 5
+## # Groups:   PatientID [3]
+##    PatientID Months_ImplantToVisit BB_yn ACE_yn ARB_yn
+##        &amp;lt;int&amp;gt;                 &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt;  &amp;lt;fct&amp;gt; 
+##  1         1                     1 0     0      0     
+##  2         1                     2 0     0      0     
+##  3         2                     1 0     1      0     
+##  4         2                     2 0     1      0     
+##  5         2                     3 0     1      0     
+##  6         2                     4 0     1      0     
+##  7         2                     5 0     1      0     
+##  8         2                     6 1     1      0     
+##  9         2                     7 1     1      0     
+## 10         2                     8 1     1      0     
+## # … with 11 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;meds1 %&amp;gt;%
+  mutate_at(.vars = vars(ends_with(&amp;quot;_yn&amp;quot;)),
+              .funs = funs(prev = lag(., order_by = Months_ImplantToVisit))) %&amp;gt;%
+    fill(ends_with(&amp;quot;_prev&amp;quot;), .direction=&amp;quot;up&amp;quot;) %&amp;gt;%
+  head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 15 x 8
+## # Groups:   PatientID [2]
+##    PatientID Months_ImplantT… BB_yn ACE_yn ARB_yn BB_yn_prev ACE_yn_prev
+##        &amp;lt;int&amp;gt;            &amp;lt;dbl&amp;gt; &amp;lt;fct&amp;gt; &amp;lt;fct&amp;gt;  &amp;lt;fct&amp;gt;  &amp;lt;fct&amp;gt;      &amp;lt;fct&amp;gt;      
+##  1         1                1 0     0      0      0          0          
+##  2         1                2 0     0      0      0          0          
+##  3         2                1 0     1      0      0          1          
+##  4         2                2 0     1      0      0          1          
+##  5         2                3 0     1      0      0          1          
+##  6         2                4 0     1      0      0          1          
+##  7         2                5 0     1      0      0          1          
+##  8         2                6 1     1      0      0          1          
+##  9         2                7 1     1      0      1          1          
+## 10         2                8 1     1      0      1          1          
+## 11         2                9 1     1      0      1          1          
+## 12         2               10 1     1      0      1          1          
+## 13         2               11 1     1      0      1          1          
+## 14         2               12 1     1      0      1          1          
+## 15         2               13 1     1      0      1          1          
+## # … with 1 more variable: ARB_yn_prev &amp;lt;fct&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;survival-data-wrangling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Survival data wrangling&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Map four columns “days to…outcome” to a composite endpoint for a survival model&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Record &lt;em&gt;when&lt;/em&gt; the event occurred as Days.to.first.event and &lt;em&gt;which&lt;/em&gt; event it was in FE.status&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dems %&amp;gt;%
+  select(Days.to.lastFU, Days.to.death, Days.to.stroke, Days.to.GIB, Days.to.PT) %&amp;gt;%
+  # which.min cannot handle NA, so we&amp;#39;ll make NA&amp;#39;s infinity for now
+  replace(is.na(.), Inf) %&amp;gt;%
+  # to allow which.min to search along rows (dplyr naturally looks down columns)
+  rowwise() %&amp;gt;%
+  mutate(
+    FUorFEtime = pmin(Days.to.lastFU, Days.to.death, Days.to.stroke,
+                      Days.to.GIB, Days.to.PT,
+                      na.rm = T),
+    # numbers correspond to order of the Days* columns
+    FUorFEstatus = which.min(c(Days.to.lastFU, Days.to.death, Days.to.stroke,
+                                    Days.to.GIB, Days.to.PT)),
+    # condensed variable for survival model, 1 if any event
+  Event_yn = ifelse(FUorFEstatus == 1, 0, 1)) -&amp;gt; dems_int
+
+dems_int # look at the intermediate output&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Source: local data frame [265 x 8]
+## Groups: &amp;lt;by row&amp;gt;
+## 
+## # A tibble: 265 x 8
+##    Days.to.lastFU Days.to.death Days.to.stroke Days.to.GIB Days.to.PT
+##             &amp;lt;dbl&amp;gt;         &amp;lt;dbl&amp;gt;          &amp;lt;dbl&amp;gt;       &amp;lt;dbl&amp;gt;      &amp;lt;dbl&amp;gt;
+##  1             98            98             94         Inf        Inf
+##  2            163           Inf            Inf         Inf        141
+##  3            185           Inf            Inf         Inf        Inf
+##  4            139           Inf            Inf         Inf        Inf
+##  5            196           Inf            Inf          78        Inf
+##  6            161           Inf            Inf         Inf        Inf
+##  7            210           Inf            185         Inf        Inf
+##  8            233           Inf            Inf         Inf        Inf
+##  9            239           Inf            Inf         Inf        Inf
+## 10            243           Inf            Inf         Inf        Inf
+## # … with 255 more rows, and 3 more variables: FUorFEtime &amp;lt;dbl&amp;gt;,
+## #   FUorFEstatus &amp;lt;int&amp;gt;, Event_yn &amp;lt;dbl&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dems_int %&amp;gt;%
+  # column names correspond to the order of the columns, rename
+  mutate(FUorFEstatus = case_when(FUorFEstatus == 1 ~ &amp;quot;censored&amp;quot;,
+                                  FUorFEstatus == 2 ~ &amp;quot;death&amp;quot;,
+                                  FUorFEstatus == 3 ~ &amp;quot;stroke&amp;quot;,
+                                  FUorFEstatus == 4 ~ &amp;quot;gib&amp;quot;,
+                                  FUorFEstatus == 5 ~ &amp;quot;pt&amp;quot;,
+                                  TRUE ~ &amp;quot;error&amp;quot;)) %&amp;gt;%
+  # not case sensitive
+  select(contains(&amp;quot;fe&amp;quot;), Event_yn) %&amp;gt;%
+  # allow for joining with no duplicate cols
+  rownames_to_column() %&amp;gt;%
+  full_join(dems %&amp;gt;% rownames_to_column()) %&amp;gt;%
+  select(-rowname) -&amp;gt; dems_clean
+
+# check to make sure everything worked
+dems_clean %&amp;gt;% filter(FUorFEstatus == &amp;quot;error&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Source: local data frame [0 x 55]
+## Groups: &amp;lt;by row&amp;gt;
+## 
+## # A tibble: 0 x 55
+## # … with 55 variables: FUorFEtime &amp;lt;dbl&amp;gt;, FUorFEstatus &amp;lt;chr&amp;gt;,
+## #   Event_yn &amp;lt;dbl&amp;gt;, PatientID &amp;lt;int&amp;gt;, Year.of.Implant &amp;lt;int&amp;gt;, Outcome &amp;lt;int&amp;gt;,
+## #   Days.to.lastFU &amp;lt;int&amp;gt;, Stroke &amp;lt;int&amp;gt;, Days.to.stroke &amp;lt;int&amp;gt;,
+## #   TypeStroke &amp;lt;int&amp;gt;, Stroke_IA &amp;lt;int&amp;gt;, Days.to.IA.stroke &amp;lt;int&amp;gt;,
+## #   TypeStroke_IA &amp;lt;int&amp;gt;, PT &amp;lt;int&amp;gt;, Days.to.PT &amp;lt;int&amp;gt;, GIB &amp;lt;int&amp;gt;,
+## #   Days.to.GIB &amp;lt;int&amp;gt;, GIB_IA &amp;lt;int&amp;gt;, Days.to.GIB_IA &amp;lt;int&amp;gt;,
+## #   Age.at.implant &amp;lt;int&amp;gt;, Sex &amp;lt;fct&amp;gt;, Race &amp;lt;int&amp;gt;, Caucasian &amp;lt;int&amp;gt;,
+## #   AfibFlut &amp;lt;fct&amp;gt;, Smoking_Hx &amp;lt;fct&amp;gt;, DM &amp;lt;fct&amp;gt;, Ischemic &amp;lt;int&amp;gt;,
+## #   HTN_Hx &amp;lt;fct&amp;gt;, Stroke_Hx &amp;lt;fct&amp;gt;, Pulmonary_Hx &amp;lt;fct&amp;gt;, ICD &amp;lt;fct&amp;gt;,
+## #   IMCS &amp;lt;int&amp;gt;, DT &amp;lt;int&amp;gt;, Hb_pre &amp;lt;dbl&amp;gt;, PLT_pre &amp;lt;int&amp;gt;, INR_dx &amp;lt;dbl&amp;gt;,
+## #   Creat_dx &amp;lt;dbl&amp;gt;, Height &amp;lt;dbl&amp;gt;, Weight &amp;lt;dbl&amp;gt;, BMI &amp;lt;dbl&amp;gt;, Speed &amp;lt;int&amp;gt;,
+## #   PI &amp;lt;dbl&amp;gt;, Flow &amp;lt;dbl&amp;gt;, RVAD &amp;lt;fct&amp;gt;, IABP &amp;lt;fct&amp;gt;,
+## #   Days.to.first.outpt.visit &amp;lt;int&amp;gt;, Days.to.IA.discharge &amp;lt;int&amp;gt;, EF &amp;lt;fct&amp;gt;,
+## #   LVEDD &amp;lt;fct&amp;gt;, RV_Dysf &amp;lt;fct&amp;gt;, LDH_Dx &amp;lt;int&amp;gt;, eGFR &amp;lt;dbl&amp;gt;, AvgMAP &amp;lt;lgl&amp;gt;,
+## #   Death &amp;lt;int&amp;gt;, Days.to.death &amp;lt;int&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dems_clean %&amp;gt;%
+  head(n=15)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Source: local data frame [15 x 55]
+## Groups: &amp;lt;by row&amp;gt;
+## 
+## # A tibble: 15 x 55
+##    FUorFEtime FUorFEstatus Event_yn PatientID Year.of.Implant Outcome
+##         &amp;lt;dbl&amp;gt; &amp;lt;chr&amp;gt;           &amp;lt;dbl&amp;gt;     &amp;lt;int&amp;gt;           &amp;lt;int&amp;gt;   &amp;lt;int&amp;gt;
+##  1         94 stroke              1         1            2016       2
+##  2        141 pt                  1         2            2016       7
+##  3        185 censored            0         3            2016       7
+##  4        139 censored            0         4            2016       6
+##  5         78 gib                 1         5            2016       7
+##  6        161 censored            0         6            2016       1
+##  7        185 stroke              1         7            2016       7
+##  8        233 censored            0         8            2016       7
+##  9        239 censored            0         9            2016       7
+## 10        243 censored            0        10            2016       7
+## 11        248 censored            0        11            2016       7
+## 12         51 pt                  1        12            2016       1
+## 13         37 gib                 1        13            2016       7
+## 14        261 censored            0        14            2016       7
+## 15        265 censored            0        15            2016       7
+## # … with 49 more variables: Days.to.lastFU &amp;lt;int&amp;gt;, Stroke &amp;lt;int&amp;gt;,
+## #   Days.to.stroke &amp;lt;int&amp;gt;, TypeStroke &amp;lt;int&amp;gt;, Stroke_IA &amp;lt;int&amp;gt;,
+## #   Days.to.IA.stroke &amp;lt;int&amp;gt;, TypeStroke_IA &amp;lt;int&amp;gt;, PT &amp;lt;int&amp;gt;,
+## #   Days.to.PT &amp;lt;int&amp;gt;, GIB &amp;lt;int&amp;gt;, Days.to.GIB &amp;lt;int&amp;gt;, GIB_IA &amp;lt;int&amp;gt;,
+## #   Days.to.GIB_IA &amp;lt;int&amp;gt;, Age.at.implant &amp;lt;int&amp;gt;, Sex &amp;lt;fct&amp;gt;, Race &amp;lt;int&amp;gt;,
+## #   Caucasian &amp;lt;int&amp;gt;, AfibFlut &amp;lt;fct&amp;gt;, Smoking_Hx &amp;lt;fct&amp;gt;, DM &amp;lt;fct&amp;gt;,
+## #   Ischemic &amp;lt;int&amp;gt;, HTN_Hx &amp;lt;fct&amp;gt;, Stroke_Hx &amp;lt;fct&amp;gt;, Pulmonary_Hx &amp;lt;fct&amp;gt;,
+## #   ICD &amp;lt;fct&amp;gt;, IMCS &amp;lt;int&amp;gt;, DT &amp;lt;int&amp;gt;, Hb_pre &amp;lt;dbl&amp;gt;, PLT_pre &amp;lt;int&amp;gt;,
+## #   INR_dx &amp;lt;dbl&amp;gt;, Creat_dx &amp;lt;dbl&amp;gt;, Height &amp;lt;dbl&amp;gt;, Weight &amp;lt;dbl&amp;gt;, BMI &amp;lt;dbl&amp;gt;,
+## #   Speed &amp;lt;int&amp;gt;, PI &amp;lt;dbl&amp;gt;, Flow &amp;lt;dbl&amp;gt;, RVAD &amp;lt;fct&amp;gt;, IABP &amp;lt;fct&amp;gt;,
+## #   Days.to.first.outpt.visit &amp;lt;int&amp;gt;, Days.to.IA.discharge &amp;lt;int&amp;gt;, EF &amp;lt;fct&amp;gt;,
+## #   LVEDD &amp;lt;fct&amp;gt;, RV_Dysf &amp;lt;fct&amp;gt;, LDH_Dx &amp;lt;int&amp;gt;, eGFR &amp;lt;dbl&amp;gt;, AvgMAP &amp;lt;lgl&amp;gt;,
+## #   Death &amp;lt;int&amp;gt;, Days.to.death &amp;lt;int&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;making-functions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Making functions&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Problem: dplyr doesn’t know what to do with quotes around the variable name, but you can’t put the column name into a function without quotes because R will try to find it as an object in your environment…&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Solution: relying on the rlang package (sym, !!, !!!, etc)
+&lt;ul&gt;
+&lt;li&gt;A good tutorial: &lt;a href=&#34;http://jonthegeek.com/2018/06/04/writing-custom-tidyverse-functions/&#34; class=&#34;uri&#34;&gt;http://jonthegeek.com/2018/06/04/writing-custom-tidyverse-functions/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;irisSummary &amp;lt;- function(group){
+    iris %&amp;gt;%
+      group_by(!!sym(group)) %&amp;gt;%
+      summarise(mean(Sepal.Length), sd(Sepal.Length))
+}
+
+irisSummary(group = &amp;quot;Species&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 3 x 3
+##   Species    `mean(Sepal.Length)` `sd(Sepal.Length)`
+##   &amp;lt;fct&amp;gt;                     &amp;lt;dbl&amp;gt;              &amp;lt;dbl&amp;gt;
+## 1 setosa                     5.01              0.352
+## 2 versicolor                 5.94              0.516
+## 3 virginica                  6.59              0.636&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;irisScatPlot &amp;lt;- function(x, y){
+    iris %&amp;gt;%
+    ggplot(aes_string(x, y, col=&amp;quot;Species&amp;quot;)) +
+    geom_point() -&amp;gt; p
+  return(p)
+}
+
+irisScatPlot(x=&amp;quot;Sepal.Length&amp;quot;,y=&amp;quot;Petal.Length&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-49-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

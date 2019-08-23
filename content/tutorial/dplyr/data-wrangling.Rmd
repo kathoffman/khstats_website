@@ -1,0 +1,634 @@
+---
+title: "Data Wrangling with dplyr"
+author: "Katherine Hoffman"
+date: 2019-03-05T21:13:14-05:00
+categories: ["R"]
+tags: ["dplyr", "R", "#rstats"]
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+---
+
+## A Presentation for Weill Cornell Medicine's Biostatistics Computing Club
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T, warning=F, message=F)
+```
+
+![](/img/dplyr_image.jpg)
+*Image courtesy of Allison Horst's Twitter: @allison_horst*
+
+# Introduction
+
+## Why dplyr?
+
+* Powerful but efficient
+
+    * Consistent syntax
+
+    * Fast
+
+* Function chaining
+
+    * Works well with entire tidyverse suite
+
+1. Efficiency*
+
+2. Simple syntax
+
+3. Function chaining
+
+4. Ability to analyze external databases
+
+5. Works well with other packages in tidyverse suite
+    a. ggplot2
+    b. tidyr
+    c. stringr
+    c. forcats
+    e. purrr
+
+*if you start dealing with data sets with > 1 million rows, data.table will be much faster
+
+```{r, message=T}
+data("iris")
+library(tidyverse)
+```
+
+## Tibbles
+
+* An "update" to the data.frame object class in R
+
+* Updates relevant for using dplyr:
+
+    * Vectors of length 1 are automatically recycled
+
+    * Newly created vectors can be referenced in the same line of code
+
+* Other perks: only the first 10 lines print to the screen so your console doesn't get overloaded
+
+* Read more about tibbles here: https://r4ds.had.co.nz/tibbles.html
+
+* dplyr automatically converts objects to tbl_df (tibble data frame) objects
+
+## Piping
+
+* ```r '%>%'``` operator from ```r 'library(magitrr)'```
+
+* Use ```r '%>%'``` to send an object (typically a dataframe) to the next function
+
+* The function you pipe to will use the object in front of the ```r '%>%'``` as its first argument
+
+```{r}
+iris %>% head() # equivalent to head(iris)
+iris %>% head(n=3) # equivalent to head(iris, n=3)
+```
+
+* If you don't want it to be the first argument, use ```r '.'```
+
+```{r}
+iris %>% lm(Sepal.Width ~ Sepal.Length, data=.)
+```
+
+* Shortcut for ```r '%>%'``` is CTRL + SHIFT + M (or CMD + SHIFT + M for OSX)
+
+* A function that takes a data frame as the first argument, eg. ```r 'head()'```, is called a **verb**
+
+* The entire tidyverse suite operates under the verb function structure, making piping especially convenient
+
+# Main verbs
+
+## ```arrange()```
+
+* Sort data frame by column(s), lowest to highest
+
+```{r}
+arrange(iris, Petal.Length) %>% head(n=15)
+```
+
+* If you specify a variable of class factor or character, you will rearrange the rows to alphabetical order
+
+* Use ```r 'desc()'``` if you want the opposite order
+
+```{r}
+arrange(iris, desc(Species), # sort z to a since species is a factor
+        Sepal.Width) %>% head(n=15)
+```
+
+## ```mutate()```
+
+* Add a new variable (while preserving all existing variables)
+
+```{r}
+mutate(iris, logSepLength = log(Sepal.Length)) %>% head(n=15)
+```
+```{r, include=F}
+mutate(iris, Petals_long = ifelse(Petal.Length > 1.4, 1, 0)) %>% head(n=15)
+```
+
+
+* There's also ```r 'transmute()'``` which deletes the old column(s) you use to make the new column
+
+```{r}
+iris %>% transmute(Length_diff = Sepal.Length - Petal.Length,
+                   Width_diff = Sepal.Width - Petal.Width) %>% head(n=15)
+```
+
+## ```filter()```
+
+* Return rows matching specified conditions
+
+* Use with ```r '>'```, ```r ">=" ```, ```r "<"```, ```r "<=" ```, ```r "|" ```, ```r "!"```, ```r "%in%"```, ```r "=="```, and ```r "!="```. Separating conditions by ```r ","``` represents the ```r "&"``` argument.
+
+```{r}
+iris %>% filter(Sepal.Length >= 2) %>% head(n=15)
+iris %>% filter(Petal.Length >= mean(Petal.Length)) %>% head(n=15)
+iris %>% filter(Species != "versicolor") %>% head(n=15)
+iris %>% filter(Species %in% c("versicolor", "setosa")) %>% head(n=15)
+```
+
+## ```select()```
+
+* Keep only specified variables
+
+```{r}
+select(iris, Sepal.Length, Sepal.Width) %>% head(n=15)
+```
+
+* Specify variables to exclude with ```r '-'```
+
+```{r}
+select(iris, -Species) %>% head(n=15)
+```
+* Select a range of variables with ```r ':'```
+```{r}
+select(iris, Sepal.Length:Petal.Length) %>% head(n=15)
+```
+
+
+* If you select just one column, you will still get a dataframe. If you need a vector, use ```r 'pull()'```
+
+```{r}
+pull(iris, Sepal.Length) %>% head(n=15)
+```
+
+## ```summarise()```
+
+* Condenses data down to one value per group
+
+```{r}
+summarise(iris, mean(Petal.Length)) %>% head(n=15)
+summarise(iris, sd_pl = sd(Petal.Length), var_pl = sd(Petal.Length)^2) %>% head(n=15)
+```
+
+
+## ```group_by()```
+
+* Invisibly groups data by specified column(s)
+
+* Use with other verbs to get grouped information
+
+```{r}
+iris %>% group_by(Species) %>% head(n=15)
+```
+
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  summarise(mean(Petal.Length), sd(Petal.Length)) %>% head(n=15)
+```
+
+* Data will remain grouped until you use ```r 'ungroup()'```
+
+## ```rename()```
+
+* Give your columns new names. Syntax is newColumn = oldColumn.
+
+```{r}
+iris %>% rename(sep_len = Sepal.Length) %>% head(n=15)
+```
+
+<!-- * If you have weird characters in your column names, put ` signs around the old column name, not " -->
+
+# Helper functions
+
+
+## ```everything()```
+
+* Move columns to the front of your data
+
+```{r}
+select(iris, Species, everything()) %>% head(n=15)
+```
+
+## ```starts_with()```
+
+```{r}
+select(iris, starts_with("Petal")) %>% head(n=15)
+```
+
+## ```ends_with()```
+
+```{r}
+select(iris, ends_with("Length")) %>% head(n=15)
+```
+
+## ```contains()```
+
+* Searches column names for a specified string
+
+```{r}
+select(iris, contains("Wid")) %>% head(n=15)
+```
+
+## ```matches()```
+
+* Searches column names for a specified regular expression
+
+```{r}
+select(iris, matches("wid|spec")) %>% head(n=15)
+```
+
+For more info on regex see [here](https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285 "here")
+
+## ```row_number()```
+
+* Specify which row number you want for your verb
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  filter(row_number() == 1) %>% head(n=15)
+```
+
+## ```n()```
+
+* References the number of rows in your data frame (or for each group in a ```'grouped_df'```)
+
+```{r}
+iris %>%
+  group_by(Species) %>%
+  filter(row_number() == n()) %>% head(n=15)
+```
+
+
+
+# Fancy verbs
+
+* Scoped verbs take the additional arguments **.predicate**, **.funs**, and **.vars**
+
+* They end in ```_at()```, ```_if()``` and ```_all()```
+
+* Signify what function (**.funs**) should be applied too ```all``` variables, only ```at``` certain variables (**.vars**), or only ```if``` variables meet a certain condition (**.predicate**)
+
+* ie. ```mutate_at()```, ```mutate_if()```, ```mutate_all()```, ```summarise_if()```, ```summarise_at()```, ```summarise_all()```, ```select_if()```,  ```select_at()```, ```rename_if()```,   ```filter_all()```,  ```arrange_all()```, ```group_by_at()``` ...the list goes on!
+
+* A few examples (we will see more later)
+
+```{r}
+iris %>% select_if(.predicate = is.numeric) %>% head(n=15)
+iris %>% select_if(.predicate = is.numeric, .funs=funs(paste0("num_",.))) %>% head(n=15) # can also be used to rename
+iris %>% summarise_if(.predicate = is.numeric, .funs = funs(mean(., na.rm=T))) %>% head(n=15)
+iris %>% mutate_at(.vars = vars(c("Sepal.Length","Petal.Length")),
+                                         .funs = funs(scale)) %>% head(n=15)
+# z scores by Species for all numeric variables
+iris %>% group_by(Species) %>%
+  mutate_if(.predicate = is.numeric, .funs = funs(scale)) %>% head(n=15)
+```
+
+
+  * I have never used any of the ```group_by_*()``` but I imagine they're useful when you have a large selection of identifiers/grouping variables that you can call easily with a predicate (for example, ```is.factor```). They can also be used with a **.funs** argument as a shortcut to ```group_by() %>% mutate()```.
+
+# Miscellaneous verbs
+
+## ```lag()```
+
+* Makes a new column with the value of one row previously
+
+## ```lead()```
+
+* Makes a new column with the value of one row ahead
+
+```{r}
+x <- runif(5)
+cbind(ahead = lead(x), x, behind = lag(x))
+```
+
+* Can choose a time column to order your new values by with the argument ```'order_by'```
+
+<!-- ```{r} -->
+<!-- df <- data.frame(year = 2000:2005, value = (0:5) ^ 2) -->
+<!-- df -->
+<!-- scrambled <- df[sample(nrow(df)), ] -->
+<!-- scrambled -->
+<!-- right <- mutate(scrambled, prev = lag(value, order_by = year)) -->
+<!-- arrange(right, year) -->
+<!-- ``` -->
+
+* Lag and lead are very useful for longitudinal models
+
+## ```complete()```
+
+```{r}
+incomplete_df <- data.frame(day = c(1,3,7,9), dose = c(0, 25, 40, 30)) %>% head(n=15)
+incomplete_df
+complete(incomplete_df, day = full_seq(1:max(day), 1)) %>% head(n=15)
+```
+
+## ```fill()```
+
+* Fill in missing values with values before or after
+
+```{r}
+incomplete_df %>%
+  complete(day = full_seq(1:max(day), 1)) %>%
+  fill(dose, .direction = "down") %>% head(n=15)
+```
+
+## ```drop_na()```
+
+```{r}
+incomplete_df %>%
+  complete(day = full_seq(1:max(day), 1)) %>%
+  drop_na() %>% head(n=15) # when you have more variables, specify which columns you care about dropping NAs from
+```
+
+
+## ```sample_frac()```
+
+* Randomly sample a specified fraction of rows of a data frame
+
+```{r}
+mydat <- data.frame(id = sample(1:100, 20), meas = rnorm(20))
+mydat
+mydat %>% sample_frac(size = .5)
+mydat %>% sample_frac(size= .5, replace = T) # you can also add sampling weights
+```
+
+## ```sample_n()```
+
+* Randomly sample a specified number of rows of a data frame
+
+```{r}
+mydat %>% sample_n(3)
+```
+
+# Joining functions
+
+```{r, paged.print = F}
+x <- data.frame(id = c("A","B","C"), val = 1:3)
+y <- data.frame(id = c("A","B","D"), val = c("T","F","T"))
+x
+y
+```
+
+* "Mutating" joins combine variables from the left and right hand sides ie. ```full_join()```, ```inner_join()```, ```right_join()```, and ```left_join()```
+
+## ```full_join()```
+
+* Return all rows and columns
+
+```{r, paged.print = F}
+full_join(x, y, by = "id")
+```
+
+## ```inner_join()```
+
+* Return all rows from ```x``` that have a match in ```y```, and all columns from ```x``` and ```y```
+
+```{r, paged.print = F}
+inner_join(x, y, by = "id")
+```
+
+## ```left_join()```
+
+* Return all rows from ```x``` and all columns from ```x``` and ```y```
+
+```{r, paged.print = F}
+left_join(x, y, by = "id")
+```
+
+## ```right_join()```
+
+* Return all rows from ```x``` and all columns from ```x``` and ```y```
+
+```{r, paged.print = F}
+right_join(x, y, by = "id")
+```
+
+
+* "Filtering" joins keep cases from the left hand side, ie. ```semi_join()``` and ```anti_join()```
+
+## ```semi_join()```
+
+* Return all rows in  ```x``` that have a match in  ```y```, keeping only columns from  ```y```
+
+```{r, paged.print = F}
+semi_join(x, y, by = "id")
+```
+
+## ```anti_join()```
+
+* Return all rows from  ```x``` where there are not matching values in  ```y```, keeping just the columns from  ```x```
+
+```{r, paged.print = F}
+anti_join(x, y, by = "id")
+```
+
+# Incorporating dplyr into your workflow
+
+## Frequency Tables
+
+```{r}
+library(kableExtra)
+mtcars %>%
+  group_by(vs, am) %>%
+  summarise(n=n(), freq=n()/nrow(.)) %>%
+  kable(caption="Frequency Table of vs and am", format="html") %>%
+  kable_styling(c("condensed","responsive","striped","hover"), full_width = F)
+```
+
+## compareGroups
+
+```{r}
+library(compareGroups)
+iris %>%
+  mutate(Sepal.Length.Sq = Sepal.Length^2) %>%
+  compareGroups(Species ~ ., data = .) %>%
+  createTable() %>%
+  export2md() %>%
+  kable_styling(c("condensed","responsive","striped","hover"))
+```
+
+## ggplotting
+
+```{r}
+iris %>%
+  filter(Species != "setosa") %>%
+  ggplot(aes(Sepal.Length, Petal.Width, col=Species)) +
+  geom_point()
+```
+
+## Finding columns of interest
+
+* When you have too many column names to look through manually, search for a string or pattern of strings
+
+```{r}
+load("dplyr_dat.Rdata")
+length(names(brain))
+select(brain, matches("pib.*parietal.*")) %>% names() # regex is not case sensitive
+```
+
+<!-- * Create summary measures using variables of interest -->
+
+<!-- ```{r} -->
+<!-- brain %>% -->
+<!--   group_by(ID) %>% -->
+<!--   transmute(PIB_Parietal = mean(c(PIB.PET_AAL__Parietal_Inf_L, -->
+<!--                                   PIB.PET_AAL__Parietal_Inf_R, -->
+<!--                                   PIB.PET_AAL__Parietal_Sup_L, -->
+<!--                                   PIB.PET_AAL__Parietal_Sup_R), na.rm=T)) %>% -->
+<!--   arrange(PIB_Parietal) -->
+<!-- ``` -->
+
+
+## Missing data wrangling
+
+* Add a column flagging a value as missing and then replace the missing values with the mean of the other values
+
+```{r}
+misdat <- data.frame(x1 = sample(c(1:3, NA), 13, replace=T),
+                     x2 = sample(c(-5:-2,NA), 13, replace=T))
+misdat
+misdat %>%
+  mutate_all(.funs = funs(miss = ifelse(is.na(.), 1, 0))) %>%
+  mutate_all(.funs = funs(replace_na(., mean(., na.rm=T))))
+```
+
+
+## Longitudinal data wrangling A
+
+* Calculate the time since a patient was first admitted to the hospital
+
+```{r}
+id <- c(1,1,1,2,2,2,2,3)
+admit <- as.Date(c("2017-06-22", "2017-07-13", "2017-08-29",
+                   "2017-04-01", "2017-05-02", "2017-11-14", "2018-01-14",
+                   "2019-01-01"))
+discharge <- as.Date(c("2017-06-25", "2017-07-31", "2017-10-13",
+                   "2017-04-02", "2017-05-10", "2017-11-18", "2018-02-12",
+                   "2019-01-05"))
+hosp_dat <- data.frame(id, admit, discharge)
+hosp_dat
+hosp_dat %>%
+  group_by(id) %>%
+  mutate(days_since_init_admit = discharge - admit[1])
+```
+
+## Longitudinal data wrangling B
+
+* Make a row for every patient for every month from the start of follow up to the end of follow up (get equally spaced time intervals)
+
+* Make another column containing the drugs the patient was on previously (for prediction or longitudinal models)
+
+```{r}
+load("meds.Rdata")
+```
+
+```{r, include=F}
+meds <- meds %>% na.omit() %>%
+  select(PatientID, Months_ImplantToVisit, everything()) %>%
+  head(n=15)
+```
+
+```{r}
+meds
+meds %>%
+    group_by(PatientID) %>%
+    complete(Months_ImplantToVisit = full_seq(1:max(Months_ImplantToVisit), 1)) %>%
+    fill(ends_with("_yn")) %>%
+    fill(ends_with("_yn"), .direction="up") -> meds1
+meds1
+meds1 %>%
+  mutate_at(.vars = vars(ends_with("_yn")),
+              .funs = funs(prev = lag(., order_by = Months_ImplantToVisit))) %>%
+    fill(ends_with("_prev"), .direction="up") %>%
+  head(n=15)
+
+```
+
+## Survival data wrangling
+
+* Map four columns "days to...outcome" to a composite endpoint for a survival model
+
+* Record *when* the event occurred as Days.to.first.event and *which* event it was in FE.status
+
+```{r}
+dems %>%
+  select(Days.to.lastFU, Days.to.death, Days.to.stroke, Days.to.GIB, Days.to.PT) %>%
+  # which.min cannot handle NA, so we'll make NA's infinity for now
+  replace(is.na(.), Inf) %>%
+  # to allow which.min to search along rows (dplyr naturally looks down columns)
+  rowwise() %>%
+  mutate(
+    FUorFEtime = pmin(Days.to.lastFU, Days.to.death, Days.to.stroke,
+                      Days.to.GIB, Days.to.PT,
+                      na.rm = T),
+    # numbers correspond to order of the Days* columns
+    FUorFEstatus = which.min(c(Days.to.lastFU, Days.to.death, Days.to.stroke,
+                                    Days.to.GIB, Days.to.PT)),
+    # condensed variable for survival model, 1 if any event
+  Event_yn = ifelse(FUorFEstatus == 1, 0, 1)) -> dems_int
+
+dems_int # look at the intermediate output
+
+dems_int %>%
+  # column names correspond to the order of the columns, rename
+  mutate(FUorFEstatus = case_when(FUorFEstatus == 1 ~ "censored",
+                                  FUorFEstatus == 2 ~ "death",
+                                  FUorFEstatus == 3 ~ "stroke",
+                                  FUorFEstatus == 4 ~ "gib",
+                                  FUorFEstatus == 5 ~ "pt",
+                                  TRUE ~ "error")) %>%
+  # not case sensitive
+  select(contains("fe"), Event_yn) %>%
+  # allow for joining with no duplicate cols
+  rownames_to_column() %>%
+  full_join(dems %>% rownames_to_column()) %>%
+  select(-rowname) -> dems_clean
+
+# check to make sure everything worked
+dems_clean %>% filter(FUorFEstatus == "error")
+
+dems_clean %>%
+  head(n=15)
+```
+
+
+## Making functions
+
+* Problem: dplyr doesn't know what to do with quotes around the variable name, but you can't put the column name into a function without quotes because R will try to find it as an object in your environment...
+
+* Solution: relying on the rlang package (sym, !!, !!!, etc)
+  - A good tutorial: http://jonthegeek.com/2018/06/04/writing-custom-tidyverse-functions/
+
+```{r}
+irisSummary <- function(group){
+    iris %>%
+      group_by(!!sym(group)) %>%
+      summarise(mean(Sepal.Length), sd(Sepal.Length))
+}
+
+irisSummary(group = "Species")
+
+irisScatPlot <- function(x, y){
+    iris %>%
+    ggplot(aes_string(x, y, col="Species")) +
+    geom_point() -> p
+  return(p)
+}
+
+irisScatPlot(x="Sepal.Length",y="Petal.Length")
+```

@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Katherine Hoffman">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="A Presentation for Weill Cornell Medicine’s Biostatistics Computing Club Image courtesy of Allison Horst’s Twitter: @allison_horst
+ Introduction Why dplyr?  Powerful but efficient
+ Consistent syntax
+ Fast
+  Function chaining
+ Works well with entire tidyverse suite   Efficiency*
+ Simple syntax
+ Function chaining
+ Ability to analyze external databases
+ Works well with other packages in tidyverse suite ggplot2 tidyr stringr forcats purrr   *if you start dealing with data sets with &gt; 1 million rows, data.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/tutorial/dplyr/data-wrangling/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.3072054fc61fe865aa34bcb366de141d.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/tutorial/dplyr/data-wrangling/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="KHstats">
+  <meta property="og:url" content="/tutorial/dplyr/data-wrangling/">
+  <meta property="og:title" content="Data Wrangling with dplyr | KHstats">
+  <meta property="og:description" content="A Presentation for Weill Cornell Medicine’s Biostatistics Computing Club Image courtesy of Allison Horst’s Twitter: @allison_horst
+ Introduction Why dplyr?  Powerful but efficient
+ Consistent syntax
+ Fast
+  Function chaining
+ Works well with entire tidyverse suite   Efficiency*
+ Simple syntax
+ Function chaining
+ Ability to analyze external databases
+ Works well with other packages in tidyverse suite ggplot2 tidyr stringr forcats purrr   *if you start dealing with data sets with &gt; 1 million rows, data."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2019-03-05T21:13:14-05:00">
+    
+    <meta property="article:modified_time" content="2019-03-05T21:13:14-05:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Data Wrangling with dplyr | KHstats</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">KHstats</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#hero"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#experience"><span>Experience</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Blog</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tutorials"><span>Tutorials</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Data Wrangling with dplyr</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2019-03-05 21:13:14 -0500 EST" itemprop="datePublished">
+<meta content="2019-03-05 21:13:14 -0500 EST" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Mar 5, 2019</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/r/">R</a></span>
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/tutorial/dplyr/data-wrangling/&amp;text=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/tutorial/dplyr/data-wrangling/&amp;t=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Data%20Wrangling%20with%20dplyr&amp;body=/tutorial/dplyr/data-wrangling/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/tutorial/dplyr/data-wrangling/&amp;title=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Data%20Wrangling%20with%20dplyr%20/tutorial/dplyr/data-wrangling/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/tutorial/dplyr/data-wrangling/&amp;title=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="a-presentation-for-weill-cornell-medicines-biostatistics-computing-club" class="section level2">
+<h2>A Presentation for Weill Cornell Medicine’s Biostatistics Computing Club</h2>
+<p><img src="/img/dplyr_image.jpg" />
+<em>Image courtesy of Allison Horst’s Twitter: <span class="citation">@allison_horst</span></em></p>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<div id="why-dplyr" class="section level2">
+<h2>Why dplyr?</h2>
+<ul>
+<li><p>Powerful but efficient</p>
+<ul>
+<li><p>Consistent syntax</p></li>
+<li><p>Fast</p></li>
+</ul></li>
+<li><p>Function chaining</p>
+<ul>
+<li>Works well with entire tidyverse suite</li>
+</ul></li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><p>Efficiency*</p></li>
+<li><p>Simple syntax</p></li>
+<li><p>Function chaining</p></li>
+<li><p>Ability to analyze external databases</p></li>
+<li>Works well with other packages in tidyverse suite
+<ol style="list-style-type: lower-alpha">
+<li>ggplot2</li>
+<li>tidyr</li>
+<li>stringr</li>
+<li>forcats</li>
+<li>purrr</li>
+</ol></li>
+</ol>
+<p>*if you start dealing with data sets with &gt; 1 million rows, data.table will be much faster</p>
+<pre class="r"><code>data(&quot;iris&quot;)
+library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ───────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div id="tibbles" class="section level2">
+<h2>Tibbles</h2>
+<ul>
+<li><p>An “update” to the data.frame object class in R</p></li>
+<li><p>Updates relevant for using dplyr:</p>
+<ul>
+<li><p>Vectors of length 1 are automatically recycled</p></li>
+<li><p>Newly created vectors can be referenced in the same line of code</p></li>
+</ul></li>
+<li><p>Other perks: only the first 10 lines print to the screen so your console doesn’t get overloaded</p></li>
+<li><p>Read more about tibbles here: <a href="https://r4ds.had.co.nz/tibbles.html" class="uri">https://r4ds.had.co.nz/tibbles.html</a></p></li>
+<li><p>dplyr automatically converts objects to tbl_df (tibble data frame) objects</p></li>
+</ul>
+</div>
+<div id="piping" class="section level2">
+<h2>Piping</h2>
+<ul>
+<li><p><code>%&gt;%</code> operator from <code>library(magitrr)</code></p></li>
+<li><p>Use <code>%&gt;%</code> to send an object (typically a dataframe) to the next function</p></li>
+<li><p>The function you pipe to will use the object in front of the <code>%&gt;%</code> as its first argument</p></li>
+</ul>
+<pre class="r"><code>iris %&gt;% head() # equivalent to head(iris)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+<pre class="r"><code>iris %&gt;% head(n=3) # equivalent to head(iris, n=3)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa</code></pre>
+<ul>
+<li>If you don’t want it to be the first argument, use <code>.</code></li>
+</ul>
+<pre class="r"><code>iris %&gt;% lm(Sepal.Width ~ Sepal.Length, data=.)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Sepal.Width ~ Sepal.Length, data = .)
+## 
+## Coefficients:
+##  (Intercept)  Sepal.Length  
+##      3.41895      -0.06188</code></pre>
+<ul>
+<li><p>Shortcut for <code>%&gt;%</code> is CTRL + SHIFT + M (or CMD + SHIFT + M for OSX)</p></li>
+<li><p>A function that takes a data frame as the first argument, eg. <code>head()</code>, is called a <strong>verb</strong></p></li>
+<li><p>The entire tidyverse suite operates under the verb function structure, making piping especially convenient</p></li>
+</ul>
+</div>
+</div>
+<div id="main-verbs" class="section level1">
+<h1>Main verbs</h1>
+<div id="arrange" class="section level2">
+<h2><code>arrange()</code></h2>
+<ul>
+<li>Sort data frame by column(s), lowest to highest</li>
+</ul>
+<pre class="r"><code>arrange(iris, Petal.Length) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           4.6         3.6          1.0         0.2  setosa
+## 2           4.3         3.0          1.1         0.1  setosa
+## 3           5.8         4.0          1.2         0.2  setosa
+## 4           5.0         3.2          1.2         0.2  setosa
+## 5           4.7         3.2          1.3         0.2  setosa
+## 6           5.4         3.9          1.3         0.4  setosa
+## 7           5.5         3.5          1.3         0.2  setosa
+## 8           4.4         3.0          1.3         0.2  setosa
+## 9           5.0         3.5          1.3         0.3  setosa
+## 10          4.5         2.3          1.3         0.3  setosa
+## 11          4.4         3.2          1.3         0.2  setosa
+## 12          5.1         3.5          1.4         0.2  setosa
+## 13          4.9         3.0          1.4         0.2  setosa
+## 14          5.0         3.6          1.4         0.2  setosa
+## 15          4.6         3.4          1.4         0.3  setosa</code></pre>
+<ul>
+<li><p>If you specify a variable of class factor or character, you will rearrange the rows to alphabetical order</p></li>
+<li><p>Use <code>desc()</code> if you want the opposite order</p></li>
+</ul>
+<pre class="r"><code>arrange(iris, desc(Species), # sort z to a since species is a factor
+        Sepal.Width) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width   Species
+## 1           6.0         2.2          5.0         1.5 virginica
+## 2           4.9         2.5          4.5         1.7 virginica
+## 3           6.7         2.5          5.8         1.8 virginica
+## 4           5.7         2.5          5.0         2.0 virginica
+## 5           6.3         2.5          5.0         1.9 virginica
+## 6           7.7         2.6          6.9         2.3 virginica
+## 7           6.1         2.6          5.6         1.4 virginica
+## 8           5.8         2.7          5.1         1.9 virginica
+## 9           6.4         2.7          5.3         1.9 virginica
+## 10          6.3         2.7          4.9         1.8 virginica
+## 11          5.8         2.7          5.1         1.9 virginica
+## 12          5.8         2.8          5.1         2.4 virginica
+## 13          5.6         2.8          4.9         2.0 virginica
+## 14          7.7         2.8          6.7         2.0 virginica
+## 15          6.2         2.8          4.8         1.8 virginica</code></pre>
+</div>
+<div id="mutate" class="section level2">
+<h2><code>mutate()</code></h2>
+<ul>
+<li>Add a new variable (while preserving all existing variables)</li>
+</ul>
+<pre class="r"><code>mutate(iris, logSepLength = log(Sepal.Length)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species logSepLength
+## 1           5.1         3.5          1.4         0.2  setosa     1.629241
+## 2           4.9         3.0          1.4         0.2  setosa     1.589235
+## 3           4.7         3.2          1.3         0.2  setosa     1.547563
+## 4           4.6         3.1          1.5         0.2  setosa     1.526056
+## 5           5.0         3.6          1.4         0.2  setosa     1.609438
+## 6           5.4         3.9          1.7         0.4  setosa     1.686399
+## 7           4.6         3.4          1.4         0.3  setosa     1.526056
+## 8           5.0         3.4          1.5         0.2  setosa     1.609438
+## 9           4.4         2.9          1.4         0.2  setosa     1.481605
+## 10          4.9         3.1          1.5         0.1  setosa     1.589235
+## 11          5.4         3.7          1.5         0.2  setosa     1.686399
+## 12          4.8         3.4          1.6         0.2  setosa     1.568616
+## 13          4.8         3.0          1.4         0.1  setosa     1.568616
+## 14          4.3         3.0          1.1         0.1  setosa     1.458615
+## 15          5.8         4.0          1.2         0.2  setosa     1.757858</code></pre>
+<ul>
+<li>There’s also <code>transmute()</code> which deletes the old column(s) you use to make the new column</li>
+</ul>
+<pre class="r"><code>iris %&gt;% transmute(Length_diff = Sepal.Length - Petal.Length,
+                   Width_diff = Sepal.Width - Petal.Width) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Length_diff Width_diff
+## 1          3.7        3.3
+## 2          3.5        2.8
+## 3          3.4        3.0
+## 4          3.1        2.9
+## 5          3.6        3.4
+## 6          3.7        3.5
+## 7          3.2        3.1
+## 8          3.5        3.2
+## 9          3.0        2.7
+## 10         3.4        3.0
+## 11         3.9        3.5
+## 12         3.2        3.2
+## 13         3.4        2.9
+## 14         3.2        2.9
+## 15         4.6        3.8</code></pre>
+</div>
+<div id="filter" class="section level2">
+<h2><code>filter()</code></h2>
+<ul>
+<li><p>Return rows matching specified conditions</p></li>
+<li><p>Use with <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>|</code>, <code>!</code>, <code>%in%</code>, <code>==</code>, and <code>!=</code>. Separating conditions by <code>,</code> represents the <code>&amp;</code> argument.</p></li>
+</ul>
+<pre class="r"><code>iris %&gt;% filter(Sepal.Length &gt;= 2) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           5.1         3.5          1.4         0.2  setosa
+## 2           4.9         3.0          1.4         0.2  setosa
+## 3           4.7         3.2          1.3         0.2  setosa
+## 4           4.6         3.1          1.5         0.2  setosa
+## 5           5.0         3.6          1.4         0.2  setosa
+## 6           5.4         3.9          1.7         0.4  setosa
+## 7           4.6         3.4          1.4         0.3  setosa
+## 8           5.0         3.4          1.5         0.2  setosa
+## 9           4.4         2.9          1.4         0.2  setosa
+## 10          4.9         3.1          1.5         0.1  setosa
+## 11          5.4         3.7          1.5         0.2  setosa
+## 12          4.8         3.4          1.6         0.2  setosa
+## 13          4.8         3.0          1.4         0.1  setosa
+## 14          4.3         3.0          1.1         0.1  setosa
+## 15          5.8         4.0          1.2         0.2  setosa</code></pre>
+<pre class="r"><code>iris %&gt;% filter(Petal.Length &gt;= mean(Petal.Length)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species
+## 1           7.0         3.2          4.7         1.4 versicolor
+## 2           6.4         3.2          4.5         1.5 versicolor
+## 3           6.9         3.1          4.9         1.5 versicolor
+## 4           5.5         2.3          4.0         1.3 versicolor
+## 5           6.5         2.8          4.6         1.5 versicolor
+## 6           5.7         2.8          4.5         1.3 versicolor
+## 7           6.3         3.3          4.7         1.6 versicolor
+## 8           6.6         2.9          4.6         1.3 versicolor
+## 9           5.2         2.7          3.9         1.4 versicolor
+## 10          5.9         3.0          4.2         1.5 versicolor
+## 11          6.0         2.2          4.0         1.0 versicolor
+## 12          6.1         2.9          4.7         1.4 versicolor
+## 13          6.7         3.1          4.4         1.4 versicolor
+## 14          5.6         3.0          4.5         1.5 versicolor
+## 15          5.8         2.7          4.1         1.0 versicolor</code></pre>
+<pre class="r"><code>iris %&gt;% filter(Species != &quot;versicolor&quot;) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           5.1         3.5          1.4         0.2  setosa
+## 2           4.9         3.0          1.4         0.2  setosa
+## 3           4.7         3.2          1.3         0.2  setosa
+## 4           4.6         3.1          1.5         0.2  setosa
+## 5           5.0         3.6          1.4         0.2  setosa
+## 6           5.4         3.9          1.7         0.4  setosa
+## 7           4.6         3.4          1.4         0.3  setosa
+## 8           5.0         3.4          1.5         0.2  setosa
+## 9           4.4         2.9          1.4         0.2  setosa
+## 10          4.9         3.1          1.5         0.1  setosa
+## 11          5.4         3.7          1.5         0.2  setosa
+## 12          4.8         3.4          1.6         0.2  setosa
+## 13          4.8         3.0          1.4         0.1  setosa
+## 14          4.3         3.0          1.1         0.1  setosa
+## 15          5.8         4.0          1.2         0.2  setosa</code></pre>
+<pre class="r"><code>iris %&gt;% filter(Species %in% c(&quot;versicolor&quot;, &quot;setosa&quot;)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1           5.1         3.5          1.4         0.2  setosa
+## 2           4.9         3.0          1.4         0.2  setosa
+## 3           4.7         3.2          1.3         0.2  setosa
+## 4           4.6         3.1          1.5         0.2  setosa
+## 5           5.0         3.6          1.4         0.2  setosa
+## 6           5.4         3.9          1.7         0.4  setosa
+## 7           4.6         3.4          1.4         0.3  setosa
+## 8           5.0         3.4          1.5         0.2  setosa
+## 9           4.4         2.9          1.4         0.2  setosa
+## 10          4.9         3.1          1.5         0.1  setosa
+## 11          5.4         3.7          1.5         0.2  setosa
+## 12          4.8         3.4          1.6         0.2  setosa
+## 13          4.8         3.0          1.4         0.1  setosa
+## 14          4.3         3.0          1.1         0.1  setosa
+## 15          5.8         4.0          1.2         0.2  setosa</code></pre>
+</div>
+<div id="select" class="section level2">
+<h2><code>select()</code></h2>
+<ul>
+<li>Keep only specified variables</li>
+</ul>
+<pre class="r"><code>select(iris, Sepal.Length, Sepal.Width) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width
+## 1           5.1         3.5
+## 2           4.9         3.0
+## 3           4.7         3.2
+## 4           4.6         3.1
+## 5           5.0         3.6
+## 6           5.4         3.9
+## 7           4.6         3.4
+## 8           5.0         3.4
+## 9           4.4         2.9
+## 10          4.9         3.1
+## 11          5.4         3.7
+## 12          4.8         3.4
+## 13          4.8         3.0
+## 14          4.3         3.0
+## 15          5.8         4.0</code></pre>
+<ul>
+<li>Specify variables to exclude with <code>-</code></li>
+</ul>
+<pre class="r"><code>select(iris, -Species) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1           5.1         3.5          1.4         0.2
+## 2           4.9         3.0          1.4         0.2
+## 3           4.7         3.2          1.3         0.2
+## 4           4.6         3.1          1.5         0.2
+## 5           5.0         3.6          1.4         0.2
+## 6           5.4         3.9          1.7         0.4
+## 7           4.6         3.4          1.4         0.3
+## 8           5.0         3.4          1.5         0.2
+## 9           4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## 11          5.4         3.7          1.5         0.2
+## 12          4.8         3.4          1.6         0.2
+## 13          4.8         3.0          1.4         0.1
+## 14          4.3         3.0          1.1         0.1
+## 15          5.8         4.0          1.2         0.2</code></pre>
+<ul>
+<li>Select a range of variables with <code>:</code></li>
+</ul>
+<pre class="r"><code>select(iris, Sepal.Length:Petal.Length) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length
+## 1           5.1         3.5          1.4
+## 2           4.9         3.0          1.4
+## 3           4.7         3.2          1.3
+## 4           4.6         3.1          1.5
+## 5           5.0         3.6          1.4
+## 6           5.4         3.9          1.7
+## 7           4.6         3.4          1.4
+## 8           5.0         3.4          1.5
+## 9           4.4         2.9          1.4
+## 10          4.9         3.1          1.5
+## 11          5.4         3.7          1.5
+## 12          4.8         3.4          1.6
+## 13          4.8         3.0          1.4
+## 14          4.3         3.0          1.1
+## 15          5.8         4.0          1.2</code></pre>
+<ul>
+<li>If you select just one column, you will still get a dataframe. If you need a vector, use <code>pull()</code></li>
+</ul>
+<pre class="r"><code>pull(iris, Sepal.Length) %&gt;% head(n=15)</code></pre>
+<pre><code>##  [1] 5.1 4.9 4.7 4.6 5.0 5.4 4.6 5.0 4.4 4.9 5.4 4.8 4.8 4.3 5.8</code></pre>
+</div>
+<div id="summarise" class="section level2">
+<h2><code>summarise()</code></h2>
+<ul>
+<li>Condenses data down to one value per group</li>
+</ul>
+<pre class="r"><code>summarise(iris, mean(Petal.Length)) %&gt;% head(n=15)</code></pre>
+<pre><code>##   mean(Petal.Length)
+## 1              3.758</code></pre>
+<pre class="r"><code>summarise(iris, sd_pl = sd(Petal.Length), var_pl = sd(Petal.Length)^2) %&gt;% head(n=15)</code></pre>
+<pre><code>##      sd_pl   var_pl
+## 1 1.765298 3.116278</code></pre>
+</div>
+<div id="group_by" class="section level2">
+<h2><code>group_by()</code></h2>
+<ul>
+<li><p>Invisibly groups data by specified column(s)</p></li>
+<li><p>Use with other verbs to get grouped information</p></li>
+</ul>
+<pre class="r"><code>iris %&gt;% group_by(Species) %&gt;% head(n=15)</code></pre>
+<pre><code>## # A tibble: 15 x 5
+## # Groups:   Species [1]
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1          5.1         3.5          1.4         0.2 setosa 
+##  2          4.9         3            1.4         0.2 setosa 
+##  3          4.7         3.2          1.3         0.2 setosa 
+##  4          4.6         3.1          1.5         0.2 setosa 
+##  5          5           3.6          1.4         0.2 setosa 
+##  6          5.4         3.9          1.7         0.4 setosa 
+##  7          4.6         3.4          1.4         0.3 setosa 
+##  8          5           3.4          1.5         0.2 setosa 
+##  9          4.4         2.9          1.4         0.2 setosa 
+## 10          4.9         3.1          1.5         0.1 setosa 
+## 11          5.4         3.7          1.5         0.2 setosa 
+## 12          4.8         3.4          1.6         0.2 setosa 
+## 13          4.8         3            1.4         0.1 setosa 
+## 14          4.3         3            1.1         0.1 setosa 
+## 15          5.8         4            1.2         0.2 setosa</code></pre>
+<pre class="r"><code>iris %&gt;%
+  group_by(Species) %&gt;%
+  summarise(mean(Petal.Length), sd(Petal.Length)) %&gt;% head(n=15)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   Species    `mean(Petal.Length)` `sd(Petal.Length)`
+##   &lt;fct&gt;                     &lt;dbl&gt;              &lt;dbl&gt;
+## 1 setosa                     1.46              0.174
+## 2 versicolor                 4.26              0.470
+## 3 virginica                  5.55              0.552</code></pre>
+<ul>
+<li>Data will remain grouped until you use <code>ungroup()</code></li>
+</ul>
+</div>
+<div id="rename" class="section level2">
+<h2><code>rename()</code></h2>
+<ul>
+<li>Give your columns new names. Syntax is newColumn = oldColumn.</li>
+</ul>
+<pre class="r"><code>iris %&gt;% rename(sep_len = Sepal.Length) %&gt;% head(n=15)</code></pre>
+<pre><code>##    sep_len Sepal.Width Petal.Length Petal.Width Species
+## 1      5.1         3.5          1.4         0.2  setosa
+## 2      4.9         3.0          1.4         0.2  setosa
+## 3      4.7         3.2          1.3         0.2  setosa
+## 4      4.6         3.1          1.5         0.2  setosa
+## 5      5.0         3.6          1.4         0.2  setosa
+## 6      5.4         3.9          1.7         0.4  setosa
+## 7      4.6         3.4          1.4         0.3  setosa
+## 8      5.0         3.4          1.5         0.2  setosa
+## 9      4.4         2.9          1.4         0.2  setosa
+## 10     4.9         3.1          1.5         0.1  setosa
+## 11     5.4         3.7          1.5         0.2  setosa
+## 12     4.8         3.4          1.6         0.2  setosa
+## 13     4.8         3.0          1.4         0.1  setosa
+## 14     4.3         3.0          1.1         0.1  setosa
+## 15     5.8         4.0          1.2         0.2  setosa</code></pre>
+<!-- * If you have weird characters in your column names, put ` signs around the old column name, not " -->
+</div>
+</div>
+<div id="helper-functions" class="section level1">
+<h1>Helper functions</h1>
+<div id="everything" class="section level2">
+<h2><code>everything()</code></h2>
+<ul>
+<li>Move columns to the front of your data</li>
+</ul>
+<pre class="r"><code>select(iris, Species, everything()) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Species Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1   setosa          5.1         3.5          1.4         0.2
+## 2   setosa          4.9         3.0          1.4         0.2
+## 3   setosa          4.7         3.2          1.3         0.2
+## 4   setosa          4.6         3.1          1.5         0.2
+## 5   setosa          5.0         3.6          1.4         0.2
+## 6   setosa          5.4         3.9          1.7         0.4
+## 7   setosa          4.6         3.4          1.4         0.3
+## 8   setosa          5.0         3.4          1.5         0.2
+## 9   setosa          4.4         2.9          1.4         0.2
+## 10  setosa          4.9         3.1          1.5         0.1
+## 11  setosa          5.4         3.7          1.5         0.2
+## 12  setosa          4.8         3.4          1.6         0.2
+## 13  setosa          4.8         3.0          1.4         0.1
+## 14  setosa          4.3         3.0          1.1         0.1
+## 15  setosa          5.8         4.0          1.2         0.2</code></pre>
+</div>
+<div id="starts_with" class="section level2">
+<h2><code>starts_with()</code></h2>
+<pre class="r"><code>select(iris, starts_with(&quot;Petal&quot;)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Petal.Length Petal.Width
+## 1           1.4         0.2
+## 2           1.4         0.2
+## 3           1.3         0.2
+## 4           1.5         0.2
+## 5           1.4         0.2
+## 6           1.7         0.4
+## 7           1.4         0.3
+## 8           1.5         0.2
+## 9           1.4         0.2
+## 10          1.5         0.1
+## 11          1.5         0.2
+## 12          1.6         0.2
+## 13          1.4         0.1
+## 14          1.1         0.1
+## 15          1.2         0.2</code></pre>
+</div>
+<div id="ends_with" class="section level2">
+<h2><code>ends_with()</code></h2>
+<pre class="r"><code>select(iris, ends_with(&quot;Length&quot;)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Petal.Length
+## 1           5.1          1.4
+## 2           4.9          1.4
+## 3           4.7          1.3
+## 4           4.6          1.5
+## 5           5.0          1.4
+## 6           5.4          1.7
+## 7           4.6          1.4
+## 8           5.0          1.5
+## 9           4.4          1.4
+## 10          4.9          1.5
+## 11          5.4          1.5
+## 12          4.8          1.6
+## 13          4.8          1.4
+## 14          4.3          1.1
+## 15          5.8          1.2</code></pre>
+</div>
+<div id="contains" class="section level2">
+<h2><code>contains()</code></h2>
+<ul>
+<li>Searches column names for a specified string</li>
+</ul>
+<pre class="r"><code>select(iris, contains(&quot;Wid&quot;)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Width Petal.Width
+## 1          3.5         0.2
+## 2          3.0         0.2
+## 3          3.2         0.2
+## 4          3.1         0.2
+## 5          3.6         0.2
+## 6          3.9         0.4
+## 7          3.4         0.3
+## 8          3.4         0.2
+## 9          2.9         0.2
+## 10         3.1         0.1
+## 11         3.7         0.2
+## 12         3.4         0.2
+## 13         3.0         0.1
+## 14         3.0         0.1
+## 15         4.0         0.2</code></pre>
+</div>
+<div id="matches" class="section level2">
+<h2><code>matches()</code></h2>
+<ul>
+<li>Searches column names for a specified regular expression</li>
+</ul>
+<pre class="r"><code>select(iris, matches(&quot;wid|spec&quot;)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Width Petal.Width Species
+## 1          3.5         0.2  setosa
+## 2          3.0         0.2  setosa
+## 3          3.2         0.2  setosa
+## 4          3.1         0.2  setosa
+## 5          3.6         0.2  setosa
+## 6          3.9         0.4  setosa
+## 7          3.4         0.3  setosa
+## 8          3.4         0.2  setosa
+## 9          2.9         0.2  setosa
+## 10         3.1         0.1  setosa
+## 11         3.7         0.2  setosa
+## 12         3.4         0.2  setosa
+## 13         3.0         0.1  setosa
+## 14         3.0         0.1  setosa
+## 15         4.0         0.2  setosa</code></pre>
+<p>For more info on regex see <a href="https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285" title="here">here</a></p>
+</div>
+<div id="row_number" class="section level2">
+<h2><code>row_number()</code></h2>
+<ul>
+<li>Specify which row number you want for your verb</li>
+</ul>
+<pre class="r"><code>iris %&gt;%
+  group_by(Species) %&gt;%
+  filter(row_number() == 1) %&gt;% head(n=15)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+## # Groups:   Species [3]
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species   
+##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;     
+## 1          5.1         3.5          1.4         0.2 setosa    
+## 2          7           3.2          4.7         1.4 versicolor
+## 3          6.3         3.3          6           2.5 virginica</code></pre>
+</div>
+<div id="n" class="section level2">
+<h2><code>n()</code></h2>
+<ul>
+<li>References the number of rows in your data frame (or for each group in a <code>'grouped_df'</code>)</li>
+</ul>
+<pre class="r"><code>iris %&gt;%
+  group_by(Species) %&gt;%
+  filter(row_number() == n()) %&gt;% head(n=15)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+## # Groups:   Species [3]
+##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species   
+##          &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;     
+## 1          5           3.3          1.4         0.2 setosa    
+## 2          5.7         2.8          4.1         1.3 versicolor
+## 3          5.9         3            5.1         1.8 virginica</code></pre>
+</div>
+</div>
+<div id="fancy-verbs" class="section level1">
+<h1>Fancy verbs</h1>
+<ul>
+<li><p>Scoped verbs take the additional arguments <strong>.predicate</strong>, <strong>.funs</strong>, and <strong>.vars</strong></p></li>
+<li><p>They end in <code>_at()</code>, <code>_if()</code> and <code>_all()</code></p></li>
+<li><p>Signify what function (<strong>.funs</strong>) should be applied too <code>all</code> variables, only <code>at</code> certain variables (<strong>.vars</strong>), or only <code>if</code> variables meet a certain condition (<strong>.predicate</strong>)</p></li>
+<li><p>ie. <code>mutate_at()</code>, <code>mutate_if()</code>, <code>mutate_all()</code>, <code>summarise_if()</code>, <code>summarise_at()</code>, <code>summarise_all()</code>, <code>select_if()</code>, <code>select_at()</code>, <code>rename_if()</code>, <code>filter_all()</code>, <code>arrange_all()</code>, <code>group_by_at()</code> …the list goes on!</p></li>
+<li><p>A few examples (we will see more later)</p></li>
+</ul>
+<pre class="r"><code>iris %&gt;% select_if(.predicate = is.numeric) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1           5.1         3.5          1.4         0.2
+## 2           4.9         3.0          1.4         0.2
+## 3           4.7         3.2          1.3         0.2
+## 4           4.6         3.1          1.5         0.2
+## 5           5.0         3.6          1.4         0.2
+## 6           5.4         3.9          1.7         0.4
+## 7           4.6         3.4          1.4         0.3
+## 8           5.0         3.4          1.5         0.2
+## 9           4.4         2.9          1.4         0.2
+## 10          4.9         3.1          1.5         0.1
+## 11          5.4         3.7          1.5         0.2
+## 12          4.8         3.4          1.6         0.2
+## 13          4.8         3.0          1.4         0.1
+## 14          4.3         3.0          1.1         0.1
+## 15          5.8         4.0          1.2         0.2</code></pre>
+<pre class="r"><code>iris %&gt;% select_if(.predicate = is.numeric, .funs=funs(paste0(&quot;num_&quot;,.))) %&gt;% head(n=15) # can also be used to rename</code></pre>
+<pre><code>##    num_Sepal.Length num_Sepal.Width num_Petal.Length num_Petal.Width
+## 1               5.1             3.5              1.4             0.2
+## 2               4.9             3.0              1.4             0.2
+## 3               4.7             3.2              1.3             0.2
+## 4               4.6             3.1              1.5             0.2
+## 5               5.0             3.6              1.4             0.2
+## 6               5.4             3.9              1.7             0.4
+## 7               4.6             3.4              1.4             0.3
+## 8               5.0             3.4              1.5             0.2
+## 9               4.4             2.9              1.4             0.2
+## 10              4.9             3.1              1.5             0.1
+## 11              5.4             3.7              1.5             0.2
+## 12              4.8             3.4              1.6             0.2
+## 13              4.8             3.0              1.4             0.1
+## 14              4.3             3.0              1.1             0.1
+## 15              5.8             4.0              1.2             0.2</code></pre>
+<pre class="r"><code>iris %&gt;% summarise_if(.predicate = is.numeric, .funs = funs(mean(., na.rm=T))) %&gt;% head(n=15)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width
+## 1     5.843333    3.057333        3.758    1.199333</code></pre>
+<pre class="r"><code>iris %&gt;% mutate_at(.vars = vars(c(&quot;Sepal.Length&quot;,&quot;Petal.Length&quot;)),
+                                         .funs = funs(scale)) %&gt;% head(n=15)</code></pre>
+<pre><code>##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1   -0.89767388         3.5    -1.335752         0.2  setosa
+## 2   -1.13920048         3.0    -1.335752         0.2  setosa
+## 3   -1.38072709         3.2    -1.392399         0.2  setosa
+## 4   -1.50149039         3.1    -1.279104         0.2  setosa
+## 5   -1.01843718         3.6    -1.335752         0.2  setosa
+## 6   -0.53538397         3.9    -1.165809         0.4  setosa
+## 7   -1.50149039         3.4    -1.335752         0.3  setosa
+## 8   -1.01843718         3.4    -1.279104         0.2  setosa
+## 9   -1.74301699         2.9    -1.335752         0.2  setosa
+## 10  -1.13920048         3.1    -1.279104         0.1  setosa
+## 11  -0.53538397         3.7    -1.279104         0.2  setosa
+## 12  -1.25996379         3.4    -1.222456         0.2  setosa
+## 13  -1.25996379         3.0    -1.335752         0.1  setosa
+## 14  -1.86378030         3.0    -1.505695         0.1  setosa
+## 15  -0.05233076         4.0    -1.449047         0.2  setosa</code></pre>
+<pre class="r"><code># z scores by Species for all numeric variables
+iris %&gt;% group_by(Species) %&gt;%
+  mutate_if(.predicate = is.numeric, .funs = funs(scale)) %&gt;% head(n=15)</code></pre>
+<pre><code>## # A tibble: 15 x 5
+## # Groups:   Species [1]
+##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+##           &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt; &lt;fct&gt;  
+##  1       0.267       0.190        -0.357      -0.436 setosa 
+##  2      -0.301      -1.13         -0.357      -0.436 setosa 
+##  3      -0.868      -0.601        -0.933      -0.436 setosa 
+##  4      -1.15       -0.865         0.219      -0.436 setosa 
+##  5      -0.0170      0.454        -0.357      -0.436 setosa 
+##  6       1.12        1.25          1.37        1.46  setosa 
+##  7      -1.15       -0.0739       -0.357       0.512 setosa 
+##  8      -0.0170     -0.0739        0.219      -0.436 setosa 
+##  9      -1.72       -1.39         -0.357      -0.436 setosa 
+## 10      -0.301      -0.865         0.219      -1.39  setosa 
+## 11       1.12        0.718         0.219      -0.436 setosa 
+## 12      -0.584      -0.0739        0.795      -0.436 setosa 
+## 13      -0.584      -1.13         -0.357      -1.39  setosa 
+## 14      -2.00       -1.13         -2.08       -1.39  setosa 
+## 15       2.25        1.51         -1.51       -0.436 setosa</code></pre>
+<ul>
+<li>I have never used any of the <code>group_by_*()</code> but I imagine they’re useful when you have a large selection of identifiers/grouping variables that you can call easily with a predicate (for example, <code>is.factor</code>). They can also be used with a <strong>.funs</strong> argument as a shortcut to <code>group_by() %&gt;% mutate()</code>.</li>
+</ul>
+</div>
+<div id="miscellaneous-verbs" class="section level1">
+<h1>Miscellaneous verbs</h1>
+<div id="lag" class="section level2">
+<h2><code>lag()</code></h2>
+<ul>
+<li>Makes a new column with the value of one row previously</li>
+</ul>
+</div>
+<div id="lead" class="section level2">
+<h2><code>lead()</code></h2>
+<ul>
+<li>Makes a new column with the value of one row ahead</li>
+</ul>
+<pre class="r"><code>x &lt;- runif(5)
+cbind(ahead = lead(x), x, behind = lag(x))</code></pre>
+<pre><code>##          ahead         x    behind
+## [1,] 0.5677863 0.8123114        NA
+## [2,] 0.9943139 0.5677863 0.8123114
+## [3,] 0.9466897 0.9943139 0.5677863
+## [4,] 0.4742474 0.9466897 0.9943139
+## [5,]        NA 0.4742474 0.9466897</code></pre>
+<ul>
+<li>Can choose a time column to order your new values by with the argument <code>'order_by'</code></li>
+</ul>
+<!-- ```{r} -->
+<!-- df <- data.frame(year = 2000:2005, value = (0:5) ^ 2) -->
+<!-- df -->
+<!-- scrambled <- df[sample(nrow(df)), ] -->
+<!-- scrambled -->
+<!-- right <- mutate(scrambled, prev = lag(value, order_by = year)) -->
+<!-- arrange(right, year) -->
+<!-- ``` -->
+<ul>
+<li>Lag and lead are very useful for longitudinal models</li>
+</ul>
+</div>
+<div id="complete" class="section level2">
+<h2><code>complete()</code></h2>
+<pre class="r"><code>incomplete_df &lt;- data.frame(day = c(1,3,7,9), dose = c(0, 25, 40, 30)) %&gt;% head(n=15)
+incomplete_df</code></pre>
+<pre><code>##   day dose
+## 1   1    0
+## 2   3   25
+## 3   7   40
+## 4   9   30</code></pre>
+<pre class="r"><code>complete(incomplete_df, day = full_seq(1:max(day), 1)) %&gt;% head(n=15)</code></pre>
+<pre><code>## # A tibble: 9 x 2
+##     day  dose
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0
+## 2     2    NA
+## 3     3    25
+## 4     4    NA
+## 5     5    NA
+## 6     6    NA
+## 7     7    40
+## 8     8    NA
+## 9     9    30</code></pre>
+</div>
+<div id="fill" class="section level2">
+<h2><code>fill()</code></h2>
+<ul>
+<li>Fill in missing values with values before or after</li>
+</ul>
+<pre class="r"><code>incomplete_df %&gt;%
+  complete(day = full_seq(1:max(day), 1)) %&gt;%
+  fill(dose, .direction = &quot;down&quot;) %&gt;% head(n=15)</code></pre>
+<pre><code>## # A tibble: 9 x 2
+##     day  dose
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0
+## 2     2     0
+## 3     3    25
+## 4     4    25
+## 5     5    25
+## 6     6    25
+## 7     7    40
+## 8     8    40
+## 9     9    30</code></pre>
+</div>
+<div id="drop_na" class="section level2">
+<h2><code>drop_na()</code></h2>
+<pre class="r"><code>incomplete_df %&gt;%
+  complete(day = full_seq(1:max(day), 1)) %&gt;%
+  drop_na() %&gt;% head(n=15) # when you have more variables, specify which columns you care about dropping NAs from</code></pre>
+<pre><code>## # A tibble: 4 x 2
+##     day  dose
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1     0
+## 2     3    25
+## 3     7    40
+## 4     9    30</code></pre>
+</div>
+<div id="sample_frac" class="section level2">
+<h2><code>sample_frac()</code></h2>
+<ul>
+<li>Randomly sample a specified fraction of rows of a data frame</li>
+</ul>
+<pre class="r"><code>mydat &lt;- data.frame(id = sample(1:100, 20), meas = rnorm(20))
+mydat</code></pre>
+<pre><code>##    id        meas
+## 1  21 -0.25035637
+## 2  87  0.50363037
+## 3  74 -0.11259234
+## 4  37 -0.72029892
+## 5  60  0.89484051
+## 6  56  1.65776866
+## 7  79  0.04188483
+## 8  19  0.78851069
+## 9  58 -0.12519381
+## 10 67 -0.45813272
+## 11 83 -1.61101945
+## 12 39 -0.77879913
+## 13 23 -0.42818335
+## 14 45  0.18212417
+## 15 71  1.11600361
+## 16 88  0.13316263
+## 17  2 -0.29647094
+## 18 42  0.24232759
+## 19 89 -0.56512105
+## 20 10  1.79038253</code></pre>
+<pre class="r"><code>mydat %&gt;% sample_frac(size = .5)</code></pre>
+<pre><code>##    id        meas
+## 1  37 -0.72029892
+## 2   2 -0.29647094
+## 3  42  0.24232759
+## 4  39 -0.77879913
+## 5  19  0.78851069
+## 6  60  0.89484051
+## 7  74 -0.11259234
+## 8  79  0.04188483
+## 9  58 -0.12519381
+## 10 56  1.65776866</code></pre>
+<pre class="r"><code>mydat %&gt;% sample_frac(size= .5, replace = T) # you can also add sampling weights</code></pre>
+<pre><code>##    id        meas
+## 1  71  1.11600361
+## 2  79  0.04188483
+## 3  58 -0.12519381
+## 4  71  1.11600361
+## 5   2 -0.29647094
+## 6  83 -1.61101945
+## 7  10  1.79038253
+## 8  87  0.50363037
+## 9  21 -0.25035637
+## 10 58 -0.12519381</code></pre>
+</div>
+<div id="sample_n" class="section level2">
+<h2><code>sample_n()</code></h2>
+<ul>
+<li>Randomly sample a specified number of rows of a data frame</li>
+</ul>
+<pre class="r"><code>mydat %&gt;% sample_n(3)</code></pre>
+<pre><code>##   id      meas
+## 1 42 0.2423276
+## 2 10 1.7903825
+## 3 19 0.7885107</code></pre>
+</div>
+</div>
+<div id="joining-functions" class="section level1">
+<h1>Joining functions</h1>
+<pre class="r"><code>x &lt;- data.frame(id = c(&quot;A&quot;,&quot;B&quot;,&quot;C&quot;), val = 1:3)
+y &lt;- data.frame(id = c(&quot;A&quot;,&quot;B&quot;,&quot;D&quot;), val = c(&quot;T&quot;,&quot;F&quot;,&quot;T&quot;))
+x</code></pre>
+<pre><code>##   id val
+## 1  A   1
+## 2  B   2
+## 3  C   3</code></pre>
+<pre class="r"><code>y</code></pre>
+<pre><code>##   id val
+## 1  A   T
+## 2  B   F
+## 3  D   T</code></pre>
+<ul>
+<li>“Mutating” joins combine variables from the left and right hand sides ie. <code>full_join()</code>, <code>inner_join()</code>, <code>right_join()</code>, and <code>left_join()</code></li>
+</ul>
+<div id="full_join" class="section level2">
+<h2><code>full_join()</code></h2>
+<ul>
+<li>Return all rows and columns</li>
+</ul>
+<pre class="r"><code>full_join(x, y, by = &quot;id&quot;)</code></pre>
+<pre><code>##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F
+## 3  C     3  &lt;NA&gt;
+## 4  D    NA     T</code></pre>
+</div>
+<div id="inner_join" class="section level2">
+<h2><code>inner_join()</code></h2>
+<ul>
+<li>Return all rows from <code>x</code> that have a match in <code>y</code>, and all columns from <code>x</code> and <code>y</code></li>
+</ul>
+<pre class="r"><code>inner_join(x, y, by = &quot;id&quot;)</code></pre>
+<pre><code>##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F</code></pre>
+</div>
+<div id="left_join" class="section level2">
+<h2><code>left_join()</code></h2>
+<ul>
+<li>Return all rows from <code>x</code> and all columns from <code>x</code> and <code>y</code></li>
+</ul>
+<pre class="r"><code>left_join(x, y, by = &quot;id&quot;)</code></pre>
+<pre><code>##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F
+## 3  C     3  &lt;NA&gt;</code></pre>
+</div>
+<div id="right_join" class="section level2">
+<h2><code>right_join()</code></h2>
+<ul>
+<li>Return all rows from <code>x</code> and all columns from <code>x</code> and <code>y</code></li>
+</ul>
+<pre class="r"><code>right_join(x, y, by = &quot;id&quot;)</code></pre>
+<pre><code>##   id val.x val.y
+## 1  A     1     T
+## 2  B     2     F
+## 3  D    NA     T</code></pre>
+<ul>
+<li>“Filtering” joins keep cases from the left hand side, ie. <code>semi_join()</code> and <code>anti_join()</code></li>
+</ul>
+</div>
+<div id="semi_join" class="section level2">
+<h2><code>semi_join()</code></h2>
+<ul>
+<li>Return all rows in <code>x</code> that have a match in <code>y</code>, keeping only columns from <code>y</code></li>
+</ul>
+<pre class="r"><code>semi_join(x, y, by = &quot;id&quot;)</code></pre>
+<pre><code>##   id val
+## 1  A   1
+## 2  B   2</code></pre>
+</div>
+<div id="anti_join" class="section level2">
+<h2><code>anti_join()</code></h2>
+<ul>
+<li>Return all rows from <code>x</code> where there are not matching values in <code>y</code>, keeping just the columns from <code>x</code></li>
+</ul>
+<pre class="r"><code>anti_join(x, y, by = &quot;id&quot;)</code></pre>
+<pre><code>##   id val
+## 1  C   3</code></pre>
+</div>
+</div>
+<div id="incorporating-dplyr-into-your-workflow" class="section level1">
+<h1>Incorporating dplyr into your workflow</h1>
+<div id="frequency-tables" class="section level2">
+<h2>Frequency Tables</h2>
+<pre class="r"><code>library(kableExtra)
+mtcars %&gt;%
+  group_by(vs, am) %&gt;%
+  summarise(n=n(), freq=n()/nrow(.)) %&gt;%
+  kable(caption=&quot;Frequency Table of vs and am&quot;, format=&quot;html&quot;) %&gt;%
+  kable_styling(c(&quot;condensed&quot;,&quot;responsive&quot;,&quot;striped&quot;,&quot;hover&quot;), full_width = F)</code></pre>
+<table class="table table-condensed table-responsive table-striped table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-39">Table 1: </span>Frequency Table of vs and am
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+vs
+</th>
+<th style="text-align:right;">
+am
+</th>
+<th style="text-align:right;">
+n
+</th>
+<th style="text-align:right;">
+freq
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+0.37500
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+0.18750
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.21875
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0.21875
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="comparegroups" class="section level2">
+<h2>compareGroups</h2>
+<pre class="r"><code>library(compareGroups)
+iris %&gt;%
+  mutate(Sepal.Length.Sq = Sepal.Length^2) %&gt;%
+  compareGroups(Species ~ ., data = .) %&gt;%
+  createTable() %&gt;%
+  export2md() %&gt;%
+  kable_styling(c(&quot;condensed&quot;,&quot;responsive&quot;,&quot;striped&quot;,&quot;hover&quot;))</code></pre>
+<table class="table table-striped table-condensed table table-condensed table-responsive table-striped table-hover" style="width: auto !important; margin-left: auto; margin-right: auto; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-40">Table 2: </span>Summary descriptives table by groups of `Species’
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+setosa
+</th>
+<th style="text-align:center;">
+versicolor
+</th>
+<th style="text-align:center;">
+virginica
+</th>
+<th style="text-align:center;">
+p.overall
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-style: italic;border-bottom: 1px solid grey">
+</td>
+<td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">
+N=50
+</td>
+<td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">
+N=50
+</td>
+<td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">
+N=50
+</td>
+<td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sepal.Length
+</td>
+<td style="text-align:center;">
+5.01 (0.35)
+</td>
+<td style="text-align:center;">
+5.94 (0.52)
+</td>
+<td style="text-align:center;">
+6.59 (0.64)
+</td>
+<td style="text-align:center;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sepal.Width
+</td>
+<td style="text-align:center;">
+3.43 (0.38)
+</td>
+<td style="text-align:center;">
+2.77 (0.31)
+</td>
+<td style="text-align:center;">
+2.97 (0.32)
+</td>
+<td style="text-align:center;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Petal.Length
+</td>
+<td style="text-align:center;">
+1.46 (0.17)
+</td>
+<td style="text-align:center;">
+4.26 (0.47)
+</td>
+<td style="text-align:center;">
+5.55 (0.55)
+</td>
+<td style="text-align:center;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Petal.Width
+</td>
+<td style="text-align:center;">
+0.25 (0.11)
+</td>
+<td style="text-align:center;">
+1.33 (0.20)
+</td>
+<td style="text-align:center;">
+2.03 (0.27)
+</td>
+<td style="text-align:center;">
+&lt;0.001
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sepal.Length.Sq
+</td>
+<td style="text-align:center;">
+25.2 (3.55)
+</td>
+<td style="text-align:center;">
+35.5 (6.16)
+</td>
+<td style="text-align:center;">
+43.8 (8.44)
+</td>
+<td style="text-align:center;">
+&lt;0.001
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="ggplotting" class="section level2">
+<h2>ggplotting</h2>
+<pre class="r"><code>iris %&gt;%
+  filter(Species != &quot;setosa&quot;) %&gt;%
+  ggplot(aes(Sepal.Length, Petal.Width, col=Species)) +
+  geom_point()</code></pre>
+<p><img src="/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
+</div>
+<div id="finding-columns-of-interest" class="section level2">
+<h2>Finding columns of interest</h2>
+<ul>
+<li>When you have too many column names to look through manually, search for a string or pattern of strings</li>
+</ul>
+<pre class="r"><code>load(&quot;dplyr_dat.Rdata&quot;)
+length(names(brain))</code></pre>
+<pre><code>## [1] 1000</code></pre>
+<pre class="r"><code>select(brain, matches(&quot;pib.*parietal.*&quot;)) %&gt;% names() # regex is not case sensitive</code></pre>
+<pre><code>## [1] &quot;PIB.PET_AAL__Parietal_Inf_L&quot;        
+## [2] &quot;PIB.PET_AAL__Parietal_Inf_R&quot;        
+## [3] &quot;PIB.PET_AAL__Parietal_Sup_L&quot;        
+## [4] &quot;PIB.PET_AAL__Parietal_Sup_R&quot;        
+## [5] &quot;PIB.PET_FS__ctx.lh.inferiorparietal&quot;
+## [6] &quot;PIB.PET_FS__ctx.lh.superiorparietal&quot;
+## [7] &quot;PIB.PET_FS__ctx.rh.inferiorparietal&quot;
+## [8] &quot;PIB.PET_FS__ctx.rh.superiorparietal&quot;</code></pre>
+<!-- * Create summary measures using variables of interest -->
+<!-- ```{r} -->
+<!-- brain %>% -->
+<!--   group_by(ID) %>% -->
+<!--   transmute(PIB_Parietal = mean(c(PIB.PET_AAL__Parietal_Inf_L, -->
+<!--                                   PIB.PET_AAL__Parietal_Inf_R, -->
+<!--                                   PIB.PET_AAL__Parietal_Sup_L, -->
+<!--                                   PIB.PET_AAL__Parietal_Sup_R), na.rm=T)) %>% -->
+<!--   arrange(PIB_Parietal) -->
+<!-- ``` -->
+</div>
+<div id="missing-data-wrangling" class="section level2">
+<h2>Missing data wrangling</h2>
+<ul>
+<li>Add a column flagging a value as missing and then replace the missing values with the mean of the other values</li>
+</ul>
+<pre class="r"><code>misdat &lt;- data.frame(x1 = sample(c(1:3, NA), 13, replace=T),
+                     x2 = sample(c(-5:-2,NA), 13, replace=T))
+misdat</code></pre>
+<pre><code>##    x1 x2
+## 1   3 -5
+## 2   1 -5
+## 3   1 -4
+## 4   2 NA
+## 5   1 -4
+## 6   2 -3
+## 7   1 NA
+## 8   2 -2
+## 9   2 -4
+## 10  1 -3
+## 11  2 -4
+## 12  1 -5
+## 13  2 NA</code></pre>
+<pre class="r"><code>misdat %&gt;%
+  mutate_all(.funs = funs(miss = ifelse(is.na(.), 1, 0))) %&gt;%
+  mutate_all(.funs = funs(replace_na(., mean(., na.rm=T))))</code></pre>
+<pre><code>##    x1   x2 x1_miss x2_miss
+## 1   3 -5.0       0       0
+## 2   1 -5.0       0       0
+## 3   1 -4.0       0       0
+## 4   2 -3.9       0       1
+## 5   1 -4.0       0       0
+## 6   2 -3.0       0       0
+## 7   1 -3.9       0       1
+## 8   2 -2.0       0       0
+## 9   2 -4.0       0       0
+## 10  1 -3.0       0       0
+## 11  2 -4.0       0       0
+## 12  1 -5.0       0       0
+## 13  2 -3.9       0       1</code></pre>
+</div>
+<div id="longitudinal-data-wrangling-a" class="section level2">
+<h2>Longitudinal data wrangling A</h2>
+<ul>
+<li>Calculate the time since a patient was first admitted to the hospital</li>
+</ul>
+<pre class="r"><code>id &lt;- c(1,1,1,2,2,2,2,3)
+admit &lt;- as.Date(c(&quot;2017-06-22&quot;, &quot;2017-07-13&quot;, &quot;2017-08-29&quot;,
+                   &quot;2017-04-01&quot;, &quot;2017-05-02&quot;, &quot;2017-11-14&quot;, &quot;2018-01-14&quot;,
+                   &quot;2019-01-01&quot;))
+discharge &lt;- as.Date(c(&quot;2017-06-25&quot;, &quot;2017-07-31&quot;, &quot;2017-10-13&quot;,
+                   &quot;2017-04-02&quot;, &quot;2017-05-10&quot;, &quot;2017-11-18&quot;, &quot;2018-02-12&quot;,
+                   &quot;2019-01-05&quot;))
+hosp_dat &lt;- data.frame(id, admit, discharge)
+hosp_dat</code></pre>
+<pre><code>##   id      admit  discharge
+## 1  1 2017-06-22 2017-06-25
+## 2  1 2017-07-13 2017-07-31
+## 3  1 2017-08-29 2017-10-13
+## 4  2 2017-04-01 2017-04-02
+## 5  2 2017-05-02 2017-05-10
+## 6  2 2017-11-14 2017-11-18
+## 7  2 2018-01-14 2018-02-12
+## 8  3 2019-01-01 2019-01-05</code></pre>
+<pre class="r"><code>hosp_dat %&gt;%
+  group_by(id) %&gt;%
+  mutate(days_since_init_admit = discharge - admit[1])</code></pre>
+<pre><code>## # A tibble: 8 x 4
+## # Groups:   id [3]
+##      id admit      discharge  days_since_init_admit
+##   &lt;dbl&gt; &lt;date&gt;     &lt;date&gt;     &lt;drtn&gt;               
+## 1     1 2017-06-22 2017-06-25   3 days             
+## 2     1 2017-07-13 2017-07-31  39 days             
+## 3     1 2017-08-29 2017-10-13 113 days             
+## 4     2 2017-04-01 2017-04-02   1 days             
+## 5     2 2017-05-02 2017-05-10  39 days             
+## 6     2 2017-11-14 2017-11-18 231 days             
+## 7     2 2018-01-14 2018-02-12 317 days             
+## 8     3 2019-01-01 2019-01-05   4 days</code></pre>
+</div>
+<div id="longitudinal-data-wrangling-b" class="section level2">
+<h2>Longitudinal data wrangling B</h2>
+<ul>
+<li><p>Make a row for every patient for every month from the start of follow up to the end of follow up (get equally spaced time intervals)</p></li>
+<li><p>Make another column containing the drugs the patient was on previously (for prediction or longitudinal models)</p></li>
+</ul>
+<pre class="r"><code>load(&quot;meds.Rdata&quot;)</code></pre>
+<pre class="r"><code>meds</code></pre>
+<pre><code>##    PatientID Months_ImplantToVisit BB_yn ACE_yn ARB_yn
+## 1          1                     1     0      0      0
+## 2          1                     2     0      0      0
+## 3          2                     2     0      1      0
+## 4          2                     3     0      1      0
+## 5          2                     4     0      1      0
+## 6          2                     5     0      1      0
+## 7          2                     6     1      1      0
+## 8          2                     8     1      1      0
+## 9          2                    10     1      1      0
+## 10         2                    12     1      1      0
+## 11         2                    13     1      1      0
+## 12         2                    14     1      1      0
+## 13         2                    16     1      1      0
+## 14         3                     2     0      0      0
+## 15         3                     3     0      0      0</code></pre>
+<pre class="r"><code>meds %&gt;%
+    group_by(PatientID) %&gt;%
+    complete(Months_ImplantToVisit = full_seq(1:max(Months_ImplantToVisit), 1)) %&gt;%
+    fill(ends_with(&quot;_yn&quot;)) %&gt;%
+    fill(ends_with(&quot;_yn&quot;), .direction=&quot;up&quot;) -&gt; meds1
+meds1</code></pre>
+<pre><code>## # A tibble: 21 x 5
+## # Groups:   PatientID [3]
+##    PatientID Months_ImplantToVisit BB_yn ACE_yn ARB_yn
+##        &lt;int&gt;                 &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt; 
+##  1         1                     1 0     0      0     
+##  2         1                     2 0     0      0     
+##  3         2                     1 0     1      0     
+##  4         2                     2 0     1      0     
+##  5         2                     3 0     1      0     
+##  6         2                     4 0     1      0     
+##  7         2                     5 0     1      0     
+##  8         2                     6 1     1      0     
+##  9         2                     7 1     1      0     
+## 10         2                     8 1     1      0     
+## # … with 11 more rows</code></pre>
+<pre class="r"><code>meds1 %&gt;%
+  mutate_at(.vars = vars(ends_with(&quot;_yn&quot;)),
+              .funs = funs(prev = lag(., order_by = Months_ImplantToVisit))) %&gt;%
+    fill(ends_with(&quot;_prev&quot;), .direction=&quot;up&quot;) %&gt;%
+  head(n=15)</code></pre>
+<pre><code>## # A tibble: 15 x 8
+## # Groups:   PatientID [2]
+##    PatientID Months_ImplantT… BB_yn ACE_yn ARB_yn BB_yn_prev ACE_yn_prev
+##        &lt;int&gt;            &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;  &lt;fct&gt;  &lt;fct&gt;      &lt;fct&gt;      
+##  1         1                1 0     0      0      0          0          
+##  2         1                2 0     0      0      0          0          
+##  3         2                1 0     1      0      0          1          
+##  4         2                2 0     1      0      0          1          
+##  5         2                3 0     1      0      0          1          
+##  6         2                4 0     1      0      0          1          
+##  7         2                5 0     1      0      0          1          
+##  8         2                6 1     1      0      0          1          
+##  9         2                7 1     1      0      1          1          
+## 10         2                8 1     1      0      1          1          
+## 11         2                9 1     1      0      1          1          
+## 12         2               10 1     1      0      1          1          
+## 13         2               11 1     1      0      1          1          
+## 14         2               12 1     1      0      1          1          
+## 15         2               13 1     1      0      1          1          
+## # … with 1 more variable: ARB_yn_prev &lt;fct&gt;</code></pre>
+</div>
+<div id="survival-data-wrangling" class="section level2">
+<h2>Survival data wrangling</h2>
+<ul>
+<li><p>Map four columns “days to…outcome” to a composite endpoint for a survival model</p></li>
+<li><p>Record <em>when</em> the event occurred as Days.to.first.event and <em>which</em> event it was in FE.status</p></li>
+</ul>
+<pre class="r"><code>dems %&gt;%
+  select(Days.to.lastFU, Days.to.death, Days.to.stroke, Days.to.GIB, Days.to.PT) %&gt;%
+  # which.min cannot handle NA, so we&#39;ll make NA&#39;s infinity for now
+  replace(is.na(.), Inf) %&gt;%
+  # to allow which.min to search along rows (dplyr naturally looks down columns)
+  rowwise() %&gt;%
+  mutate(
+    FUorFEtime = pmin(Days.to.lastFU, Days.to.death, Days.to.stroke,
+                      Days.to.GIB, Days.to.PT,
+                      na.rm = T),
+    # numbers correspond to order of the Days* columns
+    FUorFEstatus = which.min(c(Days.to.lastFU, Days.to.death, Days.to.stroke,
+                                    Days.to.GIB, Days.to.PT)),
+    # condensed variable for survival model, 1 if any event
+  Event_yn = ifelse(FUorFEstatus == 1, 0, 1)) -&gt; dems_int
+
+dems_int # look at the intermediate output</code></pre>
+<pre><code>## Source: local data frame [265 x 8]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 265 x 8
+##    Days.to.lastFU Days.to.death Days.to.stroke Days.to.GIB Days.to.PT
+##             &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt;
+##  1             98            98             94         Inf        Inf
+##  2            163           Inf            Inf         Inf        141
+##  3            185           Inf            Inf         Inf        Inf
+##  4            139           Inf            Inf         Inf        Inf
+##  5            196           Inf            Inf          78        Inf
+##  6            161           Inf            Inf         Inf        Inf
+##  7            210           Inf            185         Inf        Inf
+##  8            233           Inf            Inf         Inf        Inf
+##  9            239           Inf            Inf         Inf        Inf
+## 10            243           Inf            Inf         Inf        Inf
+## # … with 255 more rows, and 3 more variables: FUorFEtime &lt;dbl&gt;,
+## #   FUorFEstatus &lt;int&gt;, Event_yn &lt;dbl&gt;</code></pre>
+<pre class="r"><code>dems_int %&gt;%
+  # column names correspond to the order of the columns, rename
+  mutate(FUorFEstatus = case_when(FUorFEstatus == 1 ~ &quot;censored&quot;,
+                                  FUorFEstatus == 2 ~ &quot;death&quot;,
+                                  FUorFEstatus == 3 ~ &quot;stroke&quot;,
+                                  FUorFEstatus == 4 ~ &quot;gib&quot;,
+                                  FUorFEstatus == 5 ~ &quot;pt&quot;,
+                                  TRUE ~ &quot;error&quot;)) %&gt;%
+  # not case sensitive
+  select(contains(&quot;fe&quot;), Event_yn) %&gt;%
+  # allow for joining with no duplicate cols
+  rownames_to_column() %&gt;%
+  full_join(dems %&gt;% rownames_to_column()) %&gt;%
+  select(-rowname) -&gt; dems_clean
+
+# check to make sure everything worked
+dems_clean %&gt;% filter(FUorFEstatus == &quot;error&quot;)</code></pre>
+<pre><code>## Source: local data frame [0 x 55]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 0 x 55
+## # … with 55 variables: FUorFEtime &lt;dbl&gt;, FUorFEstatus &lt;chr&gt;,
+## #   Event_yn &lt;dbl&gt;, PatientID &lt;int&gt;, Year.of.Implant &lt;int&gt;, Outcome &lt;int&gt;,
+## #   Days.to.lastFU &lt;int&gt;, Stroke &lt;int&gt;, Days.to.stroke &lt;int&gt;,
+## #   TypeStroke &lt;int&gt;, Stroke_IA &lt;int&gt;, Days.to.IA.stroke &lt;int&gt;,
+## #   TypeStroke_IA &lt;int&gt;, PT &lt;int&gt;, Days.to.PT &lt;int&gt;, GIB &lt;int&gt;,
+## #   Days.to.GIB &lt;int&gt;, GIB_IA &lt;int&gt;, Days.to.GIB_IA &lt;int&gt;,
+## #   Age.at.implant &lt;int&gt;, Sex &lt;fct&gt;, Race &lt;int&gt;, Caucasian &lt;int&gt;,
+## #   AfibFlut &lt;fct&gt;, Smoking_Hx &lt;fct&gt;, DM &lt;fct&gt;, Ischemic &lt;int&gt;,
+## #   HTN_Hx &lt;fct&gt;, Stroke_Hx &lt;fct&gt;, Pulmonary_Hx &lt;fct&gt;, ICD &lt;fct&gt;,
+## #   IMCS &lt;int&gt;, DT &lt;int&gt;, Hb_pre &lt;dbl&gt;, PLT_pre &lt;int&gt;, INR_dx &lt;dbl&gt;,
+## #   Creat_dx &lt;dbl&gt;, Height &lt;dbl&gt;, Weight &lt;dbl&gt;, BMI &lt;dbl&gt;, Speed &lt;int&gt;,
+## #   PI &lt;dbl&gt;, Flow &lt;dbl&gt;, RVAD &lt;fct&gt;, IABP &lt;fct&gt;,
+## #   Days.to.first.outpt.visit &lt;int&gt;, Days.to.IA.discharge &lt;int&gt;, EF &lt;fct&gt;,
+## #   LVEDD &lt;fct&gt;, RV_Dysf &lt;fct&gt;, LDH_Dx &lt;int&gt;, eGFR &lt;dbl&gt;, AvgMAP &lt;lgl&gt;,
+## #   Death &lt;int&gt;, Days.to.death &lt;int&gt;</code></pre>
+<pre class="r"><code>dems_clean %&gt;%
+  head(n=15)</code></pre>
+<pre><code>## Source: local data frame [15 x 55]
+## Groups: &lt;by row&gt;
+## 
+## # A tibble: 15 x 55
+##    FUorFEtime FUorFEstatus Event_yn PatientID Year.of.Implant Outcome
+##         &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;     &lt;int&gt;           &lt;int&gt;   &lt;int&gt;
+##  1         94 stroke              1         1            2016       2
+##  2        141 pt                  1         2            2016       7
+##  3        185 censored            0         3            2016       7
+##  4        139 censored            0         4            2016       6
+##  5         78 gib                 1         5            2016       7
+##  6        161 censored            0         6            2016       1
+##  7        185 stroke              1         7            2016       7
+##  8        233 censored            0         8            2016       7
+##  9        239 censored            0         9            2016       7
+## 10        243 censored            0        10            2016       7
+## 11        248 censored            0        11            2016       7
+## 12         51 pt                  1        12            2016       1
+## 13         37 gib                 1        13            2016       7
+## 14        261 censored            0        14            2016       7
+## 15        265 censored            0        15            2016       7
+## # … with 49 more variables: Days.to.lastFU &lt;int&gt;, Stroke &lt;int&gt;,
+## #   Days.to.stroke &lt;int&gt;, TypeStroke &lt;int&gt;, Stroke_IA &lt;int&gt;,
+## #   Days.to.IA.stroke &lt;int&gt;, TypeStroke_IA &lt;int&gt;, PT &lt;int&gt;,
+## #   Days.to.PT &lt;int&gt;, GIB &lt;int&gt;, Days.to.GIB &lt;int&gt;, GIB_IA &lt;int&gt;,
+## #   Days.to.GIB_IA &lt;int&gt;, Age.at.implant &lt;int&gt;, Sex &lt;fct&gt;, Race &lt;int&gt;,
+## #   Caucasian &lt;int&gt;, AfibFlut &lt;fct&gt;, Smoking_Hx &lt;fct&gt;, DM &lt;fct&gt;,
+## #   Ischemic &lt;int&gt;, HTN_Hx &lt;fct&gt;, Stroke_Hx &lt;fct&gt;, Pulmonary_Hx &lt;fct&gt;,
+## #   ICD &lt;fct&gt;, IMCS &lt;int&gt;, DT &lt;int&gt;, Hb_pre &lt;dbl&gt;, PLT_pre &lt;int&gt;,
+## #   INR_dx &lt;dbl&gt;, Creat_dx &lt;dbl&gt;, Height &lt;dbl&gt;, Weight &lt;dbl&gt;, BMI &lt;dbl&gt;,
+## #   Speed &lt;int&gt;, PI &lt;dbl&gt;, Flow &lt;dbl&gt;, RVAD &lt;fct&gt;, IABP &lt;fct&gt;,
+## #   Days.to.first.outpt.visit &lt;int&gt;, Days.to.IA.discharge &lt;int&gt;, EF &lt;fct&gt;,
+## #   LVEDD &lt;fct&gt;, RV_Dysf &lt;fct&gt;, LDH_Dx &lt;int&gt;, eGFR &lt;dbl&gt;, AvgMAP &lt;lgl&gt;,
+## #   Death &lt;int&gt;, Days.to.death &lt;int&gt;</code></pre>
+</div>
+<div id="making-functions" class="section level2">
+<h2>Making functions</h2>
+<ul>
+<li><p>Problem: dplyr doesn’t know what to do with quotes around the variable name, but you can’t put the column name into a function without quotes because R will try to find it as an object in your environment…</p></li>
+<li>Solution: relying on the rlang package (sym, !!, !!!, etc)
+<ul>
+<li>A good tutorial: <a href="http://jonthegeek.com/2018/06/04/writing-custom-tidyverse-functions/" class="uri">http://jonthegeek.com/2018/06/04/writing-custom-tidyverse-functions/</a></li>
+</ul></li>
+</ul>
+<pre class="r"><code>irisSummary &lt;- function(group){
+    iris %&gt;%
+      group_by(!!sym(group)) %&gt;%
+      summarise(mean(Sepal.Length), sd(Sepal.Length))
+}
+
+irisSummary(group = &quot;Species&quot;)</code></pre>
+<pre><code>## # A tibble: 3 x 3
+##   Species    `mean(Sepal.Length)` `sd(Sepal.Length)`
+##   &lt;fct&gt;                     &lt;dbl&gt;              &lt;dbl&gt;
+## 1 setosa                     5.01              0.352
+## 2 versicolor                 5.94              0.516
+## 3 virginica                  6.59              0.636</code></pre>
+<pre class="r"><code>irisScatPlot &lt;- function(x, y){
+    iris %&gt;%
+    ggplot(aes_string(x, y, col=&quot;Species&quot;)) +
+    geom_point() -&gt; p
+  return(p)
+}
+
+irisScatPlot(x=&quot;Sepal.Length&quot;,y=&quot;Petal.Length&quot;)</code></pre>
+<p><img src="/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/dplyr/">dplyr</a>
+  
+  <a class="badge badge-light" href="/tags/r/">R</a>
+  
+  <a class="badge badge-light" href="/tags/#rstats/">#rstats</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu4b4dff1ed374fdb47912daab159b868d_26697_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
+      <h6 class="card-subtitle">Research Biostatistician I</h6>
+      <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="/#contact" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/Rkatlady" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/hoffmakl" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.16bbb3750feb7244c9bc409a5a4fe678.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Katherine Hoffman">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Image courtesy of Allison Horst’s Twitter: @allison_horst
+Why dplyr? Speed*
+ Simple syntax
+ Function chaining
+ Ability to analyze external databases
+ Works well with other packages in tidyverse suite ggplot2 tidyr stringr forcats purrr   *if you start dealing with data sets with &gt; 1 million rows, data.table will be much faster
+library(tidyverse) ## ── Attaching packages ────────────── tidyverse 1.2.1 ── ## ✔ ggplot2 3.2.1 ✔ purrr 0.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/tutorial/dplyr/dplyr_presentation/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.3072054fc61fe865aa34bcb366de141d.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/tutorial/dplyr/dplyr_presentation/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="KHstats">
+  <meta property="og:url" content="/tutorial/dplyr/dplyr_presentation/">
+  <meta property="og:title" content="Data Wrangling with dplyr | KHstats">
+  <meta property="og:description" content="Image courtesy of Allison Horst’s Twitter: @allison_horst
+Why dplyr? Speed*
+ Simple syntax
+ Function chaining
+ Ability to analyze external databases
+ Works well with other packages in tidyverse suite ggplot2 tidyr stringr forcats purrr   *if you start dealing with data sets with &gt; 1 million rows, data.table will be much faster
+library(tidyverse) ## ── Attaching packages ────────────── tidyverse 1.2.1 ── ## ✔ ggplot2 3.2.1 ✔ purrr 0."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+    
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Data Wrangling with dplyr | KHstats</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">KHstats</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#hero"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#experience"><span>Experience</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Presentations</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Blog</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#tutorials"><span>Tutorials</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Data Wrangling with dplyr</h1>
+
+  
+  <p class="page-subtitle">WCM Biostatistics Computing Club</p>
+  
+
+  
+    
+
+
+
+<meta content="" itemprop="datePublished">
+<meta content="" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jan 1, 0001</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/tutorial/dplyr/dplyr_presentation/&amp;text=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/tutorial/dplyr/dplyr_presentation/&amp;t=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Data%20Wrangling%20with%20dplyr&amp;body=/tutorial/dplyr/dplyr_presentation/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/tutorial/dplyr/dplyr_presentation/&amp;title=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Data%20Wrangling%20with%20dplyr%20/tutorial/dplyr/dplyr_presentation/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/tutorial/dplyr/dplyr_presentation/&amp;title=Data%20Wrangling%20with%20dplyr" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<p><img src="dplyr_image.jpg" />
+<em>Image courtesy of Allison Horst’s Twitter: <span class="citation">@allison_horst</span></em></p>
+<div id="why-dplyr" class="section level1">
+<h1>Why dplyr?</h1>
+<ol style="list-style-type: decimal">
+<li><p>Speed*</p></li>
+<li><p>Simple syntax</p></li>
+<li><p>Function chaining</p></li>
+<li><p>Ability to analyze external databases</p></li>
+<li>Works well with other packages in tidyverse suite
+<ol style="list-style-type: lower-alpha">
+<li>ggplot2</li>
+<li>tidyr</li>
+<li>stringr</li>
+<li>forcats</li>
+<li>purrr</li>
+</ol></li>
+</ol>
+<p>*if you start dealing with data sets with &gt; 1 million rows, data.table will be much faster</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ───────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div id="our-datasets" class="section level1">
+<h1>Our datasets</h1>
+<pre class="r"><code>load(&quot;prac_dat.Rdata&quot;)
+ls()</code></pre>
+<pre><code>## [1] &quot;dems&quot; &quot;meds&quot;</code></pre>
+<pre class="r"><code>glimpse(meds)</code></pre>
+<pre><code>## Observations: 2,534
+## Variables: 8
+## $ id        &lt;int&gt; 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, …
+## $ days_dx   &lt;int&gt; 23, 58, 49, 84, 112, 140, 182, 231, 294, 350, 385, 420…
+## $ trtA_yn   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, …
+## $ trtA_type &lt;fct&gt; ., ., ., ., ., ., 1, 1, 1, 1, 1, 1, 1, , , , , , 1, 1,…
+## $ trtA_dose &lt;fct&gt; ., ., ., ., ., ., 6.25, 6.25, 6.25, 6.25, 6.25, 6.25, …
+## $ trtB_yn   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, …
+## $ trtB_type &lt;fct&gt; ., ., ., ., ., ., ., ., ., ., ., ., ., , 1, 1, 1, 1, ,…
+## $ trtB_dose &lt;fct&gt; ., ., ., ., ., ., ., ., ., ., ., ., ., , 60, 60, 60, 6…</code></pre>
+<pre class="r"><code>glimpse(dems)</code></pre>
+<pre><code>## Observations: 210
+## Variables: 8
+## $ id           &lt;int&gt; 81, 88, 32, 132, 26, 51, 167, 112, 2, 61, 218, 113,…
+## $ bmi          &lt;dbl&gt; 21.8, 24.7, 28.4, 23.2, 18.0, 21.4, 21.1, 30.6, 23.…
+## $ race         &lt;int&gt; 5, 5, 3, 5, 5, 5, 5, 3, 2, 5, 5, 5, 3, 5, 5, 5, 5, …
+## $ age          &lt;int&gt; 62, 61, 60, 62, 62, 65, 53, 74, 71, 67, 32, 58, 43,…
+## $ sex          &lt;fct&gt; Female, Female, Male, Female, Male, Female, Male, M…
+## $ days_death   &lt;int&gt; NA, NA, 187, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…
+## $ days_cardarr &lt;int&gt; NA, NA, 1334, NA, NA, NA, NA, 110, NA, NA, NA, 57, …
+## $ days_stroke  &lt;int&gt; NA, 299, NA, NA, NA, NA, NA, 969, NA, NA, NA, NA, N…</code></pre>
+</div>
+<div id="piping" class="section level1">
+<h1>Piping</h1>
+<ul>
+<li><p><code>%&gt;%</code> operator from <code>library(magitrr)</code></p></li>
+<li><p>Use <code>%&gt;%</code> to send an object (typically a dataframe) to the next function</p></li>
+<li><p>The function you pipe to will use the object in front of the <code>%&gt;%</code> as its first argument</p></li>
+</ul>
+<pre class="r"><code>dems %&gt;% head() # equivalent to head(dems)</code></pre>
+<pre><code>##    id  bmi race age    sex days_death days_cardarr days_stroke
+## 1  81 21.8    5  62 Female         NA           NA          NA
+## 2  88 24.7    5  61 Female         NA           NA         299
+## 3  32 28.4    3  60   Male        187         1334          NA
+## 4 132 23.2    5  62 Female         NA           NA          NA
+## 5  26 18.0    5  62   Male         NA           NA          NA
+## 6  51 21.4    5  65 Female         NA           NA          NA</code></pre>
+<pre class="r"><code>dems %&gt;% head(n=3)</code></pre>
+<pre><code>##   id  bmi race age    sex days_death days_cardarr days_stroke
+## 1 81 21.8    5  62 Female         NA           NA          NA
+## 2 88 24.7    5  61 Female         NA           NA         299
+## 3 32 28.4    3  60   Male        187         1334          NA</code></pre>
+<ul>
+<li>If you don’t want it to be the first argument, use <code>.</code></li>
+</ul>
+<pre class="r"><code>dems %&gt;% compareGroups(sex ~ bmi+race+age, data=.) %&gt;% createTable() %&gt;% export2md()</code></pre>
+<table class="table table-striped table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:unnamed-chunk-4">Table 1: </span>Summary descriptives table by groups of `sex’
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+Female
+</th>
+<th style="text-align:center;">
+Male
+</th>
+<th style="text-align:center;">
+p.overall
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;font-style: italic;border-bottom: 1px solid grey">
+</td>
+<td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">
+N=40
+</td>
+<td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">
+N=170
+</td>
+<td style="text-align:center;font-style: italic;border-bottom: 1px solid grey">
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+bmi
+</td>
+<td style="text-align:center;">
+25.3 (4.11)
+</td>
+<td style="text-align:center;">
+25.7 (5.14)
+</td>
+<td style="text-align:center;">
+0.575
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+race
+</td>
+<td style="text-align:center;">
+4.58 (0.98)
+</td>
+<td style="text-align:center;">
+4.25 (1.18)
+</td>
+<td style="text-align:center;">
+0.078
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:center;">
+55.5 (13.4)
+</td>
+<td style="text-align:center;">
+57.4 (13.9)
+</td>
+<td style="text-align:center;">
+0.430
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>A verb is a function that takes a data frame as the first argument (Ex: <code>head()</code>)</p></li>
+<li><p>The entire tidyverse suite operates under this verb function structure, making piping especially convenient</p></li>
+</ul>
+</div>
+<div id="verbs-to-know" class="section level1">
+<h1>Verbs to Know</h1>
+<div id="select" class="section level2 tabset tabset-fade tabset-pills">
+<h2><code>select()</code></h2>
+<div id="dplyr" class="section level3">
+<h3>dplyr</h3>
+<ul>
+<li>Description of select</li>
+</ul>
+<pre class="r"><code>select(dems, age, sex) %&gt;% head()</code></pre>
+<pre><code>##   age    sex
+## 1  62 Female
+## 2  61 Female
+## 3  60   Male
+## 4  62 Female
+## 5  62   Male
+## 6  65 Female</code></pre>
+<ul>
+<li>Specify variables to exclude with <code>-</code></li>
+</ul>
+<pre class="r"><code>select(dems, -id) %&gt;% head()</code></pre>
+<pre><code>##    bmi race age    sex days_death days_cardarr days_stroke
+## 1 21.8    5  62 Female         NA           NA          NA
+## 2 24.7    5  61 Female         NA           NA         299
+## 3 28.4    3  60   Male        187         1334          NA
+## 4 23.2    5  62 Female         NA           NA          NA
+## 5 18.0    5  62   Male         NA           NA          NA
+## 6 21.4    5  65 Female         NA           NA          NA</code></pre>
+<ul>
+<li>If you select just one column, you will still get a dataframe. If you need a vector, use <code>pull()</code></li>
+</ul>
+<pre class="r"><code>pull(dems, age) %&gt;% head()</code></pre>
+<pre><code>## [1] 62 61 60 62 62 65</code></pre>
+</div>
+<div id="base-r" class="section level3">
+<h3>base R</h3>
+<pre class="r"><code>dems[c(&quot;age&quot;,&quot;sex&quot;)] %&gt;% head()</code></pre>
+<pre><code>##   age    sex
+## 1  62 Female
+## 2  61 Female
+## 3  60   Male
+## 4  62 Female
+## 5  62   Male
+## 6  65 Female</code></pre>
+</div>
+<div id="data.table" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>library(data.table)
+#data.table requires your data to be class DT to work
+meds.dt &lt;- data.table(meds) 
+dems.dt &lt;- data.table(dems)
+
+dems.dt[, .(age,sex)] %&gt;% head()</code></pre>
+<pre><code>##    age    sex
+## 1:  62 Female
+## 2:  61 Female
+## 3:  60   Male
+## 4:  62 Female
+## 5:  62   Male
+## 6:  65 Female</code></pre>
+</div>
+</div>
+<div id="filter" class="section level2 tabset tabset-fade tabset-pills">
+<h2><code>filter()</code></h2>
+<div id="dplyr-1" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>filter(dems, age &lt;= 25)</code></pre>
+<pre><code>##   id  bmi race age    sex days_death days_cardarr days_stroke
+## 1 71 22.8    3  21 Female         NA           NA          NA
+## 2  6 19.6    5  24   Male         NA          301          NA</code></pre>
+<pre class="r"><code>filter(dems, bmi &gt; 45 | bmi &lt; 18)</code></pre>
+<pre><code>##    id  bmi race age  sex days_death days_cardarr days_stroke
+## 1 106 17.3    5  32 Male         NA           NA          NA
+## 2 104 17.5    3  61 Male         NA           NA         504
+## 3 100 15.9    5  37 Male         NA           NA          NA
+## 4  91 17.1    3  67 Male         NA          342          NA
+## 5  40 17.9    3  27 Male         NA          253          NA</code></pre>
+<pre class="r"><code>filter(meds, trtA_dose == 12.5, trtA_type != 2) %&gt;% head()</code></pre>
+<pre><code>##   id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1  3     303       1         1      12.5       0                    
+## 2  4      27       1         1      12.5       0         0         0
+## 3  4      48       1         1      12.5       0         0         0
+## 4 10     438       1         1      12.5       0                    
+## 5 10     501       1         1      12.5       0                    
+## 6 18     184       1         1      12.5       1         1        90</code></pre>
+<pre class="r"><code>filter(meds, is.na(trtA_yn)) #use !is.na() to get all rows where trtA_yn is not NA</code></pre>
+<pre><code>##     id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1    5      27      NA                          NA                    
+## 2   79     193      NA      &lt;NA&gt;      &lt;NA&gt;      NA      &lt;NA&gt;      &lt;NA&gt;
+## 3   84     238      NA                           0                    
+## 4  106     876      NA      &lt;NA&gt;      &lt;NA&gt;      NA      &lt;NA&gt;      &lt;NA&gt;
+## 5  121      79      NA         .         .      NA         .         .
+## 6  141     790      NA         .         .      NA         .         .
+## 7  141     831      NA         .         .      NA         .         .
+## 8  141     880      NA         .         .      NA         .         .
+## 9  141     938      NA         .         .      NA         .         .
+## 10 149  -41166      NA                          NA                    
+## 11 178     504      NA                          NA                    
+## 12 192     321      NA                          NA                    
+## 13 192     608      NA                          NA</code></pre>
+</div>
+<div id="base-r-1" class="section level3">
+<h3>base R</h3>
+<pre class="r"><code>dems[dems$age &lt;= 25, ] </code></pre>
+<pre><code>##    id  bmi race age    sex days_death days_cardarr days_stroke
+## 38 71 22.8    3  21 Female         NA           NA          NA
+## 62  6 19.6    5  24   Male         NA          301          NA</code></pre>
+</div>
+<div id="data.table-1" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>dems.dt[age &lt;= 25]</code></pre>
+<pre><code>##    id  bmi race age    sex days_death days_cardarr days_stroke
+## 1: 71 22.8    3  21 Female         NA           NA          NA
+## 2:  6 19.6    5  24   Male         NA          301          NA</code></pre>
+</div>
+</div>
+<div id="arrange" class="section level2 tabset tabset-fade tabset-pills">
+<h2><code>arrange()</code></h2>
+<div id="dplyr-2" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>arrange(meds, id) %&gt;% head()</code></pre>
+<pre><code>##   id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1  1      23       0         .         .       0         .         .
+## 2  1      58       0         .         .       0         .         .
+## 3  2      49       0         .         .       0         .         .
+## 4  2      84       0         .         .       0         .         .
+## 5  2     112       0         .         .       0         .         .
+## 6  2     140       0         .         .       0         .         .</code></pre>
+<pre class="r"><code>arrange(meds, desc(id)) %&gt;% head()</code></pre>
+<pre><code>##    id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1 220      49       1         2       100       1         1        60
+## 2 220      84       1         2       100       1         1        60
+## 3 220     119       1         2       100       1         1        60
+## 4 220     154       1         2       100       1         1        60
+## 5 220     194       1         2       125       0         0         0
+## 6 219      43       1         1        25       0         0         0</code></pre>
+<pre class="r"><code>arrange(meds, id, days_dx) %&gt;% head()</code></pre>
+<pre><code>##   id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1  1      23       0         .         .       0         .         .
+## 2  1      58       0         .         .       0         .         .
+## 3  2      49       0         .         .       0         .         .
+## 4  2      84       0         .         .       0         .         .
+## 5  2     112       0         .         .       0         .         .
+## 6  2     140       0         .         .       0         .         .</code></pre>
+</div>
+<div id="base-r-2" class="section level3">
+<h3>base R</h3>
+<pre class="r"><code>meds[order(meds$id),] %&gt;% head()</code></pre>
+<pre><code>##   id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1  1      23       0         .         .       0         .         .
+## 2  1      58       0         .         .       0         .         .
+## 3  2      49       0         .         .       0         .         .
+## 4  2      84       0         .         .       0         .         .
+## 5  2     112       0         .         .       0         .         .
+## 6  2     140       0         .         .       0         .         .</code></pre>
+</div>
+<div id="data.table-2" class="section level3">
+<h3>data.table</h3>
+<pre class="r"><code>meds.dt[order(id),] %&gt;% head()</code></pre>
+<pre><code>##    id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1:  1      23       0         .         .       0         .         .
+## 2:  1      58       0         .         .       0         .         .
+## 3:  2      49       0         .         .       0         .         .
+## 4:  2      84       0         .         .       0         .         .
+## 5:  2     112       0         .         .       0         .         .
+## 6:  2     140       0         .         .       0         .         .</code></pre>
+</div>
+</div>
+<div id="mutate" class="section level2 tabset tabset-fade tabset-pills">
+<h2><code>mutate()</code></h2>
+<div id="dplyr-3" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>mutate(meds, n_trts = trtA_yn + trtB_yn) %&gt;% head(n=20)</code></pre>
+<pre><code>##    id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1   1      23       0         .         .       0         .         .
+## 2   1      58       0         .         .       0         .         .
+## 3   2      49       0         .         .       0         .         .
+## 4   2      84       0         .         .       0         .         .
+## 5   2     112       0         .         .       0         .         .
+## 6   2     140       0         .         .       0         .         .
+## 7   2     182       1         1      6.25       0         .         .
+## 8   2     231       1         1      6.25       0         .         .
+## 9   2     294       1         1      6.25       0         .         .
+## 10  2     350       1         1      6.25       0         .         .
+## 11  2     385       1         1      6.25       0         .         .
+## 12  2     420       1         1      6.25       0         .         .
+## 13  2     476       1         1      6.25       0         .         .
+## 14  3      49       0                           0                    
+## 15  3      77       0                           1         1        60
+## 16  3     140       0                           1         1        60
+## 17  3     196       0                           1         1        60
+## 18  3     238       0                           1         1        60
+## 19  3     303       1         1      12.5       0                    
+## 20  3     327       1         1        25       0                    
+##    n_trts
+## 1       0
+## 2       0
+## 3       0
+## 4       0
+## 5       0
+## 6       0
+## 7       1
+## 8       1
+## 9       1
+## 10      1
+## 11      1
+## 12      1
+## 13      1
+## 14      0
+## 15      1
+## 16      1
+## 17      1
+## 18      1
+## 19      1
+## 20      1</code></pre>
+<pre class="r"><code>mutate(dems,
+       bmi_cat = ifelse(bmi &lt; 25, 1, ifelse(bmi &gt;= 25 | bmi &lt; 35, 2, 3)),
+       bmi_ters = cut(bmi, breaks=3)) %&gt;% head(n=20)</code></pre>
+<pre><code>##     id  bmi race age    sex days_death days_cardarr days_stroke bmi_cat
+## 1   81 21.8    5  62 Female         NA           NA          NA       1
+## 2   88 24.7    5  61 Female         NA           NA         299       1
+## 3   32 28.4    3  60   Male        187         1334          NA       2
+## 4  132 23.2    5  62 Female         NA           NA          NA       1
+## 5   26 18.0    5  62   Male         NA           NA          NA       1
+## 6   51 21.4    5  65 Female         NA           NA          NA       1
+## 7  167 21.1    5  53   Male         NA           NA          NA       1
+## 8  112 30.6    3  74   Male         NA          110         969       2
+## 9    2 23.8    2  71   Male         NA           NA          NA       1
+## 10  61 32.7    5  67   Male         NA           NA          NA       2
+## 11 218 24.5    5  32   Male         NA           NA          NA       1
+## 12 113 25.9    5  58 Female         NA           57          NA       2
+## 13  34 22.2    3  43   Male         NA         1083          NA       1
+## 14 131 27.5    5  59   Male         NA           NA          NA       2
+## 15 186 24.0    5  30   Male         NA           NA          NA       1
+## 16 130 25.6    5  62 Female         29           NA          NA       2
+## 17 120 26.0    5  72   Male         NA           NA        1314       2
+## 18   4 21.7    5  57 Female         NA           NA        1066       1
+## 19  53 26.9    5  83   Male         NA           NA          NA       2
+## 20 199 21.5    5  39   Male         NA           NA          NA       1
+##       bmi_ters
+## 1  (15.9,25.3]
+## 2  (15.9,25.3]
+## 3  (25.3,34.6]
+## 4  (15.9,25.3]
+## 5  (15.9,25.3]
+## 6  (15.9,25.3]
+## 7  (15.9,25.3]
+## 8  (25.3,34.6]
+## 9  (15.9,25.3]
+## 10 (25.3,34.6]
+## 11 (15.9,25.3]
+## 12 (25.3,34.6]
+## 13 (15.9,25.3]
+## 14 (25.3,34.6]
+## 15 (15.9,25.3]
+## 16 (25.3,34.6]
+## 17 (25.3,34.6]
+## 18 (15.9,25.3]
+## 19 (25.3,34.6]
+## 20 (15.9,25.3]</code></pre>
+</div>
+<div id="base-r-3" class="section level3">
+<h3>base R</h3>
+<pre class="r"><code>meds$n_trts &lt;- meds$trtA_yn + meds$trtB_yn
+head(meds, n=20)</code></pre>
+<pre><code>##    id days_dx trtA_yn trtA_type trtA_dose trtB_yn trtB_type trtB_dose
+## 1   1      23       0         .         .       0         .         .
+## 2   1      58       0         .         .       0         .         .
+## 3   2      49       0         .         .       0         .         .
+## 4   2      84       0         .         .       0         .         .
+## 5   2     112       0         .         .       0         .         .
+## 6   2     140       0         .         .       0         .         .
+## 7   2     182       1         1      6.25       0         .         .
+## 8   2     231       1         1      6.25       0         .         .
+## 9   2     294       1         1      6.25       0         .         .
+## 10  2     350       1         1      6.25       0         .         .
+## 11  2     385       1         1      6.25       0         .         .
+## 12  2     420       1         1      6.25       0         .         .
+## 13  2     476       1         1      6.25       0         .         .
+## 14  3      49       0                           0                    
+## 15  3      77       0                           1         1        60
+## 16  3     140       0                           1         1        60
+## 17  3     196       0                           1         1        60
+## 18  3     238       0                           1         1        60
+## 19  3     303       1         1      12.5       0                    
+## 20  3     327       1         1        25       0                    
+##    n_trts
+## 1       0
+## 2       0
+## 3       0
+## 4       0
+## 5       0
+## 6       0
+## 7       1
+## 8       1
+## 9       1
+## 10      1
+## 11      1
+## 12      1
+## 13      1
+## 14      0
+## 15      1
+## 16      1
+## 17      1
+## 18      1
+## 19      1
+## 20      1</code></pre>
+<pre class="r"><code>meds$n_trts &lt;- NULL</code></pre>
+</div>
+<div id="data.table-3" class="section level3">
+<h3>data.table</h3>
+<ul>
+<li>There’s also <code>transmutate()</code> which deletes the old column(s) you use to make the new column</li>
+</ul>
+</div>
+</div>
+<div id="summarise" class="section level2 tabset tabset-fade tabset-pills">
+<h2><code>summarise()</code></h2>
+<div id="dplyr-4" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>summarise(dems, mean(age), sd(age), min(age), max(age), median(age))</code></pre>
+<pre><code>##   mean(age)  sd(age) min(age) max(age) median(age)
+## 1        57 13.80937       21       84          60</code></pre>
+</div>
+<div id="base-r-4" class="section level3">
+<h3>base R</h3>
+</div>
+<div id="data.table-4" class="section level3">
+<h3>data.table</h3>
+</div>
+</div>
+<div id="group_by" class="section level2 tabset tabset-fade tabset-pills">
+<h2><code>group_by()</code></h2>
+<div id="dplyr-5" class="section level3">
+<h3>dplyr</h3>
+<pre class="r"><code>group_by(dems, id) %&gt;% head()</code></pre>
+<pre><code>## # A tibble: 6 x 8
+## # Groups:   id [6]
+##      id   bmi  race   age sex    days_death days_cardarr days_stroke
+##   &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;fct&gt;       &lt;int&gt;        &lt;int&gt;       &lt;int&gt;
+## 1    81  21.8     5    62 Female         NA           NA          NA
+## 2    88  24.7     5    61 Female         NA           NA         299
+## 3    32  28.4     3    60 Male          187         1334          NA
+## 4   132  23.2     5    62 Female         NA           NA          NA
+## 5    26  18       5    62 Male           NA           NA          NA
+## 6    51  21.4     5    65 Female         NA           NA          NA</code></pre>
+<pre class="r"><code>group_by(dems, sex) %&gt;% summarise(mean(age), mean(bmi))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   sex    `mean(age)` `mean(bmi)`
+##   &lt;fct&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+## 1 Female        55.5        25.3
+## 2 Male          57.4        25.7</code></pre>
+</div>
+<div id="base-r-5" class="section level3">
+<h3>base R</h3>
+</div>
+<div id="data.table-5" class="section level3">
+<h3>data.table</h3>
+<ul>
+<li>Opposite is <code>ungroup()</code></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="helper-functions" class="section level1">
+<h1>Helper functions</h1>
+<div id="everything" class="section level2">
+<h2><code>everything()</code></h2>
+<ul>
+<li>Move columns to the front of your data</li>
+</ul>
+<pre class="r"><code>select(dems, age, everything()) %&gt;% head()</code></pre>
+<pre><code>##   age  id  bmi race    sex days_death days_cardarr days_stroke
+## 1  62  81 21.8    5 Female         NA           NA          NA
+## 2  61  88 24.7    5 Female         NA           NA         299
+## 3  60  32 28.4    3   Male        187         1334          NA
+## 4  62 132 23.2    5 Female         NA           NA          NA
+## 5  62  26 18.0    5   Male         NA           NA          NA
+## 6  65  51 21.4    5 Female         NA           NA          NA</code></pre>
+</div>
+<div id="row_number" class="section level2">
+<h2><code>row_number()</code></h2>
+</div>
+<div id="starts_with" class="section level2">
+<h2><code>starts_with()</code></h2>
+</div>
+<div id="ends_with" class="section level2">
+<h2><code>ends_with()</code></h2>
+</div>
+<div id="matches" class="section level2">
+<h2><code>matches()</code></h2>
+</div>
+<div id="contains" class="section level2">
+<h2><code>contains()</code></h2>
+</div>
+</div>
+<div id="extra-functions" class="section level1">
+<h1>Extra functions</h1>
+<div id="lag-and-lead" class="section level2">
+<h2><code>lag()</code> and <code>lead()</code></h2>
+</div>
+<div id="between" class="section level2">
+<h2><code>between()</code></h2>
+</div>
+<div id="sample_frac" class="section level2">
+<h2><code>sample_frac()</code></h2>
+</div>
+<div id="sample_n" class="section level2">
+<h2><code>sample_n()</code></h2>
+</div>
+</div>
+<div id="joining-functions" class="section level1">
+<h1>Joining functions</h1>
+<div id="full_join" class="section level2">
+<h2><code>full_join()</code></h2>
+</div>
+<div id="inner_join" class="section level2">
+<h2><code>inner_join()</code></h2>
+</div>
+<div id="outer_join" class="section level2">
+<h2><code>outer_join()</code></h2>
+</div>
+<div id="right_join" class="section level2">
+<h2><code>right_join()</code></h2>
+</div>
+<div id="left_join" class="section level2">
+<h2><code>left_join()</code></h2>
+</div>
+<div id="semi_join" class="section level2">
+<h2><code>semi_join()</code></h2>
+</div>
+<div id="anti_join" class="section level2">
+<h2><code>anti_join()</code></h2>
+</div>
+</div>
+<div id="putting-it-all-together" class="section level1">
+<h1>Putting it all together</h1>
+<pre class="r"><code>#summarise_at(meds, vars(ends_with(&quot;yn&quot;)), funs(count(.)))</code></pre>
+<div id="functions-using-dplyr" class="section level2">
+<h2>Functions using dplyr</h2>
+<pre class="r"><code>pcorPlot &lt;- function(cent, x, y){ 
+ yform &lt;- as.formula(paste(y, &quot;~ Age_MRS&quot;))
+ xform &lt;- as.formula(paste(x, &quot;~ Age_MRS&quot;))
+  df &lt;- dat %&gt;%
+  filter(Center == cent) %&gt;% 
+  drop_na(!!x, !!y, Age_MRS) %&gt;%
+  mutate(mody_err = (lm(yform, dat = .)$residuals), 
+         modx_err = lm(xform, dat = .)$residuals) %&gt;%
+  mutate_at(.vars = vars(!!y),
+            .funs = funs(ymean = mean(., na.rm=T))) %&gt;% 
+  mutate_at(.vars = vars(!!x),
+            .funs = funs(xmean = mean(., na.rm=T))) %&gt;% 
+  mutate(y_err = mody_err + ymean, 
+         x_err = modx_err + xmean)
+  p_raw &lt;- ggplot(df, aes_string(x, y, col=&quot;Meno_grp&quot;)) + 
+    geom_smooth(method=&quot;lm&quot;, aes(col=NULL), alpha=.4) + 
+    geom_point(size=2) +
+    labs(x=x, y=y, title=&quot;Raw values&quot;) 
+  p_adj &lt;- ggplot(df, aes(x_err, y_err, col=Meno_grp)) + 
+    geom_smooth(method=&quot;lm&quot;, aes(col=NULL), alpha=.4) +
+    geom_point(size=2) +
+    labs(x=x, y=y, title=&quot;Age-adjusted&quot;) 
+  return(ggarrange(p_raw, p_adj, ncol=2, common.legend = T, legend=&quot;right&quot;) %&gt;% 
+           annotate_figure(top = text_grob(paste(x, &quot;and&quot;, y))))
+}
+
+# Side by side plots
+# Plot a) scatterplot of two raw measures
+# Plot b) scatterplot with partial correlations (holding third cont. variable of age constant)
+pcorPlot &lt;- function(cent, x, y){ #function to take character strings for center and two cont. measures
+  #make formulas for linear regressions
+ yform &lt;- as.formula(paste(y, &quot;~ Age_MRS&quot;))
+ xform &lt;- as.formula(paste(x, &quot;~ Age_MRS&quot;))
+  df &lt;- dat %&gt;%
+  filter(Center == cent) %&gt;% # only keep data from center of choice
+  drop_na(!!x, !!y, Age_MRS) %&gt;% # remove na&#39;s from columns in linear regression
+  mutate(mody_err = (lm(yform, dat = .)$residuals), # pull out the residuals for Y ~ age and X ~ age
+         modx_err = lm(xform, dat = .)$residuals) %&gt;%
+  mutate_at(.vars = vars(!!y),
+            .funs = funs(ymean = mean(., na.rm=T))) %&gt;% # make a column with the mean of Y meas.
+  mutate_at(.vars = vars(!!x),
+            .funs = funs(xmean = mean(., na.rm=T))) %&gt;% # make a column with the mean of X meas.
+  mutate(y_err = mody_err + ymean, # add the means to the error terms to get partial correlations
+         x_err = modx_err + xmean)
+  p_raw &lt;- ggplot(df, aes_string(x, y, col=&quot;Meno_grp&quot;)) + # make a plot with the raw values
+    geom_smooth(method=&quot;lm&quot;, aes(col=NULL), alpha=.4) + # using aes_string() so we can use the function params
+    geom_point(size=2) +
+    labs(x=x, y=y, title=&quot;Raw values&quot;) 
+  p_adj &lt;- ggplot(df, aes(x_err, y_err, col=Meno_grp)) + # call the error columns and replot
+    geom_smooth(method=&quot;lm&quot;, aes(col=NULL), alpha=.4) +
+    geom_point(size=2) +
+    labs(x=x, y=y, title=&quot;Age-adjusted&quot;) 
+  return(ggarrange(p_raw, p_adj, ncol=2, common.legend = T, legend=&quot;right&quot;) %&gt;% # return both plots
+           annotate_figure(top = text_grob(paste(x, &quot;and&quot;, y))))
+}</code></pre>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hu4b4dff1ed374fdb47912daab159b868d_26697_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
+      <h6 class="card-subtitle">Research Biostatistician I</h6>
+      <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="/#contact" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/Rkatlady" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/hoffmakl" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.16bbb3750feb7244c9bc409a5a4fe678.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

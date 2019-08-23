@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>headers in functions | KHstats</title>
+    <link>/tags/headers-in-functions/</link>
+      <atom:link href="/tags/headers-in-functions/index.xml" rel="self" type="application/rss+xml" />
+    <description>headers in functions</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 16 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>headers in functions</title>
+      <link>/tags/headers-in-functions/</link>
+    </image>
+    
+    <item>
+      <title>Outputting Rmarkdown Headers within Functions</title>
+      <link>/tutorial/headers-in-functions/headers-in-functions/</link>
+      <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
+      <guid>/tutorial/headers-in-functions/headers-in-functions/</guid>
+      <description>
+
+
+&lt;p&gt;When doing long, identical analyses on different data sets or variables, it can be useful to have one function which outputs your analyses in an Rmarkdown friendly (ie., with headers) format.&lt;/p&gt;
+&lt;p&gt;This is a simple example of how multiple mini-analyses can be combined into one run-all function containing headers.&lt;/p&gt;
+&lt;p&gt;Let’s say we have two separate data sets, dat1 and dat2, and we want to look do two analyses on each data set.&lt;/p&gt;
+&lt;p&gt;Look at the distribution of each x and y variable
+Run and report a regression model, y ~ x
+We want whoever is receiving our report to be able to click on each sub-analysis in our table of contents.&lt;/p&gt;
+&lt;p&gt;Let’s start by setting up our Rmd chunks, loading our libraries, and creating our data sets:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;knitr::opts_chunk$set(echo = T, results=&amp;quot;asis&amp;quot;, warning=F, message=F)
+library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ──────────── tidyverse 1.2.1 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ─────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat1 &amp;lt;- data.frame(x=rnorm(50),y=rnorm(50))
+dat2 &amp;lt;- data.frame(x=rnorm(250),y=rnorm(250))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Make many mini functions
+xDistFun &amp;lt;- function(dat){
+  ggplot(dat, aes(x)) + geom_histogram(fill=&amp;quot;blue&amp;quot;)}
+yDistFun &amp;lt;- function(dat){
+  ggplot(dat, aes(y)) + geom_histogram(fill=&amp;quot;red&amp;quot;)}
+xRegFun &amp;lt;- function(dat){
+  lm(y ~ x, data=dat) %&amp;gt;% broom::tidy() %&amp;gt;% knitr::kable()}
+# Organize functions into a repetitive analysis
+runManyFuns &amp;lt;- function(dat){
+  title &amp;lt;- deparse(substitute(dat))
+  h1 &amp;lt;- &amp;quot;Distributions&amp;quot;
+  out1 &amp;lt;- list(xDistFun(dat = dat), yDistFun(dat = dat))
+  h2 &amp;lt;- &amp;quot;Regression Model&amp;quot;
+  out2 &amp;lt;- xRegFun(dat = dat)
+  headers &amp;lt;- c(h1, h2)
+  out &amp;lt;- list(out1, out2)
+  cat(paste0(&amp;quot;\n#Data: &amp;quot;, title, &amp;quot;\n&amp;quot;))
+  for (i in 1:length(headers)){
+    cat(paste0(&amp;quot;\n##&amp;quot;, headers[i], &amp;quot;\n&amp;quot;))
+    print(out[[i]])
+  }
+  #print(out2)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Run analysis on different data sets, outcomes, etc.
+runManyFuns(dat1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;#Data: dat1&lt;/p&gt;
+&lt;p&gt;##Distributions
+[[1]]
+&lt;img src=&#34;/tutorial/headers-in-functions/headers-in-functions_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;
+[[2]]
+&lt;img src=&#34;/tutorial/headers-in-functions/headers-in-functions_files/figure-html/unnamed-chunk-2-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;##Regression Model&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;term&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;estimate&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;std.error&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;statistic&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p.value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;(Intercept)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0570509&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.1280334&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4455941&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6578938&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;x&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0899300&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.1349523&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6663835&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5083564&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;runManyFuns(dat2)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;#Data: dat2&lt;/p&gt;
+&lt;p&gt;##Distributions
+[[1]]
+&lt;img src=&#34;/tutorial/headers-in-functions/headers-in-functions_files/figure-html/unnamed-chunk-2-3.png&#34; width=&#34;672&#34; /&gt;
+[[2]]
+&lt;img src=&#34;/tutorial/headers-in-functions/headers-in-functions_files/figure-html/unnamed-chunk-2-4.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;##Regression Model&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;term&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;estimate&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;std.error&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;statistic&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p.value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;(Intercept)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.0942183&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0652249&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.4445157&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.1498562&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;x&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0339235&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0699850&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4847247&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6282995&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
