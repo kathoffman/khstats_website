@@ -57,7 +57,7 @@ The researchers have asked for my assistance in writing the methods section. The
 
 12:00PM - I head to lunch with a group of coworkers. They have gotten food from a nearby salad place, and we sit in one of our favorite buildings on campus and eat together. Our jokes oscillate from incredibly nerdy to pretty stupid. One of my coworkers points out that our hair is styled the same way for the third day in a row.
 
-![Alt Text](https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/katalan.gif)
+![](https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/katalan.gif)
 
 12:45PM - I get back to my desk and type up my handwritten notes from the neurology meeting and put them in that project’s “Notes” folder. It’s important to me that I keep track of all my meetings electronically - I fear losing my notebooks or someone else having to decipher my cursive should I ever have to pass off a project.
 
@@ -67,7 +67,7 @@ The researchers have asked for my assistance in writing the methods section. The
 
 1:30PM - I get to work writing up functions, which is just a fancy programming way of saying your code can do the same thing to multiple data sets (or subsets of patients, as is the case of this protein expression study I’m doing). Sometimes it takes a bit longer to write my functions than it would if I were to just copy and paste my code several different times, but the final code is much more readable and less prone to errors. By the time I’m done working, I have some interactive plots showing the significant and non-significant results. When you hover over them, they show what protein corresponds to which point on the graph. They look like this, except this is not the real data we used in her study.
 
-![Alt Text](https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/volcano.gif)
+![](https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/volcano.gif)
 
 I use Rstudio and its amazing Rmarkdown tool to craft a draft report to the researcher, and I save it with today’s date in my “Reports” folder for that project. The report so far includes unadjusted and adjusted models of all the protein expressions using very small p-values to account for the 1000+ statistical comparisons we’re making. I show the results in various plots such as the one above (called a “volcano plot” for its shape).
 
