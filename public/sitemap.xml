@@ -58,11 +58,6 @@
   </url>
   
   <url>
-    <loc>/tags/#rstats/</loc>
-    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/#rstatsnyc/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
@@ -93,7 +88,12 @@
   </url>
   
   <url>
-    <loc>/post/nyrconf/testing/</loc>
+    <loc>/tags/rstats/</loc>
+    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/nyrconf/nyr-conf-2019/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
@@ -108,12 +108,27 @@
   </url>
   
   <url>
+    <loc>/categories/blog/</loc>
+    <lastmod>2019-04-16T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/career/</loc>
     <lastmod>2019-04-16T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/sas/</loc>
+    <lastmod>2019-04-16T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/statistics/</loc>
+    <lastmod>2019-04-16T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/stem/</loc>
     <lastmod>2019-04-16T21:13:14-05:00</lastmod>
   </url>
   
@@ -155,16 +170,6 @@
   <url>
     <loc>/talk/shanghai/</loc>
     <lastmod>2018-03-01T10:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/deep-learning/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/demo/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -214,11 +219,6 @@
   
   <url>
     <loc>/authors/robert-ford/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/source-themes/</loc>
     <lastmod>2015-09-01T00:00:00+00:00</lastmod>
   </url>
   

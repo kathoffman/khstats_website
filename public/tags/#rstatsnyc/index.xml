@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>#rstatsnyc | KHstats</title>
+    <link>/tags/#rstatsnyc/</link>
+      <atom:link href="/tags/#rstatsnyc/index.xml" rel="self" type="application/rss+xml" />
+    <description>#rstatsnyc</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2019 21:13:14 -0500</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>#rstatsnyc</title>
+      <link>/tags/#rstatsnyc/</link>
+    </image>
+    
+    <item>
+      <title>Tips and Tricks from the New York R Conference</title>
+      <link>/post/nyrconf/nyr-conf-2019/</link>
+      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
+      <guid>/post/nyrconf/nyr-conf-2019/</guid>
+      <description>
+
+
+&lt;p&gt;In early May I attended the &lt;a href=&#34;https://www.rstats.nyc/&#34;&gt;New York R Conference&lt;/a&gt;. There were 24 speakers, including my coworker at Weill Cornell Medicine, Elizabeth Sweeney! Each person did a 20-minute presentation on some way they use R for their work and/or hobbies. There was a &lt;em&gt;ton&lt;/em&gt; of information, and even though not all of it was directly useful for my workflow as a statistical consultant in an academic setting, I really enjoyed being around so many people who love R.&lt;/p&gt;
+&lt;p&gt;I’ve linked some videos of my favorite talks and put together some the topics/packages/functions I found most intriguing or useful in my day-to-day work as a research biostatistician. (This was originally a presentation for my &lt;a href=&#34;https://wcm-computing-club.github.io/&#34;&gt;biostatistics team’s computing club&lt;/a&gt;.)&lt;/p&gt;
+&lt;div id=&#34;visualizing-data-with-naniar&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Visualizing data with &lt;code&gt;naniar&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;Brooke Watson, a data scientist at the American Civil Liberties Union, gave a great presentation on how she uses &lt;code&gt;R&lt;/code&gt; to defend immigrants. She shared several data wrangling tips. One new function for me was &lt;code&gt;naniar::vis_miss()&lt;/code&gt; to visualize your missing data quickly.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;tidyverse&amp;quot;)
+#install.packages(&amp;quot;naniar&amp;quot;)
+library(tidyverse)
+library(naniar)
+vis_miss(airquality) # a base R data set&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/nyrconf/testing_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;It returns a &lt;code&gt;ggplot2&lt;/code&gt; object so you can edit titles, colors, etc. if necessary. You can also add a clustering argument to make it easier to see patterns of missingness in your data.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;vis_miss(airquality, cluster=T) +
+  labs(title=&amp;quot;Missingness in the airquality data set&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/nyrconf/testing_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;checking-out-data-differences-with-daff&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Checking out data differences with &lt;code&gt;daff&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;Brooke also gave a demo for a neat package to check if and where differences in two data sets are occurring.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;daff)
+library(daff)
+dat1 &amp;lt;- data.frame(A = c(1:3), B = c(T,F,T))
+dat2 &amp;lt;- data.frame(A = c(1:4), C = c(&amp;quot;apple&amp;quot;,NA,NA,&amp;quot;banana&amp;quot;))
+my_diff &amp;lt;- diff_data(dat1, dat2)
+my_diff&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Daff Comparison: &amp;#39;dat1&amp;#39; vs. &amp;#39;dat2&amp;#39; 
+##       +++    ---  
+## @@  A C      B    
+## +   1 apple  TRUE 
+##     2 &amp;lt;NA&amp;gt;   FALSE
+##     3 &amp;lt;NA&amp;gt;   TRUE 
+## +++ 4 banana &amp;lt;NA&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- {{ --&gt;
+&lt;!-- &lt;figure src = &#34;diff_screenshot.png&#34; title=&#34;A caption&#34; lightbox=&#34;true&#34;&gt; --&gt;
+&lt;!-- }} --&gt;
+&lt;p&gt;I thought this would be useful for when you receive new data sets from investigators and want to make sure column names, patients, etc. haven’t changed. Check out the full documentation &lt;a href=&#34;https://github.com/edwindj/daff&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;gohelverse&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Gohelverse&lt;/h1&gt;
+&lt;p&gt;Noam Ross shared code for editable figures using David Gohel’s &lt;code&gt;officer&lt;/code&gt; and &lt;code&gt;rvg&lt;/code&gt; packages. I shared some &lt;a href=&#34;https://github.com/hoffmakl/reporting/blob/master/vg.R&#34;&gt;example code&lt;/a&gt; for my team on github after I saw him present it at an R-Ladies event in the fall. Essentially you can run some pretty simple lines of code to output figures (base R, &lt;code&gt;ggplot2&lt;/code&gt;, or otherwise) as editable figures in Powerpoint. Noam reminded us that whoever you give these figures to will now be able to edit &lt;em&gt;anything&lt;/em&gt;, even data points, so keep that in mind before you freely give away editable figures… :)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;rvg&amp;quot;)
+#install.packages(&amp;quot;officer&amp;quot;)
+library(rvg)
+library(officer)
+
+#sample data
+dat &amp;lt;- data.frame(x = rnorm(100, 10),
+                  y = rnorm(100, 100),
+                  z = rnorm(100, 1))
+
+#make an empty ppt
+read_pptx() %&amp;gt;% 
+  #add a slide, must specify the slide layout and layout name
+  add_slide(layout=&amp;quot;Title and Content&amp;quot;, master=&amp;quot;Office Theme&amp;quot;) %&amp;gt;%
+  #specify what you want on the slide (code = ...)
+  #type=&amp;quot;body&amp;quot; means the plots going in the body part of the layout
+  #width and height are in inches
+  ph_with_vg(code = plot(dat$x, dat$y, main=&amp;quot;Edit me!&amp;quot;, pch=16), type=&amp;quot;body&amp;quot;, width=6, height=4) %&amp;gt;%
+  #output your ppt (target argument is just the file destination/name)
+  print(target=&amp;quot;plot.pptx&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;/Users/katherinehoffman/Desktop/basic/content/post/nyrconf/plot.pptx&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;going-from-rmarkdown-to-word-and-back-again-with-redoc&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Going from RMarkdown to Word, and back again with &lt;code&gt;redoc&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;Noam also shared his new package, &lt;code&gt;redoc&lt;/code&gt;, which allows you to reload an Rmd-generated word file back into R as a modified Rmd file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/redoc.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This is part of his goal to decrease the pain of “the valley of heartbreak.” &lt;img src=&#34;/img/valleyofheartbreak.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Installation command is:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#remotes::install_github(&amp;quot;noamross/redoc&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You may need to update several packages to get it to run correctly, but after that the main commands are just &lt;code&gt;redoc&lt;/code&gt; and &lt;code&gt;dedoc&lt;/code&gt;. To see for yourself, try running my &lt;a href=&#34;https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd&#34;&gt;github code&lt;/a&gt;, making some changes to your word doc, and reloading back into &lt;code&gt;Rmarkdown&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;pipelines-in-drake&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Pipelines in &lt;code&gt;drake&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;&lt;img src=&#34;/img/drake.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This could definitely be an entire computing club presentation… but for long projects that you have to redo with new data often, &lt;code&gt;drake&lt;/code&gt; is becoming really popular. Amanda Dobbyn gave an awesome presentation and you can see her slides &lt;a href=&#34;https://aedobbyn.github.io/nyr-2019/#1&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Another super informative bookdown guide by the authors can be found &lt;a href=&#34;https://ropenscilabs.github.io/drake-manual/&#34;&gt;here&lt;/a&gt;.
+Essentially their motto is “what gets done stays done” so that you are not redoing work you’ve already done in order to update your results. Yet, you’re still redoing what needs to be done in a reproducible way!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/drake_pipeline.png&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;git-merge-conflicts&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Git merge conflicts&lt;/h1&gt;
+&lt;p&gt;I went to a whole-day workshop on Git so if you’re interested in talking more about this let me know. &lt;em&gt;BUT&lt;/em&gt; the biggest thing I learned was that if you are ever using Git and find your code has strange characters like &amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; HEAD followed by ======== and a long set of letters/numbers, this means you have a merge conflict. It’s meant to be a flag so you know where to fix the differences in your two files you’re trying to version control! I spent days struggling with this problem before, so I thought I’d pass the message along in case anyone runs into it someday. :)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;talks-to-check-out&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Talks to check out&lt;/h1&gt;
+&lt;p&gt;When the talks are released, I’ll make a post on slack, and when they are, I highly recommend:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/watch?time_continue=4&amp;amp;v=33BzunEXEIE&#34;&gt;Emily Robinson’s&lt;/a&gt; accessible instructions for how to make a package with &lt;code&gt;usethis&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/embed/g2bQJIth1-I&#34;&gt;Jaqueline Nolis’&lt;/a&gt; &lt;strong&gt;really funny&lt;/strong&gt; talk on how neural nets aren’t actually hard at all&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://www.youtube.com/embed/ZmbrsbYwRWw&#34;&gt;Andrew Gelman’s&lt;/a&gt; discussion on “solving all your statistical problems with p-values” (but he’s a Bayesian, ha ha)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-bonus&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A bonus!&lt;/h1&gt;
+&lt;p&gt;This was not from the New York R Conference but I saw it on &lt;a href=&#34;https://twitter.com/OppenheimerEvan/status/1132092898760114184&#34;&gt;Twitter&lt;/a&gt; while making this presentation for my computing club and it made me quite happy…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;genius&amp;quot;)
+library(genius)
+genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 53 x 3
+##    track_title  line lyric                                           
+##    &amp;lt;chr&amp;gt;       &amp;lt;int&amp;gt; &amp;lt;chr&amp;gt;                                           
+##  1 Hey Jude        1 Hey Jude, don&amp;#39;t make it bad                     
+##  2 Hey Jude        2 Take a sad song and make it better              
+##  3 Hey Jude        3 Remember to let her into your heart             
+##  4 Hey Jude        4 Then you can start to make it better            
+##  5 Hey Jude        5 Hey Jude, don&amp;#39;t be afraid                       
+##  6 Hey Jude        6 You were made to go out and get her             
+##  7 Hey Jude        7 The minute you let her under your skin          
+##  8 Hey Jude        8 Then you begin to make it better                
+##  9 Hey Jude        9 And anytime you feel the pain, hey Jude, refrain
+## 10 Hey Jude       10 Don&amp;#39;t carry the world upon your shoulders       
+## # … with 43 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;takeaways&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Takeaways&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;You can check out tweets from the conference by searching the hashtag #rstatsnyc on Twitter&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Check out the &lt;a href=&#34;https://www.meetup.com/rladies-newyork/&#34;&gt;R-Ladies NYC meetups&lt;/a&gt; and &lt;a href=&#34;https://www.meetup.com/nyhackr/&#34;&gt;New York R meetups&lt;/a&gt;!&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

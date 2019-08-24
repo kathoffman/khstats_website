@@ -116,9 +116,9 @@
     
     <item>
       <title>Tips and Tricks from the New York R Conference</title>
-      <link>/post/nyrconf/testing/</link>
+      <link>/post/nyrconf/nyr-conf-2019/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
-      <guid>/post/nyrconf/testing/</guid>
+      <guid>/post/nyrconf/nyr-conf-2019/</guid>
       <description>
 
 
@@ -354,12 +354,12 @@ genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;
 &lt;p&gt;*if you start dealing with data sets with &amp;gt; 1 million rows, data.table will be much faster&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data(&amp;quot;iris&amp;quot;)
 library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Attaching packages ────────────── tidyverse 1.2.1 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ── tidyverse 1.2.1 ──&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## ✔ ggplot2 3.2.1     ✔ purrr   0.3.2
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   0.8.3     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Conflicts ───────────────── tidyverse_conflicts() ──
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ───── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
@@ -975,12 +975,12 @@ iris %&amp;gt;% group_by(Species) %&amp;gt;%
 &lt;/ul&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;x &amp;lt;- runif(5)
 cbind(ahead = lead(x), x, behind = lag(x))&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##          ahead         x    behind
-## [1,] 0.5677863 0.8123114        NA
-## [2,] 0.9943139 0.5677863 0.8123114
-## [3,] 0.9466897 0.9943139 0.5677863
-## [4,] 0.4742474 0.9466897 0.9943139
-## [5,]        NA 0.4742474 0.9466897&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##           ahead          x    behind
+## [1,] 0.47072787 0.78080563        NA
+## [2,] 0.64402818 0.47072787 0.7808056
+## [3,] 0.32345814 0.64402818 0.4707279
+## [4,] 0.08515902 0.32345814 0.6440282
+## [5,]         NA 0.08515902 0.3234581&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;Can choose a time column to order your new values by with the argument &lt;code&gt;&#39;order_by&#39;&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -1060,51 +1060,51 @@ incomplete_df&lt;/code&gt;&lt;/pre&gt;
 &lt;/ul&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat &amp;lt;- data.frame(id = sample(1:100, 20), meas = rnorm(20))
 mydat&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##    id        meas
-## 1  21 -0.25035637
-## 2  87  0.50363037
-## 3  74 -0.11259234
-## 4  37 -0.72029892
-## 5  60  0.89484051
-## 6  56  1.65776866
-## 7  79  0.04188483
-## 8  19  0.78851069
-## 9  58 -0.12519381
-## 10 67 -0.45813272
-## 11 83 -1.61101945
-## 12 39 -0.77879913
-## 13 23 -0.42818335
-## 14 45  0.18212417
-## 15 71  1.11600361
-## 16 88  0.13316263
-## 17  2 -0.29647094
-## 18 42  0.24232759
-## 19 89 -0.56512105
-## 20 10  1.79038253&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     id         meas
+## 1   57  2.288186793
+## 2  100 -1.602300385
+## 3   46  0.609128605
+## 4   85 -0.481366290
+## 5   71 -0.333337018
+## 6   99  0.551787362
+## 7    5 -0.042839936
+## 8   75 -0.803681418
+## 9   67  0.904749782
+## 10  23  0.333527940
+## 11  77  0.040703715
+## 12  33  0.002205167
+## 13  37  0.943927491
+## 14  41  1.027059802
+## 15  64  1.005199118
+## 16  62  0.591302764
+## 17   3  1.262050643
+## 18   7 -0.644000308
+## 19  97 -0.768234573
+## 20  45  0.698145334&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat %&amp;gt;% sample_frac(size = .5)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##    id        meas
-## 1  37 -0.72029892
-## 2   2 -0.29647094
-## 3  42  0.24232759
-## 4  39 -0.77879913
-## 5  19  0.78851069
-## 6  60  0.89484051
-## 7  74 -0.11259234
-## 8  79  0.04188483
-## 9  58 -0.12519381
-## 10 56  1.65776866&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     id       meas
+## 1   71 -0.3333370
+## 2    3  1.2620506
+## 3   75 -0.8036814
+## 4   85 -0.4813663
+## 5   45  0.6981453
+## 6   64  1.0051991
+## 7  100 -1.6023004
+## 8   62  0.5913028
+## 9   37  0.9439275
+## 10  41  1.0270598&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat %&amp;gt;% sample_frac(size= .5, replace = T) # you can also add sampling weights&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##    id        meas
-## 1  71  1.11600361
-## 2  79  0.04188483
-## 3  58 -0.12519381
-## 4  71  1.11600361
-## 5   2 -0.29647094
-## 6  83 -1.61101945
-## 7  10  1.79038253
-## 8  87  0.50363037
-## 9  21 -0.25035637
-## 10 58 -0.12519381&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    id         meas
+## 1  62  0.591302764
+## 2  75 -0.803681418
+## 3  33  0.002205167
+## 4  97 -0.768234573
+## 5  23  0.333527940
+## 6  23  0.333527940
+## 7  67  0.904749782
+## 8  62  0.591302764
+## 9  85 -0.481366290
+## 10 75 -0.803681418&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;sample_n&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;&lt;code&gt;sample_n()&lt;/code&gt;&lt;/h2&gt;
@@ -1113,9 +1113,9 @@ mydat&lt;/code&gt;&lt;/pre&gt;
 &lt;/ul&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mydat %&amp;gt;% sample_n(3)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##   id      meas
-## 1 42 0.2423276
-## 2 10 1.7903825
-## 3 19 0.7885107&lt;/code&gt;&lt;/pre&gt;
+## 1 62 0.5913028
+## 2 37 0.9439275
+## 3 41 1.0270598&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;joining-functions&#34; class=&#34;section level1&#34;&gt;
@@ -1472,36 +1472,36 @@ length(names(brain))&lt;/code&gt;&lt;/pre&gt;
                      x2 = sample(c(-5:-2,NA), 13, replace=T))
 misdat&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##    x1 x2
-## 1   3 -5
-## 2   1 -5
-## 3   1 -4
-## 4   2 NA
-## 5   1 -4
-## 6   2 -3
-## 7   1 NA
-## 8   2 -2
-## 9   2 -4
-## 10  1 -3
-## 11  2 -4
-## 12  1 -5
-## 13  2 NA&lt;/code&gt;&lt;/pre&gt;
+## 1   3 -3
+## 2   3 -5
+## 3   3 -2
+## 4  NA NA
+## 5  NA -5
+## 6  NA -2
+## 7   1 -3
+## 8   3 NA
+## 9   1 -4
+## 10 NA -3
+## 11 NA -4
+## 12  3 -5
+## 13 NA -4&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;misdat %&amp;gt;%
   mutate_all(.funs = funs(miss = ifelse(is.na(.), 1, 0))) %&amp;gt;%
   mutate_all(.funs = funs(replace_na(., mean(., na.rm=T))))&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;##    x1   x2 x1_miss x2_miss
-## 1   3 -5.0       0       0
-## 2   1 -5.0       0       0
-## 3   1 -4.0       0       0
-## 4   2 -3.9       0       1
-## 5   1 -4.0       0       0
-## 6   2 -3.0       0       0
-## 7   1 -3.9       0       1
-## 8   2 -2.0       0       0
-## 9   2 -4.0       0       0
-## 10  1 -3.0       0       0
-## 11  2 -4.0       0       0
-## 12  1 -5.0       0       0
-## 13  2 -3.9       0       1&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          x1        x2 x1_miss x2_miss
+## 1  3.000000 -3.000000       0       0
+## 2  3.000000 -5.000000       0       0
+## 3  3.000000 -2.000000       0       0
+## 4  2.428571 -3.636364       1       1
+## 5  2.428571 -5.000000       1       0
+## 6  2.428571 -2.000000       1       0
+## 7  1.000000 -3.000000       0       0
+## 8  3.000000 -3.636364       0       1
+## 9  1.000000 -4.000000       0       0
+## 10 2.428571 -3.000000       1       0
+## 11 2.428571 -4.000000       1       0
+## 12 3.000000 -5.000000       0       0
+## 13 2.428571 -4.000000       1       0&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;longitudinal-data-wrangling-a&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Longitudinal data wrangling A&lt;/h2&gt;

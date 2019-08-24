@@ -20,5 +20,13 @@
       <description></description>
     </item>
     
+    <item>
+      <title>blog</title>
+      <link>/categories/blog/</link>
+      <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
+      <guid>/categories/blog/</guid>
+      <description></description>
+    </item>
+    
   </channel>
 </rss>

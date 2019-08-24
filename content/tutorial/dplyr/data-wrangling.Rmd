@@ -3,7 +3,7 @@ title: "Data Wrangling with dplyr"
 author: "Katherine Hoffman"
 date: 2019-03-05T21:13:14-05:00
 categories: ["R"]
-tags: ["dplyr", "R", "#rstats"]
+tags: ["dplyr", "R", "rstats"]
 output: 
   html_document:
     toc: true

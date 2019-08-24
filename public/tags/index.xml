@@ -21,14 +21,6 @@
     </item>
     
     <item>
-      <title>#rstats</title>
-      <link>/tags/#rstats/</link>
-      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
-      <guid>/tags/#rstats/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>#rstatsnyc</title>
       <link>/tags/#rstatsnyc/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
@@ -49,6 +41,14 @@
       <link>/tags/r-markdown/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
       <guid>/tags/r-markdown/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rstats</title>
+      <link>/tags/rstats/</link>
+      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/rstats/</guid>
       <description></description>
     </item>
     
@@ -77,34 +77,26 @@
     </item>
     
     <item>
+      <title>statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/statistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>STEM</title>
+      <link>/tags/stem/</link>
+      <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/stem/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>dplyr</title>
       <link>/tags/dplyr/</link>
       <pubDate>Tue, 05 Mar 2019 21:13:14 -0500</pubDate>
       <guid>/tags/dplyr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Deep Learning</title>
-      <link>/tags/deep-learning/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>/tags/deep-learning/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Demo</title>
-      <link>/tags/demo/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>/tags/demo/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Source Themes</title>
-      <link>/tags/source-themes/</link>
-      <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
-      <guid>/tags/source-themes/</guid>
       <description></description>
     </item>
     
