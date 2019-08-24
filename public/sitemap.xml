@@ -58,11 +58,6 @@
   </url>
   
   <url>
-    <loc>/tags/#rstatsnyc/</loc>
-    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/categories/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
@@ -89,6 +84,11 @@
   
   <url>
     <loc>/tags/rstats/</loc>
+    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/rstatsnyc/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   

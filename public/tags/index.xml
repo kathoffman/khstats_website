@@ -21,14 +21,6 @@
     </item>
     
     <item>
-      <title>#rstatsnyc</title>
-      <link>/tags/#rstatsnyc/</link>
-      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
-      <guid>/tags/#rstatsnyc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>New York R Conference</title>
       <link>/tags/new-york-r-conference/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
@@ -49,6 +41,14 @@
       <link>/tags/rstats/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
       <guid>/tags/rstats/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rstatsnyc</title>
+      <link>/tags/rstatsnyc/</link>
+      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/rstatsnyc/</guid>
       <description></description>
     </item>
     

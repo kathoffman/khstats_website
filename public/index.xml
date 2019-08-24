@@ -132,11 +132,11 @@
 library(tidyverse)
 library(naniar)
 vis_miss(airquality) # a base R data set&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/nyrconf/testing_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;It returns a &lt;code&gt;ggplot2&lt;/code&gt; object so you can edit titles, colors, etc. if necessary. You can also add a clustering argument to make it easier to see patterns of missingness in your data.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;vis_miss(airquality, cluster=T) +
   labs(title=&amp;quot;Missingness in the airquality data set&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/nyrconf/testing_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;checking-out-data-differences-with-daff&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Checking out data differences with &lt;code&gt;daff&lt;/code&gt;&lt;/h1&gt;

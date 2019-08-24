@@ -3,7 +3,7 @@ title: "Tips and Tricks from the New York R Conference"
 author: "Katherine Hoffman"
 date: 2019-06-01T21:13:14-05:00
 categories: ["R"]
-tags: ["R Markdown", "New York R Conference", "rstats", "#rstatsnyc"]
+tags: ["R Markdown", "New York R Conference", "rstats", "rstatsnyc"]
 ---
 
 
@@ -18,11 +18,11 @@ tags: ["R Markdown", "New York R Conference", "rstats", "#rstatsnyc"]
 library(tidyverse)
 library(naniar)
 vis_miss(airquality) # a base R data set</code></pre>
-<p><img src="/post/nyrconf/testing_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="/post/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>It returns a <code>ggplot2</code> object so you can edit titles, colors, etc. if necessary. You can also add a clustering argument to make it easier to see patterns of missingness in your data.</p>
 <pre class="r"><code>vis_miss(airquality, cluster=T) +
   labs(title=&quot;Missingness in the airquality data set&quot;)</code></pre>
-<p><img src="/post/nyrconf/testing_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/post/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </div>
 <div id="checking-out-data-differences-with-daff" class="section level1">
 <h1>Checking out data differences with <code>daff</code></h1>
