@@ -16,7 +16,7 @@ location: 1300 York St New York, NY
 math: true
 publishDate: "2017-01-01T00:00:00Z"
 summary: Using sl3 to build ensemble learning models in R
-tags: []
+tags: [R]
 title: Become a Superlearner
 url_code: ""
 url_pdf: ""

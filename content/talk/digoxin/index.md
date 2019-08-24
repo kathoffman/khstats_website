@@ -17,7 +17,7 @@ location: Denver, CO
 math: true
 publishDate: "2019-06-17T19:00:00Z"
 summary: ASA Joint Statistical Meeting 2019
-tags: [R]
+tags: []
 title: Estimating the Causal Effect of Digoxin using Marginal Structural Models
 url_code: ""
 url_pdf: ""
