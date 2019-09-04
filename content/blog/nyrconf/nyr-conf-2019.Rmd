@@ -108,7 +108,7 @@ I went to a whole-day workshop on Git so if you're interested in talking more ab
 
 # Talks to check out
 
-When the talks are released, I'll make a post on slack, and when they are, I highly recommend:
+Some of my favorite talks from the conference were...
 
 - [Emily Robinson's](https://www.youtube.com/watch?time_continue=4&v=33BzunEXEIE) accessible instructions for how to make a package with `usethis`
 
