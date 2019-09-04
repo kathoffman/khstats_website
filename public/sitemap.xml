@@ -58,6 +58,11 @@
   </url>
   
   <url>
+    <loc>/categories/blog/</loc>
+    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
@@ -69,11 +74,6 @@
   
   <url>
     <loc>/blog/</loc>
-    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
@@ -104,11 +104,6 @@
   
   <url>
     <loc>/tags/biostatistician/</loc>
-    <lastmod>2019-04-16T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/blog/</loc>
     <lastmod>2019-04-16T21:13:14-05:00</lastmod>
   </url>
   
@@ -164,6 +159,11 @@
   
   <url>
     <loc>/tags/dplyr/</loc>
+    <lastmod>2019-03-05T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
     <lastmod>2019-03-05T21:13:14-05:00</lastmod>
   </url>
   
