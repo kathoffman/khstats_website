@@ -26,12 +26,7 @@ library(naniar)
 vis_miss(airquality) # a base R data set
 ```
 
-It returns a `ggplot2` object so you can edit titles, colors, etc. if necessary. You can also add a clustering argument to make it easier to see patterns of missingness in your data.
-
-```{r}
-vis_miss(airquality, cluster=T) +
-  labs(title="Missingness in the airquality data set")
-```
+It returns a `ggplot2` object so you can edit titles, colors, etc. if necessary. You can also add various sorting and clustering arguments to make it easier to see patterns of missingness in your data.
 
 # Checking out data differences with `daff`
 
@@ -50,7 +45,7 @@ my_diff
 <!-- <figure src = "diff_screenshot.png" title="A caption" lightbox="true"> -->
 <!-- }} -->
 
-I thought this would be useful for when you receive new data sets from investigators and want to make sure column names, patients, etc. haven't changed. Check out the full documentation [here](https://github.com/edwindj/daff).
+I thought this would be useful for when you receive new data sets and want to make sure column names, patients, etc. haven't changed. Check out the full documentation [here](https://github.com/edwindj/daff).
 
 # Gohelverse
 
@@ -94,7 +89,7 @@ Installation command is:
 #remotes::install_github("noamross/redoc")
 ```
 
-You may need to update several packages to get it to run correctly, but after that the main commands are just `redoc` and `dedoc`. To see for yourself, try running my [github code](https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd), making some changes to your word doc, and reloading back into `Rmarkdown`.
+You may need to update several packages to get it to run correctly, but after that the main commands are just `redoc` and `dedoc`. To see for yourself, try running my [github code](https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd), making some changes to your word doc, and reloading back into `Rmarkdown` with the `dedoc()` function.
 
 # Pipelines in `drake`
 
@@ -102,7 +97,7 @@ You may need to update several packages to get it to run correctly, but after th
 
 This could definitely be an entire computing club presentation... but for long projects that you have to redo with new data often, `drake` is becoming really popular. Amanda Dobbyn gave an awesome presentation and you can see her slides [here](https://aedobbyn.github.io/nyr-2019/#1).
 
-Another super informative bookdown guide by the authors can be found [here](https://ropenscilabs.github.io/drake-manual/).
+A super informative bookdown guide by the authors can be found [here](https://ropenscilabs.github.io/drake-manual/).
 Essentially their motto is "what gets done stays done" so that you are not redoing work you've already done in order to update your results. Yet, you're still redoing what needs to be done in a reproducible way!
 
 ![](/img/drake_pipeline.png)
@@ -123,7 +118,7 @@ When the talks are released, I'll make a post on slack, and when they are, I hig
 
 # A bonus!
 
-This was not from the New York R Conference but I saw it on [Twitter](https://twitter.com/OppenheimerEvan/status/1132092898760114184) while making this presentation for my computing club and it made me quite happy...
+This was not from the New York R Conference but I saw it on [Twitter](https://twitter.com/OppenheimerEvan/status/1132092898760114184) while making this presentation for my computing club and I really enjoyed it...
 
 ```{r}
 #install.packages("genius")
@@ -133,7 +128,7 @@ genius_lyrics("the beatles", "hey jude")
 
 # Takeaways
 
-- You can check out tweets from the conference by searching the hashtag #rstatsnyc on Twitter
+- You can check out tweets from the conference by searching the hashtag [#rstatsnyc](https://twitter.com/search?q=%23rstatsnyc&src=typed_query) on Twitter
 
 - Check out the [R-Ladies NYC meetups](https://www.meetup.com/rladies-newyork/) and [New York R meetups](https://www.meetup.com/nyhackr/)!
 

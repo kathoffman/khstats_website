@@ -133,17 +133,37 @@
   </url>
   
   <url>
+    <loc>/tags/headers-in-functions/</loc>
+    <lastmod>2019-04-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tutorial/headers/headers-in-functions/</loc>
+    <lastmod>2019-04-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/rmarkdown/</loc>
+    <lastmod>2019-04-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/rmarkdown/</loc>
+    <lastmod>2019-04-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tutorial/</loc>
+    <lastmod>2019-04-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tutorial/dplyr/data-wrangling/</loc>
     <lastmod>2019-03-05T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/dplyr/</loc>
-    <lastmod>2019-03-05T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tutorial/</loc>
     <lastmod>2019-03-05T21:13:14-05:00</lastmod>
   </url>
   

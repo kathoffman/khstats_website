@@ -18,11 +18,8 @@ tags: ["R Markdown", "New York R Conference", "rstats", "rstatsnyc"]
 library(tidyverse)
 library(naniar)
 vis_miss(airquality) # a base R data set</code></pre>
-<p><img src="/post/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-<p>It returns a <code>ggplot2</code> object so you can edit titles, colors, etc. if necessary. You can also add a clustering argument to make it easier to see patterns of missingness in your data.</p>
-<pre class="r"><code>vis_miss(airquality, cluster=T) +
-  labs(title=&quot;Missingness in the airquality data set&quot;)</code></pre>
-<p><img src="/post/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/blog/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>It returns a <code>ggplot2</code> object so you can edit titles, colors, etc. if necessary. You can also add various sorting and clustering arguments to make it easier to see patterns of missingness in your data.</p>
 </div>
 <div id="checking-out-data-differences-with-daff" class="section level1">
 <h1>Checking out data differences with <code>daff</code></h1>
@@ -43,7 +40,7 @@ my_diff</code></pre>
 <!-- {{ -->
 <!-- <figure src = "diff_screenshot.png" title="A caption" lightbox="true"> -->
 <!-- }} -->
-<p>I thought this would be useful for when you receive new data sets from investigators and want to make sure column names, patients, etc. haven’t changed. Check out the full documentation <a href="https://github.com/edwindj/daff">here</a>.</p>
+<p>I thought this would be useful for when you receive new data sets and want to make sure column names, patients, etc. haven’t changed. Check out the full documentation <a href="https://github.com/edwindj/daff">here</a>.</p>
 </div>
 <div id="gohelverse" class="section level1">
 <h1>Gohelverse</h1>
@@ -68,7 +65,7 @@ read_pptx() %&gt;%
   ph_with_vg(code = plot(dat$x, dat$y, main=&quot;Edit me!&quot;, pch=16), type=&quot;body&quot;, width=6, height=4) %&gt;%
   #output your ppt (target argument is just the file destination/name)
   print(target=&quot;plot.pptx&quot;)</code></pre>
-<pre><code>## [1] &quot;/Users/katherinehoffman/Desktop/basic/content/post/nyrconf/plot.pptx&quot;</code></pre>
+<pre><code>## [1] &quot;/Users/katherinehoffman/Desktop/basic/content/blog/nyrconf/plot.pptx&quot;</code></pre>
 </div>
 <div id="going-from-rmarkdown-to-word-and-back-again-with-redoc" class="section level1">
 <h1>Going from RMarkdown to Word, and back again with <code>redoc</code></h1>
@@ -77,13 +74,13 @@ read_pptx() %&gt;%
 <p>This is part of his goal to decrease the pain of “the valley of heartbreak.” <img src="/img/valleyofheartbreak.jpg" /></p>
 <p>Installation command is:</p>
 <pre class="r"><code>#remotes::install_github(&quot;noamross/redoc&quot;)</code></pre>
-<p>You may need to update several packages to get it to run correctly, but after that the main commands are just <code>redoc</code> and <code>dedoc</code>. To see for yourself, try running my <a href="https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd">github code</a>, making some changes to your word doc, and reloading back into <code>Rmarkdown</code>.</p>
+<p>You may need to update several packages to get it to run correctly, but after that the main commands are just <code>redoc</code> and <code>dedoc</code>. To see for yourself, try running my <a href="https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd">github code</a>, making some changes to your word doc, and reloading back into <code>Rmarkdown</code> with the <code>dedoc()</code> function.</p>
 </div>
 <div id="pipelines-in-drake" class="section level1">
 <h1>Pipelines in <code>drake</code></h1>
 <p><img src="/img/drake.jpg" /></p>
 <p>This could definitely be an entire computing club presentation… but for long projects that you have to redo with new data often, <code>drake</code> is becoming really popular. Amanda Dobbyn gave an awesome presentation and you can see her slides <a href="https://aedobbyn.github.io/nyr-2019/#1">here</a>.</p>
-<p>Another super informative bookdown guide by the authors can be found <a href="https://ropenscilabs.github.io/drake-manual/">here</a>.
+<p>A super informative bookdown guide by the authors can be found <a href="https://ropenscilabs.github.io/drake-manual/">here</a>.
 Essentially their motto is “what gets done stays done” so that you are not redoing work you’ve already done in order to update your results. Yet, you’re still redoing what needs to be done in a reproducible way!</p>
 <p><img src="/img/drake_pipeline.png" /></p>
 </div>
@@ -102,7 +99,7 @@ Essentially their motto is “what gets done stays done” so that you are not r
 </div>
 <div id="a-bonus" class="section level1">
 <h1>A bonus!</h1>
-<p>This was not from the New York R Conference but I saw it on <a href="https://twitter.com/OppenheimerEvan/status/1132092898760114184">Twitter</a> while making this presentation for my computing club and it made me quite happy…</p>
+<p>This was not from the New York R Conference but I saw it on <a href="https://twitter.com/OppenheimerEvan/status/1132092898760114184">Twitter</a> while making this presentation for my computing club and I really enjoyed it…</p>
 <pre class="r"><code>#install.packages(&quot;genius&quot;)
 library(genius)
 genius_lyrics(&quot;the beatles&quot;, &quot;hey jude&quot;)</code></pre>
@@ -124,7 +121,7 @@ genius_lyrics(&quot;the beatles&quot;, &quot;hey jude&quot;)</code></pre>
 <div id="takeaways" class="section level1">
 <h1>Takeaways</h1>
 <ul>
-<li><p>You can check out tweets from the conference by searching the hashtag #rstatsnyc on Twitter</p></li>
+<li><p>You can check out tweets from the conference by searching the hashtag <a href="https://twitter.com/search?q=%23rstatsnyc&amp;src=typed_query">#rstatsnyc</a> on Twitter</p></li>
 <li><p>Check out the <a href="https://www.meetup.com/rladies-newyork/">R-Ladies NYC meetups</a> and <a href="https://www.meetup.com/nyhackr/">New York R meetups</a>!</p></li>
 </ul>
 </div>
