@@ -5,12 +5,44 @@
     <link>/tags/</link>
       <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 10 Sep 2019 19:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 06 Oct 2019 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Tags</title>
       <link>/tags/</link>
     </image>
+    
+    <item>
+      <title>biostatistics</title>
+      <link>/tags/biostatistics/</link>
+      <pubDate>Sun, 06 Oct 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/biostatistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>career</title>
+      <link>/tags/career/</link>
+      <pubDate>Sun, 06 Oct 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/career/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>interview</title>
+      <link>/tags/interview/</link>
+      <pubDate>Sun, 06 Oct 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/interview/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SAS</title>
+      <link>/tags/sas/</link>
+      <pubDate>Sun, 06 Oct 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/sas/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>R</title>
@@ -57,22 +89,6 @@
       <link>/tags/biostatistician/</link>
       <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
       <guid>/tags/biostatistician/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>career</title>
-      <link>/tags/career/</link>
-      <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
-      <guid>/tags/career/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SAS</title>
-      <link>/tags/sas/</link>
-      <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
-      <guid>/tags/sas/</guid>
       <description></description>
     </item>
     
