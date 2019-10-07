@@ -16,7 +16,7 @@ I've linked some videos of my favorite talks and put together some the topics/pa
 
 # Visualizing data with `naniar`
 
-Brooke Watson, a data scientist at the American Civil Liberties Union, gave a great presentation on how she uses `R` to defend immigrants. She shared several data wrangling tips. One new function for me was `naniar::vis_miss()` to visualize your missing data quickly.
+Brooke Watson, a data scientist at the American Civil Liberties Union, gave a great presentation on how she uses R to defend immigrants. She shared several data wrangling tips. One new function for me was `naniar::vis_miss()` to visualize your missing data quickly.
 
 ```{r}
 #install.packages("tidyverse")
@@ -89,7 +89,7 @@ Installation command is:
 #remotes::install_github("noamross/redoc")
 ```
 
-You may need to update several packages to get it to run correctly, but after that the main commands are just `redoc` and `dedoc`. To see for yourself, try running my [github code](https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd), making some changes to your word doc, and reloading back into `Rmarkdown` with the `dedoc()` function.
+You may need to update several packages to get it to run correctly, but after that the main commands are just `redoc` and `dedoc`. To see for yourself, try running my [github code](https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd), making some changes to your word doc, and reloading back into Rmarkdown with the `dedoc()` function.
 
 # Pipelines in `drake`
 
