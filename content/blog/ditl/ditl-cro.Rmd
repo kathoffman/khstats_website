@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE, message=F, warning=F)
 
 ![](/img/kim1.png)
 
-Earlier this year I wrote my first blog post, ["A Day in the Life of a Biostatistician"](https://www.khstats.com/blog/ditl-biostats/), documenting the granular details of my work as an early career academic research biostatistician. I’m excited to announce I am turning that post into a "day in the life" series in which I interview other biostatisticians with differing roles. My hope is that it will enlighten anyone interested in the field of biostatistics, and especially help undergraduate and current biostatistics Masters students make informed decisions about their careers.
+Earlier this year I wrote my first blog post, ["A Day in the Life of a Biostatistician,"](https://www.khstats.com/blog/ditl-biostats/) documenting the granular details of my work as an early career academic research biostatistician. I’m excited to announce I am turning that post into a "day in the life" series in which I interview other biostatisticians with differing roles. My hope is that it will enlighten anyone interested in the field of biostatistics, and especially help undergraduate and current biostatistics Masters students make informed decisions about their careers.
 
 My first interviewee is Kim Hirschhorn, a former classmate and good friend from my time at the University of Michigan School of Public Health. Kim is an avid reality TV show watcher, loves Eggo waffles and Hostess Ho-Hos, and is a great statistician; so great, professors were often confused as to why she wasn’t planning to pursue a PhD. Kim, however, has always been adamant that she doesn’t need a PhD to have the career she wants.
 
