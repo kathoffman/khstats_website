@@ -21,7 +21,7 @@ tags: [R]
 title: Become a Superlearner
 url_code: ""
 url_pdf: ""
-url_slides: "Power Simulations in R.pdf"
+url_slides: "superlearning_slides_no_animation.pdf"
 url_video: ""
 links:
   -icon:
