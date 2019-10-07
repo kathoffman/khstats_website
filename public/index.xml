@@ -173,7 +173,7 @@ Earlier you mentioned writing macros in SAS. Does everyone use SAS? Could you us
 &lt;p&gt;I’ve linked some videos of my favorite talks and put together some the topics/packages/functions I found most intriguing or useful in my day-to-day work as a research biostatistician. (This was originally a presentation for my &lt;a href=&#34;https://wcm-computing-club.github.io/&#34;&gt;biostatistics team’s computing club&lt;/a&gt;.)&lt;/p&gt;
 &lt;div id=&#34;visualizing-data-with-naniar&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Visualizing data with &lt;code&gt;naniar&lt;/code&gt;&lt;/h1&gt;
-&lt;p&gt;Brooke Watson, a data scientist at the American Civil Liberties Union, gave a great presentation on how she uses &lt;code&gt;R&lt;/code&gt; to defend immigrants. She shared several data wrangling tips. One new function for me was &lt;code&gt;naniar::vis_miss()&lt;/code&gt; to visualize your missing data quickly.&lt;/p&gt;
+&lt;p&gt;Brooke Watson, a data scientist at the American Civil Liberties Union, gave a great presentation on how she uses R to defend immigrants. She shared several data wrangling tips. One new function for me was &lt;code&gt;naniar::vis_miss()&lt;/code&gt; to visualize your missing data quickly.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#install.packages(&amp;quot;tidyverse&amp;quot;)
 #install.packages(&amp;quot;naniar&amp;quot;)
 library(tidyverse)
@@ -235,7 +235,7 @@ read_pptx() %&amp;gt;%
 &lt;p&gt;This is part of his goal to decrease the pain of “the valley of heartbreak.” &lt;img src=&#34;/img/valleyofheartbreak.jpg&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Installation command is:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#remotes::install_github(&amp;quot;noamross/redoc&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;You may need to update several packages to get it to run correctly, but after that the main commands are just &lt;code&gt;redoc&lt;/code&gt; and &lt;code&gt;dedoc&lt;/code&gt;. To see for yourself, try running my &lt;a href=&#34;https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd&#34;&gt;github code&lt;/a&gt;, making some changes to your word doc, and reloading back into &lt;code&gt;Rmarkdown&lt;/code&gt; with the &lt;code&gt;dedoc()&lt;/code&gt; function.&lt;/p&gt;
+&lt;p&gt;You may need to update several packages to get it to run correctly, but after that the main commands are just &lt;code&gt;redoc&lt;/code&gt; and &lt;code&gt;dedoc&lt;/code&gt;. To see for yourself, try running my &lt;a href=&#34;https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd&#34;&gt;github code&lt;/a&gt;, making some changes to your word doc, and reloading back into Rmarkdown with the &lt;code&gt;dedoc()&lt;/code&gt; function.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;pipelines-in-drake&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Pipelines in &lt;code&gt;drake&lt;/code&gt;&lt;/h1&gt;
