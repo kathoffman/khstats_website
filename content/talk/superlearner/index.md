@@ -17,9 +17,14 @@ math: true
 publishDate: "2017-01-01T00:00:00Z"
 summary: Using sl3 to build ensemble learning models in R
 tags: [R]
+#slides: url_slides
 title: Become a Superlearner
 url_code: ""
 url_pdf: ""
-url_slides: ""
+url_slides: "Power Simulations in R.pdf"
 url_video: ""
+links:
+  -icon:
+    name: Github
+    url: https://github.com/hoffmakl/sl3-demo
 ---

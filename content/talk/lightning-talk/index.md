@@ -7,9 +7,6 @@ date_end: "2019-06-17T19:05:00Z"
 event: NYC R Ladies 2019 Lightning Talks
 event_url: https://example.org
 featured: false
-image:
-  caption: 'Image credit: [**@robinson_es**](https://twitter.com/robinson_es/status/1141486381811871744)'
-  focal_point: Right
 links:
   -icon:
     name: Github
