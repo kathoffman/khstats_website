@@ -20,7 +20,7 @@
       <description>
 
 
-&lt;p&gt;I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods I will be able to implement.&lt;/p&gt;
+&lt;p&gt;I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement.&lt;/p&gt;
 &lt;p&gt;This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a “treatment timeline” for each patient, and the end product looks something like this:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;960&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Each line represents one patient, and each square represents a measurement at a specified point. I find these graphs useful to look for patterns or discrepancies in follow up times, treatment patterns, and missingness. They also allow me to verify that my coding is correct as I move through different data manipulations for my analyses.&lt;/p&gt;
@@ -191,7 +191,7 @@ dat &amp;lt;-
   theme_bw() +
   labs(x = &amp;quot;Months of Follow-Up&amp;quot;, y = &amp;quot;Patient ID&amp;quot;, col = &amp;quot;Treatment&amp;quot;,
        title = &amp;quot;Patient Treatment Timeline&amp;quot;,
-       subtitle = &amp;quot;x indicates time of patient death&amp;quot;) +
+       subtitle = &amp;quot;x indicates month of patient death&amp;quot;) +
   # edit legend box and make patient ids small
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.6, .9), legend.direction = &amp;quot;horizontal&amp;quot;,
@@ -249,38 +249,38 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;84.24921&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;91.69544&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;92.92961&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;71.34886&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;74.39510&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;156.57317&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;69.87801&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;172.23156&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -305,8 +305,9 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
         legend.direction = &amp;quot;horizontal&amp;quot;,
         legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;, high=&amp;quot;firebrick1&amp;quot;, na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 160 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+  scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;, high=&amp;quot;firebrick1&amp;quot;, na.value = &amp;quot;lightgray&amp;quot;,
+                       breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Alternatively, we could rearrange our timelines by the number of measures we have for each patients &lt;code&gt;cov&lt;/code&gt;ariate of interest by making a new column containing the &lt;code&gt;sum(!is.na(cov))&lt;/code&gt; and rearranging our &lt;code&gt;pt_id&lt;/code&gt; by that column.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
@@ -333,8 +334,9 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
         legend.direction = &amp;quot;horizontal&amp;quot;,
         legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 160 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+  scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;,
+                       breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.&lt;/p&gt;
 &lt;p&gt;Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!&lt;/p&gt;

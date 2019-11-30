@@ -28,7 +28,7 @@
   
     
   
-  <meta name="description" content="I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods I will be able to implement.
+  <meta name="description" content="I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement.
 This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a “treatment timeline” for each patient, and the end product looks something like this:">
 
   
@@ -129,7 +129,7 @@ This post contains reproducible examples for how I prefer to visually explore su
   <meta property="og:site_name" content="KHstats">
   <meta property="og:url" content="/blog/trt-timelines/trt-timelines/">
   <meta property="og:title" content="Patient Treatment Timelines for Longitudinal Survival Data | KHstats">
-  <meta property="og:description" content="I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods I will be able to implement.
+  <meta property="og:description" content="I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement.
 This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a “treatment timeline” for each patient, and the end product looks something like this:"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
@@ -560,7 +560,7 @@ This post contains reproducible examples for how I prefer to visually explore su
       
 
 
-<p>I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods I will be able to implement.</p>
+<p>I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement.</p>
 <p>This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a “treatment timeline” for each patient, and the end product looks something like this:</p>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-1-1.png" width="960" /></p>
 <p>Each line represents one patient, and each square represents a measurement at a specified point. I find these graphs useful to look for patterns or discrepancies in follow up times, treatment patterns, and missingness. They also allow me to verify that my coding is correct as I move through different data manipulations for my analyses.</p>
@@ -731,7 +731,7 @@ dat &lt;-
   theme_bw() +
   labs(x = &quot;Months of Follow-Up&quot;, y = &quot;Patient ID&quot;, col = &quot;Treatment&quot;,
        title = &quot;Patient Treatment Timeline&quot;,
-       subtitle = &quot;x indicates time of patient death&quot;) +
+       subtitle = &quot;x indicates month of patient death&quot;) +
   # edit legend box and make patient ids small
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.6, .9), legend.direction = &quot;horizontal&quot;,
@@ -789,38 +789,38 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">84.24921</td>
+<td align="right">91.69544</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">92.92961</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="right">1</td>
 <td align="right">2</td>
-<td align="right">71.34886</td>
 <td align="right">0</td>
-</tr>
-<tr class="even">
+<td align="right">NA</td>
 <td align="right">1</td>
-<td align="right">3</td>
-<td align="right">74.39510</td>
-<td align="right">0</td>
 </tr>
 <tr class="odd">
+<td align="right">2</td>
 <td align="right">1</td>
-<td align="right">4</td>
 <td align="right">NA</td>
-<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">156.57317</td>
 <td align="right">1</td>
-<td align="right">5</td>
-<td align="right">69.87801</td>
-<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">NA</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">4</td>
+<td align="right">172.23156</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
@@ -845,8 +845,9 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
         legend.direction = &quot;horizontal&quot;,
         legend.background = element_rect(linetype=&quot;solid&quot;, colour =&quot;black&quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_gradient(low=&quot;dodgerblue&quot;, high=&quot;firebrick1&quot;, na.value = &quot;lightgray&quot;) </code></pre>
-<pre><code>## Warning: Removed 160 rows containing missing values (geom_point).</code></pre>
+  scale_color_gradient(low=&quot;dodgerblue&quot;, high=&quot;firebrick1&quot;, na.value = &quot;lightgray&quot;,
+                       breaks=c(90, 120, 150, 180)) </code></pre>
+<pre><code>## Warning: Removed 143 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Alternatively, we could rearrange our timelines by the number of measures we have for each patients <code>cov</code>ariate of interest by making a new column containing the <code>sum(!is.na(cov))</code> and rearranging our <code>pt_id</code> by that column.</p>
 <pre class="r"><code>dat_cc_miss %&gt;%
@@ -873,8 +874,9 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
         legend.direction = &quot;horizontal&quot;,
         legend.background = element_rect(linetype=&quot;solid&quot;, colour =&quot;black&quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_gradient(low=&quot;dodgerblue&quot;,high=&quot;firebrick1&quot;,na.value = &quot;lightgray&quot;) </code></pre>
-<pre><code>## Warning: Removed 160 rows containing missing values (geom_point).</code></pre>
+  scale_color_gradient(low=&quot;dodgerblue&quot;,high=&quot;firebrick1&quot;,na.value = &quot;lightgray&quot;,
+                       breaks=c(90, 120, 150, 180)) </code></pre>
+<pre><code>## Warning: Removed 143 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.</p>
 <p>Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!</p>

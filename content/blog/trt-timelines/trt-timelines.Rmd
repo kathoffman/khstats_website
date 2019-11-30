@@ -15,19 +15,19 @@ output:
 knitr::opts_chunk$set(echo = TRUE, results="asis")
 ```
 
-I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods I will be able to implement. 
+I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement. 
 
 This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a "treatment timeline" for each patient, and the end product looks something like this:
 
-```{r, echo=F, warning=F, message=F, fig.height=6.5, fig.width=10}
+```{r, echo=F, warning=F, message=F, fig.height=6.25, fig.width=10}
 library(tidyverse, warn.conflicts = F)
-set.seed(777)
+set.seed(317)
 n <- 50
 dat <- 
   tibble(.rows = n) %>%  # empty data frame / tibble with n rows
   mutate(pt_id = factor(row_number()),  # patient ids are 1-n
          pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient so we can see patterns
-         months_followup = round(runif(n, 0, 20)), # randomly generate length of time in the study
+         months_followup = round(runif(n, 0, 12)), # randomly generate length of time in the study
          death = rbinom(n, 1, .5)) %>% # death randomly occurs at any time point. Obviously an unrealistic assumption. :)
   group_by(pt_id) %>%   # group by patient so we can do more data manipulation
   complete(months_followup = full_seq(0:max(months_followup), 1)) %>% # add in all the months patients are in the study
@@ -62,29 +62,28 @@ dat_cc_miss  <- dat_cc %>%
   select(pt_id, months_followup, cov, death)
 
 p <- dat %>%
-  mutate(trt = factor(trt, levels=0:1, labels=c("No","Yes"))) %>%
-  mutate(pt_id_ordered = fct_rev(fct_reorder(pt_id, last_month_followup)),
-         death = fct_drop(factor(death))) %>%
-  ggplot(aes(x = months_followup,
-             y = pt_id_ordered,
-             group = pt_id_ordered,
-             col = trt)) +
+  group_by(pt_id) %>%
+  mutate(last_month_followup = max(months_followup), 
+         month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
+  ungroup() %>%
+  mutate(pt_id = fct_rev(fct_reorder(pt_id, last_month_followup)),
+         # make the treatment variable labels nicer
+         trt = factor(trt, levels=0:1, labels=c("No","Yes"))) %>%
+  ggplot(aes(x = months_followup, y = pt_id, group = pt_id, col = trt)) +
   geom_line()  + 
   geom_point(shape = 15) + 
-  geom_point(aes(x = death_date, y = pt_id_ordered), shape=4, col="black") +
+  geom_point(aes(x = month_death, y = pt_id), col = "black", shape = 4) +
   theme_bw() +
-  labs(x = "Months of Follow-Up",
-       y = "Patient ID",
-       col = "Treatment",
-       title = "Patient Timelines: Binary Treatment",
+  labs(x = "Months of Follow-Up", y = "Patient ID", col = "Treatment",
+       title = "Patient Treatment Timeline",
        subtitle = "x indicates month of patient death") +
   theme(axis.text.y = element_text(size=6),
-        legend.position = c(.7, .9),
-        legend.direction = "horizontal",
+        legend.position = c(.6, .9), legend.direction = "horizontal",
         legend.background = element_rect(linetype="solid", colour ="black")) +
+  # remove extra space around timeline
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_manual(values=c("dodgerblue","firebrick1")) 
-
+  # set the color of the lines and points
+  scale_color_manual(values=c("dodgerblue","firebrick1"))
 p2 <- dat_cc_miss %>%
   group_by(pt_id) %>%
   mutate(last_month_followup = max(months_followup),
@@ -113,7 +112,7 @@ p2 <- dat_cc_miss %>%
   scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray",
                        breaks=c(90, 120, 150, 180)) 
 
-gridExtra::grid.arrange(p,p2,nrow=1)
+gridExtra::grid.arrange(p, p2, nrow=1)
 
 ```
 
@@ -206,7 +205,7 @@ dat %>%
   theme_bw() +
   labs(x = "Months of Follow-Up", y = "Patient ID", col = "Treatment",
        title = "Patient Treatment Timeline",
-       subtitle = "x indicates time of patient death") +
+       subtitle = "x indicates month of patient death") +
   # edit legend box and make patient ids small
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.6, .9), legend.direction = "horizontal",
@@ -291,7 +290,8 @@ dat_cc_miss %>%
         legend.direction = "horizontal",
         legend.background = element_rect(linetype="solid", colour ="black")) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_gradient(low="dodgerblue", high="firebrick1", na.value = "lightgray") 
+  scale_color_gradient(low="dodgerblue", high="firebrick1", na.value = "lightgray",
+                       breaks=c(90, 120, 150, 180)) 
 ```
 
 Alternatively, we could rearrange our timelines by the number of measures we have for each patients `cov`ariate of interest by making a new column containing the `sum(!is.na(cov))` and rearranging our `pt_id` by that column.
@@ -321,7 +321,8 @@ dat_cc_miss %>%
         legend.direction = "horizontal",
         legend.background = element_rect(linetype="solid", colour ="black")) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray") 
+  scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray",
+                       breaks=c(90, 120, 150, 180)) 
 ```
 
 From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.
