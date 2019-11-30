@@ -586,7 +586,7 @@ dat &lt;-
          death = replace_na(death, 0)) %&gt;%  # also fill in death
   select(pt_id, months_followup, trt, death) # remove leftover columns from data generation</code></pre>
 <p>Let’s look at the data. It’s in “long” format with patient ID’s repeating for each <code>month_followup</code> they were in my (fake) study. At every month, we know whether or not they were on the treatment, and whether they died at that time point. This first example does not contain any missingness.</p>
-<pre class="r"><code>dat %&gt;% filter(pt_id == 5) %&gt;% knitr::kable()</code></pre>
+<pre class="r"><code>knitr::kable(head(dat))</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -598,94 +598,40 @@ dat &lt;-
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">5</td>
+<td align="left">1</td>
 <td align="right">0</td>
-<td align="left">0</td>
+<td align="left">1</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="left">5</td>
+<td align="left">1</td>
 <td align="right">1</td>
-<td align="left">0</td>
+<td align="left">1</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td align="left">5</td>
+<td align="left">1</td>
 <td align="right">2</td>
-<td align="left">0</td>
+<td align="left">1</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="left">5</td>
+<td align="left">1</td>
 <td align="right">3</td>
-<td align="left">0</td>
+<td align="left">1</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
-<td align="left">5</td>
+<td align="left">1</td>
 <td align="right">4</td>
-<td align="left">0</td>
+<td align="left">1</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
-<td align="left">5</td>
+<td align="left">1</td>
 <td align="right">5</td>
-<td align="left">0</td>
+<td align="left">1</td>
 <td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">6</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="right">7</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">8</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="right">9</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">10</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="right">11</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">12</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="right">13</td>
-<td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">5</td>
-<td align="right">14</td>
-<td align="left">0</td>
-<td align="right">1</td>
 </tr>
 </tbody>
 </table>

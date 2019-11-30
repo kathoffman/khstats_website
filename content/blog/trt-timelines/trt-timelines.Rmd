@@ -151,7 +151,7 @@ dat <-
 Let's look at the data. It's in "long" format with patient ID's repeating for each `month_followup` they were in my (fake) study. At every month, we know whether or not they were on the treatment, and whether they died at that time point. This first example does not contain any missingness.
 
 ```{r}
-dat %>% filter(pt_id == 5) %>% knitr::kable()
+knitr::kable(head(dat))
 ```
 
 We can now plot our data in a very basic way. We really only need to specify in the `aes`thetics that the `x`-axis is time, the `y`-axis is subject IDs, the `col`or should correspond to treatment, and *our lines should be `group`ed together by subject*. Don't forget that last one! Then we can say we want `geom_line` to make a base timeline for each subject, and the points on the timeline should be squares (`shape = 15` in the `geom_point` mapping function).
