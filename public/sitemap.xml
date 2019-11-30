@@ -53,6 +53,16 @@
   </url>
   
   <url>
+    <loc>/project/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/external-project/</loc>
+    <lastmod>2019-11-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/biostatistics/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
@@ -205,21 +215,6 @@
   <url>
     <loc>/talk/shanghai/</loc>
     <lastmod>2018-03-01T10:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/external-project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/internal-project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
   </url>
   
   <url>

@@ -8,15 +8,15 @@
   url = "#hero"
   weight = 10
   
-#[[main]]
-#  name = "Experience"
-#  url = "#experience"
-#  weight = 15  
+[[main]]
+  name = "Experience"
+  url = "#experience"
+  weight = 15  
 
 [[main]]
   name = "Talks"
   url = "#talks"
-  weight = 20
+  weight = 30
 
 #[[main]]
 #  name = "Tutorials"
@@ -26,7 +26,7 @@
 [[main]]
   name = "Blog"
   url = "#blogs"
-  weight = 40
+  weight = 20
 
 #[[main]]
 #  name = "Publications"

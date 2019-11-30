@@ -1,11 +1,8 @@
 ---
-date: "2016-04-27T00:00:00Z"
-external_link: http://example.org
+date: "2019-11-10T00:00:00Z"
+external_link: https://sph.umich.edu/stories/2019posts/katherine-hoffman.html
 image:
-  caption: Photo by Toa Heftiba on Unsplash
   focal_point: Smart
-summary: An example of linking directly to an external project website using `external_link`.
-tags:
-#- Demo
-title: External Project
+summary: "Discovering Biostatistics and its Broad Applications"
+title: University of Michigan Alumni Profile
 ---
