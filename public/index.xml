@@ -325,38 +325,38 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;136.7207&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;134.6658&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;126.0648&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;166.4625&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;185.0464&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -382,7 +382,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
         legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;, high=&amp;quot;firebrick1&amp;quot;, na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 166 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 180 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Alternatively, we could rearrange our timelines by the number of measures we have for each patients &lt;code&gt;cov&lt;/code&gt;ariate of interest by making a new column containing the &lt;code&gt;sum(!is.na(cov))&lt;/code&gt; and rearranging our &lt;code&gt;pt_id&lt;/code&gt; by that column.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
@@ -410,7 +410,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
         legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 166 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 180 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.&lt;/p&gt;
 &lt;p&gt;Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!&lt;/p&gt;

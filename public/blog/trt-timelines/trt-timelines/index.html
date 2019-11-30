@@ -795,38 +795,38 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">136.7207</td>
-<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">134.6658</td>
-<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">2</td>
-<td align="right">NA</td>
-<td align="right">0</td>
+<td align="right">126.0648</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="right">0</td>
-<td align="right">166.4625</td>
-<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">1</td>
 </tr>
 <tr class="odd">
 <td align="right">2</td>
 <td align="right">1</td>
-<td align="right">185.0464</td>
-<td align="right">0</td>
+<td align="right">NA</td>
+<td align="right">1</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
 <td align="right">2</td>
 <td align="right">NA</td>
-<td align="right">0</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
@@ -852,7 +852,7 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
         legend.background = element_rect(linetype=&quot;solid&quot;, colour =&quot;black&quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&quot;dodgerblue&quot;, high=&quot;firebrick1&quot;, na.value = &quot;lightgray&quot;) </code></pre>
-<pre><code>## Warning: Removed 166 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 180 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Alternatively, we could rearrange our timelines by the number of measures we have for each patients <code>cov</code>ariate of interest by making a new column containing the <code>sum(!is.na(cov))</code> and rearranging our <code>pt_id</code> by that column.</p>
 <pre class="r"><code>dat_cc_miss %&gt;%
@@ -880,7 +880,7 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
         legend.background = element_rect(linetype=&quot;solid&quot;, colour =&quot;black&quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&quot;dodgerblue&quot;,high=&quot;firebrick1&quot;,na.value = &quot;lightgray&quot;) </code></pre>
-<pre><code>## Warning: Removed 166 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 180 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.</p>
 <p>Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!</p>
