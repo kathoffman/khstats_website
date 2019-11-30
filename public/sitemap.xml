@@ -18,6 +18,41 @@
   </url>
   
   <url>
+    <loc>/categories/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/trt-timelines/trt-timelines/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/biostatistics/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
@@ -33,22 +68,7 @@
   </url>
   
   <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/interview/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   
@@ -63,17 +83,7 @@
   </url>
   
   <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/talk/superlearner/</loc>
-    <lastmod>2019-09-10T19:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r/</loc>
     <lastmod>2019-09-10T19:00:00+00:00</lastmod>
   </url>
   
@@ -148,7 +158,7 @@
   </url>
   
   <url>
-    <loc>/tutorial/headers/headers-in-functions/</loc>
+    <loc>/blog/headers/headers-in-functions/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
   </url>
   
@@ -163,22 +173,12 @@
   </url>
   
   <url>
-    <loc>/tutorial/</loc>
-    <lastmod>2019-04-16T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tutorial/dplyr/data-wrangling/</loc>
+    <loc>/blog/dplyr/data-wrangling/</loc>
     <lastmod>2019-03-05T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/dplyr/</loc>
-    <lastmod>2019-03-05T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
     <lastmod>2019-03-05T21:13:14-05:00</lastmod>
   </url>
   
@@ -269,6 +269,10 @@
   
   <url>
     <loc>/courses/</loc>
+  </url>
+  
+  <url>
+    <loc>/tutorial/</loc>
   </url>
   
 </urlset>
