@@ -255,7 +255,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
                        breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Alternatively, we could rearrange our timelines by the number of measures we have for each patients &lt;code&gt;cov&lt;/code&gt;ariate of interest by making a new column containing the &lt;code&gt;sum(!is.na(cov))&lt;/code&gt; and rearranging our &lt;code&gt;pt_id&lt;/code&gt; by that column.&lt;/p&gt;
+&lt;p&gt;Alternatively, we could rearrange our timelines by the number of measures we have for each patient’s &lt;code&gt;cov&lt;/code&gt;ariate of interest by making a new column containing the &lt;code&gt;sum(!is.na(cov))&lt;/code&gt; and rearranging our &lt;code&gt;pt_id&lt;/code&gt; by that column.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
   group_by(pt_id) %&amp;gt;%
   mutate(last_month_followup = max(months_followup),

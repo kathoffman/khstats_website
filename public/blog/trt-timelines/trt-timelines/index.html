@@ -795,7 +795,7 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
                        breaks=c(90, 120, 150, 180)) </code></pre>
 <pre><code>## Warning: Removed 143 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
-<p>Alternatively, we could rearrange our timelines by the number of measures we have for each patients <code>cov</code>ariate of interest by making a new column containing the <code>sum(!is.na(cov))</code> and rearranging our <code>pt_id</code> by that column.</p>
+<p>Alternatively, we could rearrange our timelines by the number of measures we have for each patient’s <code>cov</code>ariate of interest by making a new column containing the <code>sum(!is.na(cov))</code> and rearranging our <code>pt_id</code> by that column.</p>
 <pre class="r"><code>dat_cc_miss %&gt;%
   group_by(pt_id) %&gt;%
   mutate(last_month_followup = max(months_followup),
