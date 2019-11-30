@@ -226,7 +226,7 @@ dat &amp;lt;-
 &lt;div id=&#34;example-2-continuous-covariate-with-missingness&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Example 2: Continuous Covariate with Missingness&lt;/h1&gt;
 &lt;p&gt;We can follow the very same steps for making a timeline for a continuous variable.&lt;/p&gt;
-&lt;p&gt;Again, here is the data generation code:&lt;/p&gt;
+&lt;p&gt;Again, here is the data generation code so you can make these plots yourself:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc &amp;lt;- 
   tibble(.rows = n) %&amp;gt;%
   mutate(pt_id = row_number(),
@@ -354,7 +354,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
                        breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.&lt;/p&gt;
+&lt;p&gt;From this plot we can start to see that patients with more missing measurements have higher covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.&lt;/p&gt;
 &lt;p&gt;Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!&lt;/p&gt;
 &lt;/div&gt;
 </description>

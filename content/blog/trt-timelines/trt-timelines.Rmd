@@ -19,7 +19,7 @@ I am a biostatistician at a research university, and I often find myself working
 
 This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a "treatment timeline" for each patient, and the end product looks something like this:
 
-```{r, echo=F, warning=F, message=F, fig.height=6.25, fig.width=10}
+```{r, echo=F, warning=F, message=F, fig.height=6, fig.width=10}
 library(tidyverse, warn.conflicts = F)
 set.seed(317)
 n <- 50
@@ -75,7 +75,7 @@ p <- dat %>%
   geom_point(aes(x = month_death, y = pt_id), col = "black", shape = 4) +
   theme_bw() +
   labs(x = "Months of Follow-Up", y = "Patient ID", col = "Treatment",
-       title = "Patient Treatment Timeline",
+       title = "Patient Timelines: Binary Treatment",
        subtitle = "x indicates month of patient death") +
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.6, .9), legend.direction = "horizontal",
@@ -229,7 +229,7 @@ geom_point(aes(x = month_death, y = pt_id, shape = month_death), col = "black")
 
 We can follow the very same steps for making a timeline for a continuous variable.
 
-Again, here is the data generation code:
+Again, here is the data generation code so you can make these plots yourself:
 
 ```{r, eval=F}
 dat_cc <- 
@@ -325,7 +325,7 @@ dat_cc_miss %>%
                        breaks=c(90, 120, 150, 180)) 
 ```
 
-From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.
+From this plot we can start to see that patients with more missing measurements have higher covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.
 
 Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!
 
