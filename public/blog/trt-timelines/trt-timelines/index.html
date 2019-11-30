@@ -567,198 +567,131 @@ This post contains reproducible examples for how I prefer to visually explore su
 <p>For the following examples I generate longitudinal survival data sets. I skip over how I made this data because it’s not the focus of this post, but if you have questions about the data generation please let me know. In general, I am trying to work from the point in a survival data analysis where you’ve already calculated each individual’s time to event.</p>
 <div id="example-1-binary-treatment" class="section level1">
 <h1>Example 1: Binary Treatment</h1>
-<p>In this first example, we’ll be generating months until death or censoring, which are dependent on a binary treatment.</p>
-<p>To make these charts, my first step is to load the package <code>tidyverse</code>, since we’ll need functions from <code>dplyr</code>, <code>tidyr</code>, <code>forcats</code>, and <code>ggplot2</code>. I then set a seed for data generation. Finally, I set my <code>n</code> to the number of patients I want in my data. The data sets I make these visualizations for are typically 100-500 patients in size, but for space purposes I’ll set my <code>n</code> to only 50.</p>
-<pre class="r"><code>library(tidyverse)
-set.seed(7)
-n &lt;- 50</code></pre>
+<p>To make these charts, my first step is to load the package <code>tidyverse</code>, since I use functions from <code>dplyr</code>, <code>tidyr</code>, <code>forcats</code>, and <code>ggplot2</code>.</p>
+<pre class="r"><code>library(tidyverse)</code></pre>
 <p>Here is the data generation code. If you’re interested in how I made it, you can check the comments, but if not, <strong>I recommend just copying and pasting into your <code>R</code> console to try the plotting code!</strong></p>
-<pre class="r"><code>dat &lt;- 
+<pre class="r"><code>set.seed(7)
+n &lt;- 50 # The data sets I make these visualizations for are typically 100-500 patients in size, but for space purposes I&#39;ll set my n to only 50.
+dat &lt;- 
   tibble(.rows = n) %&gt;%  # empty data frame / tibble with n rows
   mutate(pt_id = factor(row_number()),  # patient ids are 1-n
-         pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient
+         pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient so we can see patterns
          months_followup = round(runif(n, 0, 20) + 3 * pt_trt_prob), # randomly generate length of time in the study, which is affected by the prob of treatment
-         death = rbinom(n, 1, 1-pt_trt_prob)) %&gt;% # death is affected by prob of treatment
+         death = rbinom(n, 1, .5)) %&gt;% # death is not affected by treatment and randomly occurs at any time point. Obviously an unrealistic assumption. :)
   group_by(pt_id) %&gt;%   # group by patient so we can do more data manipulation
   complete(months_followup = full_seq(0:max(months_followup), 1)) %&gt;% # add in all the months patients are in the study
   fill(pt_trt_prob, .direction = &quot;up&quot;) %&gt;% # fill in the treatment probability I made earlier so I can use this to add treatment for every time point
   ungroup() %&gt;% # no longer need patients grouped
-  mutate(trt = factor(rbinom(row_number(), 1, pt_trt_prob)),
-         death = replace_na(death, 0)) %&gt;%   # fill in treatment for everyone based on their treatment probability
-  select(pt_id, trt, months_followup, death) # remove leftover columns from data generation</code></pre>
+  mutate(trt = factor(rbinom(row_number(), 1, pt_trt_prob^2)),  # fill in treatment for everyone based on their treatment probability
+         death = replace_na(death, 0)) %&gt;%  # also fill in death
+  select(pt_id, months_followup, trt, death) # remove leftover columns from data generation</code></pre>
 <p>Let’s look at the data. It’s in “long” format with patient ID’s repeating for each <code>month_followup</code> they were in my (fake) study. At every month, we know whether or not they were on the treatment, and whether they died at that time point. This first example does not contain any missingness.</p>
-<pre class="r"><code>dat %&gt;% filter(pt_id %in% 5:6) %&gt;% knitr::kable()</code></pre>
+<pre class="r"><code>dat %&gt;% filter(pt_id == 5) %&gt;% knitr::kable()</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th align="left">pt_id</th>
-<th align="left">trt</th>
 <th align="right">months_followup</th>
+<th align="left">trt</th>
 <th align="right">death</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">0</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">1</td>
 <td align="right">1</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">2</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">1</td>
 <td align="right">3</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">4</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">5</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">6</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">7</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">8</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">9</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">10</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">11</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">12</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">13</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">14</td>
+<td align="left">0</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="left">5</td>
-<td align="left">0</td>
 <td align="right">15</td>
-<td align="right">1</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left">0</td>
-<td align="right">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
 <td align="left">0</td>
 <td align="right">1</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left">0</td>
-<td align="right">2</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
-<td align="left">1</td>
-<td align="right">3</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left">1</td>
-<td align="right">4</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
-<td align="left">0</td>
-<td align="right">5</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left">1</td>
-<td align="right">6</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
-<td align="left">0</td>
-<td align="right">7</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left">1</td>
-<td align="right">8</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">6</td>
-<td align="left">1</td>
-<td align="right">9</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="left">6</td>
-<td align="left">1</td>
-<td align="right">10</td>
-<td align="right">0</td>
 </tr>
 </tbody>
 </table>
@@ -785,7 +718,7 @@ n &lt;- 50</code></pre>
   geom_point(shape = 15) + 
   # add in a new mapping layer of points that correspond to death
   geom_point(aes(x = month_death, y = pt_id), col = &quot;black&quot;, shape = 4) </code></pre>
-<pre><code>## Warning: Removed 599 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 594 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Don’t worry about the warning for removing missing values – it’s because we have <code>NA</code>s at most months for our <code>month_death</code>, so <code>geom_point</code> doesn’t know where to put an ‘x’ marker.</p>
 <p>Finally, let’s work on making the plot a bit nicer to look at:</p>
@@ -813,14 +746,17 @@ n &lt;- 50</code></pre>
   scale_x_continuous(expand=c(0.01,0.01)) +
   # set the color of the lines and points
   scale_color_manual(values=c(&quot;dodgerblue&quot;,&quot;firebrick1&quot;))</code></pre>
-<pre><code>## Warning: Removed 599 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 594 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-<p>I have never made one of these plots for publication, so I don’t mind that the subtitle contains legend information. If you wanted to have the <code>month_death</code> markers in a legend, you would change <code>geom_point(aes(x = month_death, y = pt_id), col = &quot;black&quot;, shape = 4)</code> to <code>geom_point(aes(x = month_death, y = pt_id, shape = month_death), col = &quot;black&quot;)</code>.</p>
+<p>I have never made one of these plots for publication, so I don’t mind that the subtitle contains legend information. If you wanted to have the <code>month_death</code> markers in a legend, you could change:</p>
+<pre class="r"><code>geom_point(aes(x = month_death, y = pt_id), col = &quot;black&quot;, shape = 4)</code></pre>
+<p>to:</p>
+<pre class="r"><code>geom_point(aes(x = month_death, y = pt_id, shape = month_death), col = &quot;black&quot;)</code></pre>
 </div>
 <div id="example-2-continuous-covariate-with-missingness" class="section level1">
 <h1>Example 2: Continuous Covariate with Missingness</h1>
 <p>We can follow the very same steps for making a timeline for a continuous variable.</p>
-<p>Again, here is the data generation code.</p>
+<p>Again, here is the data generation code:</p>
 <pre class="r"><code>dat_cc &lt;- 
   tibble(.rows = n) %&gt;%
   mutate(pt_id = row_number(),
@@ -859,37 +795,37 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">0</td>
-<td align="right">83.74774</td>
+<td align="right">136.7207</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">92.42815</td>
+<td align="right">134.6658</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">2</td>
-<td align="right">70.84739</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="right">1</td>
-<td align="right">3</td>
-<td align="right">73.89363</td>
-<td align="right">0</td>
-</tr>
-<tr class="odd">
-<td align="right">1</td>
-<td align="right">4</td>
 <td align="right">NA</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">166.4625</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="right">2</td>
 <td align="right">1</td>
-<td align="right">5</td>
-<td align="right">69.37655</td>
+<td align="right">185.0464</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">NA</td>
 <td align="right">0</td>
 </tr>
 </tbody>
@@ -916,8 +852,8 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
         legend.background = element_rect(linetype=&quot;solid&quot;, colour =&quot;black&quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&quot;dodgerblue&quot;, high=&quot;firebrick1&quot;, na.value = &quot;lightgray&quot;) </code></pre>
-<pre><code>## Warning: Removed 160 rows containing missing values (geom_point).</code></pre>
-<p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre><code>## Warning: Removed 166 rows containing missing values (geom_point).</code></pre>
+<p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>Alternatively, we could rearrange our timelines by the number of measures we have for each patients <code>cov</code>ariate of interest by making a new column containing the <code>sum(!is.na(cov))</code> and rearranging our <code>pt_id</code> by that column.</p>
 <pre class="r"><code>dat_cc_miss %&gt;%
   group_by(pt_id) %&gt;%
@@ -944,8 +880,8 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
         legend.background = element_rect(linetype=&quot;solid&quot;, colour =&quot;black&quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&quot;dodgerblue&quot;,high=&quot;firebrick1&quot;,na.value = &quot;lightgray&quot;) </code></pre>
-<pre><code>## Warning: Removed 160 rows containing missing values (geom_point).</code></pre>
-<p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre><code>## Warning: Removed 166 rows containing missing values (geom_point).</code></pre>
+<p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.</p>
 <p>Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!</p>
 </div>

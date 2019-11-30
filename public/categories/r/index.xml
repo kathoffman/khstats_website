@@ -27,198 +27,131 @@
 &lt;p&gt;For the following examples I generate longitudinal survival data sets. I skip over how I made this data because it’s not the focus of this post, but if you have questions about the data generation please let me know. In general, I am trying to work from the point in a survival data analysis where you’ve already calculated each individual’s time to event.&lt;/p&gt;
 &lt;div id=&#34;example-1-binary-treatment&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Example 1: Binary Treatment&lt;/h1&gt;
-&lt;p&gt;In this first example, we’ll be generating months until death or censoring, which are dependent on a binary treatment.&lt;/p&gt;
-&lt;p&gt;To make these charts, my first step is to load the package &lt;code&gt;tidyverse&lt;/code&gt;, since we’ll need functions from &lt;code&gt;dplyr&lt;/code&gt;, &lt;code&gt;tidyr&lt;/code&gt;, &lt;code&gt;forcats&lt;/code&gt;, and &lt;code&gt;ggplot2&lt;/code&gt;. I then set a seed for data generation. Finally, I set my &lt;code&gt;n&lt;/code&gt; to the number of patients I want in my data. The data sets I make these visualizations for are typically 100-500 patients in size, but for space purposes I’ll set my &lt;code&gt;n&lt;/code&gt; to only 50.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
-set.seed(7)
-n &amp;lt;- 50&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To make these charts, my first step is to load the package &lt;code&gt;tidyverse&lt;/code&gt;, since I use functions from &lt;code&gt;dplyr&lt;/code&gt;, &lt;code&gt;tidyr&lt;/code&gt;, &lt;code&gt;forcats&lt;/code&gt;, and &lt;code&gt;ggplot2&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Here is the data generation code. If you’re interested in how I made it, you can check the comments, but if not, &lt;strong&gt;I recommend just copying and pasting into your &lt;code&gt;R&lt;/code&gt; console to try the plotting code!&lt;/strong&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat &amp;lt;- 
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(7)
+n &amp;lt;- 50 # The data sets I make these visualizations for are typically 100-500 patients in size, but for space purposes I&amp;#39;ll set my n to only 50.
+dat &amp;lt;- 
   tibble(.rows = n) %&amp;gt;%  # empty data frame / tibble with n rows
   mutate(pt_id = factor(row_number()),  # patient ids are 1-n
-         pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient
+         pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient so we can see patterns
          months_followup = round(runif(n, 0, 20) + 3 * pt_trt_prob), # randomly generate length of time in the study, which is affected by the prob of treatment
-         death = rbinom(n, 1, 1-pt_trt_prob)) %&amp;gt;% # death is affected by prob of treatment
+         death = rbinom(n, 1, .5)) %&amp;gt;% # death is not affected by treatment and randomly occurs at any time point. Obviously an unrealistic assumption. :)
   group_by(pt_id) %&amp;gt;%   # group by patient so we can do more data manipulation
   complete(months_followup = full_seq(0:max(months_followup), 1)) %&amp;gt;% # add in all the months patients are in the study
   fill(pt_trt_prob, .direction = &amp;quot;up&amp;quot;) %&amp;gt;% # fill in the treatment probability I made earlier so I can use this to add treatment for every time point
   ungroup() %&amp;gt;% # no longer need patients grouped
-  mutate(trt = factor(rbinom(row_number(), 1, pt_trt_prob)),
-         death = replace_na(death, 0)) %&amp;gt;%   # fill in treatment for everyone based on their treatment probability
-  select(pt_id, trt, months_followup, death) # remove leftover columns from data generation&lt;/code&gt;&lt;/pre&gt;
+  mutate(trt = factor(rbinom(row_number(), 1, pt_trt_prob^2)),  # fill in treatment for everyone based on their treatment probability
+         death = replace_na(death, 0)) %&amp;gt;%  # also fill in death
+  select(pt_id, months_followup, trt, death) # remove leftover columns from data generation&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Let’s look at the data. It’s in “long” format with patient ID’s repeating for each &lt;code&gt;month_followup&lt;/code&gt; they were in my (fake) study. At every month, we know whether or not they were on the treatment, and whether they died at that time point. This first example does not contain any missingness.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat %&amp;gt;% filter(pt_id %in% 5:6) %&amp;gt;% knitr::kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat %&amp;gt;% filter(pt_id == 5) %&amp;gt;% knitr::kable()&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr class=&#34;header&#34;&gt;
 &lt;th align=&#34;left&#34;&gt;pt_id&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;trt&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;months_followup&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;trt&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;death&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;7&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;9&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;11&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;12&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;13&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;14&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;15&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
 &lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;7&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;9&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;left&#34;&gt;6&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;10&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -245,7 +178,7 @@ n &amp;lt;- 50&lt;/code&gt;&lt;/pre&gt;
   geom_point(shape = 15) + 
   # add in a new mapping layer of points that correspond to death
   geom_point(aes(x = month_death, y = pt_id), col = &amp;quot;black&amp;quot;, shape = 4) &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 599 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 594 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Don’t worry about the warning for removing missing values – it’s because we have &lt;code&gt;NA&lt;/code&gt;s at most months for our &lt;code&gt;month_death&lt;/code&gt;, so &lt;code&gt;geom_point&lt;/code&gt; doesn’t know where to put an ‘x’ marker.&lt;/p&gt;
 &lt;p&gt;Finally, let’s work on making the plot a bit nicer to look at:&lt;/p&gt;
@@ -273,14 +206,17 @@ n &amp;lt;- 50&lt;/code&gt;&lt;/pre&gt;
   scale_x_continuous(expand=c(0.01,0.01)) +
   # set the color of the lines and points
   scale_color_manual(values=c(&amp;quot;dodgerblue&amp;quot;,&amp;quot;firebrick1&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 599 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 594 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;I have never made one of these plots for publication, so I don’t mind that the subtitle contains legend information. If you wanted to have the &lt;code&gt;month_death&lt;/code&gt; markers in a legend, you would change &lt;code&gt;geom_point(aes(x = month_death, y = pt_id), col = &amp;quot;black&amp;quot;, shape = 4)&lt;/code&gt; to &lt;code&gt;geom_point(aes(x = month_death, y = pt_id, shape = month_death), col = &amp;quot;black&amp;quot;)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I have never made one of these plots for publication, so I don’t mind that the subtitle contains legend information. If you wanted to have the &lt;code&gt;month_death&lt;/code&gt; markers in a legend, you could change:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;geom_point(aes(x = month_death, y = pt_id), col = &amp;quot;black&amp;quot;, shape = 4)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;to:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;geom_point(aes(x = month_death, y = pt_id, shape = month_death), col = &amp;quot;black&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;example-2-continuous-covariate-with-missingness&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Example 2: Continuous Covariate with Missingness&lt;/h1&gt;
 &lt;p&gt;We can follow the very same steps for making a timeline for a continuous variable.&lt;/p&gt;
-&lt;p&gt;Again, here is the data generation code.&lt;/p&gt;
+&lt;p&gt;Again, here is the data generation code:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc &amp;lt;- 
   tibble(.rows = n) %&amp;gt;%
   mutate(pt_id = row_number(),
@@ -319,37 +255,37 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;83.74774&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;136.7207&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;92.42815&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;134.6658&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;70.84739&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;even&#34;&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;73.89363&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr class=&#34;odd&#34;&gt;
-&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;166.4625&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;69.37655&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;185.0464&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -376,8 +312,8 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
         legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;, high=&amp;quot;firebrick1&amp;quot;, na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 160 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 166 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Alternatively, we could rearrange our timelines by the number of measures we have for each patients &lt;code&gt;cov&lt;/code&gt;ariate of interest by making a new column containing the &lt;code&gt;sum(!is.na(cov))&lt;/code&gt; and rearranging our &lt;code&gt;pt_id&lt;/code&gt; by that column.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
   group_by(pt_id) %&amp;gt;%
@@ -404,8 +340,8 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
         legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Warning: Removed 160 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 166 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;From this plot we can start to see that patients with less missing measurements measurements look like they have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.&lt;/p&gt;
 &lt;p&gt;Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!&lt;/p&gt;
 &lt;/div&gt;
