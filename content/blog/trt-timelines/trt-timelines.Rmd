@@ -24,20 +24,18 @@ library(tidyverse, warn.conflicts = F)
 set.seed(777)
 n <- 50
 dat <- 
-  tibble(.rows = n) %>%
-  mutate(pt_id = factor(row_number()),
-         months_followup = round(runif(n, 0, 12)),
-         pt_trt_prob = runif(n, 0, 1),
-         death = rbinom(n, 1, 0.5)) %>%
-  group_by(pt_id) %>%
-  complete(months_followup = full_seq(0:max(months_followup), 1)) %>%
-  fill(pt_trt_prob, .direction = "up") %>%
-  mutate(death = replace_na(death, 0),
-         last_month_followup = max(months_followup),
-         death_date = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
-  ungroup() %>%
-  mutate(trt = rbinom(row_number(), 1, pt_trt_prob)) #%>%
-  #mutate(trt  = ifelse(sample_n(., 30)$pt_id == pt_id, NA, trt)) 
+  tibble(.rows = n) %>%  # empty data frame / tibble with n rows
+  mutate(pt_id = factor(row_number()),  # patient ids are 1-n
+         pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient so we can see patterns
+         months_followup = round(runif(n, 0, 20)), # randomly generate length of time in the study
+         death = rbinom(n, 1, .5)) %>% # death randomly occurs at any time point. Obviously an unrealistic assumption. :)
+  group_by(pt_id) %>%   # group by patient so we can do more data manipulation
+  complete(months_followup = full_seq(0:max(months_followup), 1)) %>% # add in all the months patients are in the study
+  fill(pt_trt_prob, .direction = "up") %>% # fill in the treatment probability I made earlier so I can use this to add treatment for every time point
+  ungroup() %>% # no longer need patients grouped
+  mutate(trt = factor(rbinom(row_number(), 1, pt_trt_prob^2)),  # fill in treatment for everyone based on their treatment probability
+         death = replace_na(death, 0)) %>%  # also fill in death
+  select(pt_id, months_followup, trt, death) # remove leftover columns from data generation
 
 dat_cc <- 
   tibble(.rows = n) %>%
@@ -140,8 +138,8 @@ dat <-
   tibble(.rows = n) %>%  # empty data frame / tibble with n rows
   mutate(pt_id = factor(row_number()),  # patient ids are 1-n
          pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient so we can see patterns
-         months_followup = round(runif(n, 0, 20) + 3 * pt_trt_prob), # randomly generate length of time in the study, which is affected by the prob of treatment
-         death = rbinom(n, 1, .5)) %>% # death is not affected by treatment and randomly occurs at any time point. Obviously an unrealistic assumption. :)
+         months_followup = round(runif(n, 0, 20)), # randomly generate length of time in the study
+         death = rbinom(n, 1, .5)) %>% # death randomly occurs at any time point. Obviously an unrealistic assumption. :)
   group_by(pt_id) %>%   # group by patient so we can do more data manipulation
   complete(months_followup = full_seq(0:max(months_followup), 1)) %>% # add in all the months patients are in the study
   fill(pt_trt_prob, .direction = "up") %>% # fill in the treatment probability I made earlier so I can use this to add treatment for every time point
@@ -238,16 +236,16 @@ Again, here is the data generation code:
 dat_cc <- 
   tibble(.rows = n) %>%
   mutate(pt_id = row_number(),
-         months_followup = round(runif(n, 0, 12)),
-         pt_cov_mean = runif(n, 80, 150),
-         death = rbinom(n, 1, 0.5)) %>%
+         months_followup = round(runif(n, 0, 12)), # random months of follow up
+         pt_cov_mean = runif(n, 80, 150), # random mean of a patient's covariate measures
+         death = rbinom(n, 1, 0.5)) %>% # random death
   group_by(pt_id) %>%
   complete(months_followup = full_seq(0:max(months_followup), 1)) %>%
   fill(pt_cov_mean, death, .direction = "up") %>%
   mutate(last_month_followup = max(months_followup),
          death_date = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
   ungroup() %>%
-  mutate(cov = rnorm(row_number(), pt_cov_mean, 10)) 
+  mutate(cov = rnorm(row_number(), pt_cov_mean, 10))  # everyone's covariates are close to their original mean (use to see patterns later)
 ```
 
 This time I am incorporating missingness at a patient-level on my simulated covariate measurements to show how we can use the plots to look at potential patterns in missingness.
@@ -255,7 +253,7 @@ This time I am incorporating missingness at a patient-level on my simulated cova
 ```{r}
 dat_cc_samp <- dat_cc %>%
   mutate(idx = row_number()) %>%
-  sample_frac(.4, weight = pt_cov_mean^3)  %>% # sample 40% of data, with weights for the sample determined by the patient's mean covariate. This would mean patients with a higher covariate are more likely to have missing data. Perhaps they are sicker patients!
+  sample_frac(.4, weight = pt_cov_mean^3)  %>% # sample 40% of data, with weights for the sample determined by the patient's mean covariate. This would mean patients with a higher mean covariate measure are more likely to have missing data.
   pull(idx)
 
 dat_cc_miss  <- dat_cc %>%

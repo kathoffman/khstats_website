@@ -29,8 +29,8 @@ dat &lt;-
   tibble(.rows = n) %&gt;%  # empty data frame / tibble with n rows
   mutate(pt_id = factor(row_number()),  # patient ids are 1-n
          pt_trt_prob = runif(n,0,1), # randomly generate a treatment probability for each patient so we can see patterns
-         months_followup = round(runif(n, 0, 20) + 3 * pt_trt_prob), # randomly generate length of time in the study, which is affected by the prob of treatment
-         death = rbinom(n, 1, .5)) %&gt;% # death is not affected by treatment and randomly occurs at any time point. Obviously an unrealistic assumption. :)
+         months_followup = round(runif(n, 0, 20)), # randomly generate length of time in the study
+         death = rbinom(n, 1, .5)) %&gt;% # death randomly occurs at any time point. Obviously an unrealistic assumption. :)
   group_by(pt_id) %&gt;%   # group by patient so we can do more data manipulation
   complete(months_followup = full_seq(0:max(months_followup), 1)) %&gt;% # add in all the months patients are in the study
   fill(pt_trt_prob, .direction = &quot;up&quot;) %&gt;% # fill in the treatment probability I made earlier so I can use this to add treatment for every time point
@@ -138,12 +138,6 @@ dat &lt;-
 <td align="left">5</td>
 <td align="right">14</td>
 <td align="left">0</td>
-<td align="right">0</td>
-</tr>
-<tr class="even">
-<td align="left">5</td>
-<td align="right">15</td>
-<td align="left">0</td>
 <td align="right">1</td>
 </tr>
 </tbody>
@@ -171,7 +165,7 @@ dat &lt;-
   geom_point(shape = 15) + 
   # add in a new mapping layer of points that correspond to death
   geom_point(aes(x = month_death, y = pt_id), col = &quot;black&quot;, shape = 4) </code></pre>
-<pre><code>## Warning: Removed 594 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 515 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Don’t worry about the warning for removing missing values – it’s because we have <code>NA</code>s at most months for our <code>month_death</code>, so <code>geom_point</code> doesn’t know where to put an ‘x’ marker.</p>
 <p>Finally, let’s work on making the plot a bit nicer to look at:</p>
@@ -199,7 +193,7 @@ dat &lt;-
   scale_x_continuous(expand=c(0.01,0.01)) +
   # set the color of the lines and points
   scale_color_manual(values=c(&quot;dodgerblue&quot;,&quot;firebrick1&quot;))</code></pre>
-<pre><code>## Warning: Removed 594 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 515 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>I have never made one of these plots for publication, so I don’t mind that the subtitle contains legend information. If you wanted to have the <code>month_death</code> markers in a legend, you could change:</p>
 <pre class="r"><code>geom_point(aes(x = month_death, y = pt_id), col = &quot;black&quot;, shape = 4)</code></pre>
@@ -213,20 +207,20 @@ dat &lt;-
 <pre class="r"><code>dat_cc &lt;- 
   tibble(.rows = n) %&gt;%
   mutate(pt_id = row_number(),
-         months_followup = round(runif(n, 0, 12)),
-         pt_cov_mean = runif(n, 80, 150),
-         death = rbinom(n, 1, 0.5)) %&gt;%
+         months_followup = round(runif(n, 0, 12)), # random months of follow up
+         pt_cov_mean = runif(n, 80, 150), # random mean of a patient&#39;s covariate measures
+         death = rbinom(n, 1, 0.5)) %&gt;% # random death
   group_by(pt_id) %&gt;%
   complete(months_followup = full_seq(0:max(months_followup), 1)) %&gt;%
   fill(pt_cov_mean, death, .direction = &quot;up&quot;) %&gt;%
   mutate(last_month_followup = max(months_followup),
          death_date = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %&gt;%
   ungroup() %&gt;%
-  mutate(cov = rnorm(row_number(), pt_cov_mean, 10)) </code></pre>
+  mutate(cov = rnorm(row_number(), pt_cov_mean, 10))  # everyone&#39;s covariates are close to their original mean (use to see patterns later)</code></pre>
 <p>This time I am incorporating missingness at a patient-level on my simulated covariate measurements to show how we can use the plots to look at potential patterns in missingness.</p>
 <pre class="r"><code>dat_cc_samp &lt;- dat_cc %&gt;%
   mutate(idx = row_number()) %&gt;%
-  sample_frac(.4, weight = pt_cov_mean^3)  %&gt;% # sample 40% of data, with weights for the sample determined by the patient&#39;s mean covariate. This would mean patients with a higher covariate are more likely to have missing data. Perhaps they are sicker patients!
+  sample_frac(.4, weight = pt_cov_mean^3)  %&gt;% # sample 40% of data, with weights for the sample determined by the patient&#39;s mean covariate. This would mean patients with a higher mean covariate measure are more likely to have missing data.
   pull(idx)
 
 dat_cc_miss  &lt;- dat_cc %&gt;%
@@ -260,7 +254,7 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">2</td>
-<td align="right">NA</td>
+<td align="right">71.34886</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
@@ -272,7 +266,7 @@ dat_cc_miss  &lt;- dat_cc %&gt;%
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">4</td>
-<td align="right">64.17518</td>
+<td align="right">NA</td>
 <td align="right">0</td>
 </tr>
 <tr class="even">
