@@ -93,13 +93,13 @@
 &lt;p&gt;I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement.&lt;/p&gt;
 &lt;p&gt;This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a “treatment timeline” for each patient, and the end product looks something like this:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;960&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Each line represents one patient, and each square represents a measurement at a specified point. I find these graphs useful to look for patterns or discrepancies in follow up times, treatment patterns, and missingness. They also allow me to verify that my coding is correct as I move through different data manipulations for my analyses.&lt;/p&gt;
+&lt;p&gt;Each line represents one patient, and each square represents a measurement at a specified point. I find these graphs useful to look for patterns or discrepancies in follow up times, treatment, and missingness. They also allow me to verify that my coding is correct as I move through different data manipulations for my analyses.&lt;/p&gt;
 &lt;p&gt;For the following examples I generate longitudinal survival data sets. I skip over how I made this data because it’s not the focus of this post, but if you have questions about the data generation please let me know. In general, I am trying to work from the point in a survival data analysis where you’ve already calculated each individual’s time to event.&lt;/p&gt;
 &lt;div id=&#34;example-1-binary-treatment&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Example 1: Binary Treatment&lt;/h1&gt;
 &lt;p&gt;To make these charts, my first step is to load the package &lt;code&gt;tidyverse&lt;/code&gt;, since I use functions from &lt;code&gt;dplyr&lt;/code&gt;, &lt;code&gt;tidyr&lt;/code&gt;, &lt;code&gt;forcats&lt;/code&gt;, and &lt;code&gt;ggplot2&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Here is the data generation code. If you’re interested in how I made it, you can check the comments, but if not, &lt;strong&gt;I recommend just copying and pasting into your &lt;code&gt;R&lt;/code&gt; console to try the plotting code!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Here is the data generation code. If you’re interested in how I made it, you can check the comments, but if not, &lt;strong&gt;I recommend just copying and pasting into your &lt;code&gt;R&lt;/code&gt; console to try the plotting code.&lt;/strong&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(7)
 n &amp;lt;- 50 # The data sets I make these visualizations for are typically 100-500 patients in size, but for space purposes I&amp;#39;ll set my n to only 50.
 dat &amp;lt;- 
@@ -109,7 +109,7 @@ dat &amp;lt;-
          months_followup = round(runif(n, 0, 20)), # randomly generate length of time in the study
          death = rbinom(n, 1, .5)) %&amp;gt;% # death randomly occurs at any time point. Obviously an unrealistic assumption. :)
   group_by(pt_id) %&amp;gt;%   # group by patient so we can do more data manipulation
-  complete(months_followup = full_seq(0:max(months_followup), 1)) %&amp;gt;% # add in all the months patients are in the study
+  complete(months_followup = full_seq(0:max(months_followup), 1)) %&amp;gt;% # add i^n all the months patients are in the study
   fill(pt_trt_prob, .direction = &amp;quot;up&amp;quot;) %&amp;gt;% # fill in the treatment probability I made earlier so I can use this to add treatment for every time point
   ungroup() %&amp;gt;% # no longer need patients grouped
   mutate(trt = factor(rbinom(row_number(), 1, pt_trt_prob^2)),  # fill in treatment for everyone based on their treatment probability
@@ -354,7 +354,33 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
                        breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;From this plot we can start to see that patients with more missing measurements have higher covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.&lt;/p&gt;
+&lt;p&gt;From this plot we can start to see that patients with more missing measurements have higher covariate measurements. This becomes clearer if we rearrange patients by their &lt;em&gt;proportion&lt;/em&gt; of non-missing measurements.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
+  group_by(pt_id) %&amp;gt;%
+  mutate(last_month_followup = max(months_followup),
+         # the proportion is the total number of measures divided by the total months of followup
+         prop_measures = sum(!is.na(cov))/last_month_followup) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  # reorder IDs by proportion of measures we have for each patient
+  mutate(pt_id = fct_rev(fct_reorder(factor(pt_id), prop_measures)),
+  month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %&amp;gt;%
+  ggplot(aes(x = months_followup, y = pt_id,
+             group = pt_id, col = cov)) +
+  geom_line()  + 
+  geom_point(shape = 15) + 
+  geom_point(aes(x = month_death, y = pt_id), shape=4, col=&amp;quot;black&amp;quot;) +
+  theme_bw() +
+  labs(x = &amp;quot;Months of Follow-Up&amp;quot;, y = &amp;quot;Patient ID&amp;quot;, col = &amp;quot;Covariate&amp;quot;,
+       title = &amp;quot;Patient Timelines: Continuous Covariate&amp;quot;,
+       subtitle = &amp;quot;x indicates month of patient death, gray indicates missing covariate&amp;quot;) +
+  theme(axis.text.y = element_text(size=6), # move legend to the side by removing legend location
+        legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
+  scale_x_continuous(expand=c(0.01,0.01)) +
+  scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;,
+                       breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;768&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.&lt;/p&gt;
 &lt;p&gt;Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!&lt;/p&gt;
 &lt;/div&gt;
 </description>

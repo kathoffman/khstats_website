@@ -116,7 +116,7 @@ gridExtra::grid.arrange(p, p2, nrow=1)
 
 ```
 
-Each line represents one patient, and each square represents a measurement at a specified point. I find these graphs useful to look for patterns or discrepancies in follow up times, treatment patterns, and missingness. They also allow me to verify that my coding is correct as I move through different data manipulations for my analyses.
+Each line represents one patient, and each square represents a measurement at a specified point. I find these graphs useful to look for patterns or discrepancies in follow up times, treatment, and missingness. They also allow me to verify that my coding is correct as I move through different data manipulations for my analyses.
 
 For the following examples I generate longitudinal survival data sets. I skip over how I made this data because it's not the focus of this post, but if you have questions about the data generation please let me know. In general, I am trying to work from the point in a survival data analysis where you've already calculated each individual's time to event.
 
@@ -128,7 +128,7 @@ To make these charts, my first step is to load the package `tidyverse`, since I 
 library(tidyverse)
 ```
 
-Here is the data generation code. If you're interested in how I made it, you can check the comments, but if not, **I recommend just copying and pasting into your `R` console to try the plotting code!**
+Here is the data generation code. If you're interested in how I made it, you can check the comments, but if not, **I recommend just copying and pasting into your `R` console to try the plotting code.**
 
 ```{r}
 set.seed(7)
@@ -140,7 +140,7 @@ dat <-
          months_followup = round(runif(n, 0, 20)), # randomly generate length of time in the study
          death = rbinom(n, 1, .5)) %>% # death randomly occurs at any time point. Obviously an unrealistic assumption. :)
   group_by(pt_id) %>%   # group by patient so we can do more data manipulation
-  complete(months_followup = full_seq(0:max(months_followup), 1)) %>% # add in all the months patients are in the study
+  complete(months_followup = full_seq(0:max(months_followup), 1)) %>% # add i^n all the months patients are in the study
   fill(pt_trt_prob, .direction = "up") %>% # fill in the treatment probability I made earlier so I can use this to add treatment for every time point
   ungroup() %>% # no longer need patients grouped
   mutate(trt = factor(rbinom(row_number(), 1, pt_trt_prob^2)),  # fill in treatment for everyone based on their treatment probability
@@ -325,7 +325,35 @@ dat_cc_miss %>%
                        breaks=c(90, 120, 150, 180)) 
 ```
 
-From this plot we can start to see that patients with more missing measurements have higher covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.
+From this plot we can start to see that patients with more missing measurements have higher covariate measurements. This becomes clearer if we rearrange patients by their *proportion* of non-missing measurements.
+
+```{r, fig.width=8}
+dat_cc_miss %>%
+  group_by(pt_id) %>%
+  mutate(last_month_followup = max(months_followup),
+         # the proportion is the total number of measures divided by the total months of followup
+         prop_measures = sum(!is.na(cov))/last_month_followup) %>%
+  ungroup() %>%
+  # reorder IDs by proportion of measures we have for each patient
+  mutate(pt_id = fct_rev(fct_reorder(factor(pt_id), prop_measures)),
+  month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
+  ggplot(aes(x = months_followup, y = pt_id,
+             group = pt_id, col = cov)) +
+  geom_line()  + 
+  geom_point(shape = 15) + 
+  geom_point(aes(x = month_death, y = pt_id), shape=4, col="black") +
+  theme_bw() +
+  labs(x = "Months of Follow-Up", y = "Patient ID", col = "Covariate",
+       title = "Patient Timelines: Continuous Covariate",
+       subtitle = "x indicates month of patient death, gray indicates missing covariate") +
+  theme(axis.text.y = element_text(size=6), # move legend to the side by removing legend location
+        legend.background = element_rect(linetype="solid", colour ="black")) +
+  scale_x_continuous(expand=c(0.01,0.01)) +
+  scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray",
+                       breaks=c(90, 120, 150, 180)) 
+```
+
+If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.
 
 Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!
 
