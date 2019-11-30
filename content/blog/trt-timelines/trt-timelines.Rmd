@@ -94,10 +94,9 @@ p <- dat %>%
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.7, .9),
         legend.direction = "horizontal",
-        legend.background = element_rect(linetype="solid", 
-                                  colour ="black")) +
+        legend.background = element_rect(linetype="solid", colour ="black")) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_manual(values=c("#ffc198","#9cc4ff")) 
+  scale_color_manual(values=c("dodgerblue","firebrick1")) 
 p2 <- dat_cc_miss %>%
   mutate(pt_id = fct_rev(fct_reorder(factor(pt_id), last_month_followup)),
   month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
@@ -115,8 +114,7 @@ p2 <- dat_cc_miss %>%
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.7, .9),
         legend.direction = "horizontal",
-        legend.background = element_rect(linetype="solid", 
-                                  colour ="black")) +
+        legend.background = element_rect(linetype="solid", colour ="black")) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray") 
 gridExtra::grid.arrange(p,p2,nrow=1)
@@ -140,7 +138,6 @@ n <- 50
 
 Here is the data generation code. If you're interested in how I made it, you can check the comments, but if not, **I recommend just copying and pasting into your `R` console to try the plotting code!**
 
-
 ```{r}
 dat <- 
   tibble(.rows = n) %>%  # empty data frame / tibble with n rows
@@ -158,13 +155,11 @@ dat <-
 
 ```
 
-
 Let's look at the data. It's in "long" format for each month each subject had a measurement from.
 
 ```{r}
 knitr::kable(head(dat))
 ```
-
 
 We can now plot our data in a very basic way. We really only need to specify in the `aes`thetics that the `x`-axis is time, the `y`-axis is subject IDs, the `col`or should correspond to treatment, and *our lines should be `group`ed together by subject*. Don't forget that last one! Then we can say we want `geom_line` to make a base timeline for each subject, and the points on the timeline should be squares (`shape = 15` in the `geom_point` mapping function).
 
@@ -199,7 +194,7 @@ dat %>%
 
 Don't worry about the warning for removing missing values -- it's because we have `NA`s at most months for our `month_death`, so `geom_point` doesn't know where to put an 'x' marker.
 
-Finally, let's work on making the plot a bit nicer to look at.
+Finally, let's work on making the plot a bit nicer to look at:
 
 ```{r}
 dat %>%
@@ -225,42 +220,13 @@ dat %>%
   # remove extra space around timeline
   scale_x_continuous(expand=c(0.01,0.01)) +
   # set the color of the lines and points
-  scale_color_manual(values=c("#ffc198","#9cc4ff"))
-
-```
-
-
-```{r, eval=F}
-dat %>%
-  group_by(pt_id) %>%
-  mutate(last_month_followup = max(months_followup), 
-         month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
-  ungroup() %>%
-  mutate(pt_id = fct_rev(fct_reorder(pt_id, last_month_followup)),
-         # make the treatment variable labels nicer
-         trt = factor(trt, levels=0:1, labels=c("No","Yes"))) %>%
-  ggplot(aes(x = months_followup, y = pt_id, group = pt_id, col = trt)) +
-  geom_line()  + 
-  geom_point(shape = 15) + 
-  geom_point(aes(x = month_death, y = pt_id), col = "black", shape = 4) +
-  theme_bw() +
-  labs(x = "Months of Follow-Up", y = "Patient ID", col = "Treatment",
-       title = "Patient Treatment Timeline",
-       subtitle = "x indicates time of death") +
-  # edit legend box and make patient ids small
-  theme(axis.text.y = element_text(size=6),
-        legend.position = c(.6, .9), legend.direction = "horizontal",
-        legend.background = element_rect(linetype="solid", colour ="black")) +
-  # remove extra space around timeline
-  scale_x_continuous(expand=c(0.01,0.01)) +
-  # set the color of the lines and points
-  scale_color_manual(values=c("#ffc198","#9cc4ff"), na.value="lightgrey")
+  scale_color_manual(values=c("dodgerblue","firebrick1"))
 
 ```
 
 # Example 2: Continuous Covariate with Missingness
 
-We can follow the very same steps for making a timeline for a continuous covariate (or treatment).
+We can follow the very same steps for making a timeline for a continuous variable.
 
 Again, here is the data generation code. 
 
@@ -277,7 +243,7 @@ dat_cc <-
   mutate(last_month_followup = max(months_followup),
          death_date = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
   ungroup() %>%
-  mutate(cov = rnorm(row_number(), pt_cov_mean, 10))
+  mutate(cov = rnorm(row_number(), pt_cov_mean, 10)) 
 ```
 
 This time I am incorporating missingness at a patient-level on my simulated covariate measurements to show how we can use the plots to look at potential patterns in missingness.
@@ -290,7 +256,14 @@ dat_cc_samp <- dat_cc %>%
 
 dat_cc_miss  <- dat_cc %>%
   mutate(cov = case_when(row_number() %in% dat_cc_samp ~ NA_real_,
-                         TRUE ~ cov))
+                         TRUE ~ cov)) %>%
+  select(pt_id, months_followup, cov, death, last_month_followup)
+```
+
+Looking again at the data we'll be using:
+
+```{r}
+knitr::kable(head(dat_cc_miss))
 ```
 
 We can plot the data and see this missingness with gray timeline points and lines:
@@ -299,10 +272,8 @@ We can plot the data and see this missingness with gray timeline points and line
 dat_cc_miss %>%
   mutate(pt_id = fct_rev(fct_reorder(factor(pt_id), last_month_followup)),
   month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
-  ggplot(aes(x = months_followup,
-             y = pt_id,
-             group = pt_id,
-             col = cov)) +
+  ggplot(aes(x = months_followup, y = pt_id,
+             group = pt_id, col = cov)) +
   geom_line()  + 
   geom_point(shape = 15) + 
   geom_point(aes(x = month_death, y = pt_id), shape=4, col="black") +
@@ -313,8 +284,7 @@ dat_cc_miss %>%
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.7, .9),
         legend.direction = "horizontal",
-        legend.background = element_rect(linetype="solid", 
-                                  colour ="black")) +
+        legend.background = element_rect(linetype="solid", colour ="black")) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray") 
 ```
@@ -327,12 +297,10 @@ dat_cc_miss %>%
   mutate(n_measures = sum(!is.na(cov))) %>%
   ungroup() %>%
   mutate(
-    pt_id = fct_reorder(factor(pt_id), n_measures),
+    pt_id = fct_rev(fct_reorder(factor(pt_id), n_measures)),
   month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
-  ggplot(aes(x = months_followup,
-             y = pt_id,
-             group = pt_id,
-             col = cov)) +
+  ggplot(aes(x = months_followup, y = pt_id,
+             group = pt_id, col = cov)) +
   geom_line()  + 
   geom_point(shape = 15) + 
   geom_point(aes(x = month_death, y = pt_id), shape=4, col="black") +
@@ -341,13 +309,14 @@ dat_cc_miss %>%
        title = "Patient Timelines: Continuous Covariate",
        subtitle = "x indicates month of patient death, gray indicates missing covariate") +
   theme(axis.text.y = element_text(size=6),
-        legend.background = element_rect(linetype="solid", 
-                                  colour ="black")) +
+        legend.position = c(.7, .9),
+        legend.direction = "horizontal",
+        legend.background = element_rect(linetype="solid", colour ="black")) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray") 
 ```
 
-From this plot we can see a potential pattern that patients with more measurements tend to have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this apparent missingness pattern.
+From this plot we can start to see the data generating mechanism that patients with less missing measurements measurements tend to have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.
 
-Happy timeline plotting!
+Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!
 

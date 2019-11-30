@@ -122,7 +122,7 @@ n &amp;lt;- 50&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 599 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Don’t worry about the warning for removing missing values – it’s because we have &lt;code&gt;NA&lt;/code&gt;s at most months for our &lt;code&gt;month_death&lt;/code&gt;, so &lt;code&gt;geom_point&lt;/code&gt; doesn’t know where to put an ‘x’ marker.&lt;/p&gt;
-&lt;p&gt;Finally, let’s work on making the plot a bit nicer to look at.&lt;/p&gt;
+&lt;p&gt;Finally, let’s work on making the plot a bit nicer to look at:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat %&amp;gt;%
   group_by(pt_id) %&amp;gt;%
   mutate(last_month_followup = max(months_followup), 
@@ -146,37 +146,13 @@ n &amp;lt;- 50&lt;/code&gt;&lt;/pre&gt;
   # remove extra space around timeline
   scale_x_continuous(expand=c(0.01,0.01)) +
   # set the color of the lines and points
-  scale_color_manual(values=c(&amp;quot;#ffc198&amp;quot;,&amp;quot;#9cc4ff&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+  scale_color_manual(values=c(&amp;quot;dodgerblue&amp;quot;,&amp;quot;firebrick1&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 599 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat %&amp;gt;%
-  group_by(pt_id) %&amp;gt;%
-  mutate(last_month_followup = max(months_followup), 
-         month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %&amp;gt;%
-  ungroup() %&amp;gt;%
-  mutate(pt_id = fct_rev(fct_reorder(pt_id, last_month_followup)),
-         # make the treatment variable labels nicer
-         trt = factor(trt, levels=0:1, labels=c(&amp;quot;No&amp;quot;,&amp;quot;Yes&amp;quot;))) %&amp;gt;%
-  ggplot(aes(x = months_followup, y = pt_id, group = pt_id, col = trt)) +
-  geom_line()  + 
-  geom_point(shape = 15) + 
-  geom_point(aes(x = month_death, y = pt_id), col = &amp;quot;black&amp;quot;, shape = 4) +
-  theme_bw() +
-  labs(x = &amp;quot;Months of Follow-Up&amp;quot;, y = &amp;quot;Patient ID&amp;quot;, col = &amp;quot;Treatment&amp;quot;,
-       title = &amp;quot;Patient Treatment Timeline&amp;quot;,
-       subtitle = &amp;quot;x indicates time of death&amp;quot;) +
-  # edit legend box and make patient ids small
-  theme(axis.text.y = element_text(size=6),
-        legend.position = c(.6, .9), legend.direction = &amp;quot;horizontal&amp;quot;,
-        legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
-  # remove extra space around timeline
-  scale_x_continuous(expand=c(0.01,0.01)) +
-  # set the color of the lines and points
-  scale_color_manual(values=c(&amp;quot;#ffc198&amp;quot;,&amp;quot;#9cc4ff&amp;quot;), na.value=&amp;quot;lightgrey&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;example-2-continuous-covariate-with-missingness&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Example 2: Continuous Covariate with Missingness&lt;/h1&gt;
-&lt;p&gt;We can follow the very same steps for making a timeline for a continuous covariate (or treatment).&lt;/p&gt;
+&lt;p&gt;We can follow the very same steps for making a timeline for a continuous variable.&lt;/p&gt;
 &lt;p&gt;Again, here is the data generation code.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc &amp;lt;- 
   tibble(.rows = n) %&amp;gt;%
@@ -190,7 +166,7 @@ n &amp;lt;- 50&lt;/code&gt;&lt;/pre&gt;
   mutate(last_month_followup = max(months_followup),
          death_date = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %&amp;gt;%
   ungroup() %&amp;gt;%
-  mutate(cov = rnorm(row_number(), pt_cov_mean, 10))&lt;/code&gt;&lt;/pre&gt;
+  mutate(cov = rnorm(row_number(), pt_cov_mean, 10)) &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This time I am incorporating missingness at a patient-level on my simulated covariate measurements to show how we can use the plots to look at potential patterns in missingness.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_samp &amp;lt;- dat_cc %&amp;gt;%
   mutate(idx = row_number()) %&amp;gt;%
@@ -199,15 +175,71 @@ n &amp;lt;- 50&lt;/code&gt;&lt;/pre&gt;
 
 dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
   mutate(cov = case_when(row_number() %in% dat_cc_samp ~ NA_real_,
-                         TRUE ~ cov))&lt;/code&gt;&lt;/pre&gt;
+                         TRUE ~ cov)) %&amp;gt;%
+  select(pt_id, months_followup, cov, death, last_month_followup)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Looking again at the data we’ll be using:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;knitr::kable(head(dat_cc_miss))&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;right&#34;&gt;pt_id&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;months_followup&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cov&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;death&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;last_month_followup&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;83.74774&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;92.42815&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;70.84739&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;73.89363&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;69.37655&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;p&gt;We can plot the data and see this missingness with gray timeline points and lines:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
   mutate(pt_id = fct_rev(fct_reorder(factor(pt_id), last_month_followup)),
   month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %&amp;gt;%
-  ggplot(aes(x = months_followup,
-             y = pt_id,
-             group = pt_id,
-             col = cov)) +
+  ggplot(aes(x = months_followup, y = pt_id,
+             group = pt_id, col = cov)) +
   geom_line()  + 
   geom_point(shape = 15) + 
   geom_point(aes(x = month_death, y = pt_id), shape=4, col=&amp;quot;black&amp;quot;) +
@@ -218,8 +250,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
   theme(axis.text.y = element_text(size=6),
         legend.position = c(.7, .9),
         legend.direction = &amp;quot;horizontal&amp;quot;,
-        legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, 
-                                  colour =&amp;quot;black&amp;quot;)) +
+        legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 160 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
@@ -230,12 +261,10 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
   mutate(n_measures = sum(!is.na(cov))) %&amp;gt;%
   ungroup() %&amp;gt;%
   mutate(
-    pt_id = fct_reorder(factor(pt_id), n_measures),
+    pt_id = fct_rev(fct_reorder(factor(pt_id), n_measures)),
   month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %&amp;gt;%
-  ggplot(aes(x = months_followup,
-             y = pt_id,
-             group = pt_id,
-             col = cov)) +
+  ggplot(aes(x = months_followup, y = pt_id,
+             group = pt_id, col = cov)) +
   geom_line()  + 
   geom_point(shape = 15) + 
   geom_point(aes(x = month_death, y = pt_id), shape=4, col=&amp;quot;black&amp;quot;) +
@@ -244,14 +273,15 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
        title = &amp;quot;Patient Timelines: Continuous Covariate&amp;quot;,
        subtitle = &amp;quot;x indicates month of patient death, gray indicates missing covariate&amp;quot;) +
   theme(axis.text.y = element_text(size=6),
-        legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, 
-                                  colour =&amp;quot;black&amp;quot;)) +
+        legend.position = c(.7, .9),
+        legend.direction = &amp;quot;horizontal&amp;quot;,
+        legend.background = element_rect(linetype=&amp;quot;solid&amp;quot;, colour =&amp;quot;black&amp;quot;)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 160 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;768&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;From this plot we can see a potential pattern that patients with more measurements tend to have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this apparent missingness pattern.&lt;/p&gt;
-&lt;p&gt;Happy timeline plotting!&lt;/p&gt;
+&lt;p&gt;From this plot we can start to see the data generating mechanism that patients with less missing measurements measurements tend to have longer lengths of follow up and lower covariate measurements. If this were my real data, I would follow up with my research collaborators for more information on this missingness pattern.&lt;/p&gt;
+&lt;p&gt;Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>
