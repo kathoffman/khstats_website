@@ -113,7 +113,8 @@ p2 <- dat_cc_miss %>%
         legend.background = element_rect(linetype="solid", colour ="black"),
         legend.text=element_text(size=8)) +
   scale_x_continuous(expand=c(0.01,0.01)) +
-  scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray") 
+  scale_color_gradient(low="dodgerblue",high="firebrick1",na.value = "lightgray",
+                       breaks=c(90, 120, 150, 180)) 
 
 gridExtra::grid.arrange(p,p2,nrow=1)
 
