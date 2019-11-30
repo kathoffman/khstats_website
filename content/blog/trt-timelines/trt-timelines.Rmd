@@ -9,7 +9,6 @@ output:
     toc: true
     toc_float: true
     smart: false
-    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -22,7 +21,7 @@ This post contains reproducible examples for how I prefer to visually explore su
 
 ```{r, echo=F, warning=F, message=F, fig.height=6.5, fig.width=10}
 library(tidyverse, warn.conflicts = F)
-set.seed(7771)
+set.seed(7709)
 n <- 50
 dat <- 
   tibble(.rows = n) %>%
