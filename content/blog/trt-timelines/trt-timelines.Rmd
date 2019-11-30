@@ -294,7 +294,7 @@ dat_cc_miss %>%
                        breaks=c(90, 120, 150, 180)) 
 ```
 
-Alternatively, we could rearrange our timelines by the number of measures we have for each patients `cov`ariate of interest by making a new column containing the `sum(!is.na(cov))` and rearranging our `pt_id` by that column.
+Alternatively, we could rearrange our timelines by the number of measures we have for each patient's `cov`ariate of interest by making a new column containing the `sum(!is.na(cov))` and rearranging our `pt_id` by that column.
 
 ```{r}
 dat_cc_miss %>%
