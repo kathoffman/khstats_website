@@ -21,7 +21,7 @@ This post contains reproducible examples for how I prefer to visually explore su
 
 ```{r, echo=F, warning=F, message=F, fig.height=6.5, fig.width=10}
 library(tidyverse, warn.conflicts = F)
-set.seed(7709)
+set.seed(777)
 n <- 50
 dat <- 
   tibble(.rows = n) %>%
@@ -255,7 +255,7 @@ This time I am incorporating missingness at a patient-level on my simulated cova
 ```{r}
 dat_cc_samp <- dat_cc %>%
   mutate(idx = row_number()) %>%
-  sample_frac(.5, weight = pt_cov_mean^3)  %>% # sample 50% of data, with weights for the sample determined by the patient's mean covariate. This would mean patients with a higher covariate are more likely to have missing data. Perhaps they are sicker patients!
+  sample_frac(.4, weight = pt_cov_mean^3)  %>% # sample 40% of data, with weights for the sample determined by the patient's mean covariate. This would mean patients with a higher covariate are more likely to have missing data. Perhaps they are sicker patients!
   pull(idx)
 
 dat_cc_miss  <- dat_cc %>%
