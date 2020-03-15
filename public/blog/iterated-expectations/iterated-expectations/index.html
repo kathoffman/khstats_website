@@ -125,8 +125,8 @@
   
   <meta property="twitter:card" content="summary">
   
-  <meta property="twitter:site" content="@Rkatlady">
-  <meta property="twitter:creator" content="@Rkatlady">
+  <meta property="twitter:site" content="@rkatlady">
+  <meta property="twitter:creator" content="@rkatlady">
   
   <meta property="og:site_name" content="KHstats">
   <meta property="og:url" content="/blog/iterated-expectations/iterated-expectations/">
@@ -322,35 +322,6 @@
 
         <li class="nav-item">
           <a class="nav-link " href="/#talks"><span>Talks</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
-            
-          
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#contact"><span>Contact</span></a>
         </li>
 
         
@@ -613,15 +584,15 @@
 </table>
 <ul>
 <li><p>This is because <span class="math inline">\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)</span>.</p></li>
-<li><p>We can view a fitted value from the regression, <span class="math inline">\(E[Y|X,Z]\)</span>, as a random variable itself to help us see this.</p></li>
+<li><p>We can view a fitted value from the regression, <span class="math inline">\(E[Y|X,Z]\)</span>, as a random variable to help us see this.</p></li>
 <li><p><a href="#proof-without-explanations">Skip to the end</a> to see the proof without any explanations.</p></li>
 </ul>
 <hr />
 <p><img src="/img/expectations.png" /></p>
 <p>I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between <span class="math inline">\(X\)</span> and <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
-<p>I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a few functions to make ANCOVA tables in <code>R</code>. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
-<p>In my (incorrect! don’t do this!) ANCOVA function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
-<p>I soon realized that to get ANCOVA means, my grouping variable should not be in the linear regression. However, I was still perplexed as to why the adjusted and unadjusted group means would be the same after adjusting for other variables.</p>
+<p>I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in <code>R</code>. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
+<p>In my function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
+<p>I soon realized that for what I needed to do, my grouping variable should not be in the linear regression. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.</p>
 <p>I created a very basic example to test this unexpected result. I regressed a variable from the <code>iris</code> data set, <code>Sepal.Length</code>, on another variable called <code>Sepal.Width</code> and a grouping variable <code>Species</code>. I then looked at the <code>Species</code> group predictions for both the unadjusted <code>Sepal.Length</code> and fitted values from my linear regression model for <code>Sepal.Length</code>.</p>
 <pre class="r"><code>library(dplyr)
 library(knitr)
@@ -671,9 +642,9 @@ iris %&gt;%
 <p><span class="math inline">\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]\)</span></p>
 <p>My table of unadjusted and adjusted Sepal Length means was therefore showing me that:</p>
 <p><span class="math display">\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]</span></p>
-<p>In more general notation, it seemed apparently true that:</p>
-<p><span class="math inline">\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)</span></p>
-<p>Is it true?! Spoiler alert – yes. The proof without any explanations is at the end of the post if you want to skip there. Otherwise, I’ll work through the steps one by one.</p>
+<p>In more general notation:</p>
+<p><span class="math display">\[E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\]</span></p>
+<p>Is it true?! Spoiler alert – yes. The proof without any explanations is at the <a href="#proof-without-explanations">end of the post</a> if you want to skip there. Otherwise, I’ll work through the steps one by one.</p>
 <hr />
 </div>
 <div id="proof-set-up" class="section level1">
@@ -718,8 +689,8 @@ iris %&gt;%
 <p><span class="math inline">\(\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]\)</span></p>
 <p>So, we’ve proved that:</p>
 <p><span class="math inline">\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)</span></p>
-<p>which, thankfully, means I have an answer to my ANCOVA table confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.</p>
-<p>Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It’s a perfect activity for social distancing! 😷</p>
+<p>which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.</p>
+<p>Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷</p>
 <hr />
 </div>
 <div id="proof-without-explanations" class="section level1">

@@ -69,15 +69,15 @@
 &lt;/table&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;This is because &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;We can view a fitted value from the regression, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z]\)&lt;/span&gt;, as a random variable itself to help us see this.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We can view a fitted value from the regression, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z]\)&lt;/span&gt;, as a random variable to help us see this.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;#proof-without-explanations&#34;&gt;Skip to the end&lt;/a&gt; to see the proof without any explanations.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr /&gt;
 &lt;p&gt;&lt;img src=&#34;/img/expectations.png&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.&lt;/p&gt;
-&lt;p&gt;I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a few functions to make ANCOVA tables in &lt;code&gt;R&lt;/code&gt;. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
-&lt;p&gt;In my (incorrect! don’t do this!) ANCOVA function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
-&lt;p&gt;I soon realized that to get ANCOVA means, my grouping variable should not be in the linear regression. However, I was still perplexed as to why the adjusted and unadjusted group means would be the same after adjusting for other variables.&lt;/p&gt;
+&lt;p&gt;I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in &lt;code&gt;R&lt;/code&gt;. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
+&lt;p&gt;In my function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
+&lt;p&gt;I soon realized that for what I needed to do, my grouping variable should not be in the linear regression. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.&lt;/p&gt;
 &lt;p&gt;I created a very basic example to test this unexpected result. I regressed a variable from the &lt;code&gt;iris&lt;/code&gt; data set, &lt;code&gt;Sepal.Length&lt;/code&gt;, on another variable called &lt;code&gt;Sepal.Width&lt;/code&gt; and a grouping variable &lt;code&gt;Species&lt;/code&gt;. I then looked at the &lt;code&gt;Species&lt;/code&gt; group predictions for both the unadjusted &lt;code&gt;Sepal.Length&lt;/code&gt; and fitted values from my linear regression model for &lt;code&gt;Sepal.Length&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
 library(knitr)
@@ -127,9 +127,9 @@ iris %&amp;gt;%
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;My table of unadjusted and adjusted Sepal Length means was therefore showing me that:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;In more general notation, it seemed apparently true that:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Is it true?! Spoiler alert – yes. The proof without any explanations is at the end of the post if you want to skip there. Otherwise, I’ll work through the steps one by one.&lt;/p&gt;
+&lt;p&gt;In more general notation:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Is it true?! Spoiler alert – yes. The proof without any explanations is at the &lt;a href=&#34;#proof-without-explanations&#34;&gt;end of the post&lt;/a&gt; if you want to skip there. Otherwise, I’ll work through the steps one by one.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;proof-set-up&#34; class=&#34;section level1&#34;&gt;
@@ -174,8 +174,8 @@ iris %&amp;gt;%
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;So, we’ve proved that:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;which, thankfully, means I have an answer to my ANCOVA table confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.&lt;/p&gt;
-&lt;p&gt;Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It’s a perfect activity for social distancing! 😷&lt;/p&gt;
+&lt;p&gt;which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.&lt;/p&gt;
+&lt;p&gt;Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;proof-without-explanations&#34; class=&#34;section level1&#34;&gt;

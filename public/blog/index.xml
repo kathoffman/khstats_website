@@ -29,9 +29,88 @@
 &lt;li&gt;&lt;p&gt;By the end, you will be able to run one function to get a tidied data frame of correlations:&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;P&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;sig_p&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p_if_sig&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r_if_sig&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;You can then run &lt;code&gt;ggplot2&lt;/code&gt; code on this data to make your own correlation heat maps.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If you just want the code, &lt;a href=&#34;#just-the-code&#34;&gt;skip to the end&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;You can then run &lt;code&gt;ggplot2&lt;/code&gt; code on this data to make your own correlation heat maps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you just want the code, &lt;a href=&#34;#just-the-code&#34;&gt;skip to the end&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
@@ -39,18 +118,18 @@
 &lt;h1&gt;Less-customizable options&lt;/h1&gt;
 &lt;p&gt;I really appreciate some of the packages and functions that allow me to make correlation plots super quickly using &lt;code&gt;R&lt;/code&gt;. Here are a few examples:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrplot::corrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrgram::corrgram(mtcars)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Registered S3 method overwritten by &amp;#39;seriation&amp;#39;:
 ##   method         from 
 ##   reorder.hclust gclus&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggcorrplot::ggcorrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggcorrplot::ggcorrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;All of these are nice, but none of them are ultimately as customizable as I need them to be. I’ll next show how you can bypass using someone else’s function constraints to prepare correlations in your data in a &lt;code&gt;ggplot2&lt;/code&gt;-friendly format.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&#34;step-1-get-the-correlations&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Step 1: get the correlations&lt;/h1&gt;
+&lt;div id=&#34;getting-the-correlations&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Getting the correlations&lt;/h1&gt;
 &lt;p&gt;We could use the base &lt;code&gt;R&lt;/code&gt; function &lt;code&gt;cor()&lt;/code&gt; to get our correlations, but I do not like the defaults for missing data. Instead, I use Frank Harrell’s &lt;code&gt;Hmisc::rcorr()&lt;/code&gt; function for two reasons:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;it drops missing pairs as the default&lt;/p&gt;&lt;/li&gt;
@@ -59,14 +138,6 @@
 &lt;p&gt;Let’s load the libraries we’ll need for this, which are &lt;code&gt;knitr&lt;/code&gt; for showing tables using &lt;code&gt;kable&lt;/code&gt;, and &lt;code&gt;tidyverse&lt;/code&gt; (we’ll specifically use &lt;code&gt;tidyr&lt;/code&gt;, &lt;code&gt;dplyr&lt;/code&gt;, &lt;code&gt;ggplot2&lt;/code&gt;, &lt;code&gt;tibble&lt;/code&gt; and &lt;code&gt;purrr&lt;/code&gt;).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(knitr)
 library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Attaching packages ────────────────────────────────── tidyverse 1.3.0 ──&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ✓ ggplot2 3.3.0.9000     ✓ purrr   0.3.3     
-## ✓ tibble  2.1.3          ✓ dplyr   0.8.5     
-## ✓ tidyr   1.0.2          ✓ stringr 1.4.0     
-## ✓ readr   1.3.1          ✓ forcats 0.5.0&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;First, let’s look at our output from our correlation function we’ll use, &lt;code&gt;Hmisc::rcorr()&lt;/code&gt;. It requires the input to be a matrix, and outputs a list of three matrices.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mtcars_cor &amp;lt;- Hmisc::rcorr(as.matrix(mtcars))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;These three matrices include the correlation coefficient (default is Pearson’s), &lt;code&gt;r&lt;/code&gt;, the p-value, &lt;code&gt;P&lt;/code&gt;, and the number of observations used for each correlation, &lt;code&gt;n&lt;/code&gt;. Let’s turn each matrix into a &lt;code&gt;data frame&lt;/code&gt; and look at the top six rows with &lt;code&gt;head&lt;/code&gt; and &lt;code&gt;kable&lt;/code&gt;.&lt;/p&gt;
@@ -346,7 +417,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;Next we can write a function that formats a &lt;code&gt;data frame&lt;/code&gt; correctly for &lt;code&gt;Hmisc::rcorr()&lt;/code&gt; and then turns each of the three elements of the list (&lt;code&gt;r&lt;/code&gt;,&lt;code&gt;n&lt;/code&gt; and `)&lt;/p&gt;
+&lt;p&gt;Next we can write a function that formats a &lt;code&gt;data frame&lt;/code&gt; correctly for &lt;code&gt;Hmisc::rcorr()&lt;/code&gt; and then turns each of the three elements of the list (&lt;code&gt;r&lt;/code&gt;,&lt;code&gt;n&lt;/code&gt; and &lt;code&gt;P&lt;/code&gt;)&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors &amp;lt;- function(df) {
   M &amp;lt;- Hmisc::rcorr(as.matrix(df))
   # turn all three matrices (r, n, and P into a data frame)
@@ -929,6 +1000,49 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;plotting&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Plotting&lt;/h1&gt;
 &lt;p&gt;We’re finally ready to plot our correlation heat maps in &lt;code&gt;ggplot2&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The simplest form of this plot only requires us to specify &lt;code&gt;measure1&lt;/code&gt; and &lt;code&gt;measure2&lt;/code&gt; on the &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;-axis, respectively. Then we can map the correlation &lt;code&gt;r&lt;/code&gt; to the &lt;code&gt;fill&lt;/code&gt; &lt;code&gt;aes&lt;/code&gt;thetic, and add a tile as the &lt;code&gt;geom&lt;/code&gt;etry.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;) +
+  # map a red, white and blue color scale to correspond to -1:1 sequential gradient
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  theme_classic() +
+  # remove excess space on x and y axes
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  # change global font to roboto
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;,
+       subtitle=&amp;quot;Only significant Pearson&amp;#39;s correlation coefficients shown&amp;quot;) +
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
+  geom_tile(col=&amp;quot;black&amp;quot;, fill=&amp;quot;white&amp;quot;) +
+  geom_point(aes(size = abs(r)), shape=15) +
+  labs(x = NULL, y = NULL, col = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;) +
+  theme_classic()+
+  scale_color_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1))  +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;)) +
+  scale_size(range=c(1,9), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;just-the-code&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Just the code&lt;/h1&gt;
@@ -949,19 +1063,18 @@ formatted_cors &amp;lt;- function(df){
            r_if_sig = ifelse(P &amp;lt;.05, r, NA))
 }
 
-
 formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
   geom_tile() +
   labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;,
        subtitle=&amp;quot;Only significant Pearson&amp;#39;s correlation coefficients shown&amp;quot;) +
-  scale_fill_gradient2(mid=&amp;quot;white&amp;quot;,low=&amp;quot;#0057E7&amp;quot;,high=&amp;quot;#D62D20&amp;quot;, limits=c(-1,1)) +
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
   geom_text() +
   theme_classic() +
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>
@@ -1023,15 +1136,15 @@ formatted_cors(mtcars) %&amp;gt;%
 &lt;/table&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;This is because &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;We can view a fitted value from the regression, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z]\)&lt;/span&gt;, as a random variable itself to help us see this.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We can view a fitted value from the regression, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z]\)&lt;/span&gt;, as a random variable to help us see this.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;&lt;a href=&#34;#proof-without-explanations&#34;&gt;Skip to the end&lt;/a&gt; to see the proof without any explanations.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr /&gt;
 &lt;p&gt;&lt;img src=&#34;/img/expectations.png&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.&lt;/p&gt;
-&lt;p&gt;I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a few functions to make ANCOVA tables in &lt;code&gt;R&lt;/code&gt;. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
-&lt;p&gt;In my (incorrect! don’t do this!) ANCOVA function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
-&lt;p&gt;I soon realized that to get ANCOVA means, my grouping variable should not be in the linear regression. However, I was still perplexed as to why the adjusted and unadjusted group means would be the same after adjusting for other variables.&lt;/p&gt;
+&lt;p&gt;I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in &lt;code&gt;R&lt;/code&gt;. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
+&lt;p&gt;In my function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
+&lt;p&gt;I soon realized that for what I needed to do, my grouping variable should not be in the linear regression. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.&lt;/p&gt;
 &lt;p&gt;I created a very basic example to test this unexpected result. I regressed a variable from the &lt;code&gt;iris&lt;/code&gt; data set, &lt;code&gt;Sepal.Length&lt;/code&gt;, on another variable called &lt;code&gt;Sepal.Width&lt;/code&gt; and a grouping variable &lt;code&gt;Species&lt;/code&gt;. I then looked at the &lt;code&gt;Species&lt;/code&gt; group predictions for both the unadjusted &lt;code&gt;Sepal.Length&lt;/code&gt; and fitted values from my linear regression model for &lt;code&gt;Sepal.Length&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
 library(knitr)
@@ -1081,9 +1194,9 @@ iris %&amp;gt;%
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;My table of unadjusted and adjusted Sepal Length means was therefore showing me that:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;In more general notation, it seemed apparently true that:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Is it true?! Spoiler alert – yes. The proof without any explanations is at the end of the post if you want to skip there. Otherwise, I’ll work through the steps one by one.&lt;/p&gt;
+&lt;p&gt;In more general notation:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Is it true?! Spoiler alert – yes. The proof without any explanations is at the &lt;a href=&#34;#proof-without-explanations&#34;&gt;end of the post&lt;/a&gt; if you want to skip there. Otherwise, I’ll work through the steps one by one.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;proof-set-up&#34; class=&#34;section level1&#34;&gt;
@@ -1128,8 +1241,8 @@ iris %&amp;gt;%
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;So, we’ve proved that:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;which, thankfully, means I have an answer to my ANCOVA table confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.&lt;/p&gt;
-&lt;p&gt;Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It’s a perfect activity for social distancing! 😷&lt;/p&gt;
+&lt;p&gt;which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.&lt;/p&gt;
+&lt;p&gt;Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;proof-without-explanations&#34; class=&#34;section level1&#34;&gt;

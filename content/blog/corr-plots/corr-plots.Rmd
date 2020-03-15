@@ -14,6 +14,24 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, results="asis", warning=F, messages=F)
+library(tidyverse)
+library(knitr)
+cors <- function(df) {
+  M <- Hmisc::rcorr(as.matrix(df))
+  Mdf <- map(M, ~data.frame(.x))
+  return(Mdf)
+}
+
+formatted_cors <- function(df){
+  cors(df) %>%
+    map(~rownames_to_column(.x, var="measure1")) %>%
+    map(~pivot_longer(.x, -measure1, "measure2")) %>%
+    bind_rows(.id = "id") %>%
+    pivot_wider(names_from = id, values_from = value) %>%
+    mutate(sig_p = ifelse(P < .05, T, F),
+           p_if_sig = ifelse(P <.05, P, NA),
+           r_if_sig = ifelse(P <.05, r, NA))
+}
 ```
 
 ***
@@ -26,11 +44,26 @@ knitr::opts_chunk$set(echo = TRUE, results="asis", warning=F, messages=F)
 
 - By the end, you will be able to run one function to get a tidied data frame of correlations:
 
-```{r, eval=F}
+```{r}
 formatted_cors(mtcars) %>% head() %>% kable()
 ```
 
 - You can then run `ggplot2` code on this data to make your own correlation heat maps.
+
+```{r, echo=F}
+formatted_cors(mtcars) %>%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = "Pearson's\nCorrelation", title="Correlations in Mtcars",
+       subtitle="Only significant Pearson's correlation coefficients shown") +
+  scale_fill_gradient2(mid="#FBFEF9",low="#0C6291",high="#A63446", limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family="Roboto"))
+```
+
 
 - If you just want the code, [skip to the end](#just-the-code).
 
@@ -54,7 +87,7 @@ ggcorrplot::ggcorrplot(cor(mtcars))
 
 All of these are nice, but none of them are ultimately as customizable as I need them to be. I'll next show how you can bypass using someone else's function constraints to prepare correlations in your data in a `ggplot2`-friendly format.
 
-# Step 1: get the correlations
+# Getting the correlations
 
 We could use the base `R` function `cor()` to get our correlations, but I do not like the defaults for missing data. Instead, I use Frank Harrell's `Hmisc::rcorr()` function for two reasons:
 
@@ -93,7 +126,7 @@ The number of observations, `n`. There are no missing data in the `mtcars` data 
 data.frame(mtcars_cor$n) %>% head(n=3) %>% kable()
 ```
 
-Next we can write a function that formats a `data frame` correctly for `Hmisc::rcorr()` and then turns each of the three elements of the list (`r`,`n` and `)
+Next we can write a function that formats a `data frame` correctly for `Hmisc::rcorr()` and then turns each of the three elements of the list (`r`,`n` and `P`)
 
 ```{r}
 cors <- function(df) {
@@ -208,9 +241,60 @@ formatted_cors(mtcars) %>% head() %>% kable()
 
 We're finally ready to plot our correlation heat maps in `ggplot2`. 
 
-```{r}
+The simplest form of this plot only requires us to specify `measure1` and `measure2` on the `x` and `y`-axis, respectively. Then we can map the correlation `r` to the `fill` `aes`thetic, and add a tile as the `geom`etry.
 
+```{r}
+formatted_cors(mtcars) %>%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile()
 ```
+
+We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.
+
+
+```{r}
+formatted_cors(mtcars) %>%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = "Pearson's\nCorrelation", title="Correlations in Mtcars") +
+  # map a red, white and blue color scale to correspond to -1:1 sequential gradient
+  scale_fill_gradient2(mid="#FBFEF9",low="#0C6291",high="#A63446", limits=c(-1,1)) +
+  theme_classic() +
+  # remove excess space on x and y axes
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  # change global font to roboto
+  theme(text=element_text(family="Roboto"))
+```
+
+```{r}
+formatted_cors(mtcars) %>%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = "Pearson's\nCorrelation", title="Correlations in Mtcars",
+       subtitle="Only significant Pearson's correlation coefficients shown") +
+  scale_fill_gradient2(mid="#FBFEF9",low="#0C6291",high="#A63446", limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family="Roboto"))
+```
+
+```{r}
+formatted_cors(mtcars) %>%
+  ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
+  geom_tile(col="black", fill="white") +
+  geom_point(aes(size = abs(r)), shape=15) +
+  labs(x = NULL, y = NULL, col = "Pearson's\nCorrelation", title="Correlations in Mtcars") +
+  theme_classic()+
+  scale_color_gradient2(mid="#FBFEF9",low="#0C6291",high="#A63446", limits=c(-1,1))  +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family="Roboto")) +
+  scale_size(range=c(1,9), guide=NULL) 
+```
+
 
 # Just the code
 
@@ -232,13 +316,12 @@ formatted_cors <- function(df){
            r_if_sig = ifelse(P <.05, r, NA))
 }
 
-
 formatted_cors(mtcars) %>%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
   geom_tile() +
   labs(x = NULL, y = NULL, fill = "Pearson's\nCorrelation", title="Correlations in Mtcars",
        subtitle="Only significant Pearson's correlation coefficients shown") +
-  scale_fill_gradient2(mid="white",low="#0057E7",high="#D62D20", limits=c(-1,1)) +
+  scale_fill_gradient2(mid="#FBFEF9",low="#0C6291",high="#A63446", limits=c(-1,1)) +
   geom_text() +
   theme_classic() +
   scale_x_discrete(expand=c(0,0)) +

@@ -49,7 +49,7 @@ iris %>%
 
 - This is because $E[E[Y|X,Z]|Z=z]=E[Y|Z=z]$.
 
-- We can view a fitted value from the regression, $E[Y|X,Z]$, as a random variable itself to help us see this.
+- We can view a fitted value from the regression, $E[Y|X,Z]$, as a random variable to help us see this.
 
 - [Skip to the end](#proof-without-explanations) to see the proof without any explanations.
 
@@ -59,11 +59,11 @@ iris %>%
 
 I'll admit I spent much of my first-semester of grad school struggling to understand the difference between $X$ and $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
 
-I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a few functions to make ANCOVA tables in `R`. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
+I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in `R`. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
 
-In my (incorrect! don't do this!) ANCOVA function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were *identical* to the unadjusted group means.
+In my function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were *identical* to the unadjusted group means.
 
-I soon realized that to get ANCOVA means, my grouping variable should not be in the linear regression. However, I was still perplexed as to why the adjusted and unadjusted group means would be the same after adjusting for other variables.
+I soon realized that for what I needed to do, my grouping variable should not be in the linear regression. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.
 
 I created a very basic example to test this unexpected result. I regressed a variable from the `iris` data set, `Sepal.Length`, on another variable  called `Sepal.Width` and a grouping variable `Species`. I then looked at the `Species` group predictions for both the unadjusted `Sepal.Length` and fitted values from my linear regression model for `Sepal.Length`.
 
@@ -101,11 +101,11 @@ My table of unadjusted and adjusted Sepal Length means was therefore showing me 
 
 $$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]$$
 
-In more general notation, it seemed apparently true that:
+In more general notation:
 
-$E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$
+$$E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$$
 
-Is it true?! Spoiler alert -- yes. The proof without any explanations is at the end of the post if you want to skip there. Otherwise, I'll work through the steps one by one.
+Is it true?! Spoiler alert -- yes. The proof without any explanations is at the [end of the post](#proof-without-explanations) if you want to skip there. Otherwise, I'll work through the steps one by one.
 
 ***
 
@@ -175,9 +175,9 @@ So, we've proved that:
 
 $E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$
 
-which, thankfully, means I have an answer to my ANCOVA table confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.
+which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.
 
-Here's hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It's a perfect activity for social distancing! 😷
+Here's hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷
 
 ***
 

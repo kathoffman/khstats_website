@@ -23,9 +23,88 @@ output:
 <li><p>By the end, you will be able to run one function to get a tidied data frame of correlations:</p></li>
 </ul>
 <pre class="r"><code>formatted_cors(mtcars) %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">measure1</th>
+<th align="left">measure2</th>
+<th align="right">r</th>
+<th align="right">n</th>
+<th align="right">P</th>
+<th align="left">sig_p</th>
+<th align="right">p_if_sig</th>
+<th align="right">r_if_sig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">32</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8521620</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8475514</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">32</td>
+<td align="right">2.00e-07</td>
+<td align="left">TRUE</td>
+<td align="right">2.00e-07</td>
+<td align="right">-0.7761684</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+<td align="right">32</td>
+<td align="right">1.78e-05</td>
+<td align="left">TRUE</td>
+<td align="right">1.78e-05</td>
+<td align="right">0.6811719</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8676594</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li><p>You can then run <code>ggplot2</code> code on this data to make your own correlation heat maps.</p></li>
-<li><p>If you just want the code, <a href="#just-the-code">skip to the end</a>.</p></li>
+<li>You can then run <code>ggplot2</code> code on this data to make your own correlation heat maps.</li>
+</ul>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<ul>
+<li>If you just want the code, <a href="#just-the-code">skip to the end</a>.</li>
 </ul>
 <hr />
 </div>
@@ -33,18 +112,18 @@ output:
 <h1>Less-customizable options</h1>
 <p>I really appreciate some of the packages and functions that allow me to make correlation plots super quickly using <code>R</code>. Here are a few examples:</p>
 <pre class="r"><code>corrplot::corrplot(cor(mtcars))</code></pre>
-<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <pre class="r"><code>corrgram::corrgram(mtcars)</code></pre>
 <pre><code>## Registered S3 method overwritten by &#39;seriation&#39;:
 ##   method         from 
 ##   reorder.hclust gclus</code></pre>
-<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-<pre class="r"><code>ggcorrplot::ggcorrplot(cor(mtcars))</code></pre>
 <p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>ggcorrplot::ggcorrplot(cor(mtcars))</code></pre>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>All of these are nice, but none of them are ultimately as customizable as I need them to be. I’ll next show how you can bypass using someone else’s function constraints to prepare correlations in your data in a <code>ggplot2</code>-friendly format.</p>
 </div>
-<div id="step-1-get-the-correlations" class="section level1">
-<h1>Step 1: get the correlations</h1>
+<div id="getting-the-correlations" class="section level1">
+<h1>Getting the correlations</h1>
 <p>We could use the base <code>R</code> function <code>cor()</code> to get our correlations, but I do not like the defaults for missing data. Instead, I use Frank Harrell’s <code>Hmisc::rcorr()</code> function for two reasons:</p>
 <ol style="list-style-type: decimal">
 <li><p>it drops missing pairs as the default</p></li>
@@ -53,14 +132,6 @@ output:
 <p>Let’s load the libraries we’ll need for this, which are <code>knitr</code> for showing tables using <code>kable</code>, and <code>tidyverse</code> (we’ll specifically use <code>tidyr</code>, <code>dplyr</code>, <code>ggplot2</code>, <code>tibble</code> and <code>purrr</code>).</p>
 <pre class="r"><code>library(knitr)
 library(tidyverse, warn.conflict=F)</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.0.9000     ✓ purrr   0.3.3     
-## ✓ tibble  2.1.3          ✓ dplyr   0.8.5     
-## ✓ tidyr   1.0.2          ✓ stringr 1.4.0     
-## ✓ readr   1.3.1          ✓ forcats 0.5.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
 <p>First, let’s look at our output from our correlation function we’ll use, <code>Hmisc::rcorr()</code>. It requires the input to be a matrix, and outputs a list of three matrices.</p>
 <pre class="r"><code>mtcars_cor &lt;- Hmisc::rcorr(as.matrix(mtcars))</code></pre>
 <p>These three matrices include the correlation coefficient (default is Pearson’s), <code>r</code>, the p-value, <code>P</code>, and the number of observations used for each correlation, <code>n</code>. Let’s turn each matrix into a <code>data frame</code> and look at the top six rows with <code>head</code> and <code>kable</code>.</p>
@@ -340,7 +411,7 @@ library(tidyverse, warn.conflict=F)</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Next we can write a function that formats a <code>data frame</code> correctly for <code>Hmisc::rcorr()</code> and then turns each of the three elements of the list (<code>r</code>,<code>n</code> and `)</p>
+<p>Next we can write a function that formats a <code>data frame</code> correctly for <code>Hmisc::rcorr()</code> and then turns each of the three elements of the list (<code>r</code>,<code>n</code> and <code>P</code>)</p>
 <pre class="r"><code>cors &lt;- function(df) {
   M &lt;- Hmisc::rcorr(as.matrix(df))
   # turn all three matrices (r, n, and P into a data frame)
@@ -923,6 +994,49 @@ library(tidyverse, warn.conflict=F)</code></pre>
 <div id="plotting" class="section level1">
 <h1>Plotting</h1>
 <p>We’re finally ready to plot our correlation heat maps in <code>ggplot2</code>.</p>
+<p>The simplest form of this plot only requires us to specify <code>measure1</code> and <code>measure2</code> on the <code>x</code> and <code>y</code>-axis, respectively. Then we can map the correlation <code>r</code> to the <code>fill</code> <code>aes</code>thetic, and add a tile as the <code>geom</code>etry.</p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile()</code></pre>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.</p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;) +
+  # map a red, white and blue color scale to correspond to -1:1 sequential gradient
+  scale_fill_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1)) +
+  theme_classic() +
+  # remove excess space on x and y axes
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  # change global font to roboto
+  theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;,
+       subtitle=&quot;Only significant Pearson&#39;s correlation coefficients shown&quot;) +
+  scale_fill_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
+  geom_tile(col=&quot;black&quot;, fill=&quot;white&quot;) +
+  geom_point(aes(size = abs(r)), shape=15) +
+  labs(x = NULL, y = NULL, col = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;) +
+  theme_classic()+
+  scale_color_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1))  +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&quot;Roboto&quot;)) +
+  scale_size(range=c(1,9), guide=NULL) </code></pre>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 </div>
 <div id="just-the-code" class="section level1">
 <h1>Just the code</h1>
@@ -943,17 +1057,16 @@ formatted_cors &lt;- function(df){
            r_if_sig = ifelse(P &lt;.05, r, NA))
 }
 
-
 formatted_cors(mtcars) %&gt;%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
   geom_tile() +
   labs(x = NULL, y = NULL, fill = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;,
        subtitle=&quot;Only significant Pearson&#39;s correlation coefficients shown&quot;) +
-  scale_fill_gradient2(mid=&quot;white&quot;,low=&quot;#0057E7&quot;,high=&quot;#D62D20&quot;, limits=c(-1,1)) +
+  scale_fill_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1)) +
   geom_text() +
   theme_classic() +
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
-<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 </div>
