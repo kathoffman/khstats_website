@@ -5,7 +5,7 @@
     <link>/tags/</link>
       <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 28 Nov 2019 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 18 Mar 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Tags</title>
@@ -15,8 +15,24 @@
     <item>
       <title>R</title>
       <link>/tags/r/</link>
-      <pubDate>Thu, 28 Nov 2019 21:13:14 -0500</pubDate>
+      <pubDate>Wed, 18 Mar 2020 21:13:14 -0500</pubDate>
       <guid>/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>expectations</title>
+      <link>/tags/expectations/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/expectations/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     
@@ -89,14 +105,6 @@
       <link>/tags/biostatistician/</link>
       <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
       <guid>/tags/biostatistician/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>statistics</title>
-      <link>/tags/statistics/</link>
-      <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
-      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     

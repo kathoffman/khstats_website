@@ -1,0 +1,203 @@
+---
+title: "Understanding Conditional and Iterated Expectations with a Linear Regression Model"
+author: "Katherine Hoffman"
+date: 2020-03-14T21:13:14-05:00
+categories: ["R", "statistics"]
+tags: ["R","statistics","expectations"]
+math: true
+output: 
+  blogdown::html_page:
+    toc: false
+    smart: false
+    df_print: "paged"
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results="asis", message=F, warning=F)
+```
+
+***
+
+# TLDR
+
+**Too long don't read;**
+
+- You can a regress an outcome on a grouping variable *plus any other variables* and the unadjusted and adjusted group means will be *identical*.
+
+- We can see that in a simple example using the `iris` data:
+
+```{r, echo=F}
+library(dplyr)
+library(knitr)
+```
+
+```{r}
+iris %>%
+  mutate(preds = predict(lm(Sepal.Length ~
+                              Sepal.Width +
+                              Petal.Length +
+                              Petal.Width +
+                              Species,
+                            data = .))) %>%
+  group_by(Species) %>%
+  summarise(mean_SL = mean(Sepal.Length),
+            mean_SL_preds = mean(preds)) %>%
+  kable()
+```
+
+- This is because $E[E[Y|X,Z]|Z=z]=E[Y|Z=z]$.
+
+- We can view a fitted value from the regression, $E[Y|X,Z]$, as a random variable itself to help us see this.
+
+- [Skip to the end](#proof-without-explanations) to see the proof without any explanations.
+
+***
+
+![](/img/expectations.png)
+
+I'll admit I spent much of my first-semester of grad school struggling to understand the difference between $X$ and $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
+
+I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a few functions to make ANCOVA tables in `R`. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
+
+In my (incorrect! don't do this!) ANCOVA function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were *identical* to the unadjusted group means.
+
+I soon realized that to get ANCOVA means, my grouping variable should not be in the linear regression. However, I was still perplexed as to why the adjusted and unadjusted group means would be the same after adjusting for other variables.
+
+I created a very basic example to test this unexpected result. I regressed a variable from the `iris` data set, `Sepal.Length`, on another variable  called `Sepal.Width` and a grouping variable `Species`. I then looked at the `Species` group predictions for both the unadjusted `Sepal.Length` and fitted values from my linear regression model for `Sepal.Length`.
+
+```{r}
+library(dplyr)
+library(knitr)
+
+iris %>%
+  # fit a linear regression for sepal length conditional on sepal width and species type
+  # make a new column containing the fitted predictions for sepal length
+  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %>%
+  # prepare to get group means by grouping data by species
+  group_by(Species) %>%
+  # compute unadjusted and adjusted group means
+  summarise(mean_SL = mean(Sepal.Length),
+            mean_SL_preds = mean(preds)) %>%
+  kable()
+```
+
+I saw the same strange output, even in my simple example. I realized this must be some statistics property I'd learned about and since forgotten, so I decided to write out what I was doing in expectations.
+
+First, I wrote down the linear regression I fit:
+
+$E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]$
+
+Since I took the means for each species type, I added another expectation around the first (a conditional expectation) in which I fixed species type to each of the three species:
+
+$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=virginica]$
+
+$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=versicolor]$
+
+$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]$
+
+My table of unadjusted and adjusted Sepal Length means was therefore showing me that:
+
+$$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]$$
+
+In more general notation, it seemed apparently true that:
+
+$E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$
+
+Is it true?! Spoiler alert -- yes. The proof without any explanations is at the end of the post if you want to skip there. Otherwise, I'll work through the steps one by one.
+
+***
+
+# Proof set-up
+
+*Let's pretend for the proof that both our $Y$ (outcome), $X$ (adjustment variable), and $Z$ (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function).*
+
+*A few more basic expectation property results we'll need:*
+
+#### Conditional probability
+
+$P(A|B) = \frac{P(A ∩ B)}{P(B)}$
+
+#### Partition theorem
+
+$E[A|B] = \sum_Ba \cdot P(A=a|B=b)$
+
+#### Marginal distribution from a joint distribution
+
+$\sum_A\sum_Ba\cdot P(A=a,B=b) = \sum_Aa\sum_B\cdot P(A=a,B=b) = \sum_Aa\cdot P(A=a)=E[A]$
+
+***
+
+# Step-by-step Proof
+
+First, we can first set our $Z$ to some fixed value $z$. In our `iris` example this could translate to setting $\mathrm{Species}$ to $setosa$. Because we're making our outer expectation conditional on $Z=z$, we can also move $Z=z$ into our inner expectation.
+
+$E[E[Y|X,Z]|Z=z]\\ =E[E[Y|X,Z=z]|Z=z]$
+
+Next we can rewrite $E[Y|X,Z=z]$ as the weighted summation of all possible values $X$ can take. $E[Y|X,Z=z]$ will only ever be able to take values of $X$ that vary over the range of $x$, $E[Y|X=x,Z=z]$ since our value $z$ is already fixed.
+
+We can weight each of these possible $E[Y|X=x,Z=z]$ values by $P(X=x|Z=z)$, since that's the probabilty $X$ will take value $x$ at our already-fixed $z$.
+
+Thus, we can start to find $E[E[Y|X,Z=z]|Z=z]$ by weighting each $E[Y|X=x,Z=z]$ by $P(X=x|Z=z)$ and adding them all up (see Partition Theorem):
+
+$E[E[Y|X,Z=z]|Z=z]\\ = \sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)$
+
+Now, we can get the expectation of $Y$ at each of those possible values of $X$ by a similar process (weighting each $E[Y]$ by $P(Y=y|X=x, Z=z)$.
+
+$\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)$
+
+The expectation of a random variable $Y$ is just the realization $y$, so we can rewrite as:
+
+$\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)$
+
+Next, by the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions such that:
+
+$\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}$
+
+The denominator of the first fraction cancels out with the numerator of the second fraction, so we can rewrite as:
+
+$\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}$
+
+We could then switch the summations around so that $y$ is outside the summation. This lets us get the joint distribution of only $Y$ and $Z$ so that we have:
+
+$\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\= \sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}$
+
+We can see this is also a conditional expectation (written in the form of a joint distribution) and rewrite as:
+
+$\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\=\sum_{Y}y P(Y=y|Z=z)$
+
+Which by the partition theorem is equal to:
+
+$\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]$
+
+So, we've proved that:
+
+$E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$
+
+which, thankfully, means I have an answer to my ANCOVA table confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.
+
+Here's hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It's a perfect activity for social distancing! 😷
+
+***
+
+# Proof without explanations
+
+Here's the proof without any explanations:
+
+$E[E[Y|X,Z]|Z=z]$
+
+$=E[E[Y|X,Z=z]|Z=z]\\$
+$=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\$
+$=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\$
+$=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\$
+$=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\$
+$=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\$
+$=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}\\$
+$=\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\$
+$=\sum_{Y}y P(Y=y|Z=z)\\$
+$=E[Y|Z=z]$
+
+# References
+
+[A Conditional Expectation - Arizona Math](https://www.math.arizona.edu/~tgk/464_07/cond_exp.pdf)

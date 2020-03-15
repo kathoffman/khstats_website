@@ -133,7 +133,7 @@
   <meta property="og:description" content="Research Biostatistician I"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2019-11-28T21:13:14-05:00">
+    <meta property="og:updated_time" content="2020-03-18T21:13:14-05:00">
   
 
   
@@ -411,6 +411,86 @@
   
 
   
+  
+  <div>
+    <h2><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></h2>
+    <div class="article-style">
+      
+      TL;DR Too long; didn’t read
+ If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
+ By the end, you will be able to run one function to get a tidied data frame of correlations:
+  formatted_cors(mtcars) %&gt;% head() %&gt;% kable()  You can then run ggplot2 code on this data to make your own correlation heat maps.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></h2>
+    <div class="article-style">
+      
+      TLDR Too long don’t read;
+ You can a regress an outcome on a grouping variable plus any other variables and the unadjusted and adjusted group means will be identical.
+ We can see that in a simple example using the iris data:
+  iris %&gt;% mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width + Species, data = .))) %&gt;% group_by(Species) %&gt;% summarise(mean_SL = mean(Sepal.Length), mean_SL_preds = mean(preds)) %&gt;% kable()   Species mean_SL mean_SL_preds    setosa 5.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/tmle-tutorial/tmle-tutorial-2/">An Equation-Free Explanation of Targeted Maximum Likelihood Estimation (TMLE)</a></h2>
+    <div class="article-style">
+      
+      TLDR  When performing research on observational data, we often want to accurately and precisely quantify the effect of an exposure, or treatment, on an outcome.
+ The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to calculate the average treatment effect using estimates of:
+the expected outcome for an individual, given the treatment they received and their baseline confounders
+ the probability an individual received the treatment of interest, given their baseline confounders (a propensity score)
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/sl/superlearning/">Become a Superlearner! A visual guide to the superlearner algorithm &#43; demo of {sl3}</a></h2>
+    <div class="article-style">
+      
+      What’s everyone else doing for Coronavirus social distancing activities?! One of my main ones has been reading a statistics textbook called Targeted Learning. I am really enjoying reading it, but there are a lot of moving parts, so I constantly have to check my understanding.
+The best way for me to figure out what I’ve learned is to write or draw everything out step-by-step. I tried this for Chapter 3 of Targeted Learning, which is all about a prediction algorithm called superlearning, or stacking.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/tmle-tutorial/tmle-tutorial-3/">UPDATE An Equation-Free Explanation of Targeted Maximum Likelihood Estimation (TMLE)</a></h2>
+    <div class="article-style">
+      
+      TLDR  The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to calculate the average treatment effect using estimates of:
+the expected outcome for an individual, given the treatment they received and their baseline confounders
+ the probability an individual received the treatment of interest, given their baseline confounders
+  These estimates can come from multiple machine learning models, but the overall estimate of the treatment effect will still have valid confidence intervals.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/tmle-tutorial/tmle-tutorial/">An Equation-Free Explanation of Targeted Maximum Likelihood Estimation (TMLE)</a></h2>
+    <div class="article-style">
+      
+      TLDR  The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to calculate the average treatment effect using estimates of:
+the expected outcome for an individual, given the treatment they received and their baseline confounders
+ the probability an individual received the treatment of interest, given their baseline confounders
+  These estimates can come from multiple machine learning models, but the overall estimate of the treatment effect will still have valid confidence intervals.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/power-sims/power-sims/">Writing your own Power Simulations in R</a></h2>
+    <div class="article-style">
+      
+      TLDR A review of statistical power Simulating one analysis Simulating power for one analysis Simulating the power curve over sample size Simulating power curves for many sample and effect sizes   TLDR  Statistical power is the proportion of times we reject the null hypothesis when the null hypothesis is false
+ We can estimate power for any hypothesis test by repeating our analysis many times and calculating the proportion of times we reject our null hypothesis
+      
+    </div>
+  </div>
   
   <div>
     <h2><a href="/blog/trt-timelines/trt-timelines/">Patient Treatment Timelines for Longitudinal Survival Data</a></h2>

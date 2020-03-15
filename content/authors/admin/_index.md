@@ -14,8 +14,7 @@ email: "kathoffman317@gmail.com"
 interests:
 - Causal Inference
 - Data Visualization
-- Neurological Disorders
-- Patient Safety
+- Statistics Education
 name: Katherine Hoffman
 organizations:
 - name: Weill Cornell Medicine

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>statistics | KHstats</title>
+    <link>/categories/statistics/</link>
+      <atom:link href="/categories/statistics/index.xml" rel="self" type="application/rss+xml" />
+    <description>statistics</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 14 Mar 2020 21:13:14 -0500</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>statistics</title>
+      <link>/categories/statistics/</link>
+    </image>
+    
+    <item>
+      <title>Understanding Conditional and Iterated Expectations with a Linear Regression Model</title>
+      <link>/blog/iterated-expectations/iterated-expectations/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/iterated-expectations/iterated-expectations/</guid>
+      <description>
+&lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;hr /&gt;
+&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TLDR&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;Too long don’t read;&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;You can a regress an outcome on a grouping variable &lt;em&gt;plus any other variables&lt;/em&gt; and the unadjusted and adjusted group means will be &lt;em&gt;identical&lt;/em&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We can see that in a simple example using the &lt;code&gt;iris&lt;/code&gt; data:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
+  mutate(preds = predict(lm(Sepal.Length ~
+                              Sepal.Width +
+                              Petal.Length +
+                              Petal.Width +
+                              Species,
+                            data = .))) %&amp;gt;%
+  group_by(Species) %&amp;gt;%
+  summarise(mean_SL = mean(Sepal.Length),
+            mean_SL_preds = mean(preds)) %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;Species&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mean_SL&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mean_SL_preds&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;setosa&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.006&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.006&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;versicolor&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.936&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.936&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;virginica&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6.588&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6.588&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;This is because &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We can view a fitted value from the regression, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z]\)&lt;/span&gt;, as a random variable itself to help us see this.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;#proof-without-explanations&#34;&gt;Skip to the end&lt;/a&gt; to see the proof without any explanations.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;p&gt;&lt;img src=&#34;/img/expectations.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.&lt;/p&gt;
+&lt;p&gt;I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a few functions to make ANCOVA tables in &lt;code&gt;R&lt;/code&gt;. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
+&lt;p&gt;In my (incorrect! don’t do this!) ANCOVA function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
+&lt;p&gt;I soon realized that to get ANCOVA means, my grouping variable should not be in the linear regression. However, I was still perplexed as to why the adjusted and unadjusted group means would be the same after adjusting for other variables.&lt;/p&gt;
+&lt;p&gt;I created a very basic example to test this unexpected result. I regressed a variable from the &lt;code&gt;iris&lt;/code&gt; data set, &lt;code&gt;Sepal.Length&lt;/code&gt;, on another variable called &lt;code&gt;Sepal.Width&lt;/code&gt; and a grouping variable &lt;code&gt;Species&lt;/code&gt;. I then looked at the &lt;code&gt;Species&lt;/code&gt; group predictions for both the unadjusted &lt;code&gt;Sepal.Length&lt;/code&gt; and fitted values from my linear regression model for &lt;code&gt;Sepal.Length&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
+library(knitr)
+
+iris %&amp;gt;%
+  # fit a linear regression for sepal length conditional on sepal width and species type
+  # make a new column containing the fitted predictions for sepal length
+  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %&amp;gt;%
+  # prepare to get group means by grouping data by species
+  group_by(Species) %&amp;gt;%
+  # compute unadjusted and adjusted group means
+  summarise(mean_SL = mean(Sepal.Length),
+            mean_SL_preds = mean(preds)) %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;Species&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mean_SL&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mean_SL_preds&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;setosa&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.006&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.006&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;versicolor&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.936&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.936&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;virginica&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6.588&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6.588&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;I saw the same strange output, even in my simple example. I realized this must be some statistics property I’d learned about and since forgotten, so I decided to write out what I was doing in expectations.&lt;/p&gt;
+&lt;p&gt;First, I wrote down the linear regression I fit:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Since I took the means for each species type, I added another expectation around the first (a conditional expectation) in which I fixed species type to each of the three species:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=virginica]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=versicolor]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;My table of unadjusted and adjusted Sepal Length means was therefore showing me that:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;In more general notation, it seemed apparently true that:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Is it true?! Spoiler alert – yes. The proof without any explanations is at the end of the post if you want to skip there. Otherwise, I’ll work through the steps one by one.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;proof-set-up&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Proof set-up&lt;/h1&gt;
+&lt;p&gt;&lt;em&gt;Let’s pretend for the proof that both our &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; (outcome), &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; (adjustment variable), and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt; (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function).&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;A few more basic expectation property results we’ll need:&lt;/em&gt;&lt;/p&gt;
+&lt;div id=&#34;conditional-probability&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Conditional probability&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(P(A|B) = \frac{P(A ∩ B)}{P(B)}\)&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;partition-theorem&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Partition theorem&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[A|B] = \sum_Ba \cdot P(A=a|B=b)\)&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;marginal-distribution-from-a-joint-distribution&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;Marginal distribution from a joint distribution&lt;/h4&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_A\sum_Ba\cdot P(A=a,B=b) = \sum_Aa\sum_B\cdot P(A=a,B=b) = \sum_Aa\cdot P(A=a)=E[A]\)&lt;/span&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;step-by-step-proof&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Step-by-step Proof&lt;/h1&gt;
+&lt;p&gt;First, we can first set our &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt; to some fixed value &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt;. In our &lt;code&gt;iris&lt;/code&gt; example this could translate to setting &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{Species}\)&lt;/span&gt; to &lt;span class=&#34;math inline&#34;&gt;\(setosa\)&lt;/span&gt;. Because we’re making our outer expectation conditional on &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt;, we can also move &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt; into our inner expectation.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]\\ =E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Next we can rewrite &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; as the weighted summation of all possible values &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; can take. &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; will only ever be able to take values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; that vary over the range of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; since our value &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt; is already fixed.&lt;/p&gt;
+&lt;p&gt;We can weight each of these possible &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; values by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt;, since that’s the probabilty &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; will take value &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; at our already-fixed &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Thus, we can start to find &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt; by weighting each &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt; and adding them all up (see Partition Theorem):&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z=z]|Z=z]\\ = \sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Now, we can get the expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; at each of those possible values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; by a similar process (weighting each &lt;span class=&#34;math inline&#34;&gt;\(E[Y]\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(Y=y|X=x, Z=z)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The expectation of a random variable &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; is just the realization &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt;, so we can rewrite as:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Next, by the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions such that:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The denominator of the first fraction cancels out with the numerator of the second fraction, so we can rewrite as:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We could then switch the summations around so that &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; is outside the summation. This lets us get the joint distribution of only &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt; so that we have:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\= \sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We can see this is also a conditional expectation (written in the form of a joint distribution) and rewrite as:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\=\sum_{Y}y P(Y=y|Z=z)\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Which by the partition theorem is equal to:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;So, we’ve proved that:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;which, thankfully, means I have an answer to my ANCOVA table confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.&lt;/p&gt;
+&lt;p&gt;Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It’s a perfect activity for social distancing! 😷&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;proof-without-explanations&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Proof without explanations&lt;/h1&gt;
+&lt;p&gt;Here’s the proof without any explanations:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=E[E[Y|X,Z=z]|Z=z]\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y P(Y=y|Z=z)\\\)&lt;/span&gt;
+&lt;span class=&#34;math inline&#34;&gt;\(=E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;References&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.math.arizona.edu/~tgk/464_07/cond_exp.pdf&#34;&gt;A Conditional Expectation - Arizona Math&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
