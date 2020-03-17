@@ -93,7 +93,6 @@
 &lt;hr /&gt;
 &lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TL;DR&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;Too long; didn’t read&lt;/strong&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;If you’re ever felt limited by correlogram packages in &lt;code&gt;R&lt;/code&gt;, this post will show you how to write your own function to tidy the many correlations into a &lt;code&gt;ggplot2&lt;/code&gt;-friendly form for plotting.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;By the end, you will be able to run one function to get a tidied data frame of correlations:&lt;/p&gt;&lt;/li&gt;
@@ -1089,6 +1088,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   # change global font to roboto
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column &lt;code&gt;r_if_sig&lt;/code&gt; that outputs from &lt;code&gt;formatted_cors()&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
   geom_tile() +
@@ -1101,6 +1101,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Another version of this could involve squares with different sizes to denote strength of correlation using &lt;code&gt;geom_point&lt;/code&gt; with &lt;code&gt;shape&lt;/code&gt; set to a value from &lt;a href=&#34;http://www.sthda.com/english/wiki/ggplot2-point-shapes&#34;&gt;these available &lt;code&gt;geom_shape&lt;/code&gt;s&lt;/a&gt;. Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
   geom_tile(col=&amp;quot;black&amp;quot;, fill=&amp;quot;white&amp;quot;) +
@@ -1111,8 +1112,8 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;)) +
-  scale_size(range=c(1,9), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+  scale_size(range=c(1,11), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;just-the-code&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Just the code&lt;/h1&gt;
@@ -1161,11 +1162,10 @@ formatted_cors(mtcars) %&amp;gt;%
 
 &lt;hr /&gt;
 &lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;TLDR&lt;/h1&gt;
-&lt;p&gt;&lt;strong&gt;Too long don’t read;&lt;/strong&gt;&lt;/p&gt;
+&lt;h1&gt;TL;DR&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;You can a regress an outcome on a grouping variable &lt;em&gt;plus any other variables&lt;/em&gt; and the unadjusted and adjusted group means will be &lt;em&gt;identical&lt;/em&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;We can see that in a simple example using the &lt;code&gt;iris&lt;/code&gt; data:&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We can see this in a simple example using the &lt;code&gt;iris&lt;/code&gt; data:&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
   mutate(preds = predict(lm(Sepal.Length ~
@@ -1207,14 +1207,14 @@ formatted_cors(mtcars) %&amp;gt;%
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;This is because &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;We can view a fitted value from the regression, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z]\)&lt;/span&gt;, as a random variable to help us see this.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;#proof-without-explanations&#34;&gt;Skip to the end&lt;/a&gt; to see the proof without any explanations.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;#the-proof&#34;&gt;Skip to the end&lt;/a&gt; to see the proof.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr /&gt;
 &lt;p&gt;&lt;img src=&#34;/img/expectations.png&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.&lt;/p&gt;
-&lt;p&gt;I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in &lt;code&gt;R&lt;/code&gt;. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
-&lt;p&gt;In my function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
-&lt;p&gt;I soon realized that for what I needed to do, my grouping variable should not be in the linear regression. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.&lt;/p&gt;
+&lt;p&gt;I recently found myself in a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in &lt;code&gt;R&lt;/code&gt;. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
+&lt;p&gt;In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
+&lt;p&gt;I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.&lt;/p&gt;
 &lt;p&gt;I created a very basic example to test this unexpected result. I regressed a variable from the &lt;code&gt;iris&lt;/code&gt; data set, &lt;code&gt;Sepal.Length&lt;/code&gt;, on another variable called &lt;code&gt;Sepal.Width&lt;/code&gt; and a grouping variable &lt;code&gt;Species&lt;/code&gt;. I then looked at the &lt;code&gt;Species&lt;/code&gt; group predictions for both the unadjusted &lt;code&gt;Sepal.Length&lt;/code&gt; and fitted values from my linear regression model for &lt;code&gt;Sepal.Length&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
 library(knitr)
@@ -1264,15 +1264,15 @@ iris %&amp;gt;%
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;My table of unadjusted and adjusted Sepal Length means was therefore showing me that:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;In more general notation:&lt;/p&gt;
+&lt;p&gt;Or, in more general notation:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Is it true?! Spoiler alert – yes. The proof without any explanations is at the &lt;a href=&#34;#proof-without-explanations&#34;&gt;end of the post&lt;/a&gt; if you want to skip there. Otherwise, I’ll work through the steps one by one.&lt;/p&gt;
+&lt;p&gt;Is it true?! Spoiler alert – yes. Let’s work through the steps of the proof one by one.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;proof-set-up&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Proof set-up&lt;/h1&gt;
-&lt;p&gt;&lt;em&gt;Let’s pretend for the proof that both our &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; (outcome), &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; (adjustment variable), and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt; (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function).&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;A few more basic expectation property results we’ll need:&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Let’s pretend for the proof that both our &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; (outcome), &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; (adjustment variable), and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt; (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function times the realization of the random variable).&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;A few fundamental expectation results we’ll need:&lt;/em&gt;&lt;/p&gt;
 &lt;div id=&#34;conditional-probability&#34; class=&#34;section level4&#34;&gt;
 &lt;h4&gt;Conditional probability&lt;/h4&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(P(A|B) = \frac{P(A ∩ B)}{P(B)}\)&lt;/span&gt;&lt;/p&gt;
@@ -1289,961 +1289,39 @@ iris %&amp;gt;%
 &lt;/div&gt;
 &lt;div id=&#34;step-by-step-proof&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Step-by-step Proof&lt;/h1&gt;
-&lt;p&gt;First, we can first set our &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt; to some fixed value &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt;. In our &lt;code&gt;iris&lt;/code&gt; example this could translate to setting &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{Species}\)&lt;/span&gt; to &lt;span class=&#34;math inline&#34;&gt;\(setosa\)&lt;/span&gt;. Because we’re making our outer expectation conditional on &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt;, we can also move &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt; into our inner expectation.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]\\ =E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Next we can rewrite &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; as the weighted summation of all possible values &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; can take. &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; will only ever be able to take values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; that vary over the range of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; since our value &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt; is already fixed.&lt;/p&gt;
-&lt;p&gt;We can weight each of these possible &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; values by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt;, since that’s the probabilty &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; will take value &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; at our already-fixed &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;Thus, we can start to find &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt; by weighting each &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt; and adding them all up (see Partition Theorem):&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z=z]|Z=z]\\ = \sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Now, we can get the expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; at each of those possible values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; by a similar process (weighting each &lt;span class=&#34;math inline&#34;&gt;\(E[Y]\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(Y=y|X=x, Z=z)\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;The expectation of a random variable &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; is just the realization &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt;, so we can rewrite as:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Next, by the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions such that:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;The denominator of the first fraction cancels out with the numerator of the second fraction, so we can rewrite as:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;We could then switch the summations around so that &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; is outside the summation. This lets us get the joint distribution of only &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt; so that we have:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\= \sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;We can see this is also a conditional expectation (written in the form of a joint distribution) and rewrite as:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\=\sum_{Y}y P(Y=y|Z=z)\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Which by the partition theorem is equal to:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Click on the superscript number after each step for more information.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt; &lt;a href=&#34;#fn1&#34; class=&#34;footnote-ref&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\)&lt;/span&gt; &lt;a href=&#34;#fn2&#34; class=&#34;footnote-ref&#34; id=&#34;fnref2&#34;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)&lt;/span&gt; &lt;a href=&#34;#fn3&#34; class=&#34;footnote-ref&#34; id=&#34;fnref3&#34;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\)&lt;/span&gt; &lt;a href=&#34;#fn4&#34; class=&#34;footnote-ref&#34; id=&#34;fnref4&#34;&gt;&lt;sup&gt;4&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\)&lt;/span&gt; &lt;a href=&#34;#fn5&#34; class=&#34;footnote-ref&#34; id=&#34;fnref5&#34;&gt;&lt;sup&gt;5&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\)&lt;/span&gt; &lt;a href=&#34;#fn6&#34; class=&#34;footnote-ref&#34; id=&#34;fnref6&#34;&gt;&lt;sup&gt;6&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}\)&lt;/span&gt; &lt;a href=&#34;#fn7&#34; class=&#34;footnote-ref&#34; id=&#34;fnref7&#34;&gt;&lt;sup&gt;7&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y P(Y=y|Z=z)\)&lt;/span&gt; &lt;a href=&#34;#fn8&#34; class=&#34;footnote-ref&#34; id=&#34;fnref8&#34;&gt;&lt;sup&gt;8&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=E[Y|Z=z]\)&lt;/span&gt; &lt;a href=&#34;#fn9&#34; class=&#34;footnote-ref&#34; id=&#34;fnref9&#34;&gt;&lt;sup&gt;9&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;So, we’ve proved that:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.&lt;/p&gt;
 &lt;p&gt;Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷&lt;/p&gt;
-&lt;hr /&gt;
-&lt;/div&gt;
-&lt;div id=&#34;proof-without-explanations&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Proof without explanations&lt;/h1&gt;
-&lt;p&gt;Here’s the proof without any explanations:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(=E[E[Y|X,Z=z]|Z=z]\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=\sum_{Y}y P(Y=y|Z=z)\\\)&lt;/span&gt;
-&lt;span class=&#34;math inline&#34;&gt;\(=E[Y|Z=z]\)&lt;/span&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&#34;https://www.math.arizona.edu/~tgk/464_07/cond_exp.pdf&#34;&gt;A Conditional Expectation - Arizona Math&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Become a Superlearner! A visual guide to the superlearner algorithm &#43; demo of {sl3}</title>
-      <link>/blog/sl/superlearning/</link>
-      <pubDate>Thu, 16 Jan 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/sl/superlearning/</guid>
-      <description>
-
-
-&lt;p&gt;What’s everyone else doing for Coronavirus social distancing activities?! One of my main ones has been reading a statistics textbook called &lt;em&gt;Targeted Learning&lt;/em&gt;. I am really enjoying reading it, but there are a lot of moving parts, so I constantly have to check my understanding.&lt;/p&gt;
-&lt;p&gt;The best way for me to figure out what I’ve learned is to write or draw everything out step-by-step. I tried this for Chapter 3 of &lt;em&gt;Targeted Learning&lt;/em&gt;, which is all about a prediction algorithm called superlearning, or stacking. I consider myself a very visual learner, so I made a “visual guide” to explicitly show each step of superlearning. Besides making a nice decoration for my desk, I’m hoping it can help another visual learner or two understand superlearning a bit faster.&lt;/p&gt;
-&lt;p&gt;
-An image as a link: &lt;a href=&#34;https://indd.adobe.com/view/9aebc992-f8ac-4bbb-86fe-4e08029bc7bd&#34;&gt;
-&lt;img border=&#34;1&#34; alt = &#34;test&#34; src=&#34;/img/sl_ss.png&#34; width=&#34;825&#34; height=&#34;637.5&#34;&gt;
-&lt;/a&gt;
-&lt;/p&gt;
-&lt;p&gt;What is superlearning?&lt;/p&gt;
-&lt;p&gt;Superlearning is the process of ensembling many types of estimation/prediction algorims together to use&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Writing your own Power Simulations in R</title>
-      <link>/blog/power-sims/power-sims/</link>
-      <pubDate>Tue, 31 Dec 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/power-sims/power-sims/</guid>
-      <description>
-&lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
-&lt;script src=&#34;/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
-
-&lt;div id=&#34;TOC&#34;&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#tldr&#34;&gt;TLDR&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#a-review-of-statistical-power&#34;&gt;A review of statistical power&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#simulating-one-analysis&#34;&gt;Simulating one analysis&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#simulating-power-for-one-analysis&#34;&gt;Simulating power for one analysis&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#simulating-the-power-curve-over-sample-size&#34;&gt;Simulating the power curve over sample size&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#simulating-power-curves-for-many-sample-and-effect-sizes&#34;&gt;Simulating power curves for many sample and effect sizes&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-
+&lt;div class=&#34;footnotes&#34;&gt;
 &lt;hr /&gt;
-&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;TLDR&lt;/h1&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Statistical power is the proportion of times we reject the null hypothesis when the null hypothesis is false&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;We can estimate power for any hypothesis test by repeating our analysis many times and calculating the proportion of times we reject our null hypothesis&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Skip to the &lt;a href=&#34;#full-code-without-explanations&#34;&gt;end of the post&lt;/a&gt; for &lt;code&gt;R&lt;/code&gt; simulation code without text explanations&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr /&gt;
-&lt;/div&gt;
-&lt;div id=&#34;a-review-of-statistical-power&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;A review of statistical power&lt;/h1&gt;
-&lt;p&gt;introduction&lt;/p&gt;
-&lt;hr /&gt;
-&lt;/div&gt;
-&lt;div id=&#34;simulating-one-analysis&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Simulating one analysis&lt;/h1&gt;
-&lt;p&gt;We’ll look at simulation examples using one of the most straightforward analyses: simple linear regression. Although you would never need to do a power calculation simulation for a simple linear regression because there is a formula for it, the concepts and code can easily be applied to a more complicated analysis in which formulas do not exist.&lt;/p&gt;
-&lt;p&gt;We start by loading the packages needed for this analysis, and setting a seed for reproducible results:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
-library(ggplot2)
-library(broom)
-library(kableExtra)
-library(purrr)
-library(future.apply)
-library(furrr)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(7)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We will generate a data set with sample size &lt;code&gt;n&lt;/code&gt; of &lt;code&gt;100&lt;/code&gt; and a population mean &lt;code&gt;mu&lt;/code&gt; of some measure equal to &lt;code&gt;50&lt;/code&gt; with standard deviation of &lt;code&gt;10&lt;/code&gt;. We’ll randomly assign a treatment we’ll call &lt;code&gt;A&lt;/code&gt;, of which the true effect on these measures in our population is a difference, or &lt;code&gt;delta&lt;/code&gt; of &lt;code&gt;5&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n &amp;lt;- 100
-mu &amp;lt;- 50
-sd &amp;lt;- 10
-delta &amp;lt;- 5
-A &amp;lt;- rep(c(0,1), each=n/2)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;With these parameters set, it becomes easy to generate our outcome &lt;code&gt;Y&lt;/code&gt; under the assumption that our measure of interest is a &lt;code&gt;r&lt;/code&gt;andom variable &lt;code&gt;norm&lt;/code&gt;ally distributed with mean &lt;code&gt;mu&lt;/code&gt;, standard deviation &lt;code&gt;sd&lt;/code&gt;. Our outcome changes a &lt;code&gt;delta&lt;/code&gt; amount due to our treatment &lt;code&gt;A&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We put our data of interest (the treatment assigned, &lt;code&gt;A&lt;/code&gt;, and resultant outcome, &lt;code&gt;Y&lt;/code&gt;) into a tibble/data frame.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat &amp;lt;- tibble(A, Y)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Then we can plot the distributions of the two groups as a sanity check.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat %&amp;gt;%
-  group_by(A) %&amp;gt;% mutate(mean_Y = mean(Y)) %&amp;gt;% ungroup() %&amp;gt;%
-  mutate(A = factor(A, levels=0:1, labels=c(&amp;quot;control&amp;quot;,&amp;quot;treatment&amp;quot;))) %&amp;gt;%
-  ggplot(aes(Y, col=A)) +
-  geom_density(alpha=.5) +
-  geom_vline(aes(xintercept=mean_Y, col=A),
-            linetype=&amp;quot;dashed&amp;quot;) +
-  ggtitle(&amp;quot;Distribution of Y under Treatment and Control&amp;quot;) +
-  theme_classic() +
-  scale_y_continuous(expand=c(0,0)) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/power-sims/power-sims_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;We see the distributions of both the treatment and control groups look normally distributed, and the treated group has a higher mean.&lt;/p&gt;
-&lt;p&gt;We can fit a linear model for our outcome given treatment and see the estimate of our treatment effect from this data set is 3. At an alpha level of 0.05, we would fail to reject our null hypothesis because the p-value is 0.121.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit &amp;lt;- lm(Y ~ A, data = dat)
-fit %&amp;gt;% tidy %&amp;gt;% kable(digits=3)&lt;/code&gt;&lt;/pre&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left;&#34;&gt;
-term
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-estimate
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-std.error
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-statistic
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-p.value
-&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-(Intercept)
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-52.387
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.355
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-38.652
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-A
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3.000
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.917
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.565
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.121
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;However, if we were to resample our data again, the next time we may randomly draw samples that, after fitting our linear model, &lt;em&gt;do&lt;/em&gt; give us enough evidence to reject the null hypothesis:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta
-fit &amp;lt;- lm(Y ~ A)
-fit %&amp;gt;% tidy %&amp;gt;% kable(digits=3)&lt;/code&gt;&lt;/pre&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left;&#34;&gt;
-term
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-estimate
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-std.error
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-statistic
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-p.value
-&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-(Intercept)
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-51.852
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.347
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-38.505
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-A
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3.904
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.904
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2.050
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.043
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;p&gt;If we were to estimate our statistical power based off of these two simulations, we’d calculate it to be 50%, because 1/2 of our simulations yielded a decision to reject our null hypothesis (and our null hypothesis is indeed false). This would be a terrible estimate of power, though! We need to simulate the same analysis many times in order to actually get a good estimate for power.&lt;/p&gt;
-&lt;hr /&gt;
-&lt;/div&gt;
-&lt;div id=&#34;simulating-power-for-one-analysis&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Simulating power for one analysis&lt;/h1&gt;
-&lt;p&gt;We’ll start by clearing our working directory. You could alternatively restart &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rm(list=ls())&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Next, let’s decide what our &lt;code&gt;alpha&lt;/code&gt;, or the Type I error rate we’re willing to accept, should be. This is usually &lt;code&gt;0.05&lt;/code&gt;. We will also set our &lt;code&gt;n&lt;/code&gt;umber of &lt;code&gt;sim&lt;/code&gt;ulation&lt;code&gt;s&lt;/code&gt; to be &lt;code&gt;500&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;alpha &amp;lt;- .05
-nsims &amp;lt;- 500&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Next, we need to initiate an empty object to hold the results of our simulations. It’s good practice to think about what information you actually want to save from each simulation run. In this case, I am only concerned with whether the p-value of my regression is less than my &lt;code&gt;alpha&lt;/code&gt;. Therefore, I initiate an empty vector to hold my &lt;code&gt;sig&lt;/code&gt;nificance decision after every simulation.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sig &amp;lt;- c()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Next, let’s generate the fixed parts of our simulation, like sample size, population mean, true effect size, and treatment assignments.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n &amp;lt;- 100
-mu &amp;lt;- 50
-sd &amp;lt;- 10
-delta &amp;lt;- 5
-A &amp;lt;- rep(c(0, 1), each = n / 2) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Now it’s time to simulate!&lt;/p&gt;
-&lt;p&gt;When I learn something new involving iteration, it’s often &lt;em&gt;really&lt;/em&gt; helpful for me to see it in a for-loop instead of a function. For this reason I’m showing my simulation examples first in a for-loop, but just below you’ll find the equivalent code in &lt;code&gt;lapply&lt;/code&gt; and &lt;code&gt;purrr&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;This for-loop is saying that every time we run a simulation, we’re going to generate new data (here, just a new outcome), save that data to a tibble and fit a linear model, pull the p-value for &lt;code&gt;A&lt;/code&gt; from the fit object, and then save in our &lt;code&gt;sig&lt;/code&gt;nificance vector whether or not the p-value was less than our &lt;code&gt;alpha&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;for (i in 1:nsims){
-  Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta
-  dat &amp;lt;- tibble(A, Y)
-  fit &amp;lt;- lm(Y~A, data=dat)
-  p_val &amp;lt;- fit %&amp;gt;% tidy %&amp;gt;% filter(term == &amp;quot;A&amp;quot;) %&amp;gt;% pull(p.value)
-  sig[i] &amp;lt;- p_val &amp;lt;= alpha
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;After running that for-loop we have a &lt;code&gt;sig&lt;/code&gt;nificance vector, which has the same length as our number of simulations, and tells us whether we rejected the null hypothesis at each simulation.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;print(head(sig))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;[1] TRUE TRUE TRUE TRUE TRUE FALSE&lt;/p&gt;
-&lt;p&gt;So, that means to calculate our power, we just need to calculate the proportion of times we rejected the null hypothesis (since our null hypothesis that the treatment effect is zero, is in fact false).&lt;/p&gt;
-&lt;p&gt;That’s easy, we take the mean!&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;power &amp;lt;- mean(sig)
-power&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;[1] 0.722&lt;/p&gt;
-&lt;p&gt;So we interpret the result of our power simulation as “with treatment assigned equally and randomly to &lt;code&gt;n=100&lt;/code&gt; observations, and a true treatment effect size of &lt;code&gt;5&lt;/code&gt; on a population mean of &lt;code&gt;50&lt;/code&gt; with a standard deviation of &lt;code&gt;10&lt;/code&gt;, our simple linear regression analysis has 72% power to detect the true treatment effect.”&lt;/p&gt;
-&lt;p&gt;The equivalent way to do this using &lt;code&gt;lapply&lt;/code&gt; or &lt;code&gt;purrr&lt;/code&gt; would be to make a function containing everything in your for-loop before you save the relevant power information. Let’s clear our working directory and see what that function would look like.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rm(list=ls())&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;slr_sig &amp;lt;- function(n, mu, sd, delta, alpha){
-  A &amp;lt;- rep(c(0,1), each=n/2)
-  Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta
-  dat &amp;lt;- tibble(A, Y)
-  fit &amp;lt;- lm(Y~A, data=dat)
-  p_val &amp;lt;- fit %&amp;gt;% tidy %&amp;gt;% filter(term == &amp;quot;A&amp;quot;) %&amp;gt;% pull(p.value)
-  return(p_val &amp;lt;= alpha)
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Then, we can apply or map our function over however many simulations we want to do, and every time it will return whether or not our p-value was less than our alpha.&lt;/p&gt;
-&lt;p&gt;Using &lt;code&gt;purrr&lt;/code&gt;’s &lt;code&gt;map()&lt;/code&gt; or base &lt;code&gt;R&lt;/code&gt;’s &lt;code&gt;lapply()&lt;/code&gt;, we run our new &lt;code&gt;slr_sig&lt;/code&gt; function &lt;code&gt;nsims&lt;/code&gt; times. We can then unlist our results (since both functions output a list), and take the mean of that &lt;code&gt;sig&lt;/code&gt;nificance vector to get our power, just as we did with the for-loop.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;nsims &amp;lt;- 500
-sig &amp;lt;- map(1:nsims, ~slr_sig(n=100, mu=50, sd=10, delta=5, alpha=.05)) %&amp;gt;% unlist()
-mean(sig)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;[1] 0.646&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sig &amp;lt;- lapply(1:nsims, function(i) slr_sig(n=100, mu=50, sd=10, delta=5, alpha=.05)) %&amp;gt;% unlist()
-mean(sig)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;[1] 0.692&lt;/p&gt;
-&lt;p&gt;If we were to increase our simulations, our power estimates would gradually converge.&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;simulating-the-power-curve-over-sample-size&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Simulating the power curve over sample size&lt;/h1&gt;
-&lt;p&gt;In the introduction at the beginning of this post, we discussed the four main aspects of power. Let’s fix our effect size to remain 5, but vary our sample size &lt;code&gt;n&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;We can do this in a nesting for-loop by just wrapping a &lt;code&gt;j&lt;/code&gt;th element for &lt;code&gt;n&lt;/code&gt; around our previous for-loop. At the end of every &lt;code&gt;i&lt;/code&gt;th iteration we’ll save the mean of the &lt;code&gt;sig&lt;/code&gt;nificance vector for that &lt;code&gt;n&lt;/code&gt; size and then we can look at the estimates for &lt;code&gt;power&lt;/code&gt; for every &lt;code&gt;n&lt;/code&gt; size` in a table or graph.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;alpha &amp;lt;- .05 # type I error rate
-sims &amp;lt;- 500 # number of simulations
-sign &amp;lt;- c() # an empty vector to hold the results of the significance test
-n_sizes &amp;lt;- seq(10, 200, by=10)
-power &amp;lt;- c()
-
-for (j in 1:length(n_sizes)){
-  n &amp;lt;- n_sizes[j]
-  for(i in 1:sims){
-    mu &amp;lt;- 50 # population mean of controls
-    sd &amp;lt;- 10 # standard deviation of the population
-    delta &amp;lt;- 5 # treatment effect size 
-    A &amp;lt;- rep(c(0,1), each=n/2) # treatment assignments, assuming equal group sizes
-    Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta
-    dat &amp;lt;- tibble(A, Y)
-    fit &amp;lt;- lm(Y~A, data=dat)
-    p_val &amp;lt;- summary(fit)$coefficients[2,4] # save the p-value
-    sign[i] &amp;lt;- p_val &amp;lt;= alpha # to save whether the p-value is less than .05
-  }
-  power[j] &amp;lt;- mean(sign)
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;p_curve &amp;lt;- tibble(n_sizes, power)
-kable(p_curve)&lt;/code&gt;&lt;/pre&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-n_sizes
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-power
-&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-10
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.118
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-20
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.186
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-30
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.244
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-40
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.298
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-50
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.428
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-60
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.514
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-70
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.568
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-80
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.646
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-90
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.652
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-100
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.718
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-110
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.718
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-120
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.800
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-130
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.804
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-140
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.872
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-150
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.880
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-160
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.852
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-170
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.890
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-180
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.942
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-190
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.934
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-200
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.938
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(p_curve, aes(n_sizes, power)) +
-  geom_line() + 
-  labs(x=&amp;quot;Sample Size (n)&amp;quot;, y=&amp;quot;Power&amp;quot;,
-       title=&amp;quot;Power Curve for Linear Regression of a Binary Treatment&amp;quot;) +
-  ylim(0,1) +
-  geom_hline(yintercept = .8, linetype=&amp;quot;dashed&amp;quot;) + theme_classic()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/power-sims/power-sims_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Alternatively, and admittedly in a much cleaner fashion, we can use our previous function and just add an argument for &lt;code&gt;n&lt;/code&gt;. Then, we can use another &lt;code&gt;for-loop&lt;/code&gt;, or, better yet, an iterative function like &lt;code&gt;map&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;Sometimes we want to know what our power will be&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;slr_n_sig &amp;lt;- function(n, mu, sd, delta, alpha){
-  A &amp;lt;- rep(c(0,1), each=n/2)
-  Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta
-  dat &amp;lt;- tibble(A, Y)
-  fit &amp;lt;- lm(Y~A, data=dat)
-  p_val &amp;lt;- fit %&amp;gt;% tidy %&amp;gt;% filter(term == &amp;quot;A&amp;quot;) %&amp;gt;% pull(p.value)
-  return(tibble(n = n, sig = p_val &amp;lt;= alpha))
-}
-
-map(1:2, ~imap(c(100,200), ~slr_n_sig(n=.x, mu=50, sd=10, delta=5, alpha=.05)))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;[[1]]
-[[1]][[1]]
-# A tibble: 1 x 2
-n sig&lt;br /&gt;
-&lt;dbl&gt; &lt;lgl&gt;
-1 100 FALSE&lt;/p&gt;
-&lt;p&gt;[[1]][[2]]
-# A tibble: 1 x 2
-n sig&lt;br /&gt;
-&lt;dbl&gt; &lt;lgl&gt;
-1 200 TRUE&lt;/p&gt;
-&lt;p&gt;[[2]]
-[[2]][[1]]
-# A tibble: 1 x 2
-n sig&lt;br /&gt;
-&lt;dbl&gt; &lt;lgl&gt;
-1 100 FALSE&lt;/p&gt;
-&lt;p&gt;[[2]][[2]]
-# A tibble: 1 x 2
-n sig&lt;br /&gt;
-&lt;dbl&gt; &lt;lgl&gt;
-1 200 TRUE&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rm(list=ls()) 
-alpha &amp;lt;- .05 # type I error rate
-sims &amp;lt;- 500 # number of simulations
-sign &amp;lt;- c() # an empty vector to hold the results of the significance test
-n_sizes &amp;lt;- seq(10, 200, by=10)
-power &amp;lt;- c()
-
-for (j in 1:length(n_sizes)){
-  n &amp;lt;- n_sizes[j]
-  for(i in 1:sims){
-    mu &amp;lt;- 50 # population mean of controls
-    sd &amp;lt;- 10 # standard deviation of the population
-    delta &amp;lt;- 5 # treatment effect size 
-    A &amp;lt;- rep(c(0,1), each=n/2) # treatment assignments, assuming equal group sizes
-    Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta
-    dat &amp;lt;- tibble(A, Y)
-    fit &amp;lt;- lm(Y~A, data=dat)
-    p_val &amp;lt;- summary(fit)$coefficients[2,4] # save the p-value
-    sign[i] &amp;lt;- p_val &amp;lt;= alpha # to save whether the p-value is less than .05
-  }
-  power[j] &amp;lt;- mean(sign)
-}
-
-p_curve &amp;lt;- tibble(n_sizes, power)
-kable(p_curve)&lt;/code&gt;&lt;/pre&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-n_sizes
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-power
-&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-10
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.108
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-20
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.208
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-30
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.258
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-40
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.354
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-50
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.402
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-60
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.486
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-70
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.522
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-80
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.576
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-90
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.664
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-100
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.710
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-110
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.736
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-120
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.814
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-130
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.828
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-140
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.814
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-150
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.876
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-160
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.906
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-170
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.888
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-180
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.920
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-190
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.932
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-200
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.934
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggplot(p_curve, aes(n_sizes, power)) +
-  geom_line() + 
-  labs(x=&amp;quot;Sample Size (n)&amp;quot;, y=&amp;quot;Power&amp;quot;,
-       title=&amp;quot;Power Curve for Linear Regression of a Binary Treatment&amp;quot;) +
-  ylim(0,1) +
-  geom_hline(yintercept = .8, linetype=&amp;quot;dashed&amp;quot;) + theme_classic()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/power-sims/power-sims_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;simulating-power-curves-for-many-sample-and-effect-sizes&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Simulating power curves for many sample and effect sizes&lt;/h1&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Vary the sample and effect sizes ------------------------------------------
-
-rm(list=ls()) 
-alpha &amp;lt;- .05 # type I error rate
-sims &amp;lt;- 200 # number of simulations
-sign &amp;lt;- c() # an empty vector to hold the results of the significance test
-n_sizes &amp;lt;- seq(10, 200, by=10)
-deltas &amp;lt;- c(3,5,8)
-power_table &amp;lt;- tibble(delta = rep(deltas, each=length(n_sizes)),
-                      n = rep(n_sizes, times = length(deltas)),
-                      power = rep(NA)) # table to keep track of our power
-count &amp;lt;- 0 # to keep track of each n and delta combo
-
-for (k in 1:length(deltas)){
-  delta &amp;lt;- deltas[k]
-for (j in 1:length(n_sizes)){
-  n &amp;lt;- n_sizes[j]
-  count &amp;lt;- count+1
-for (i in 1:sims){
-    mu &amp;lt;- 50 # population mean of controls
-    sd &amp;lt;- 10 # standard deviation of the population
-    A &amp;lt;- rep(c(0,1), each=n/2) # treatment assignments, assuming equal group sizes
-    Y &amp;lt;- rnorm(n, mean = mu, sd = sd) + A*delta
-    dat &amp;lt;- tibble(A, Y)
-    fit &amp;lt;- lm(Y~A, data=dat)
-    p_val &amp;lt;- summary(fit)$coefficients[2,4] # save the p-value
-    sign[i] &amp;lt;- p_val &amp;lt;= alpha # to save whether the p-value is less than .05
-}
-  power_table[count,&amp;quot;power&amp;quot;] &amp;lt;- mean(sign) # record power for each delta and n combo
-  print(count) # helpful to check on sim status
-}
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;[1] 1
-[1] 2
-[1] 3
-[1] 4
-[1] 5
-[1] 6
-[1] 7
-[1] 8
-[1] 9
-[1] 10
-[1] 11
-[1] 12
-[1] 13
-[1] 14
-[1] 15
-[1] 16
-[1] 17
-[1] 18
-[1] 19
-[1] 20
-[1] 21
-[1] 22
-[1] 23
-[1] 24
-[1] 25
-[1] 26
-[1] 27
-[1] 28
-[1] 29
-[1] 30
-[1] 31
-[1] 32
-[1] 33
-[1] 34
-[1] 35
-[1] 36
-[1] 37
-[1] 38
-[1] 39
-[1] 40
-[1] 41
-[1] 42
-[1] 43
-[1] 44
-[1] 45
-[1] 46
-[1] 47
-[1] 48
-[1] 49
-[1] 50
-[1] 51
-[1] 52
-[1] 53
-[1] 54
-[1] 55
-[1] 56
-[1] 57
-[1] 58
-[1] 59
-[1] 60&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;kable(head(power_table))&lt;/code&gt;&lt;/pre&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-delta
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-n
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-power
-&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-10
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.050
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-20
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.070
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-30
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.175
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-40
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.195
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-50
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.170
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-60
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.195
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Plot the three different power curves (one for each delta)
-ggplot(power_table, aes(n, power, col=factor(delta), group=factor(delta))) +
-  geom_line() + 
-  labs(x=&amp;quot;Sample Size (n)&amp;quot;, y=&amp;quot;Power&amp;quot;,
-       title=&amp;quot;Power Curve for Linear Regression of a Binary Treatment&amp;quot;,
-       col = &amp;quot;Effect Size&amp;quot;) +
-  ylim(0,1) +
-  geom_hline(yintercept = .8, linetype=&amp;quot;dashed&amp;quot;) +
-  theme_classic()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/power-sims/power-sims_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;#Full code without explanations&lt;/p&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;Because we’re making our outer expectation conditional on &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt;, we can also move &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt; into our inner expectation.&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn2&#34;&gt;&lt;p&gt;We can rewrite &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; as the weighted summation of all possible values &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; can take. &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; will only ever be able to take values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; that vary over the range of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; since our value &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt; is already fixed. We can weight each of these possible &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; values by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt;, since that’s the probabilty &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; will take value &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; at our already-fixed &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt;. Thus, we can start to find &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt; by weighting each &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt; and adding them all up (see Partition Theorem).&lt;a href=&#34;#fnref2&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn3&#34;&gt;&lt;p&gt;We can get the expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; at each of those possible values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; by a similar process as step 2 (weighting each &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(Y=y|X=x, Z=z)\)&lt;/span&gt;.&lt;a href=&#34;#fnref3&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn4&#34;&gt;&lt;p&gt;By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.&lt;a href=&#34;#fnref4&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn5&#34;&gt;&lt;p&gt;The denominator of the first fraction cancels out with the numerator of the second fraction.&lt;a href=&#34;#fnref5&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn6&#34;&gt;&lt;p&gt;We can switch the summations around so that &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; is outside the summation. This lets us get the joint distribution of only &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt;.&lt;a href=&#34;#fnref6&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn7&#34;&gt;&lt;p&gt;This is a conditional expectation, written in the form of a joint distribution&lt;a href=&#34;#fnref7&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn8&#34;&gt;&lt;p&gt;By the partition theorem.&lt;a href=&#34;#fnref8&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn9&#34;&gt;&lt;p&gt;Rewriting the previous equation as an expectation.&lt;a href=&#34;#fnref9&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
 &lt;/div&gt;
 </description>
     </item>

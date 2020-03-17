@@ -20,13 +20,11 @@ knitr::opts_chunk$set(echo = TRUE, results="asis", message=F, warning=F)
 
 ***
 
-# TLDR
-
-**Too long don't read;**
+# TL;DR
 
 - You can a regress an outcome on a grouping variable *plus any other variables* and the unadjusted and adjusted group means will be *identical*.
 
-- We can see that in a simple example using the `iris` data:
+- We can see this in a simple example using the `iris` data:
 
 ```{r, echo=F}
 library(dplyr)
@@ -51,19 +49,20 @@ iris %>%
 
 - We can view a fitted value from the regression, $E[Y|X,Z]$, as a random variable to help us see this.
 
-- [Skip to the end](#proof-without-explanations) to see the proof without any explanations.
+- [Skip to the end](#the-proof) to see the proof.
 
 ***
 
 ![](/img/expectations.png)
 
+
 I'll admit I spent much of my first-semester of grad school struggling to understand the difference between $X$ and $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
 
-I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in `R`. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
+I recently found myself in a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in `R`. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
 
-In my function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were *identical* to the unadjusted group means.
+In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were *identical* to the unadjusted group means.
 
-I soon realized that for what I needed to do, my grouping variable should not be in the linear regression. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.
+I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.
 
 I created a very basic example to test this unexpected result. I regressed a variable from the `iris` data set, `Sepal.Length`, on another variable  called `Sepal.Width` and a grouping variable `Species`. I then looked at the `Species` group predictions for both the unadjusted `Sepal.Length` and fitted values from my linear regression model for `Sepal.Length`.
 
@@ -101,19 +100,19 @@ My table of unadjusted and adjusted Sepal Length means was therefore showing me 
 
 $$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]$$
 
-In more general notation:
+Or, in more general notation:
 
 $$E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$$
 
-Is it true?! Spoiler alert -- yes. The proof without any explanations is at the [end of the post](#proof-without-explanations) if you want to skip there. Otherwise, I'll work through the steps one by one.
+Is it true?! Spoiler alert -- yes. Let's work through the steps of the proof one by one.
 
 ***
 
 # Proof set-up
 
-*Let's pretend for the proof that both our $Y$ (outcome), $X$ (adjustment variable), and $Z$ (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function).*
+*Let's pretend for the proof that both our $Y$ (outcome), $X$ (adjustment variable), and $Z$ (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function times the realization of the random variable).*
 
-*A few more basic expectation property results we'll need:*
+*A few fundamental expectation results we'll need:*
 
 #### Conditional probability
 
@@ -131,45 +130,28 @@ $\sum_A\sum_Ba\cdot P(A=a,B=b) = \sum_Aa\sum_B\cdot P(A=a,B=b) = \sum_Aa\cdot P(
 
 # Step-by-step Proof
 
-First, we can first set our $Z$ to some fixed value $z$. In our `iris` example this could translate to setting $\mathrm{Species}$ to $setosa$. Because we're making our outer expectation conditional on $Z=z$, we can also move $Z=z$ into our inner expectation.
+Click on the superscript number after each step for more information.
 
-$E[E[Y|X,Z]|Z=z]\\ =E[E[Y|X,Z=z]|Z=z]$
+$E[E[Y|X,Z]|Z=z]$ 
 
-Next we can rewrite $E[Y|X,Z=z]$ as the weighted summation of all possible values $X$ can take. $E[Y|X,Z=z]$ will only ever be able to take values of $X$ that vary over the range of $x$, $E[Y|X=x,Z=z]$ since our value $z$ is already fixed.
+$=E[E[Y|X,Z=z]|Z=z]$ ^[Because we're making our outer expectation conditional on $Z=z$, we can also move $Z=z$ into our inner expectation.]
 
-We can weight each of these possible $E[Y|X=x,Z=z]$ values by $P(X=x|Z=z)$, since that's the probabilty $X$ will take value $x$ at our already-fixed $z$.
+$=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)$ ^[We can rewrite $E[Y|X,Z=z]$ as the weighted summation of all possible values $X$ can take. $E[Y|X,Z=z]$ will only ever be able to take values of $X$ that vary over the range of $x$, $E[Y|X=x,Z=z]$ since our value $z$ is already fixed. We can weight each of these possible $E[Y|X=x,Z=z]$ values by $P(X=x|Z=z)$, since that's the probabilty $X$ will take value $x$ at our already-fixed $z$. Thus, we can start to find $E[E[Y|X,Z=z]|Z=z]$ by weighting each $E[Y|X=x,Z=z]$ by $P(X=x|Z=z)$ and adding them all up (see Partition Theorem).]
 
-Thus, we can start to find $E[E[Y|X,Z=z]|Z=z]$ by weighting each $E[Y|X=x,Z=z]$ by $P(X=x|Z=z)$ and adding them all up (see Partition Theorem):
+$=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)$ ^[We can get the expectation of $Y$ at each of those possible values of $X$ by a similar process as step 2 (weighting each $y$ by $P(Y=y|X=x, Z=z)$.]
 
-$E[E[Y|X,Z=z]|Z=z]\\ = \sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)$
+$=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}$ ^[By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.]
 
-Now, we can get the expectation of $Y$ at each of those possible values of $X$ by a similar process (weighting each $E[Y]$ by $P(Y=y|X=x, Z=z)$.
+$=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}$ ^[The denominator of the first fraction cancels out with the numerator of the second fraction.]
 
-$\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)$
+$=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}$ ^[We can switch the summations around so that $y$ is outside the summation. This lets us get the joint distribution of only $Y$ and $Z$.]
 
-The expectation of a random variable $Y$ is just the realization $y$, so we can rewrite as:
+$=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}$ ^[This is a conditional expectation, written in the form of a joint distribution]
 
-$\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)$
+$=\sum_{Y}y P(Y=y|Z=z)$ ^[By the partition theorem.]
 
-Next, by the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions such that:
+$=E[Y|Z=z]$ ^[Rewriting the previous equation as an expectation.]
 
-$\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}$
-
-The denominator of the first fraction cancels out with the numerator of the second fraction, so we can rewrite as:
-
-$\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}$
-
-We could then switch the summations around so that $y$ is outside the summation. This lets us get the joint distribution of only $Y$ and $Z$ so that we have:
-
-$\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\= \sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}$
-
-We can see this is also a conditional expectation (written in the form of a joint distribution) and rewrite as:
-
-$\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\=\sum_{Y}y P(Y=y|Z=z)$
-
-Which by the partition theorem is equal to:
-
-$\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]$
 
 So, we've proved that:
 
@@ -178,25 +160,6 @@ $E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$
 which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.
 
 Here's hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷
-
-***
-
-# Proof without explanations
-
-Here's the proof without any explanations:
-
-$E[E[Y|X,Z]|Z=z]$
-
-$=E[E[Y|X,Z=z]|Z=z]\\$
-$=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\$
-$=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\$
-$=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\$
-$=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\$
-$=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\$
-$=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}\\$
-$=\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\$
-$=\sum_{Y}y P(Y=y|Z=z)\\$
-$=E[Y|Z=z]$
 
 # References
 

@@ -18,11 +18,10 @@ output:
 
 <hr />
 <div id="tldr" class="section level1">
-<h1>TLDR</h1>
-<p><strong>Too long don’t read;</strong></p>
+<h1>TL;DR</h1>
 <ul>
 <li><p>You can a regress an outcome on a grouping variable <em>plus any other variables</em> and the unadjusted and adjusted group means will be <em>identical</em>.</p></li>
-<li><p>We can see that in a simple example using the <code>iris</code> data:</p></li>
+<li><p>We can see this in a simple example using the <code>iris</code> data:</p></li>
 </ul>
 <pre class="r"><code>iris %&gt;%
   mutate(preds = predict(lm(Sepal.Length ~
@@ -64,14 +63,14 @@ output:
 <ul>
 <li><p>This is because <span class="math inline">\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)</span>.</p></li>
 <li><p>We can view a fitted value from the regression, <span class="math inline">\(E[Y|X,Z]\)</span>, as a random variable to help us see this.</p></li>
-<li><p><a href="#proof-without-explanations">Skip to the end</a> to see the proof without any explanations.</p></li>
+<li><p><a href="#the-proof">Skip to the end</a> to see the proof.</p></li>
 </ul>
 <hr />
 <p><img src="/img/expectations.png" /></p>
 <p>I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between <span class="math inline">\(X\)</span> and <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
-<p>I recently found myself down a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in <code>R</code>. I was getting some baffling results, but after sorting them out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
-<p>In my function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
-<p>I soon realized that for what I needed to do, my grouping variable should not be in the linear regression. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.</p>
+<p>I recently found myself in a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in <code>R</code>. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
+<p>In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
+<p>I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same after adjusting for other variables.</p>
 <p>I created a very basic example to test this unexpected result. I regressed a variable from the <code>iris</code> data set, <code>Sepal.Length</code>, on another variable called <code>Sepal.Width</code> and a grouping variable <code>Species</code>. I then looked at the <code>Species</code> group predictions for both the unadjusted <code>Sepal.Length</code> and fitted values from my linear regression model for <code>Sepal.Length</code>.</p>
 <pre class="r"><code>library(dplyr)
 library(knitr)
@@ -121,15 +120,15 @@ iris %&gt;%
 <p><span class="math inline">\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]\)</span></p>
 <p>My table of unadjusted and adjusted Sepal Length means was therefore showing me that:</p>
 <p><span class="math display">\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]</span></p>
-<p>In more general notation:</p>
+<p>Or, in more general notation:</p>
 <p><span class="math display">\[E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\]</span></p>
-<p>Is it true?! Spoiler alert – yes. The proof without any explanations is at the <a href="#proof-without-explanations">end of the post</a> if you want to skip there. Otherwise, I’ll work through the steps one by one.</p>
+<p>Is it true?! Spoiler alert – yes. Let’s work through the steps of the proof one by one.</p>
 <hr />
 </div>
 <div id="proof-set-up" class="section level1">
 <h1>Proof set-up</h1>
-<p><em>Let’s pretend for the proof that both our <span class="math inline">\(Y\)</span> (outcome), <span class="math inline">\(X\)</span> (adjustment variable), and <span class="math inline">\(Z\)</span> (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function).</em></p>
-<p><em>A few more basic expectation property results we’ll need:</em></p>
+<p><em>Let’s pretend for the proof that both our <span class="math inline">\(Y\)</span> (outcome), <span class="math inline">\(X\)</span> (adjustment variable), and <span class="math inline">\(Z\)</span> (grouping variable) are categorical (discrete) variables. This is just to make the math a bit cleaner, since the expectation of a discrete variable (a weighted summation) is a little easier to show than the expectation of a continuous variable (the integral of a probability density function times the realization of the random variable).</em></p>
+<p><em>A few fundamental expectation results we’ll need:</em></p>
 <div id="conditional-probability" class="section level4">
 <h4>Conditional probability</h4>
 <p><span class="math inline">\(P(A|B) = \frac{P(A ∩ B)}{P(B)}\)</span></p>
@@ -146,48 +145,37 @@ iris %&gt;%
 </div>
 <div id="step-by-step-proof" class="section level1">
 <h1>Step-by-step Proof</h1>
-<p>First, we can first set our <span class="math inline">\(Z\)</span> to some fixed value <span class="math inline">\(z\)</span>. In our <code>iris</code> example this could translate to setting <span class="math inline">\(\mathrm{Species}\)</span> to <span class="math inline">\(setosa\)</span>. Because we’re making our outer expectation conditional on <span class="math inline">\(Z=z\)</span>, we can also move <span class="math inline">\(Z=z\)</span> into our inner expectation.</p>
-<p><span class="math inline">\(E[E[Y|X,Z]|Z=z]\\ =E[E[Y|X,Z=z]|Z=z]\)</span></p>
-<p>Next we can rewrite <span class="math inline">\(E[Y|X,Z=z]\)</span> as the weighted summation of all possible values <span class="math inline">\(X\)</span> can take. <span class="math inline">\(E[Y|X,Z=z]\)</span> will only ever be able to take values of <span class="math inline">\(X\)</span> that vary over the range of <span class="math inline">\(x\)</span>, <span class="math inline">\(E[Y|X=x,Z=z]\)</span> since our value <span class="math inline">\(z\)</span> is already fixed.</p>
-<p>We can weight each of these possible <span class="math inline">\(E[Y|X=x,Z=z]\)</span> values by <span class="math inline">\(P(X=x|Z=z)\)</span>, since that’s the probabilty <span class="math inline">\(X\)</span> will take value <span class="math inline">\(x\)</span> at our already-fixed <span class="math inline">\(z\)</span>.</p>
-<p>Thus, we can start to find <span class="math inline">\(E[E[Y|X,Z=z]|Z=z]\)</span> by weighting each <span class="math inline">\(E[Y|X=x,Z=z]\)</span> by <span class="math inline">\(P(X=x|Z=z)\)</span> and adding them all up (see Partition Theorem):</p>
-<p><span class="math inline">\(E[E[Y|X,Z=z]|Z=z]\\ = \sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\)</span></p>
-<p>Now, we can get the expectation of <span class="math inline">\(Y\)</span> at each of those possible values of <span class="math inline">\(X\)</span> by a similar process (weighting each <span class="math inline">\(E[Y]\)</span> by <span class="math inline">\(P(Y=y|X=x, Z=z)\)</span>.</p>
-<p><span class="math inline">\(\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)</span></p>
-<p>The expectation of a random variable <span class="math inline">\(Y\)</span> is just the realization <span class="math inline">\(y\)</span>, so we can rewrite as:</p>
-<p><span class="math inline">\(\sum_{X}\sum_{Y}E[Y]\cdot P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)</span></p>
-<p>Next, by the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions such that:</p>
-<p><span class="math inline">\(\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\=\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\)</span></p>
-<p>The denominator of the first fraction cancels out with the numerator of the second fraction, so we can rewrite as:</p>
-<p><span class="math inline">\(\sum_{X}\sum_{Y}y \cdot \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\)</span></p>
-<p>We could then switch the summations around so that <span class="math inline">\(y\)</span> is outside the summation. This lets us get the joint distribution of only <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span> so that we have:</p>
-<p><span class="math inline">\(\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\= \sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\)</span></p>
-<p>We can see this is also a conditional expectation (written in the form of a joint distribution) and rewrite as:</p>
-<p><span class="math inline">\(\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\=\sum_{Y}y P(Y=y|Z=z)\)</span></p>
-<p>Which by the partition theorem is equal to:</p>
-<p><span class="math inline">\(\sum_{Y}y P(Y=y|Z=z)\\=E[Y|Z=z]\)</span></p>
+<p>Click on the superscript number after each step for more information.</p>
+<p><span class="math inline">\(E[E[Y|X,Z]|Z=z]\)</span></p>
+<p><span class="math inline">\(=E[E[Y|X,Z=z]|Z=z]\)</span> <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p><span class="math inline">\(=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\)</span> <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p><span class="math inline">\(=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\)</span> <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<p><span class="math inline">\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\)</span> <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
+<p><span class="math inline">\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\)</span> <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a></p>
+<p><span class="math inline">\(=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\)</span> <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<p><span class="math inline">\(=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}\)</span> <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
+<p><span class="math inline">\(=\sum_{Y}y P(Y=y|Z=z)\)</span> <a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a></p>
+<p><span class="math inline">\(=E[Y|Z=z]\)</span> <a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a></p>
 <p>So, we’ve proved that:</p>
 <p><span class="math inline">\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)</span></p>
 <p>which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.</p>
 <p>Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷</p>
-<hr />
-</div>
-<div id="proof-without-explanations" class="section level1">
-<h1>Proof without explanations</h1>
-<p>Here’s the proof without any explanations:</p>
-<p><span class="math inline">\(E[E[Y|X,Z]|Z=z]\)</span></p>
-<p><span class="math inline">\(=E[E[Y|X,Z=z]|Z=z]\\\)</span>
-<span class="math inline">\(=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)\\\)</span>
-<span class="math inline">\(=\sum_{X}\sum_{Y}y P(Y=y|X=x,Z=z)\cdot P(X=x|Z=z)\\\)</span>
-<span class="math inline">\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z=z)}\\\)</span>
-<span class="math inline">\(=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\\)</span>
-<span class="math inline">\(=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}\\\)</span>
-<span class="math inline">\(=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}\\\)</span>
-<span class="math inline">\(=\sum_{Y}y \frac{P(Y=y,Z=z)}{P(Z=z)}\\\)</span>
-<span class="math inline">\(=\sum_{Y}y P(Y=y|Z=z)\\\)</span>
-<span class="math inline">\(=E[Y|Z=z]\)</span></p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
 <p><a href="https://www.math.arizona.edu/~tgk/464_07/cond_exp.pdf">A Conditional Expectation - Arizona Math</a></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Because we’re making our outer expectation conditional on <span class="math inline">\(Z=z\)</span>, we can also move <span class="math inline">\(Z=z\)</span> into our inner expectation.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>We can rewrite <span class="math inline">\(E[Y|X,Z=z]\)</span> as the weighted summation of all possible values <span class="math inline">\(X\)</span> can take. <span class="math inline">\(E[Y|X,Z=z]\)</span> will only ever be able to take values of <span class="math inline">\(X\)</span> that vary over the range of <span class="math inline">\(x\)</span>, <span class="math inline">\(E[Y|X=x,Z=z]\)</span> since our value <span class="math inline">\(z\)</span> is already fixed. We can weight each of these possible <span class="math inline">\(E[Y|X=x,Z=z]\)</span> values by <span class="math inline">\(P(X=x|Z=z)\)</span>, since that’s the probabilty <span class="math inline">\(X\)</span> will take value <span class="math inline">\(x\)</span> at our already-fixed <span class="math inline">\(z\)</span>. Thus, we can start to find <span class="math inline">\(E[E[Y|X,Z=z]|Z=z]\)</span> by weighting each <span class="math inline">\(E[Y|X=x,Z=z]\)</span> by <span class="math inline">\(P(X=x|Z=z)\)</span> and adding them all up (see Partition Theorem).<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>We can get the expectation of <span class="math inline">\(Y\)</span> at each of those possible values of <span class="math inline">\(X\)</span> by a similar process as step 2 (weighting each <span class="math inline">\(y\)</span> by <span class="math inline">\(P(Y=y|X=x, Z=z)\)</span>.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>The denominator of the first fraction cancels out with the numerator of the second fraction.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>We can switch the summations around so that <span class="math inline">\(y\)</span> is outside the summation. This lets us get the joint distribution of only <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span>.<a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p>This is a conditional expectation, written in the form of a joint distribution<a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>By the partition theorem.<a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p>Rewriting the previous equation as an expectation.<a href="#fnref9" class="footnote-back">↩</a></p></li>
+</ol>
 </div>

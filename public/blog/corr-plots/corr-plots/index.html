@@ -28,8 +28,7 @@
   
     
   
-  <meta name="description" content="TL;DR Too long; didn’t read
- If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
+  <meta name="description" content="TL;DR  If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
  By the end, you will be able to run one function to get a tidied data frame of correlations:
   formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n P sig_p p_if_sig r_if_sig    mpg mpg 1.">
 
@@ -131,8 +130,7 @@
   <meta property="og:site_name" content="KHstats">
   <meta property="og:url" content="/blog/corr-plots/corr-plots/">
   <meta property="og:title" content="Customizable correlation plots in R | KHstats">
-  <meta property="og:description" content="TL;DR Too long; didn’t read
- If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
+  <meta property="og:description" content="TL;DR  If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
  By the end, you will be able to run one function to get a tidied data frame of correlations:
   formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n P sig_p p_if_sig r_if_sig    mpg mpg 1."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
@@ -538,7 +536,6 @@
 <hr />
 <div id="tldr" class="section level1">
 <h1>TL;DR</h1>
-<p><strong>Too long; didn’t read</strong></p>
 <ul>
 <li><p>If you’re ever felt limited by correlogram packages in <code>R</code>, this post will show you how to write your own function to tidy the many correlations into a <code>ggplot2</code>-friendly form for plotting.</p></li>
 <li><p>By the end, you will be able to run one function to get a tidied data frame of correlations:</p></li>
@@ -1534,6 +1531,7 @@ library(tidyverse, warn.conflict=F)</code></pre>
   # change global font to roboto
   theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
 <p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column <code>r_if_sig</code> that outputs from <code>formatted_cors()</code>.</p>
 <pre class="r"><code>formatted_cors(mtcars) %&gt;%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
   geom_tile() +
@@ -1546,6 +1544,7 @@ library(tidyverse, warn.conflict=F)</code></pre>
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
 <p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>Another version of this could involve squares with different sizes to denote strength of correlation using <code>geom_point</code> with <code>shape</code> set to a value from <a href="http://www.sthda.com/english/wiki/ggplot2-point-shapes">these available <code>geom_shape</code>s</a>. Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.</p>
 <pre class="r"><code>formatted_cors(mtcars) %&gt;%
   ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
   geom_tile(col=&quot;black&quot;, fill=&quot;white&quot;) +
@@ -1556,8 +1555,8 @@ library(tidyverse, warn.conflict=F)</code></pre>
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&quot;Roboto&quot;)) +
-  scale_size(range=c(1,9), guide=NULL) </code></pre>
-<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+  scale_size(range=c(1,11), guide=NULL) </code></pre>
+<p><img src="/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png" width="576" /></p>
 </div>
 <div id="just-the-code" class="section level1">
 <h1>Just the code</h1>
@@ -1707,13 +1706,13 @@ formatted_cors(mtcars) %&gt;%
           
           <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
           
-          <li><a href="/blog/sl/superlearning/">Become a Superlearner! A visual guide to the superlearner algorithm &#43; demo of {sl3}</a></li>
-          
-          <li><a href="/blog/power-sims/power-sims/">Writing your own Power Simulations in R</a></li>
-          
           <li><a href="/blog/trt-timelines/trt-timelines/">Patient Treatment Timelines for Longitudinal Survival Data</a></li>
           
           <li><a href="/talk/power-sims/">Power Simulations in R</a></li>
+          
+          <li><a href="/talk/lightning-talk/">Fireproof Your Computer from Jenny Bryan</a></li>
+          
+          <li><a href="/blog/ditl-biostats/">A Day in the Life of a Biostatistician</a></li>
           
         </ul>
       </div>

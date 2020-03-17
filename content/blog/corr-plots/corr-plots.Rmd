@@ -38,8 +38,6 @@ formatted_cors <- function(df){
 
 # TL;DR
 
-**Too long; didn't read**
-
 - If you're ever felt limited by correlogram packages in `R`, this post will show you how to write your own function to tidy the many correlations into a `ggplot2`-friendly form for plotting.
 
 - By the end, you will be able to run one function to get a tidied data frame of correlations:
@@ -267,6 +265,8 @@ formatted_cors(mtcars) %>%
   theme(text=element_text(family="Roboto"))
 ```
 
+We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column `r_if_sig` that outputs from `formatted_cors()`.
+
 ```{r}
 formatted_cors(mtcars) %>%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
@@ -281,7 +281,9 @@ formatted_cors(mtcars) %>%
   theme(text=element_text(family="Roboto"))
 ```
 
-```{r}
+Another version of this could involve squares with different sizes to denote strength of correlation using `geom_point` with `shape` set to a value from [these available `geom_shape`s](http://www.sthda.com/english/wiki/ggplot2-point-shapes). Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.
+
+```{r, fig.width=6}
 formatted_cors(mtcars) %>%
   ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
   geom_tile(col="black", fill="white") +
@@ -292,7 +294,7 @@ formatted_cors(mtcars) %>%
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family="Roboto")) +
-  scale_size(range=c(1,9), guide=NULL) 
+  scale_size(range=c(1,11), guide=NULL) 
 ```
 
 

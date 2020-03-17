@@ -387,9 +387,8 @@
     <h2><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></h2>
     <div class="article-style">
       
-      TLDR Too long don’t read;
- You can a regress an outcome on a grouping variable plus any other variables and the unadjusted and adjusted group means will be identical.
- We can see that in a simple example using the iris data:
+      TL;DR  You can a regress an outcome on a grouping variable plus any other variables and the unadjusted and adjusted group means will be identical.
+ We can see this in a simple example using the iris data:
   iris %&gt;% mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width + Species, data = .))) %&gt;% group_by(Species) %&gt;% summarise(mean_SL = mean(Sepal.Length), mean_SL_preds = mean(preds)) %&gt;% kable()   Species mean_SL mean_SL_preds    setosa 5.
       
     </div>
