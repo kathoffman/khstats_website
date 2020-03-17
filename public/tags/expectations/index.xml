@@ -69,7 +69,7 @@
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;This is because &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)&lt;/span&gt;.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;We can view a fitted value from the regression, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z]\)&lt;/span&gt;, as a random variable to help us see this.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;#the-proof&#34;&gt;Skip to the end&lt;/a&gt; to see the proof.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;a href=&#34;#step-by-step-proof&#34;&gt;Skip to the end&lt;/a&gt; to see the proof.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr /&gt;
 &lt;p&gt;&lt;img src=&#34;/img/expectations.png&#34; /&gt;&lt;/p&gt;

@@ -49,7 +49,7 @@ iris %>%
 
 - We can view a fitted value from the regression, $E[Y|X,Z]$, as a random variable to help us see this.
 
-- [Skip to the end](#the-proof) to see the proof.
+- [Skip to the end](#step-by-step-proof) to see the proof.
 
 ***
 
