@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = TRUE, results="asis", message=F, warning=F)
 
 # TL;DR
 
-- You can a regress an outcome on a grouping variable *plus any other variables* and the unadjusted and adjusted group means will be *identical*.
+- You can a regress an outcome on a grouping variable *plus any other variable(s)* and the unadjusted and adjusted group means will be identical.
 
 - We can see this in a simple example using the `iris` data:
 
@@ -58,7 +58,7 @@ iris %>%
 
 I'll admit I spent much of my first-semester of grad school struggling to understand the difference between $X$ and $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
 
-I recently found myself in a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in `R`. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
+I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in `R`. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
 
 In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were *identical* to the unadjusted group means.
 
@@ -69,14 +69,15 @@ I created a very basic example to test this unexpected result. I regressed a var
 ```{r}
 library(dplyr)
 library(knitr)
+```
 
+```{r}
 iris %>%
-  # fit a linear regression for sepal length conditional on sepal width and species type
-  # make a new column containing the fitted predictions for sepal length
+  # fit a linear regression for sepal length given sepal width and species
+  # make a new column containing the fitted values for sepal length
   mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %>%
-  # prepare to get group means by grouping data by species
-  group_by(Species) %>%
   # compute unadjusted and adjusted group means
+  group_by(Species) %>%
   summarise(mean_SL = mean(Sepal.Length),
             mean_SL_preds = mean(preds)) %>%
   kable()
@@ -84,19 +85,27 @@ iris %>%
 
 I saw the same strange output, even in my simple example. I realized this must be some statistics property I'd learned about and since forgotten, so I decided to write out what I was doing in expectations.
 
-First, I wrote down the linear regression I fit:
+First, I wrote down the unadjusted group means in the form of an expectation. I wrote down a conditional expectation, since we are looking at the mean of `Sepal.Length` when `Species` is restricted to a certain category. We can explicitly show this by taking the expectation of a random variable, $\mathrm{Sepal Length}$, while setting another random variable, $\mathrm{Species}$, equal to only one category at a time.
+
+$E[\mathrm{SepalLength}|\mathrm{Species}=setosa]$
+
+$E[\mathrm{SepalLength}|\mathrm{Species}=virginica]$
+
+$E[\mathrm{SepalLength}|\mathrm{Species}=versicolor]$
+
+More generally, we could write out the unadjusted group mean using a group indicator variable, $\mathrm{Species}$, which can take on all possible values $species$.
+
+$E[\mathrm{SepalLength}|\mathrm{Species}=species]$
+
+So that's our unadjusted group means. What about the adjusted group mean? We can start by writing out the linear regression model, which is the expected value of $\mathrm{SepalLength}$, conditional on the random variables $\mathrm{SepalWidth}$ and $\mathrm{Species}$.
 
 $E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]$
 
-Since I took the means for each species type, I added another expectation around the first (a conditional expectation) in which I fixed species type to each of the three species:
+When I used the `predict` function on the fit of that linear regression model, I obtained the fitted values from that expectation, before I separated the fitted values by group to get the grouped means. We can see those fitted values as random variables themselves, and write out another conditional mean using a group indicator variable, just as we did for the unadjusted group means earlier.
 
-$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=virginica]$
+$$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species]$$
 
-$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=versicolor]$
-
-$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]$
-
-My table of unadjusted and adjusted Sepal Length means was therefore showing me that:
+My table of unadjusted and adjusted Sepal Length means thus showed me that:
 
 $$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]$$
 
@@ -134,7 +143,7 @@ Click on the superscript number after each step for more information.
 
 $E[E[Y|X,Z]|Z=z]$ 
 
-$=E[E[Y|X,Z=z]|Z=z]$ ^[Because we're making our outer expectation conditional on $Z=z$, we can also move $Z=z$ into our inner expectation.]
+$=E[E[Y|X,Z=z]|Z=z]$ ^[Because we're making our outer expectation conditional on $Z=z$, we can also move $Z=z$ into our inner expectation. This becomes obvious in the `iris` example, since we only use the fitted values from one category of `Species` to get the adjusted group mean for that category.]
 
 $=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)$ ^[We can rewrite $E[Y|X,Z=z]$ as the weighted summation of all possible values $X$ can take. $E[Y|X,Z=z]$ will only ever be able to take values of $X$ that vary over the range of $x$, $E[Y|X=x,Z=z]$ since our value $z$ is already fixed. We can weight each of these possible $E[Y|X=x,Z=z]$ values by $P(X=x|Z=z)$, since that's the probabilty $X$ will take value $x$ at our already-fixed $z$. Thus, we can start to find $E[E[Y|X,Z=z]|Z=z]$ by weighting each $E[Y|X=x,Z=z]$ by $P(X=x|Z=z)$ and adding them all up (see Partition Theorem).]
 
@@ -144,11 +153,11 @@ $=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(X=x,Z=z)}\cdot \frac{P(X=x,Z=z)}{P(Z
 
 $=\sum_{X}\sum_{Y}y \frac{P(Y=y,X=x,Z=z)}{P(Z=z)}$ ^[The denominator of the first fraction cancels out with the numerator of the second fraction.]
 
-$=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}$ ^[We can switch the summations around so that $y$ is outside the summation. This lets us get the joint distribution of only $Y$ and $Z$.]
+$=\sum_{Y}y\sum_{X}\frac{P(Y=y,X=x,Z=z)}{P(Z=z)}$ ^[We can switch the summations around so that $y$ is outside the summation over all values of $X$. This lets us get the joint distribution of only $Y$ and $Z$.]
 
-$=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}$ ^[This is a conditional expectation, written in the form of a joint distribution]
+$=\sum_{Y}y\frac{P(Y=y,Z=z)}{P(Z=z)}$ ^[This is a conditional expectation, written in the form of a joint distribution.]
 
-$=\sum_{Y}y P(Y=y|Z=z)$ ^[By the partition theorem.]
+$=\sum_{Y}y P(Y=y|Z=z)$ ^[By the Partition Theorem.]
 
 $=E[Y|Z=z]$ ^[Rewriting the previous equation as an expectation.]
 

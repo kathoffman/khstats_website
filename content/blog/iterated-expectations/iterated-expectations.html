@@ -20,7 +20,7 @@ output:
 <div id="tldr" class="section level1">
 <h1>TL;DR</h1>
 <ul>
-<li><p>You can a regress an outcome on a grouping variable <em>plus any other variables</em> and the unadjusted and adjusted group means will be <em>identical</em>.</p></li>
+<li><p>You can a regress an outcome on a grouping variable <em>plus any other variable(s)</em> and the unadjusted and adjusted group means will be identical.</p></li>
 <li><p>We can see this in a simple example using the <code>iris</code> data:</p></li>
 </ul>
 <pre class="r"><code>iris %&gt;%
@@ -68,20 +68,18 @@ output:
 <hr />
 <p><img src="/img/expectations.png" /></p>
 <p>I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between <span class="math inline">\(X\)</span> and <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
-<p>I recently found myself in a rabbit hole of conditional and iterated expectation properties while trying to write a seemingly simple function in <code>R</code>. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
+<p>I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in <code>R</code>. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
 <p>In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
 <p>I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same.</p>
 <p>I created a very basic example to test this unexpected result. I regressed a variable from the <code>iris</code> data set, <code>Sepal.Length</code>, on another variable called <code>Sepal.Width</code> and a grouping variable <code>Species</code>. I then looked at the <code>Species</code> group predictions for both the unadjusted <code>Sepal.Length</code> and fitted values from my linear regression model for <code>Sepal.Length</code>.</p>
 <pre class="r"><code>library(dplyr)
-library(knitr)
-
-iris %&gt;%
-  # fit a linear regression for sepal length conditional on sepal width and species type
-  # make a new column containing the fitted predictions for sepal length
+library(knitr)</code></pre>
+<pre class="r"><code>iris %&gt;%
+  # fit a linear regression for sepal length given sepal width and species
+  # make a new column containing the fitted values for sepal length
   mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %&gt;%
-  # prepare to get group means by grouping data by species
-  group_by(Species) %&gt;%
   # compute unadjusted and adjusted group means
+  group_by(Species) %&gt;%
   summarise(mean_SL = mean(Sepal.Length),
             mean_SL_preds = mean(preds)) %&gt;%
   kable()</code></pre>
@@ -112,13 +110,17 @@ iris %&gt;%
 </tbody>
 </table>
 <p>I saw the same strange output, even in my simple example. I realized this must be some statistics property I’d learned about and since forgotten, so I decided to write out what I was doing in expectations.</p>
-<p>First, I wrote down the linear regression I fit:</p>
+<p>First, I wrote down the unadjusted group means in the form of an expectation. I wrote down a conditional expectation, since we are looking at the mean of <code>Sepal.Length</code> when <code>Species</code> is restricted to a certain category. We can explicitly show this by taking the expectation of a random variable, <span class="math inline">\(\mathrm{Sepal Length}\)</span>, while setting another random variable, <span class="math inline">\(\mathrm{Species}\)</span>, equal to only one category at a time.</p>
+<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=setosa]\)</span></p>
+<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=virginica]\)</span></p>
+<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=versicolor]\)</span></p>
+<p>More generally, we could write out the unadjusted group mean using a group indicator variable, <span class="math inline">\(\mathrm{Species}\)</span>, which can take on all possible values <span class="math inline">\(species\)</span>.</p>
+<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=species]\)</span></p>
+<p>So that’s our unadjusted group means. What about the adjusted group mean? We can start by writing out the linear regression model, which is the expected value of <span class="math inline">\(\mathrm{SepalLength}\)</span>, conditional on the random variables <span class="math inline">\(\mathrm{SepalWidth}\)</span> and <span class="math inline">\(\mathrm{Species}\)</span>.</p>
 <p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]\)</span></p>
-<p>Since I took the means for each species type, I added another expectation around the first (a conditional expectation) in which I fixed species type to each of the three species:</p>
-<p><span class="math inline">\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=virginica]\)</span></p>
-<p><span class="math inline">\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=versicolor]\)</span></p>
-<p><span class="math inline">\(E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=setosa]\)</span></p>
-<p>My table of unadjusted and adjusted Sepal Length means was therefore showing me that:</p>
+<p>When I used the <code>predict</code> function on the fit of that linear regression model, I obtained the fitted values from that expectation, before I separated the fitted values by group to get the grouped means. We can see those fitted values as random variables themselves, and write out another conditional mean using a group indicator variable, just as we did for the unadjusted group means earlier.</p>
+<p><span class="math display">\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species]\]</span></p>
+<p>My table of unadjusted and adjusted Sepal Length means thus showed me that:</p>
 <p><span class="math display">\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]</span></p>
 <p>Or, in more general notation:</p>
 <p><span class="math display">\[E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\]</span></p>
@@ -168,14 +170,14 @@ iris %&gt;%
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Because we’re making our outer expectation conditional on <span class="math inline">\(Z=z\)</span>, we can also move <span class="math inline">\(Z=z\)</span> into our inner expectation.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>Because we’re making our outer expectation conditional on <span class="math inline">\(Z=z\)</span>, we can also move <span class="math inline">\(Z=z\)</span> into our inner expectation. This becomes obvious in the <code>iris</code> example, since we only use the fitted values from one category of <code>Species</code> to get the adjusted group mean for that category.<a href="#fnref1" class="footnote-back">↩</a></p></li>
 <li id="fn2"><p>We can rewrite <span class="math inline">\(E[Y|X,Z=z]\)</span> as the weighted summation of all possible values <span class="math inline">\(X\)</span> can take. <span class="math inline">\(E[Y|X,Z=z]\)</span> will only ever be able to take values of <span class="math inline">\(X\)</span> that vary over the range of <span class="math inline">\(x\)</span>, <span class="math inline">\(E[Y|X=x,Z=z]\)</span> since our value <span class="math inline">\(z\)</span> is already fixed. We can weight each of these possible <span class="math inline">\(E[Y|X=x,Z=z]\)</span> values by <span class="math inline">\(P(X=x|Z=z)\)</span>, since that’s the probabilty <span class="math inline">\(X\)</span> will take value <span class="math inline">\(x\)</span> at our already-fixed <span class="math inline">\(z\)</span>. Thus, we can start to find <span class="math inline">\(E[E[Y|X,Z=z]|Z=z]\)</span> by weighting each <span class="math inline">\(E[Y|X=x,Z=z]\)</span> by <span class="math inline">\(P(X=x|Z=z)\)</span> and adding them all up (see Partition Theorem).<a href="#fnref2" class="footnote-back">↩</a></p></li>
 <li id="fn3"><p>We can get the expectation of <span class="math inline">\(Y\)</span> at each of those possible values of <span class="math inline">\(X\)</span> by a similar process as step 2 (weighting each <span class="math inline">\(y\)</span> by <span class="math inline">\(P(Y=y|X=x, Z=z)\)</span>.<a href="#fnref3" class="footnote-back">↩</a></p></li>
 <li id="fn4"><p>By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.<a href="#fnref4" class="footnote-back">↩</a></p></li>
 <li id="fn5"><p>The denominator of the first fraction cancels out with the numerator of the second fraction.<a href="#fnref5" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p>We can switch the summations around so that <span class="math inline">\(y\)</span> is outside the summation. This lets us get the joint distribution of only <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span>.<a href="#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p>This is a conditional expectation, written in the form of a joint distribution<a href="#fnref7" class="footnote-back">↩</a></p></li>
-<li id="fn8"><p>By the partition theorem.<a href="#fnref8" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>We can switch the summations around so that <span class="math inline">\(y\)</span> is outside the summation over all values of <span class="math inline">\(X\)</span>. This lets us get the joint distribution of only <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span>.<a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p>This is a conditional expectation, written in the form of a joint distribution.<a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>By the Partition Theorem.<a href="#fnref8" class="footnote-back">↩</a></p></li>
 <li id="fn9"><p>Rewriting the previous equation as an expectation.<a href="#fnref9" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
