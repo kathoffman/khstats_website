@@ -389,7 +389,7 @@
       
       TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
  We can see this in a simple example using the iris data:
-  iris %&gt;% mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width + Species, data = .))) %&gt;% group_by(Species) %&gt;% summarise(mean_SL = mean(Sepal.Length), mean_SL_preds = mean(preds)) %&gt;% kable()   Species mean_SL mean_SL_preds    setosa 5.
+  iris %&gt;% # fit a linear regression for sepal length given sepal width and species # make a new column containing the fitted values for sepal length mutate(preds = predict(lm(Sepal.
       
     </div>
   </div>

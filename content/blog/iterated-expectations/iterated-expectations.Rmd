@@ -33,12 +33,10 @@ library(knitr)
 
 ```{r}
 iris %>%
-  mutate(preds = predict(lm(Sepal.Length ~
-                              Sepal.Width +
-                              Petal.Length +
-                              Petal.Width +
-                              Species,
-                            data = .))) %>%
+  # fit a linear regression for sepal length given sepal width and species
+  # make a new column containing the fitted values for sepal length
+  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %>%
+  # compute unadjusted and adjusted group means
   group_by(Species) %>%
   summarise(mean_SL = mean(Sepal.Length),
             mean_SL_preds = mean(preds)) %>%
@@ -64,7 +62,7 @@ In the function, I was regressing an outcome on a few variables plus a grouping 
 
 I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same.
 
-I created a very basic example to test this unexpected result. I regressed a variable from the `iris` data set, `Sepal.Length`, on another variable  called `Sepal.Width` and a grouping variable `Species`. I then looked at the `Species` group predictions for both the unadjusted `Sepal.Length` and fitted values from my linear regression model for `Sepal.Length`.
+I created a very basic example to test this unexpected result. I regressed a variable from the `iris` data set, `Sepal.Length`, on another variable  called `Sepal.Width` and a grouping variable `Species`. I then looked at the mean within each category of `Species` for both the unadjusted `Sepal.Length` and fitted values from my linear regression model for `Sepal.Length`.
 
 ```{r}
 library(dplyr)

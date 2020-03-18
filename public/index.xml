@@ -1168,12 +1168,10 @@ formatted_cors(mtcars) %&amp;gt;%
 &lt;li&gt;&lt;p&gt;We can see this in a simple example using the &lt;code&gt;iris&lt;/code&gt; data:&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
-  mutate(preds = predict(lm(Sepal.Length ~
-                              Sepal.Width +
-                              Petal.Length +
-                              Petal.Width +
-                              Species,
-                            data = .))) %&amp;gt;%
+  # fit a linear regression for sepal length given sepal width and species
+  # make a new column containing the fitted values for sepal length
+  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %&amp;gt;%
+  # compute unadjusted and adjusted group means
   group_by(Species) %&amp;gt;%
   summarise(mean_SL = mean(Sepal.Length),
             mean_SL_preds = mean(preds)) %&amp;gt;%
@@ -1215,7 +1213,7 @@ formatted_cors(mtcars) %&amp;gt;%
 &lt;p&gt;I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in &lt;code&gt;R&lt;/code&gt;. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.&lt;/p&gt;
 &lt;p&gt;In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were &lt;em&gt;identical&lt;/em&gt; to the unadjusted group means.&lt;/p&gt;
 &lt;p&gt;I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same.&lt;/p&gt;
-&lt;p&gt;I created a very basic example to test this unexpected result. I regressed a variable from the &lt;code&gt;iris&lt;/code&gt; data set, &lt;code&gt;Sepal.Length&lt;/code&gt;, on another variable called &lt;code&gt;Sepal.Width&lt;/code&gt; and a grouping variable &lt;code&gt;Species&lt;/code&gt;. I then looked at the &lt;code&gt;Species&lt;/code&gt; group predictions for both the unadjusted &lt;code&gt;Sepal.Length&lt;/code&gt; and fitted values from my linear regression model for &lt;code&gt;Sepal.Length&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I created a very basic example to test this unexpected result. I regressed a variable from the &lt;code&gt;iris&lt;/code&gt; data set, &lt;code&gt;Sepal.Length&lt;/code&gt;, on another variable called &lt;code&gt;Sepal.Width&lt;/code&gt; and a grouping variable &lt;code&gt;Species&lt;/code&gt;. I then looked at the mean within each category of &lt;code&gt;Species&lt;/code&gt; for both the unadjusted &lt;code&gt;Sepal.Length&lt;/code&gt; and fitted values from my linear regression model for &lt;code&gt;Sepal.Length&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
 library(knitr)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;iris %&amp;gt;%
