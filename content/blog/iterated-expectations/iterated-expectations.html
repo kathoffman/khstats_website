@@ -21,43 +21,388 @@ output:
 <h1>TL;DR</h1>
 <ul>
 <li><p>You can a regress an outcome on a grouping variable <em>plus any other variable(s)</em> and the unadjusted and adjusted group means will be identical.</p></li>
-<li><p>We can see this in a simple example using the <code>iris</code> data:</p></li>
+<li><p>We can see this in a simple example using the <a href="https://github.com/allisonhorst/palmerpenguins"><code>palmerpenguins</code></a> data:</p></li>
 </ul>
-<pre class="r"><code>iris %&gt;%
-  # fit a linear regression for sepal length given sepal width and species
-  # make a new column containing the fitted values for sepal length
-  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %&gt;%
+<pre class="r"><code>#remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;)
+library(palmerpenguins)
+library(tidyverse)
+library(gt)
+
+# use complete cases for simplicity
+penguins &lt;- drop_na(penguins)
+
+penguins %&gt;%
+  # fit a linear regression for bill length given bill depth and species
+  # make a new column containing the fitted values for bill length
+  mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .))) %&gt;%
   # compute unadjusted and adjusted group means
-  group_by(Species) %&gt;%
-  summarise(mean_SL = mean(Sepal.Length),
-            mean_SL_preds = mean(preds)) %&gt;%
-  kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Species</th>
-<th align="right">mean_SL</th>
-<th align="right">mean_SL_preds</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">setosa</td>
-<td align="right">5.006</td>
-<td align="right">5.006</td>
-</tr>
-<tr class="even">
-<td align="left">versicolor</td>
-<td align="right">5.936</td>
-<td align="right">5.936</td>
-</tr>
-<tr class="odd">
-<td align="left">virginica</td>
-<td align="right">6.588</td>
-<td align="right">6.588</td>
-</tr>
-</tbody>
-</table>
+  group_by(species) %&gt;%
+  summarise(mean_bill_length = mean(bill_length_mm),
+            mean_predicted_bill_length = mean(preds)) %&gt;%
+  gt()</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#xpqkqevvwm .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#xpqkqevvwm .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#xpqkqevvwm .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#xpqkqevvwm .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#xpqkqevvwm .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#xpqkqevvwm .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#xpqkqevvwm .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#xpqkqevvwm .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#xpqkqevvwm .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#xpqkqevvwm .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#xpqkqevvwm .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#xpqkqevvwm .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#xpqkqevvwm .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#xpqkqevvwm .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#xpqkqevvwm .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xpqkqevvwm .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#xpqkqevvwm .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#xpqkqevvwm .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#xpqkqevvwm .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#xpqkqevvwm .gt_left {
+  text-align: left;
+}
+
+#xpqkqevvwm .gt_center {
+  text-align: center;
+}
+
+#xpqkqevvwm .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#xpqkqevvwm .gt_font_normal {
+  font-weight: normal;
+}
+
+#xpqkqevvwm .gt_font_bold {
+  font-weight: bold;
+}
+
+#xpqkqevvwm .gt_font_italic {
+  font-style: italic;
+}
+
+#xpqkqevvwm .gt_super {
+  font-size: 65%;
+}
+
+#xpqkqevvwm .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="xpqkqevvwm" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">species</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">mean_bill_length</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">mean_predicted_bill_length</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_center">Adelie</td>
+      <td class="gt_row gt_right">38.82397</td>
+      <td class="gt_row gt_right">38.82397</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_center">Chinstrap</td>
+      <td class="gt_row gt_right">48.83382</td>
+      <td class="gt_row gt_right">48.83382</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_center">Gentoo</td>
+      <td class="gt_row gt_right">47.56807</td>
+      <td class="gt_row gt_right">47.56807</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 <ul>
 <li><p>This is because <span class="math inline">\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)</span>.</p></li>
 <li><p>We can view a fitted value from the regression, <span class="math inline">\(E[Y|X,Z]\)</span>, as a random variable to help us see this.</p></li>
@@ -65,61 +410,396 @@ output:
 </ul>
 <hr />
 <p><img src="/img/expectations.png" /></p>
-<p>I’ll admit I spent much of my first probability theory course struggling to understand the difference between <span class="math inline">\(X\)</span> and <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
+<p>I’ll admit I spent many weeks of my first probability theory course struggling to understand when and why my professor was writing <span class="math inline">\(X\)</span> versus <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
 <p>I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in <code>R</code>. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
 <p>In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
 <p>I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same.</p>
-<p>I created a very basic example to test this unexpected result. I regressed a variable from the <code>iris</code> data set, <code>Sepal.Length</code>, on another variable called <code>Sepal.Width</code> and a grouping variable <code>Species</code>. I then looked at the mean within each category of <code>Species</code> for both the unadjusted <code>Sepal.Length</code> and fitted values from my linear regression model for <code>Sepal.Length</code>.</p>
-<pre class="r"><code>library(dplyr)
-library(knitr)</code></pre>
-<pre class="r"><code>iris %&gt;%
-  # fit a linear regression for sepal length given sepal width and species
-  # make a new column containing the fitted values for sepal length
-  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %&gt;%
+<p>I created a very basic example to test this unexpected result. I regressed a variable from the new <code>penguins</code> data set, <code>bill_length_mm</code>, on another variable called <code>bill_depth_mm</code> and a grouping variable <code>species</code>. I then looked at the mean within each category of <code>species</code> for both the unadjusted <code>bill_depth_mm</code> and fitted values from my linear regression model for <code>bill_depth_mm</code>.</p>
+<pre class="r"><code>penguins %&gt;%
+  # fit a linear regression for bill length given bill depth and species
+  # make a new column containing the fitted values for bill length
+  mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .))) %&gt;%
   # compute unadjusted and adjusted group means
-  group_by(Species) %&gt;%
-  summarise(mean_SL = mean(Sepal.Length),
-            mean_SL_preds = mean(preds)) %&gt;%
-  kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">Species</th>
-<th align="right">mean_SL</th>
-<th align="right">mean_SL_preds</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">setosa</td>
-<td align="right">5.006</td>
-<td align="right">5.006</td>
-</tr>
-<tr class="even">
-<td align="left">versicolor</td>
-<td align="right">5.936</td>
-<td align="right">5.936</td>
-</tr>
-<tr class="odd">
-<td align="left">virginica</td>
-<td align="right">6.588</td>
-<td align="right">6.588</td>
-</tr>
-</tbody>
-</table>
+  group_by(species) %&gt;%
+  summarise(mean_bill_length = mean(bill_length_mm),
+            mean_predicted_bill_length = mean(preds)) %&gt;%
+  gt()</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#fbwkwbsdnc .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#fbwkwbsdnc .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#fbwkwbsdnc .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#fbwkwbsdnc .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#fbwkwbsdnc .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#fbwkwbsdnc .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#fbwkwbsdnc .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#fbwkwbsdnc .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fbwkwbsdnc .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fbwkwbsdnc .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#fbwkwbsdnc .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#fbwkwbsdnc .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#fbwkwbsdnc .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#fbwkwbsdnc .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#fbwkwbsdnc .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fbwkwbsdnc .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fbwkwbsdnc .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#fbwkwbsdnc .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fbwkwbsdnc .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#fbwkwbsdnc .gt_left {
+  text-align: left;
+}
+
+#fbwkwbsdnc .gt_center {
+  text-align: center;
+}
+
+#fbwkwbsdnc .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#fbwkwbsdnc .gt_font_normal {
+  font-weight: normal;
+}
+
+#fbwkwbsdnc .gt_font_bold {
+  font-weight: bold;
+}
+
+#fbwkwbsdnc .gt_font_italic {
+  font-style: italic;
+}
+
+#fbwkwbsdnc .gt_super {
+  font-size: 65%;
+}
+
+#fbwkwbsdnc .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="fbwkwbsdnc" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">species</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">mean_bill_length</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">mean_predicted_bill_length</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_center">Adelie</td>
+      <td class="gt_row gt_right">38.82397</td>
+      <td class="gt_row gt_right">38.82397</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_center">Chinstrap</td>
+      <td class="gt_row gt_right">48.83382</td>
+      <td class="gt_row gt_right">48.83382</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_center">Gentoo</td>
+      <td class="gt_row gt_right">47.56807</td>
+      <td class="gt_row gt_right">47.56807</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 <p>I saw the same strange output, even in my simple example. I realized this must be some statistics property I’d learned about and since forgotten, so I decided to write out what I was doing in expectations.</p>
-<p>First, I wrote down the unadjusted group means in the form of an expectation. I wrote down a conditional expectation, since we are looking at the mean of <code>Sepal.Length</code> when <code>Species</code> is restricted to a certain category. We can explicitly show this by taking the expectation of a random variable, <span class="math inline">\(\mathrm{Sepal Length}\)</span>, while setting another random variable, <span class="math inline">\(\mathrm{Species}\)</span>, equal to only one category at a time.</p>
-<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=setosa]\)</span></p>
-<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=virginica]\)</span></p>
-<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=versicolor]\)</span></p>
+<p>First, I wrote down the unadjusted group means in the form of an expectation. I wrote down a conditional expectation, since we are looking at the mean of <code>bill_length_mm</code> when <code>species</code> is restricted to a certain category. We can explicitly show this by taking the expectation of a random variable, <span class="math inline">\(\mathrm{Bill Length}\)</span>, while setting another random variable, <span class="math inline">\(\mathrm{Species}\)</span>, equal to only one category at a time.</p>
+<p><span class="math inline">\(E[\mathrm{BillLength}|\mathrm{Species}=Adelie]\)</span></p>
+<p><span class="math inline">\(E[\mathrm{BillLength}|\mathrm{Species}=Chinstrap]\)</span></p>
+<p><span class="math inline">\(E[\mathrm{BillLength}|\mathrm{Species}=Gentoo]\)</span></p>
 <p>More generally, we could write out the unadjusted group mean using a group indicator variable, <span class="math inline">\(\mathrm{Species}\)</span>, which can take on all possible values <span class="math inline">\(species\)</span>.</p>
-<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{Species}=species]\)</span></p>
-<p>So that’s our unadjusted group means. What about the adjusted group mean? We can start by writing out the linear regression model, which is the expected value of <span class="math inline">\(\mathrm{SepalLength}\)</span>, conditional on the random variables <span class="math inline">\(\mathrm{SepalWidth}\)</span> and <span class="math inline">\(\mathrm{Species}\)</span>.</p>
-<p><span class="math inline">\(E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]\)</span></p>
+<p><span class="math inline">\(E[\mathrm{BillLength}|\mathrm{Species}=species]\)</span></p>
+<p>So that’s our unadjusted group means. What about the adjusted group mean? We can start by writing out the linear regression model, which is the expected value of <span class="math inline">\(\mathrm{BillLength}\)</span>, conditional on the random variables <span class="math inline">\(\mathrm{BillDepth}\)</span> and <span class="math inline">\(\mathrm{Species}\)</span>.</p>
+<p><span class="math inline">\(E[\mathrm{BillLength}|\mathrm{BillDepth},\mathrm{Species}]\)</span></p>
 <p>When I used the <code>predict</code> function on the fit of that linear regression model, I obtained the fitted values from that expectation, before I separated the fitted values by group to get the grouped means. We can see those fitted values as random variables themselves, and write out another conditional mean using a group indicator variable, just as we did for the unadjusted group means earlier.</p>
-<p><span class="math display">\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species]\]</span></p>
-<p>My table of unadjusted and adjusted Sepal Length means thus showed me that:</p>
-<p><span class="math display">\[E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]\]</span></p>
+<p><span class="math display">\[E[E[\mathrm{BillLength}|\mathrm{BillDepth},\mathrm{Species}]|\mathrm{Species}=species]\]</span></p>
+<p>My table of unadjusted and adjusted Bill Length means thus showed me that:</p>
+<p><span class="math display">\[E[E[\mathrm{BillLength}|\mathrm{BillDepth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{BillLength}|\mathrm{Species}=species]\]</span></p>
 <p>Or, in more general notation:</p>
 <p><span class="math display">\[E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\]</span></p>
 <p>Is it true?! Spoiler alert – yes. Let’s work through the steps of the proof one by one.</p>
@@ -163,6 +843,7 @@ library(knitr)</code></pre>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
+<p>Gorman KB, Williams TD, Fraser WR (2014) Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis). PLoS ONE 9(3): e90081. <a href="https://doi.org/10.1371/journal.pone.0090081" class="uri">https://doi.org/10.1371/journal.pone.0090081</a></p>
 <p><a href="https://www.math.arizona.edu/~tgk/464_07/cond_exp.pdf">A Conditional Expectation - Arizona Math</a></p>
 </div>
 <div class="footnotes">

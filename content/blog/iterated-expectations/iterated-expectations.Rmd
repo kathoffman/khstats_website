@@ -24,23 +24,26 @@ knitr::opts_chunk$set(echo = TRUE, results="asis", message=F, warning=F)
 
 - You can a regress an outcome on a grouping variable *plus any other variable(s)* and the unadjusted and adjusted group means will be identical.
 
-- We can see this in a simple example using the `iris` data:
-
-```{r, echo=F}
-library(dplyr)
-library(knitr)
-```
+- We can see this in a simple example using the [`palmerpenguins`](https://github.com/allisonhorst/palmerpenguins) data:
 
 ```{r}
-iris %>%
-  # fit a linear regression for sepal length given sepal width and species
-  # make a new column containing the fitted values for sepal length
-  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %>%
+#remotes::install_github("allisonhorst/palmerpenguins")
+library(palmerpenguins)
+library(tidyverse)
+library(gt)
+
+# use complete cases for simplicity
+penguins <- drop_na(penguins)
+
+penguins %>%
+  # fit a linear regression for bill length given bill depth and species
+  # make a new column containing the fitted values for bill length
+  mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .))) %>%
   # compute unadjusted and adjusted group means
-  group_by(Species) %>%
-  summarise(mean_SL = mean(Sepal.Length),
-            mean_SL_preds = mean(preds)) %>%
-  kable()
+  group_by(species) %>%
+  summarise(mean_bill_length = mean(bill_length_mm),
+            mean_predicted_bill_length = mean(preds)) %>%
+  gt()
 ```
 
 - This is because $E[E[Y|X,Z]|Z=z]=E[Y|Z=z]$.
@@ -54,7 +57,7 @@ iris %>%
 ![](/img/expectations.png)
 
 
-I'll admit I spent much of my first probability theory course struggling to understand the difference between $X$ and $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
+I'll admit I spent many weeks of my first probability theory course struggling to understand when and why my professor was writing $X$ versus $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
 
 I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in `R`. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
 
@@ -62,50 +65,46 @@ In the function, I was regressing an outcome on a few variables plus a grouping 
 
 I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same.
 
-I created a very basic example to test this unexpected result. I regressed a variable from the `iris` data set, `Sepal.Length`, on another variable  called `Sepal.Width` and a grouping variable `Species`. I then looked at the mean within each category of `Species` for both the unadjusted `Sepal.Length` and fitted values from my linear regression model for `Sepal.Length`.
+I created a very basic example to test this unexpected result. I regressed a variable from the new `penguins` data set, `bill_length_mm`, on another variable  called `bill_depth_mm` and a grouping variable `species`. I then looked at the mean within each category of `species` for both the unadjusted `bill_depth_mm` and fitted values from my linear regression model for `bill_depth_mm`.
+
 
 ```{r}
-library(dplyr)
-library(knitr)
-```
-
-```{r}
-iris %>%
-  # fit a linear regression for sepal length given sepal width and species
-  # make a new column containing the fitted values for sepal length
-  mutate(preds = predict(lm(Sepal.Length ~ Sepal.Width + Species, data = .))) %>%
+penguins %>%
+  # fit a linear regression for bill length given bill depth and species
+  # make a new column containing the fitted values for bill length
+  mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .))) %>%
   # compute unadjusted and adjusted group means
-  group_by(Species) %>%
-  summarise(mean_SL = mean(Sepal.Length),
-            mean_SL_preds = mean(preds)) %>%
-  kable()
+  group_by(species) %>%
+  summarise(mean_bill_length = mean(bill_length_mm),
+            mean_predicted_bill_length = mean(preds)) %>%
+  gt()
 ```
 
 I saw the same strange output, even in my simple example. I realized this must be some statistics property I'd learned about and since forgotten, so I decided to write out what I was doing in expectations.
 
-First, I wrote down the unadjusted group means in the form of an expectation. I wrote down a conditional expectation, since we are looking at the mean of `Sepal.Length` when `Species` is restricted to a certain category. We can explicitly show this by taking the expectation of a random variable, $\mathrm{Sepal Length}$, while setting another random variable, $\mathrm{Species}$, equal to only one category at a time.
+First, I wrote down the unadjusted group means in the form of an expectation. I wrote down a conditional expectation, since we are looking at the mean of `bill_length_mm` when `species` is restricted to a certain category. We can explicitly show this by taking the expectation of a random variable, $\mathrm{Bill Length}$, while setting another random variable, $\mathrm{Species}$, equal to only one category at a time.
 
-$E[\mathrm{SepalLength}|\mathrm{Species}=setosa]$
+$E[\mathrm{BillLength}|\mathrm{Species}=Adelie]$
 
-$E[\mathrm{SepalLength}|\mathrm{Species}=virginica]$
+$E[\mathrm{BillLength}|\mathrm{Species}=Chinstrap]$
 
-$E[\mathrm{SepalLength}|\mathrm{Species}=versicolor]$
+$E[\mathrm{BillLength}|\mathrm{Species}=Gentoo]$
 
 More generally, we could write out the unadjusted group mean using a group indicator variable, $\mathrm{Species}$, which can take on all possible values $species$.
 
-$E[\mathrm{SepalLength}|\mathrm{Species}=species]$
+$E[\mathrm{BillLength}|\mathrm{Species}=species]$
 
-So that's our unadjusted group means. What about the adjusted group mean? We can start by writing out the linear regression model, which is the expected value of $\mathrm{SepalLength}$, conditional on the random variables $\mathrm{SepalWidth}$ and $\mathrm{Species}$.
+So that's our unadjusted group means. What about the adjusted group mean? We can start by writing out the linear regression model, which is the expected value of $\mathrm{BillLength}$, conditional on the random variables $\mathrm{BillDepth}$ and $\mathrm{Species}$.
 
-$E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]$
+$E[\mathrm{BillLength}|\mathrm{BillDepth},\mathrm{Species}]$
 
 When I used the `predict` function on the fit of that linear regression model, I obtained the fitted values from that expectation, before I separated the fitted values by group to get the grouped means. We can see those fitted values as random variables themselves, and write out another conditional mean using a group indicator variable, just as we did for the unadjusted group means earlier.
 
-$$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species]$$
+$$E[E[\mathrm{BillLength}|\mathrm{BillDepth},\mathrm{Species}]|\mathrm{Species}=species]$$
 
-My table of unadjusted and adjusted Sepal Length means thus showed me that:
+My table of unadjusted and adjusted Bill Length means thus showed me that:
 
-$$E[E[\mathrm{SepalLength}|\mathrm{SepalWidth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{SepalLength}|\mathrm{Species}=species]$$
+$$E[E[\mathrm{BillLength}|\mathrm{BillDepth},\mathrm{Species}]|\mathrm{Species}=species] \\ = E[\mathrm{BillLength}|\mathrm{Species}=species]$$
 
 Or, in more general notation:
 
@@ -169,5 +168,7 @@ which, thankfully, means I have an answer to my function output confusion. It wa
 Here's hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷
 
 # References
+
+Gorman KB, Williams TD, Fraser WR (2014) Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis). PLoS ONE 9(3): e90081. https://doi.org/10.1371/journal.pone.0090081
 
 [A Conditional Expectation - Arizona Math](https://www.math.arizona.edu/~tgk/464_07/cond_exp.pdf)

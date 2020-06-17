@@ -399,8 +399,8 @@
     <div class="article-style">
       
       TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
- We can see this in a simple example using the iris data:
-  iris %&gt;% # fit a linear regression for sepal length given sepal width and species # make a new column containing the fitted values for sepal length mutate(preds = predict(lm(Sepal.
+ We can see this in a simple example using the palmerpenguins data:
+  #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .
       
     </div>
   </div>
