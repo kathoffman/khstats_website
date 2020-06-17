@@ -54,7 +54,7 @@ iris %>%
 ![](/img/expectations.png)
 
 
-I'll admit I spent much of my first-semester of grad school struggling to understand the difference between $X$ and $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
+I'll admit I spent much of my first probability theory course struggling to understand the difference between $X$ and $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
 
 I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in `R`. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
 
@@ -164,7 +164,7 @@ So, we've proved that:
 
 $E[E[Y|X,Z]|Z=z] = E[Y|Z=z]$
 
-which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.
+which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I should think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be revisited in the regressions I fit on a daily basis.
 
 Here's hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷
 
