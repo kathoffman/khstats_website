@@ -140,7 +140,7 @@ Click on the superscript number after each step for more information.
 
 $E[E[Y|X,Z]|Z=z]$ 
 
-$=E[E[Y|X,Z=z]|Z=z]$ ^[Because we're making our outer expectation conditional on $Z=z$, we can also move $Z=z$ into our inner expectation. This becomes obvious in the `iris` example, since we only use the fitted values from one category of `Species` to get the adjusted group mean for that category.]
+$=E[E[Y|X,Z=z]|Z=z]$ ^[Because we're making our outer expectation conditional on $Z=z$, we can also move $Z=z$ into our inner expectation. This becomes obvious in the `penguins` example, since we only use the fitted values from one category of `species` to get the adjusted group mean for that category.]
 
 $=\sum_{X}E[Y|X=x,Z=z]\cdot P(X=x|Z=z)$ ^[We can rewrite $E[Y|X,Z=z]$ as the weighted summation of all possible values $X$ can take. $E[Y|X,Z=z]$ will only ever be able to take values of $X$ that vary over the range of $x$, $E[Y|X=x,Z=z]$ since our value $z$ is already fixed. We can weight each of these possible $E[Y|X=x,Z=z]$ values by $P(X=x|Z=z)$, since that's the probabilty $X$ will take value $x$ at our already-fixed $z$. Thus, we can start to find $E[E[Y|X,Z=z]|Z=z]$ by weighting each $E[Y|X=x,Z=z]$ by $P(X=x|Z=z)$ and adding them all up (see Partition Theorem).]
 
