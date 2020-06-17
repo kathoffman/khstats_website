@@ -84,7 +84,7 @@
   
   
   
-  <link rel="stylesheet" href="/css/academic.min.3072054fc61fe865aa34bcb366de141d.css">
+  <link rel="stylesheet" href="/css/academic.min.ce53f5d1ff75f9f89bb1c243b514bb45.css">
 
   
 
@@ -584,7 +584,7 @@
 </ul>
 <hr />
 <p><img src="/img/expectations.png" /></p>
-<p>I’ll admit I spent much of my first-semester of grad school struggling to understand the difference between <span class="math inline">\(X\)</span> and <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
+<p>I’ll admit I spent much of my first probability theory course struggling to understand the difference between <span class="math inline">\(X\)</span> and <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
 <p>I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in <code>R</code>. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
 <p>In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
 <p>I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same.</p>
@@ -677,7 +677,7 @@ library(knitr)</code></pre>
 <p><span class="math inline">\(=E[Y|Z=z]\)</span> <a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a></p>
 <p>So, we’ve proved that:</p>
 <p><span class="math inline">\(E[E[Y|X,Z]|Z=z] = E[Y|Z=z]\)</span></p>
-<p>which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I can think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be applied to the regressions I fit on a daily basis.</p>
+<p>which, thankfully, means I have an answer to my function output confusion. It was a lightbulb moment for me to realize I should think of an inner expectation as a random variable, and all the rules I learned about conditional and iterated expectations can be revisited in the regressions I fit on a daily basis.</p>
 <p>Here’s hoping you too feel inspired to revisit probability theory from time to time, even if your work is very applied. It is, after all, a perfect activity for social distancing! 😷</p>
 </div>
 <div id="references" class="section level1">
