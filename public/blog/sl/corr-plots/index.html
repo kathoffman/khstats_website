@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Katherine Hoffman">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="TL;DR  If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
+ By the end, you will be able to run one function to get a tidied data frame of correlations:
+  formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n P sig_p p_if_sig r_if_sig    mpg mpg 1.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/blog/sl/corr-plots/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.ce53f5d1ff75f9f89bb1c243b514bb45.css">
+
+  
+
+  
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-136820093-1', 'auto');
+      
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="https://www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/blog/sl/corr-plots/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@rkatlady">
+  <meta property="twitter:creator" content="@rkatlady">
+  
+  <meta property="og:site_name" content="KHstats">
+  <meta property="og:url" content="/blog/sl/corr-plots/">
+  <meta property="og:title" content="Customizable correlation plots in R | KHstats">
+  <meta property="og:description" content="TL;DR  If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
+ By the end, you will be able to run one function to get a tidied data frame of correlations:
+  formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n P sig_p p_if_sig r_if_sig    mpg mpg 1."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-03-14T21:13:14-05:00">
+    
+    <meta property="article:modified_time" content="2020-03-14T21:13:14-05:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Customizable correlation plots in R | KHstats</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">KHstats</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#hero"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#experience"><span>Experience</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#blogs"><span>Blog</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">Customizable correlation plots in R</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2020-03-14 21:13:14 -0500 -0500" itemprop="datePublished">
+<meta content="2020-03-14 21:13:14 -0500 -0500" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Mar 14, 2020</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/r/">R</a></span>
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/blog/sl/corr-plots/&amp;text=Customizable%20correlation%20plots%20in%20R" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/blog/sl/corr-plots/&amp;t=Customizable%20correlation%20plots%20in%20R" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Customizable%20correlation%20plots%20in%20R&amp;body=/blog/sl/corr-plots/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/blog/sl/corr-plots/&amp;title=Customizable%20correlation%20plots%20in%20R" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Customizable%20correlation%20plots%20in%20R%20/blog/sl/corr-plots/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/blog/sl/corr-plots/&amp;title=Customizable%20correlation%20plots%20in%20R" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<hr />
+<div id="tldr" class="section level1">
+<h1>TL;DR</h1>
+<ul>
+<li><p>If you’re ever felt limited by correlogram packages in <code>R</code>, this post will show you how to write your own function to tidy the many correlations into a <code>ggplot2</code>-friendly form for plotting.</p></li>
+<li><p>By the end, you will be able to run one function to get a tidied data frame of correlations:</p></li>
+</ul>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">measure1</th>
+<th align="left">measure2</th>
+<th align="right">r</th>
+<th align="right">n</th>
+<th align="right">P</th>
+<th align="left">sig_p</th>
+<th align="right">p_if_sig</th>
+<th align="right">r_if_sig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">32</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8521620</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8475514</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">32</td>
+<td align="right">2.00e-07</td>
+<td align="left">TRUE</td>
+<td align="right">2.00e-07</td>
+<td align="right">-0.7761684</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+<td align="right">32</td>
+<td align="right">1.78e-05</td>
+<td align="left">TRUE</td>
+<td align="right">1.78e-05</td>
+<td align="right">0.6811719</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8676594</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>You can then run <code>ggplot2</code> code on this data to make your own correlation heat maps.</li>
+</ul>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<ul>
+<li>If you just want the code, <a href="#just-the-code">skip to the end</a>.</li>
+</ul>
+<hr />
+</div>
+<div id="less-customizable-options" class="section level1">
+<h1>Less-customizable options</h1>
+<p>I really appreciate some of the packages and functions that allow me to make correlation plots super quickly using <code>R</code>. Here are a few examples:</p>
+<pre class="r"><code>corrplot::corrplot(cor(mtcars))</code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>corrgram::corrgram(mtcars)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;seriation&#39;:
+##   method         from 
+##   reorder.hclust gclus</code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>ggcorrplot::ggcorrplot(cor(mtcars))</code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>All of these are nice, but none of them are ultimately as customizable as I need them to be. I’ll next show how you can bypass using someone else’s function constraints to prepare correlations in your data in a <code>ggplot2</code>-friendly format.</p>
+</div>
+<div id="getting-the-correlations" class="section level1">
+<h1>Getting the correlations</h1>
+<p>We could use the base <code>R</code> function <code>cor()</code> to get our correlations, but I do not like the defaults for missing data. Instead, I use Frank Harrell’s <code>Hmisc::rcorr()</code> function for two reasons:</p>
+<ol style="list-style-type: decimal">
+<li><p>it drops missing pairs as the default</p></li>
+<li><p>it returns p-values, so you only need one function to get both the correlation coefficient and matching p-value</p></li>
+</ol>
+<p>Let’s load the libraries we’ll need for this, which are <code>knitr</code> for showing tables using <code>kable</code>, and <code>tidyverse</code> (we’ll specifically use <code>tidyr</code>, <code>dplyr</code>, <code>ggplot2</code>, <code>tibble</code> and <code>purrr</code>).</p>
+<pre class="r"><code>library(knitr)
+library(tidyverse, warn.conflict=F)</code></pre>
+<p>First, let’s look at our output from our correlation function we’ll use, <code>Hmisc::rcorr()</code>. It requires the input to be a matrix, and outputs a list of three matrices.</p>
+<pre class="r"><code>mtcars_cor &lt;- Hmisc::rcorr(as.matrix(mtcars))</code></pre>
+<p>These three matrices include the correlation coefficient (default is Pearson’s), <code>r</code>, the p-value, <code>P</code>, and the number of observations used for each correlation, <code>n</code>. Let’s turn each matrix into a <code>data frame</code> and look at the top six rows with <code>head</code> and <code>kable</code>.</p>
+<p>The correlation coefficients, <code>r</code>:</p>
+<pre class="r"><code>data.frame(mtcars_cor$r) %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">mpg</th>
+<th align="right">cyl</th>
+<th align="right">disp</th>
+<th align="right">hp</th>
+<th align="right">drat</th>
+<th align="right">wt</th>
+<th align="right">qsec</th>
+<th align="right">vs</th>
+<th align="right">am</th>
+<th align="right">gear</th>
+<th align="right">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.8521620</td>
+<td align="right">-0.8475514</td>
+<td align="right">-0.7761684</td>
+<td align="right">0.6811719</td>
+<td align="right">-0.8676594</td>
+<td align="right">0.4186840</td>
+<td align="right">0.6640389</td>
+<td align="right">0.5998324</td>
+<td align="right">0.4802848</td>
+<td align="right">-0.5509251</td>
+</tr>
+<tr class="even">
+<td>cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9020329</td>
+<td align="right">0.8324475</td>
+<td align="right">-0.6999381</td>
+<td align="right">0.7824958</td>
+<td align="right">-0.5912421</td>
+<td align="right">-0.8108118</td>
+<td align="right">-0.5226070</td>
+<td align="right">-0.4926866</td>
+<td align="right">0.5269883</td>
+</tr>
+<tr class="odd">
+<td>disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">0.9020329</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7909486</td>
+<td align="right">-0.7102139</td>
+<td align="right">0.8879799</td>
+<td align="right">-0.4336979</td>
+<td align="right">-0.7104159</td>
+<td align="right">-0.5912270</td>
+<td align="right">-0.5555692</td>
+<td align="right">0.3949769</td>
+</tr>
+<tr class="even">
+<td>hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">0.8324475</td>
+<td align="right">0.7909486</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.4487591</td>
+<td align="right">0.6587479</td>
+<td align="right">-0.7082234</td>
+<td align="right">-0.7230967</td>
+<td align="right">-0.2432043</td>
+<td align="right">-0.1257043</td>
+<td align="right">0.7498125</td>
+</tr>
+<tr class="odd">
+<td>drat</td>
+<td align="right">0.6811719</td>
+<td align="right">-0.6999381</td>
+<td align="right">-0.7102139</td>
+<td align="right">-0.4487591</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.7124406</td>
+<td align="right">0.0912048</td>
+<td align="right">0.4402785</td>
+<td align="right">0.7127111</td>
+<td align="right">0.6996101</td>
+<td align="right">-0.0907898</td>
+</tr>
+<tr class="even">
+<td>wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">0.7824958</td>
+<td align="right">0.8879799</td>
+<td align="right">0.6587479</td>
+<td align="right">-0.7124406</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.1747159</td>
+<td align="right">-0.5549157</td>
+<td align="right">-0.6924953</td>
+<td align="right">-0.5832870</td>
+<td align="right">0.4276059</td>
+</tr>
+</tbody>
+</table>
+<p>The p-values, <code>P</code>:</p>
+<pre class="r"><code>data.frame(mtcars_cor$P) %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">mpg</th>
+<th align="right">cyl</th>
+<th align="right">disp</th>
+<th align="right">hp</th>
+<th align="right">drat</th>
+<th align="right">wt</th>
+<th align="right">qsec</th>
+<th align="right">vs</th>
+<th align="right">am</th>
+<th align="right">gear</th>
+<th align="right">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mpg</td>
+<td align="right">NA</td>
+<td align="right">0.0e+00</td>
+<td align="right">0.0e+00</td>
+<td align="right">0.0000002</td>
+<td align="right">0.0000178</td>
+<td align="right">0.00e+00</td>
+<td align="right">0.0170820</td>
+<td align="right">0.0000342</td>
+<td align="right">0.0002850</td>
+<td align="right">0.0054009</td>
+<td align="right">0.0010844</td>
+</tr>
+<tr class="even">
+<td>cyl</td>
+<td align="right">0.00e+00</td>
+<td align="right">NA</td>
+<td align="right">0.0e+00</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000082</td>
+<td align="right">1.00e-07</td>
+<td align="right">0.0003661</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0021512</td>
+<td align="right">0.0041733</td>
+<td align="right">0.0019423</td>
+</tr>
+<tr class="odd">
+<td>disp</td>
+<td align="right">0.00e+00</td>
+<td align="right">0.0e+00</td>
+<td align="right">NA</td>
+<td align="right">0.0000001</td>
+<td align="right">0.0000053</td>
+<td align="right">0.00e+00</td>
+<td align="right">0.0131440</td>
+<td align="right">0.0000052</td>
+<td align="right">0.0003662</td>
+<td align="right">0.0009636</td>
+<td align="right">0.0252679</td>
+</tr>
+<tr class="even">
+<td>hp</td>
+<td align="right">2.00e-07</td>
+<td align="right">0.0e+00</td>
+<td align="right">1.0e-07</td>
+<td align="right">NA</td>
+<td align="right">0.0099888</td>
+<td align="right">4.15e-05</td>
+<td align="right">0.0000058</td>
+<td align="right">0.0000029</td>
+<td align="right">0.1798309</td>
+<td align="right">0.4930119</td>
+<td align="right">0.0000008</td>
+</tr>
+<tr class="odd">
+<td>drat</td>
+<td align="right">1.78e-05</td>
+<td align="right">8.2e-06</td>
+<td align="right">5.3e-06</td>
+<td align="right">0.0099888</td>
+<td align="right">NA</td>
+<td align="right">4.80e-06</td>
+<td align="right">0.6195826</td>
+<td align="right">0.0116755</td>
+<td align="right">0.0000047</td>
+<td align="right">0.0000084</td>
+<td align="right">0.6211834</td>
+</tr>
+<tr class="even">
+<td>wt</td>
+<td align="right">0.00e+00</td>
+<td align="right">1.0e-07</td>
+<td align="right">0.0e+00</td>
+<td align="right">0.0000415</td>
+<td align="right">0.0000048</td>
+<td align="right">NA</td>
+<td align="right">0.3388683</td>
+<td align="right">0.0009798</td>
+<td align="right">0.0000113</td>
+<td align="right">0.0004587</td>
+<td align="right">0.0146386</td>
+</tr>
+</tbody>
+</table>
+<p>The number of observations, <code>n</code>. There are no missing data in the <code>mtcars</code> data set so there are 32 pairs used for all correlations.</p>
+<pre class="r"><code>data.frame(mtcars_cor$n) %&gt;% head(n=3) %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">mpg</th>
+<th align="right">cyl</th>
+<th align="right">disp</th>
+<th align="right">hp</th>
+<th align="right">drat</th>
+<th align="right">wt</th>
+<th align="right">qsec</th>
+<th align="right">vs</th>
+<th align="right">am</th>
+<th align="right">gear</th>
+<th align="right">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mpg</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+</tr>
+<tr class="even">
+<td>cyl</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+</tr>
+<tr class="odd">
+<td>disp</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">32</td>
+</tr>
+</tbody>
+</table>
+<p>Next we can write a function that formats a <code>data frame</code> correctly for <code>Hmisc::rcorr()</code> and then turns each of the three elements of the list (<code>r</code>,<code>n</code> and <code>P</code>)</p>
+<pre class="r"><code>cors &lt;- function(df) {
+  M &lt;- Hmisc::rcorr(as.matrix(df))
+  # turn all three matrices (r, n, and P into a data frame)
+  Mdf &lt;- map(M, ~data.frame(.x))
+  # return the three data frames in a list
+  return(Mdf)
+}</code></pre>
+<p>Nothing too crazy happened in this function. Now we just have a list of three data frames. We can look at the the first element of our list using <code>first()</code>, which shows us the correlations between all our variables:</p>
+<pre class="r"><code>cors(mtcars) %&gt;% first() %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">mpg</th>
+<th align="right">cyl</th>
+<th align="right">disp</th>
+<th align="right">hp</th>
+<th align="right">drat</th>
+<th align="right">wt</th>
+<th align="right">qsec</th>
+<th align="right">vs</th>
+<th align="right">am</th>
+<th align="right">gear</th>
+<th align="right">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.8521620</td>
+<td align="right">-0.8475514</td>
+<td align="right">-0.7761684</td>
+<td align="right">0.6811719</td>
+<td align="right">-0.8676594</td>
+<td align="right">0.4186840</td>
+<td align="right">0.6640389</td>
+<td align="right">0.5998324</td>
+<td align="right">0.4802848</td>
+<td align="right">-0.5509251</td>
+</tr>
+<tr class="even">
+<td>cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9020329</td>
+<td align="right">0.8324475</td>
+<td align="right">-0.6999381</td>
+<td align="right">0.7824958</td>
+<td align="right">-0.5912421</td>
+<td align="right">-0.8108118</td>
+<td align="right">-0.5226070</td>
+<td align="right">-0.4926866</td>
+<td align="right">0.5269883</td>
+</tr>
+<tr class="odd">
+<td>disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">0.9020329</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7909486</td>
+<td align="right">-0.7102139</td>
+<td align="right">0.8879799</td>
+<td align="right">-0.4336979</td>
+<td align="right">-0.7104159</td>
+<td align="right">-0.5912270</td>
+<td align="right">-0.5555692</td>
+<td align="right">0.3949769</td>
+</tr>
+<tr class="even">
+<td>hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">0.8324475</td>
+<td align="right">0.7909486</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.4487591</td>
+<td align="right">0.6587479</td>
+<td align="right">-0.7082234</td>
+<td align="right">-0.7230967</td>
+<td align="right">-0.2432043</td>
+<td align="right">-0.1257043</td>
+<td align="right">0.7498125</td>
+</tr>
+<tr class="odd">
+<td>drat</td>
+<td align="right">0.6811719</td>
+<td align="right">-0.6999381</td>
+<td align="right">-0.7102139</td>
+<td align="right">-0.4487591</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.7124406</td>
+<td align="right">0.0912048</td>
+<td align="right">0.4402785</td>
+<td align="right">0.7127111</td>
+<td align="right">0.6996101</td>
+<td align="right">-0.0907898</td>
+</tr>
+<tr class="even">
+<td>wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">0.7824958</td>
+<td align="right">0.8879799</td>
+<td align="right">0.6587479</td>
+<td align="right">-0.7124406</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.1747159</td>
+<td align="right">-0.5549157</td>
+<td align="right">-0.6924953</td>
+<td align="right">-0.5832870</td>
+<td align="right">0.4276059</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="prep-the-correlations-for-ggplot2" class="section level1">
+<h1>Prep the correlations for <code>ggplot2</code></h1>
+<p>The next step is to get the data ready for plotting with <code>ggplot2</code>. We can keep the data in a list for now and use the <code>map()</code> function from <code>purrr</code>.</p>
+<p>First, we need to move the rownames to their own column using <code>tibble::rownames_to_column()</code>. The output of that looks like:</p>
+<pre class="r"><code>cors(mtcars) %&gt;%
+  map(~rownames_to_column(.x, var=&quot;measure1&quot;)) %&gt;%
+  # look at the first element of the list (r)
+  first() %&gt;%
+  head() %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">measure1</th>
+<th align="right">mpg</th>
+<th align="right">cyl</th>
+<th align="right">disp</th>
+<th align="right">hp</th>
+<th align="right">drat</th>
+<th align="right">wt</th>
+<th align="right">qsec</th>
+<th align="right">vs</th>
+<th align="right">am</th>
+<th align="right">gear</th>
+<th align="right">carb</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.8521620</td>
+<td align="right">-0.8475514</td>
+<td align="right">-0.7761684</td>
+<td align="right">0.6811719</td>
+<td align="right">-0.8676594</td>
+<td align="right">0.4186840</td>
+<td align="right">0.6640389</td>
+<td align="right">0.5998324</td>
+<td align="right">0.4802848</td>
+<td align="right">-0.5509251</td>
+</tr>
+<tr class="even">
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">1.0000000</td>
+<td align="right">0.9020329</td>
+<td align="right">0.8324475</td>
+<td align="right">-0.6999381</td>
+<td align="right">0.7824958</td>
+<td align="right">-0.5912421</td>
+<td align="right">-0.8108118</td>
+<td align="right">-0.5226070</td>
+<td align="right">-0.4926866</td>
+<td align="right">0.5269883</td>
+</tr>
+<tr class="odd">
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">0.9020329</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7909486</td>
+<td align="right">-0.7102139</td>
+<td align="right">0.8879799</td>
+<td align="right">-0.4336979</td>
+<td align="right">-0.7104159</td>
+<td align="right">-0.5912270</td>
+<td align="right">-0.5555692</td>
+<td align="right">0.3949769</td>
+</tr>
+<tr class="even">
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">0.8324475</td>
+<td align="right">0.7909486</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.4487591</td>
+<td align="right">0.6587479</td>
+<td align="right">-0.7082234</td>
+<td align="right">-0.7230967</td>
+<td align="right">-0.2432043</td>
+<td align="right">-0.1257043</td>
+<td align="right">0.7498125</td>
+</tr>
+<tr class="odd">
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+<td align="right">-0.6999381</td>
+<td align="right">-0.7102139</td>
+<td align="right">-0.4487591</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.7124406</td>
+<td align="right">0.0912048</td>
+<td align="right">0.4402785</td>
+<td align="right">0.7127111</td>
+<td align="right">0.6996101</td>
+<td align="right">-0.0907898</td>
+</tr>
+<tr class="even">
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">0.7824958</td>
+<td align="right">0.8879799</td>
+<td align="right">0.6587479</td>
+<td align="right">-0.7124406</td>
+<td align="right">1.0000000</td>
+<td align="right">-0.1747159</td>
+<td align="right">-0.5549157</td>
+<td align="right">-0.6924953</td>
+<td align="right">-0.5832870</td>
+<td align="right">0.4276059</td>
+</tr>
+</tbody>
+</table>
+<p>Next, we can turn move of the columns to a single column called <code>measure2</code> using <code>tidyr::pivot_longer()</code></p>
+<pre class="r"><code>cors(mtcars) %&gt;%
+  map(~rownames_to_column(.x, var=&quot;measure1&quot;)) %&gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
+  # look at the first element of the list (r)
+  first() %&gt;%
+  head() %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">measure1</th>
+<th align="left">measure2</th>
+<th align="right">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+</tr>
+</tbody>
+</table>
+<p>Now, we’re ready to unlist our data by using <code>bind_rows()</code>. This will turn our correlations into a very long data frame with all the rows from <code>r</code>, then <code>n</code>, then <code>P</code>.</p>
+<pre class="r"><code>cors(mtcars) %&gt;%
+  map(~rownames_to_column(.x, var=&quot;measure1&quot;)) %&gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &quot;id&quot;) %&gt;%
+  head() %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">id</th>
+<th align="left">measure1</th>
+<th align="left">measure2</th>
+<th align="right">value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">r</td>
+<td align="left">mpg</td>
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="left">r</td>
+<td align="left">mpg</td>
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+</tr>
+<tr class="odd">
+<td align="left">r</td>
+<td align="left">mpg</td>
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+</tr>
+<tr class="even">
+<td align="left">r</td>
+<td align="left">mpg</td>
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+</tr>
+<tr class="odd">
+<td align="left">r</td>
+<td align="left">mpg</td>
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+</tr>
+<tr class="even">
+<td align="left">r</td>
+<td align="left">mpg</td>
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+</tr>
+</tbody>
+</table>
+<p>For <code>ggplot2</code>, we’ll need to have <code>r</code>, <code>n</code>, and <code>p</code> as their own column. We can use <code>pivot_longer()</code> to do this.</p>
+<pre class="r"><code>cors(mtcars) %&gt;%
+  map(~rownames_to_column(.x, var=&quot;measure1&quot;)) %&gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &quot;id&quot;) %&gt;%
+  pivot_wider(names_from = id, values_from = value) %&gt;%
+  head() %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">measure1</th>
+<th align="left">measure2</th>
+<th align="right">r</th>
+<th align="right">n</th>
+<th align="right">P</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">32</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">32</td>
+<td align="right">2.00e-07</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+<td align="right">32</td>
+<td align="right">1.78e-05</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we can add a few columns that will potentially be useful later for making our correlation plots more informative. Let’s add columns that tell us whether the p-value was less than 0.05, and if so, give us back 1) the p-value and 2) the correlation coefficient, in case we want to label our plot with these values.</p>
+<pre class="r"><code>cors(mtcars) %&gt;%
+  map(~rownames_to_column(.x, var=&quot;measure1&quot;)) %&gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &quot;id&quot;) %&gt;%
+  pivot_wider(names_from = id, values_from = value) %&gt;%
+  mutate(sig_p = ifelse(P &lt; .05, T, F),
+           p_if_sig = ifelse(P &lt;.05, P, NA),
+           r_if_sig = ifelse(r &lt;.05, r, NA)) %&gt;%
+  head() %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">measure1</th>
+<th align="left">measure2</th>
+<th align="right">r</th>
+<th align="right">n</th>
+<th align="right">P</th>
+<th align="left">sig_p</th>
+<th align="right">p_if_sig</th>
+<th align="right">r_if_sig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">32</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8521620</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8475514</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">32</td>
+<td align="right">2.00e-07</td>
+<td align="left">TRUE</td>
+<td align="right">2.00e-07</td>
+<td align="right">-0.7761684</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+<td align="right">32</td>
+<td align="right">1.78e-05</td>
+<td align="left">TRUE</td>
+<td align="right">1.78e-05</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8676594</td>
+</tr>
+</tbody>
+</table>
+<p>This seems like everything I think I’ll ever ever want to plot. Of course you could add more. At this point I turned my formatted correlations into a function:</p>
+<pre class="r"><code>formatted_cors &lt;- function(df){
+  cors(df) %&gt;%
+    map(~rownames_to_column(.x, var=&quot;measure1&quot;)) %&gt;%
+    map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
+    bind_rows(.id = &quot;id&quot;) %&gt;%
+    pivot_wider(names_from = id, values_from = value) %&gt;%
+    mutate(sig_p = ifelse(P &lt; .05, T, F),
+           p_if_sig = ifelse(P &lt;.05, P, NA),
+           r_if_sig = ifelse(P &lt;.05, r, NA))
+}</code></pre>
+<p>We can test the function works as expected:</p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;% head() %&gt;% kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">measure1</th>
+<th align="left">measure2</th>
+<th align="right">r</th>
+<th align="right">n</th>
+<th align="right">P</th>
+<th align="left">sig_p</th>
+<th align="right">p_if_sig</th>
+<th align="right">r_if_sig</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">mpg</td>
+<td align="right">1.0000000</td>
+<td align="right">32</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">cyl</td>
+<td align="right">-0.8521620</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8521620</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">disp</td>
+<td align="right">-0.8475514</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8475514</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">hp</td>
+<td align="right">-0.7761684</td>
+<td align="right">32</td>
+<td align="right">2.00e-07</td>
+<td align="left">TRUE</td>
+<td align="right">2.00e-07</td>
+<td align="right">-0.7761684</td>
+</tr>
+<tr class="odd">
+<td align="left">mpg</td>
+<td align="left">drat</td>
+<td align="right">0.6811719</td>
+<td align="right">32</td>
+<td align="right">1.78e-05</td>
+<td align="left">TRUE</td>
+<td align="right">1.78e-05</td>
+<td align="right">0.6811719</td>
+</tr>
+<tr class="even">
+<td align="left">mpg</td>
+<td align="left">wt</td>
+<td align="right">-0.8676594</td>
+<td align="right">32</td>
+<td align="right">0.00e+00</td>
+<td align="left">TRUE</td>
+<td align="right">0.00e+00</td>
+<td align="right">-0.8676594</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="plotting" class="section level1">
+<h1>Plotting</h1>
+<p>We’re finally ready to plot our correlation heat maps in <code>ggplot2</code>.</p>
+<p>The simplest form of this plot only requires us to specify <code>measure1</code> and <code>measure2</code> on the <code>x</code> and <code>y</code>-axis, respectively. Then we can map the correlation <code>r</code> to the <code>fill</code> <code>aes</code>thetic, and add a tile as the <code>geom</code>etry.</p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile()</code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.</p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;) +
+  # map a red, white and blue color scale to correspond to -1:1 sequential gradient
+  scale_fill_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1)) +
+  theme_classic() +
+  # remove excess space on x and y axes
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  # change global font to roboto
+  theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column <code>r_if_sig</code> that outputs from <code>formatted_cors()</code>.</p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;,
+       subtitle=&quot;Only significant Pearson&#39;s correlation coefficients shown&quot;) +
+  scale_fill_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>Another version of this could involve squares with different sizes to denote strength of correlation using <code>geom_point</code> with <code>shape</code> set to a value from <a href="http://www.sthda.com/english/wiki/ggplot2-point-shapes">these available <code>geom_shape</code>s</a>. Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.</p>
+<pre class="r"><code>formatted_cors(mtcars) %&gt;%
+  ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
+  geom_tile(col=&quot;black&quot;, fill=&quot;white&quot;) +
+  geom_point(aes(size = abs(r)), shape=15) +
+  labs(x = NULL, y = NULL, col = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;) +
+  theme_classic()+
+  scale_color_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1))  +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&quot;Roboto&quot;)) +
+  scale_size(range=c(1,11), guide=NULL) </code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-23-1.png" width="576" /></p>
+</div>
+<div id="just-the-code" class="section level1">
+<h1>Just the code</h1>
+<pre class="r"><code>cors &lt;- function(df) {
+  M &lt;- Hmisc::rcorr(as.matrix(df))
+  Mdf &lt;- map(M, ~data.frame(.x))
+  return(Mdf)
+}
+
+formatted_cors &lt;- function(df){
+  cors(df) %&gt;%
+    map(~rownames_to_column(.x, var=&quot;measure1&quot;)) %&gt;%
+    map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
+    bind_rows(.id = &quot;id&quot;) %&gt;%
+    pivot_wider(names_from = id, values_from = value) %&gt;%
+    mutate(sig_p = ifelse(P &lt; .05, T, F),
+           p_if_sig = ifelse(P &lt;.05, P, NA),
+           r_if_sig = ifelse(P &lt;.05, r, NA))
+}
+
+formatted_cors(mtcars) %&gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &quot;Pearson&#39;s\nCorrelation&quot;, title=&quot;Correlations in Mtcars&quot;,
+       subtitle=&quot;Only significant Pearson&#39;s correlation coefficients shown&quot;) +
+  scale_fill_gradient2(mid=&quot;#FBFEF9&quot;,low=&quot;#0C6291&quot;,high=&quot;#A63446&quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&quot;Roboto&quot;))</code></pre>
+<p><img src="/blog/sl/corr-plots_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/r/">R</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hub64370a9fa8c7276c9d6cc9d2e350075_235979_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
+      <h6 class="card-subtitle">Research Biostatistician I</h6>
+      <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="/#contact" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/Rkatlady" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/hoffmakl" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
+          
+          <li><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></li>
+          
+          <li><a href="/blog/trt-timelines/trt-timelines/">Patient Treatment Timelines for Longitudinal Survival Data</a></li>
+          
+          <li><a href="/talk/power-sims/">Power Simulations in R</a></li>
+          
+          <li><a href="/talk/lightning-talk/">Fireproof Your Computer from Jenny Bryan</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.16bbb3750feb7244c9bc409a5a4fe678.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

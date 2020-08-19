@@ -18,7 +18,7 @@ date_format = "Jan 2006"
 #   Leave `date_end` empty if it's your current employer.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 [[experience]]
-  title = "Research Biostatistician I"
+  title = "Research Biostatistician II"
   company = "Weill Cornell Medicine"
   company_url = "http://hpr.weill.cornell.edu/divisions/biostatistics/"
   location = "New York, NY"
@@ -26,26 +26,9 @@ date_format = "Jan 2006"
   date_end = ""
   description = """
   
-  Responsibilities:
+  *   Current collaboration: Pulmonary diseases and ICU outcomes with WCM's [Division of Pulmonary and Critical Care Medicine](https://medicine.weill.cornell.edu/divisions-programs/pulmonary-critical-care-medicine)
   
-  * Assisting researchers with study design and data collection
-  * Managing and querying databases
-  * Model fitting and testing
-  * Visualizing data and analysis results
-  * Writing methods and results sections for manuscripts
-  
-  Current collaborations:
-  
-  * Alzheimer's Disease prevention with WCM neurologist [Dr. Lisa Mosconi](https://www.lisamosconi.com/)
-  * Pulmonary diseases and ICU outcomes with WCM's [Division of Pulmonary and Critical Care Medicine](https://medicine.weill.cornell.edu/divisions-programs/pulmonary-critical-care-medicine)
-  
-  Additional roles:
-  
-  * Teaching Assistant for WCM's Biostatistics and Data Science MS courses:
-  
-     * Data Science I
-     * Biostatistics II
-     * Causal Inference
+  * Teaching Assistantships: Biostatistics II [Winter 2019], Data Science I [Fall 2019], Causal Inference [Summer 2019 and 2020]
      
   * Contributor to [WCM Biostatistics Computing Club](https://wcm-computing-club.github.io/)
   
@@ -58,17 +41,12 @@ date_format = "Jan 2006"
   location = "Ann Arbor, Michigan"
   date_start = "2016-09-07"
   date_end = "2018-04-24"
-  description = """[Dr. Peter Song's Biostatistics Lab](http://www.umich.edu/~songlab/)
+  description = """
+  Dr. Peter Song's [Biostatistics Lab](http://www.umich.edu/~songlab/)
   
-  * Set up, maintained, and descriptively analyzed a national database on air pollution and renal failure incidence at the U.S. county level in preparation for a longitudinal geospatial association study.
+  Dr. Jeffrey Kidd's [Computational Biology Lab](http://genome.med.umich.edu/kidd-lab/)
   
-  [Dr. Jeffrey Kidd's Computational Biology Lab](http://genome.med.umich.edu/kidd-lab/)
-  
-  * Executed and evaluated methods for detecting chromosomal inversions in the dog genome e.g. pooled clone sequencing abnormalities, SNP linkage disequilibrium decay irregularities, and principal component analysis. 
-  
-  [Dr. Monica Dus' Neuroscience and Epigenetics Lab](https://sites.lsa.umich.edu/dus-lab/)
-  
-  * Created pipelines in R for neuroscience researchers to clean, summarize, and create visualizations of their large data sets of Drosophila feeding behaviors and neuronal imaging patterns.
+  Dr. Monica Dus' [Neuroscience and Epigenetics Lab](https://sites.lsa.umich.edu/dus-lab/)
   
   """
 

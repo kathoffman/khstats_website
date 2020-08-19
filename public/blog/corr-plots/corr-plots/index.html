@@ -30,7 +30,7 @@
   
   <meta name="description" content="TL;DR  If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
  By the end, you will be able to run one function to get a tidied data frame of correlations:
-  formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n P sig_p p_if_sig r_if_sig    mpg mpg 1.">
+  formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n p sig_p p_if_sig r_if_sig    mpg mpg 1.">
 
   
   <link rel="alternate" hreflang="en-us" href="/blog/corr-plots/corr-plots/">
@@ -132,7 +132,7 @@
   <meta property="og:title" content="Customizable correlation plots in R | KHstats">
   <meta property="og:description" content="TL;DR  If you’re ever felt limited by correlogram packages in R, this post will show you how to write your own function to tidy the many correlations into a ggplot2-friendly form for plotting.
  By the end, you will be able to run one function to get a tidied data frame of correlations:
-  formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n P sig_p p_if_sig r_if_sig    mpg mpg 1."><meta property="og:image" content="/img/icon-192.png">
+  formatted_cors(mtcars) %&gt;% head() %&gt;% kable()   measure1 measure2 r n p sig_p p_if_sig r_if_sig    mpg mpg 1."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -548,7 +548,7 @@
 <th align="left">measure2</th>
 <th align="right">r</th>
 <th align="right">n</th>
-<th align="right">P</th>
+<th align="right">p</th>
 <th align="left">sig_p</th>
 <th align="right">p_if_sig</th>
 <th align="right">r_if_sig</th>
@@ -1338,8 +1338,10 @@ library(tidyverse, warn.conflict=F)</code></pre>
   # merge our three list elements by binding the rows
   bind_rows(.id = &quot;id&quot;) %&gt;%
   pivot_wider(names_from = id, values_from = value) %&gt;%
-  mutate(sig_p = ifelse(P &lt; .05, T, F),
-           p_if_sig = ifelse(P &lt;.05, P, NA),
+  # change so everything is lower case
+  rename(p = P) %&gt;%
+  mutate(sig_p = ifelse(p &lt; .05, T, F),
+           p_if_sig = ifelse(p &lt;.05, p, NA),
            r_if_sig = ifelse(r &lt;.05, r, NA)) %&gt;%
   head() %&gt;%
   kable()</code></pre>
@@ -1350,7 +1352,7 @@ library(tidyverse, warn.conflict=F)</code></pre>
 <th align="left">measure2</th>
 <th align="right">r</th>
 <th align="right">n</th>
-<th align="right">P</th>
+<th align="right">p</th>
 <th align="left">sig_p</th>
 <th align="right">p_if_sig</th>
 <th align="right">r_if_sig</th>
@@ -1426,9 +1428,10 @@ library(tidyverse, warn.conflict=F)</code></pre>
     map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
     bind_rows(.id = &quot;id&quot;) %&gt;%
     pivot_wider(names_from = id, values_from = value) %&gt;%
-    mutate(sig_p = ifelse(P &lt; .05, T, F),
-           p_if_sig = ifelse(P &lt;.05, P, NA),
-           r_if_sig = ifelse(P &lt;.05, r, NA))
+    rename(p = P) %&gt;%
+    mutate(sig_p = ifelse(p &lt; .05, T, F),
+           p_if_sig = ifelse(p &lt;.05, p, NA),
+           r_if_sig = ifelse(r &lt;.05, r, NA)) 
 }</code></pre>
 <p>We can test the function works as expected:</p>
 <pre class="r"><code>formatted_cors(mtcars) %&gt;% head() %&gt;% kable()</code></pre>
@@ -1439,7 +1442,7 @@ library(tidyverse, warn.conflict=F)</code></pre>
 <th align="left">measure2</th>
 <th align="right">r</th>
 <th align="right">n</th>
-<th align="right">P</th>
+<th align="right">p</th>
 <th align="left">sig_p</th>
 <th align="right">p_if_sig</th>
 <th align="right">r_if_sig</th>
@@ -1494,7 +1497,7 @@ library(tidyverse, warn.conflict=F)</code></pre>
 <td align="right">1.78e-05</td>
 <td align="left">TRUE</td>
 <td align="right">1.78e-05</td>
-<td align="right">0.6811719</td>
+<td align="right">NA</td>
 </tr>
 <tr class="even">
 <td align="left">mpg</td>
@@ -1572,9 +1575,10 @@ formatted_cors &lt;- function(df){
     map(~pivot_longer(.x, -measure1, &quot;measure2&quot;)) %&gt;%
     bind_rows(.id = &quot;id&quot;) %&gt;%
     pivot_wider(names_from = id, values_from = value) %&gt;%
-    mutate(sig_p = ifelse(P &lt; .05, T, F),
-           p_if_sig = ifelse(P &lt;.05, P, NA),
-           r_if_sig = ifelse(P &lt;.05, r, NA))
+    rename(p = P) %&gt;%
+    mutate(sig_p = ifelse(p &lt; .05, T, F),
+           p_if_sig = ifelse(p &lt;.05, p, NA),
+           r_if_sig = ifelse(r &lt;.05, r, NA)) 
 }
 
 formatted_cors(mtcars) %&gt;%
@@ -1636,7 +1640,7 @@ formatted_cors(mtcars) %&gt;%
 
     <div class="media-body">
       <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
-      <h6 class="card-subtitle">Research Biostatistician I</h6>
+      <h6 class="card-subtitle">Research Biostatistician II</h6>
       <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
       <ul class="network-icon" aria-hidden="true">
         

@@ -1,0 +1,80 @@
+---
+title: "Become a superlearner! A short and sweet visual guide to the superlearner algorithm"
+author: "Katherine Hoffman"
+date: 2020-07-14T21:13:14-05:00
+categories: ["R"]
+draft: true
+tags: ["R"]
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+    print_df: paged
+---
+
+# The backstory:
+
+Over the winter, I started reading [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I decided to make "cheat sheets" or "visual guides" for the different chapters. This guide on Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley, is the first of a few (okay, two) that I made. 
+
+# The supercuts
+
+  - Superlearning is a technique used for prediction that involves combining many individual statistical algorithms (commonly called "data-adaptive" or "machine learning" algorithms) to create a new, single prediction algorithm that is at least as good as any of the individual algorithms.
+  
+  - The superlearner algorithm "decides" how to combine, or weight, the individual algorithms based upon how well each one minimizes a specified loss function, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.
+  
+  - The motivation for this type of "ensembling" is that no single algorithm is always the best for all kinds of data. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not *always* ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.
+  
+  - Superlearning (or variations of it) is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.
+
+# The visual guide
+
+A high-quality version of the visual guide exists on my [Github](). It's ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it. If you end up using it for anything but a decoration, I would really appreciate if you cited it using ...
+
+Essentially the visual guide is meant to be a step-by-step walkthrough of how the superlearning algorithm weights the individual "learners" (or regressions, or statistical models, whatever terminology you're most comfortable using.) Although I fully appreciate how useful and important formal notation is to explaining mathematical concepts, I tried to keep the focus on data structures and `R` code, because that's the "language" I'm most comfortably translating in my work as an applied statistician. Feedback on any parts that are confusing is welcome.
+
+# Superlearning, step by step
+
+Let's go through the algorithm one step at a time using a simulated data set. Here I will show a modified version of Maya Peterson and Laura Balzar's [Superlearning lab](https://99816be4-a59d-4405-9b7d-342a3eb577a3.filesusr.com/ugd/4cecb1_e95abbcfca3b473a982ff059c696e879.pdf), which you can try out if you want more practice.
+
+For simplicity I'm going to show the concept of superlearning using only four variables (AKA "features" or "predictors") to predict a binary outcome. The individual algorithms or "base learners" that we will use are going to be four different logistic regressions. I am *only* using the logistic regressions so that random variation in more complicated algorithms does not take away from our understanding of the general superlearning algorithm. The same code could be translated to a more complicated "library" of base algorithms or learners. For example, instead of four differently specified logistic regressions, we could use the learners LASSO, random forest, extreme gradient boosting, and stepwise logistic regression.
+
+## Step 0: Simulate some data
+
+Here we will simulate a binary outcome, `Y`, and four baseline variables for prediction, `W1,`,`W2`,`W3`, `W4`. 
+
+```{r}
+n <- 1000
+obs <- tibble::tibble(
+  W1 = rnorm(n),
+  W2 = rbinom(n, 1, plogis(10*W1)),
+  W3 = rbinom(n, 1, plogis(W1*W2 + .5*W2)),
+  W4 = rnorm(n, mean=W1*W2, sd=.5*W3),
+  Y = rbinom(n, 1, plogis(W1+2*W2+.3*W1*W2+log(W3)))
+)
+```
+
+## Step 1: Split the data into K folds
+
+For K-fold cross validation we need to split the data into 10 blocks, or chunks. The easiest way to do this is by creating indices for each cross-validation fold.
+
+```{r}
+k <- 10 # 10 fold cv
+cv_index <- sample(rep(1:k, each = n/k)) 
+```
+
+
+## Step 2: Fit base learners
+
+Next we will split the
+
+```{r}
+lrnr_a <- glm(Y ~ W1 + W2*W3 + W4, family="binomial", data=obs)
+lrnr_b <- glm(Y ~ W1 + W2*W3 + W4, family="binomial", data=obs)
+lrnr_c <- glm(Y ~ W1 + W2*W3 + W4, family="binomial", data=obs)
+```
+
+
+# References
+
+
