@@ -226,19 +226,19 @@ full_data_preds <- tibble(pred_a, pred_b, pred_c)
 Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for `y`.
 
 ```{r}
-ensemble_sl_predictions <- predict(metalrnr_fit, newdata = full_data_preds)
-kable(head(ensemble_sl_predictions))
+sl_predictions <- predict(metalrnr_fit, newdata = full_data_preds)
+kable(head(sl_predictions))
 ```
 
-And... that's it! Those are the superlearner predictions.
+And... that's it! Those are our superlearner predictions.
 
 ## Step 9 and beyond...
 
 We could compute the MSE of the ensemble superlearner predictions.
 
 ```{r}
-ensemble_sl_mse <- mean((obs$y - ensemble_sl_predictions)^2)
-ensemble_sl_mse
+sl_mse <- mean((obs$y - sl_predictions)^2)
+sl_mse
 ```
 
 We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms' hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.
