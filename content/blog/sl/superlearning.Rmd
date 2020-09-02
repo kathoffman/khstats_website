@@ -260,7 +260,7 @@ sl_fit <- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```
 
-You can specify the metalearner with the `method` argument. The default is [non-negative least squares](#appendix). For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
+You can specify the metalearner with the `method` argument. The default is [non-negative least squares](#appendix).
 
 ## CV-Risk and Coefficient Weights
 
@@ -291,6 +291,8 @@ cv_sl_fit <- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```
 
+For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
+
 
 ## Other packages to superlearn
 
@@ -308,7 +310,7 @@ The steps of the superlearner algorithm are summarized nicely in this graphic in
 
 ## Non-negative least squares regression
 
-The default in the `SuperLearner` package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as "regular" linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the *Euclidian distance*), you constrain your solution to only allow *positive* coefficients to minimize that distance.  
+The default in the `SuperLearner` package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as "regular" linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the *Euclidean distance*), you constrain your solution to only allow *positive* coefficients to minimize that distance.  
 
 It's actually very intuitive to have a regression that doesn't allow negative coefficients if you're trying to "weight" an ensemble of predictions! For a manual superlearner algorithm that implements the `nnls` function for the metalearner, see this [introductory tutorial code](https://github.com/ainaimi/SuperLearnerIntro).
 

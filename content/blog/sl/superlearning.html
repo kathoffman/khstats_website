@@ -560,7 +560,7 @@ sl_mse</code></pre>
 x_df &lt;- obs %&gt;% select(w1:w4) %&gt;% as.data.frame()
 sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c(&quot;SL.ranger&quot;, &quot;SL.glmnet&quot;, &quot;SL.earth&quot;))</code></pre>
-<p>You can specify the metalearner with the <code>method</code> argument. The default is <a href="#appendix">non-negative least squares</a>. For more information on the <code>SuperLearner</code> package, check out this <a href="https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html">vignette</a>.</p>
+<p>You can specify the metalearner with the <code>method</code> argument. The default is <a href="#appendix">non-negative least squares</a>.</p>
 <div id="cv-risk-and-coefficient-weights" class="section level2">
 <h2>CV-Risk and Coefficient Weights</h2>
 <p>We can examine the cross-validated <code>Risk</code> (loss function), and the <code>Coef</code>ficient (weight) given to each of the models.</p>
@@ -616,6 +616,7 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 <p>Recall that we can cross-validate the entire model fitting process to evaluate the predictive performance of our superlearner algorithm. This is easy with the function <code>CV.SuperLearner()</code>. Beware, this gets computationally burdensome very quickly!</p>
 <pre class="r"><code>cv_sl_fit &lt;- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c(&quot;SL.ranger&quot;, &quot;SL.glmnet&quot;, &quot;SL.earth&quot;))</code></pre>
+<p>For more information on the <code>SuperLearner</code> package, check out this <a href="https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html">vignette</a>.</p>
 </div>
 <div id="other-packages-to-superlearn" class="section level2">
 <h2>Other packages to superlearn</h2>
@@ -632,7 +633,7 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 </div>
 <div id="non-negative-least-squares-regression" class="section level2">
 <h2>Non-negative least squares regression</h2>
-<p>The default in the <code>SuperLearner</code> package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as “regular” linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the <em>Euclidian distance</em>), you constrain your solution to only allow <em>positive</em> coefficients to minimize that distance.</p>
+<p>The default in the <code>SuperLearner</code> package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as “regular” linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the <em>Euclidean distance</em>), you constrain your solution to only allow <em>positive</em> coefficients to minimize that distance.</p>
 <p>It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements the <code>nnls</code> function for the metalearner, see this <a href="https://github.com/ainaimi/SuperLearnerIntro">introductory tutorial code</a>.</p>
 </div>
 </div>
