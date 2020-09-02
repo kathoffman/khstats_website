@@ -138,7 +138,7 @@ kable(head(cv_preds), digits=3)
 
 Okay, so we have a cross-validated prediction for every observation in the data set. Now we want to merge those CV predictions back into our main data set, and compute a loss function of interest for each CV prediction. This is how we're going to optimize our prediction algorithm: we want to make sure we're "losing the least" when we use it to eventually make predictions.
 
-### Manually computing the MSE
+### *Optional step for demonstration*: manually computing the MSE
 
 Let's say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error $(y - \hat{y})^2$ for each CV prediction a, b, and c.
 
@@ -153,16 +153,26 @@ obs_preds <-
 obs_preds %>% select(contains("sqrd_error")) %>% head() %>% kable(digits=3)
 ```
 
-And then take the mean of those three cross-validated squared error columns to get the CV-MSE.
+And then take the mean of those three cross-validated squared error columns, grouped by `cv_fold`, to get the CV-MSE for each fold.
 
 ```{r}
-risk <-
+cv_risks <-
   obs_preds %>%
+  group_by(cv_fold) %>%
   summarise(cv_mse_a = mean(cv_sqrd_error_a),
             cv_mse_b = mean(cv_sqrd_error_b),
             cv_mse_c = mean(cv_sqrd_error_c)
-            ) 
-kable(risk, digits=3)
+            )
+kable(cv_risks, digits=3, caption = "CV-MSE for each CV fold for each base learner")
+```
+
+We can take the mean of those (or just take the mean without grouping by CV fold in the first place!) to get the overall CV-MSE for each learner.
+
+```{r}
+cv_risks %>%
+  select(-cv_fold) %>%
+  summarise_all(mean) %>%
+  kable(digits=3, caption = "CV-MSE for each base learner")
 ```
 
 We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is learner b. In other words, if we had to choose one of the statistical learning algorithms in our library to be our prediction model based on the CV predictions, we "lose" the least, or we "take the smallest risk," with learner b.
@@ -179,9 +189,9 @@ However, we can almost always create an even better prediction algorithm if we u
 
 > This is the key step of the superlearner algorithm: we will use a new learner, a **metalearner**, to take information from all of the base learners and create that new algorithm.
 
-For simplicity, we'll use yet another linear regression as our metalearner. This could be any statistical learning algorithm here (LASSO, non-negative least squares, random forest, etc.) As with any statistical learning algorithm, the choice of algorithm reflects the loss function we want to minimize. 
+For simplicity, we'll use yet another linear regression as our metalearner. The metalearner *could* be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the `SuperLearner` package is actually non-negative least squares (NNLS). For more information on non-negative least squares, see the [Appendix](#Appendix).
 
-Whatever metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, `y`.
+As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, `y`.
 
 ```{r}
 metalrnr_fit <- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
@@ -270,9 +280,19 @@ The steps of the superlearner algorithm are summarized nicely in this graphic in
 
 ![](/img/sl_diagram.png)
 
+# Appendix
+
+## Non-negative least squares regression
+
+The default in the `SuperLearner` package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as "regular" linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the *Euclidian distance*), you constrain your solution to only allow *positive* coefficients to minimize that distance.  
+
+It's actually very intuitive to have a regression that doesn't allow negative coefficients if you're trying to "weight" an ensemble of predictions! For a manually superlearner algorithm that implements the `nnls` function for the metalearner, see this [introductory tutorial code](https://github.com/ainaimi/SuperLearnerIntro).
+
 # References
 
 Polley, Eric. “Chapter 3: Superlearning.” Targeted Learning: Causal Inference for Observational and Experimental Data, by M. J. van der. Laan and Sherri Rose, Springer, 2011.
 
 Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL https://CRAN.R-project.org/package=SuperLearner. R package version 2.0-22.
+
+Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. *Eur J Epidemiol.* 2018;33(5):459-464. doi:10.1007/s10654-018-0390-z
 
