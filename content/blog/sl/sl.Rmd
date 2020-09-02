@@ -1,5 +1,5 @@
 ---
-title: "Become a superlearner! A visual guide and introductory tutorial for superlearning"
+title: "Become a Superlearner! A Visual Guide and Introductory Tutorial for Superlearning"
 author: "Katherine Hoffman"
 date: 2020-08-29T21:13:14-05:00
 categories: ["R"]
@@ -32,26 +32,27 @@ The guide is meant to be a step-by-step walkthrough of how the superlearner algo
   
   - The motivation for this type of "ensembling" is that **no single algorithm is always the best for all kinds of data**. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not *always* ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.
   
-  - Superlearning (or variations of it) is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.
+  - Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.
   
   ![](/img/spiderman_meme.jpg)
 
 
 # Superlearning, step by step
 
-In this tutorial I will go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar's [Superlearning lab](https://99816be4-a59d-4405-9b7d-342a3eb577a3.filesusr.com/ugd/4cecb1_e95abbcfca3b473a982ff059c696e879.pdf), which you can try out if you want more practice.
+In this tutorial I will go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar's [R Lab 3: Superlearning](https://www.ucbbiostat.com/labs), which you can try out if you want more practice.
 
 For simplicity I'll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. The individual algorithms or **base learners** that we will use will be three different linear regressions. I am *only* using the linear regressions so that code for running more complicated algorithms does not take away from understanding the general superlearning algorithm.
 
 The same code could be translated to a more complicated set, or **superlearner library**, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes. The only limit to the number of base learners in a superlearning library is computational time and power.
 
-## Step 0: Load libraries and simulate data
+## Step 0: Load libraries, set seed, and simulate data
 
 To start this example, we will simulate a continuous outcome, `y`, and four variables for prediction, `w1`, `w2`, `w3`, and `w4`. 
 
 ```{r}
 library(dplyr, warn.conflicts = F)
 library(knitr)
+set.seed(7)
 ```
 
 ```{r}
@@ -64,7 +65,7 @@ obs <- tibble::tibble(
   w4 = rnorm(n, mean=w1*w2, sd=.5*w3),
   y = w1 + w2 + w2*w3 + sin(w4)
 )
-kable(head(obs), digits=3)
+kable(head(obs), digits=3, caption = "Simulated data set")
 ```
 
 ## Step 1: Split the data into K folds
@@ -83,8 +84,8 @@ Recall that in  K-fold CV, each fold serves as the validation set one time. In t
 ```{r}
 cv_train_1 <- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
 fit_1a <- glm(y ~ w1 + w2 + w3 + w4, data=cv_train_1) # fit the first linear regression on that training data
-fit_1b <- glm(y ~ w1 + w2 + w3 + w4:w1, data=cv_train_1) # second LR fit on the training data
-fit_1c <- glm(y ~ w1:w2:w3, data=cv_train_1) # and the third LR
+fit_1b <- glm(y ~ w1 + w2 + w3 + w4*w1, data=cv_train_1) # second LR fit on the training data
+fit_1c <- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR
 ```
 
 ## Step 3: Obtain predictions for first CV-fold
@@ -102,7 +103,7 @@ Since we have 1000 `obs`ervations, that gives us three vectors of length 100: a 
 
 ```{r}
 length(pred_1a) # double check we only have n/k predictions ...we do :-)
-knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)))
+knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = "First CV round of predictions")
 ```
 
 ## Step 4: Obtain CV predictions for entire data set
@@ -120,7 +121,7 @@ cv_preds <-
   # fit all the base learners to that data
   fit_a <- glm(y ~ w2 + w4, data=cv_train)
   fit_b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train)
-  fit_c <- glm(y ~ w1:w2:w3, data=cv_train)
+  fit_c <- glm(y ~ w1*w2*w3, data=cv_train)
   # make a validation data set that only contains data from fold k
   cv_valid <- obs[which(cv_index == x),]
   # obtain predictions from all the base learners for that validation data
@@ -131,7 +132,10 @@ cv_preds <-
   return(tibble::tibble("obs_id" = cv_valid$id, "cv_fold" = x, pred_a, pred_b, pred_c))
 })
 
-kable(head(cv_preds), digits=3)
+cv_preds %>%
+  arrange(obs_id) %>%
+  head() %>%
+  kable(digits=2, caption = "All CV predictions for all three base learners")
 ```
 
 ## Step 5: Choose and compute a loss function of interest via a metalearner
@@ -150,7 +154,7 @@ obs_preds <-
          cv_sqrd_error_c = (y-pred_c)^2
         )
 
-obs_preds %>% select(contains("sqrd_error")) %>% head() %>% kable(digits=3)
+obs_preds %>% select(contains("sqrd_error")) %>% head() %>% kable(digits=2, caption = "Squared error of each base learner")
 ```
 
 And then take the mean of those three cross-validated squared error columns, grouped by `cv_fold`, to get the CV-MSE for each fold.
@@ -177,7 +181,7 @@ cv_risks %>%
 
 We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is learner b. In other words, if we had to choose one of the statistical learning algorithms in our library to be our prediction model based on the CV predictions, we "lose" the least, or we "take the smallest risk," with learner b.
 
-> We *could* stop here and fit learner b to our full data set, and that would be called using the *discrete superlearner*.
+> We *could* stop here and fit learner b to our full data set, and that would be called using the **discrete superlearner**.
 
 ```{r}
 discrete_sl_predictions <- predict(glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs))
@@ -207,7 +211,7 @@ We now have our superlearner algorithm, so it is time to input data and obtain p
 ```{r}
 fit_a <- glm(y ~ w2 + w4, data=obs)
 fit_b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs)
-fit_c <- glm(y ~ w1:w2:w3, data=obs)
+fit_c <- glm(y ~ w1*w2*w3, data=obs)
 ```
 
 ## Step 7: Extract predictions from each base learner on the entire data set
@@ -227,7 +231,7 @@ Once we have the predictions from the full data set, we can input them to the me
 
 ```{r}
 sl_predictions <- predict(metalrnr_fit, newdata = full_data_preds)
-kable(head(sl_predictions), col.names = "sl_predictions", digits= 2, caption = "Final superlearner predictions from the manually coded tutorial")
+kable(head(sl_predictions), col.names = "sl_predictions", digits= 2, caption = "Final SL predictions (manual)")
 ```
 
 And... that's it! Those are our superlearner predictions.
@@ -243,7 +247,7 @@ sl_mse
 
 We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms' hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.
 
-We can then cross-validate this entire process to evaluate the predictive performance of the new ensemble superlearner algorithm. Alternatively, we could leave a hold out training data set to evaluate the performance.
+We can then cross-validate this entire process to evaluate the predictive performance of our superlearner algorithm. Alternatively, we could leave a hold out training data set to evaluate the performance.
 
 # Using the `SuperLearner` package
 
@@ -256,7 +260,7 @@ sl_fit <- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```
 
-Not so bad, right? You can specify the metalearner with the `method` argument. The default is non-negative least squares. For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
+You can specify the metalearner with the `method` argument. The default is [non-negative least squares](#Appendix). For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
 
 ## CV-Risk and Coefficient Weights
 
@@ -266,29 +270,41 @@ We can examine the cross-validated `Risk` (loss function), and the `Coef`ficient
 sl_fit
 ```
 
-From this summary we can see that the CV-risk (default is MSE) in this library of base learners was lowest for `Sl.Earth`. This translates to the largest coefficient, or weight, given to the predictions from `earth` (which implements the MARS algorithm... but the name "MARS" is copyrighted!). The LASSO model implemented by `glmnet` has the highest CV-risk, so after the metalearning step with metalearner NNLS, it receives a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all. 
+From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for `Sl.Earth`. This translates to the largest coefficient, or weight, given to the predictions from `earth` (which implements the MARS algorithm... but the name "MARS" is copyrighted!).
+
+The LASSO model implemented by `glmnet` has the highest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all. 
 
 ## Obtaining the predictions
 
-We can also extract the predictions via the `SL.predict` element of the `SuperLearner` fit object.
+We can extract the predictions easily via the `SL.predict` element of the `SuperLearner` fit object.
 
 ```{r}
-kable(head(sl_fit$SL.predict), digits=2, col.names = "sl_predictions", caption="Final superlearner predictions computed from the SuperLearner package with SL libraries ranger, glmnet, and earth.")
+kable(head(sl_fit$SL.predict), digits=2, col.names = "sl_predictions", caption = "Final SL predictions (package)")
 ```
+
+## Cross-validated Superlearner
+
+Recall that we can cross-validate the entire model fitting process to evaluate the predictive performance of our superlearner algorithm. This is easy with the function `CV.SuperLearner()`. Beware, this gets computationally burdensome very quickly!
+
+```{r, eval=F}
+cv_sl_fit <- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
+                     SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
+```
+
 
 ## Other packages to superlearn
 
-Other packages available in `R` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `h2o`, `ml3`, and `caretEnsemble`. I wrote a [brief tutorial](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies meetup.
+Other packages freely available in `R` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `h2o`, `ml3`, and `caretEnsemble`. I previously wrote a [very brief tutorial](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo.
 
 Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. The Chief Machine Learning scientist at `h2o`, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
 
-# A Review
+# Appendix
+
+## Another visual guide
 
 The steps of the superlearner algorithm are summarized nicely in this graphic in the *Targeted Learning* book:
 
 ![](/img/sl_diagram.png)
-
-# Appendix
 
 ## Non-negative least squares regression
 
@@ -304,3 +320,8 @@ Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Pred
 
 Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. *Eur J Epidemiol.* 2018;33(5):459-464. doi:10.1007/s10654-018-0390-z
 
+# Session Info
+
+```{r}
+sessionInfo()
+```
