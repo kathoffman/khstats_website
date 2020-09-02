@@ -26,13 +26,12 @@ date_format = "Jan 2006"
   date_end = ""
   description = """
   
-  *   Current collaboration: Pulmonary diseases and ICU outcomes with WCM's [Division of Pulmonary and Critical Care Medicine](https://medicine.weill.cornell.edu/divisions-programs/pulmonary-critical-care-medicine)
+My primary collaboration is with pulmonologists and intensivists in WCM's [Division of Pulmonary and Critical Care Medicine](https://medicine.weill.cornell.edu/divisions-programs/pulmonary-critical-care-medicine). Our research covers chronic diseases such as Interstitial Lung Disease and Chronic Obstructive Pulmonary Disease, as well as acute-onset critical illnesses such as Sepsis, Acute Respiratory Distress Syndrome, and in recent months, COVID-19.
   
-  * Teaching Assistantships: Biostatistics II [Winter 2019], Data Science I [Fall 2019], Causal Inference [Summer 2019 and 2020]
-     
-  * Contributor to [WCM Biostatistics Computing Club](https://wcm-computing-club.github.io/)
+I served as the Teaching Assistant for Biostatistics II in Winter 2019, Data Science I in Fall 2019, and 
+Modern Methods for Causal Inference in Summer 2019 and 2020, and have contributed multiple talks to our [WCM Biostatistics Computing Club](https://wcm-computing-club.github.io/).
   
-  """
+"""
 
 [[experience]]
   title = "Graduate Student Research Assistant"
@@ -42,12 +41,9 @@ date_format = "Jan 2006"
   date_start = "2016-09-07"
   date_end = "2018-04-24"
   description = """
-  Dr. Peter Song's [Biostatistics Lab](http://www.umich.edu/~songlab/)
   
-  Dr. Jeffrey Kidd's [Computational Biology Lab](http://genome.med.umich.edu/kidd-lab/)
+My research time in grad school was split between Dr. Peter Song's [Biostatistics Lab](http://www.umich.edu/~songlab/), Dr. Jeffrey Kidd's [Computational Biology Lab](http://genome.med.umich.edu/kidd-lab/), and Dr. Monica Dus' [Neuroscience and Epigenetics Lab](https://sites.lsa.umich.edu/dus-lab/).
   
-  Dr. Monica Dus' [Neuroscience and Epigenetics Lab](https://sites.lsa.umich.edu/dus-lab/)
-  
-  """
+"""
 
 +++

@@ -1,0 +1,1004 @@
+---
+title: "A short and sweet tutorial on using `sl3` for superlearning"
+author: "Katherine Hoffman"
+date: 2019-09-12T21:13:14-05:00
+categories: ["R"]
+draft: false
+math: true
+tags: ["R"]
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+    print_df: paged
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="background" class="section level1">
+<h1>Background</h1>
+<p>In September 2019, I gave an R-Ladies NYC presentation about using the package <code>sl3</code> to implement the superlearner algorithm for predictions. You can download the slides for it <a href="https://github.com/hoffmakl/sl3-demo/raw/master/superlearning_slides_no_animation.pdf">here</a>. This post is a modification to the original demo I gave.</p>
+<p>For a better background on what the superlearner algorithm is, please see my more <a href="khstats.com/blog/sl/sl">recent blog post</a>.</p>
+</div>
+<div id="step-0-load-your-libraries-set-a-seed-and-load-the-data" class="section level1">
+<h1>Step 0: Load your libraries, set a seed, and load the data</h1>
+<p>You’ll likely need to install <code>sl3</code> from the <code>tlverse</code> github page, as it was not yet on CRAN at the time of writing this post.</p>
+<pre class="r"><code>#devtools::install_github(&quot;tlverse/sl3&quot;)
+library(sl3)
+library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(kableExtra)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     group_rows</code></pre>
+<pre class="r"><code>set.seed(7)</code></pre>
+<p>We will use the same WASH Benefits data set as the TLverse does in their <a href="https://tlverse.org/tlverse-handbook/">Hitchhiker’s Guide</a>. We will be predicting children in rural Kenya and Bengladesh’s weight to height z-scores.</p>
+<pre class="r"><code>washb_data &lt;- read.csv(&quot;https://raw.githubusercontent.com/tlverse/tlverse-data/master/wash-benefits/washb_data.csv&quot;)</code></pre>
+<pre class="r"><code>kable(head(washb_data))</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+whz
+</th>
+<th style="text-align:left;">
+tr
+</th>
+<th style="text-align:left;">
+fracode
+</th>
+<th style="text-align:right;">
+month
+</th>
+<th style="text-align:right;">
+aged
+</th>
+<th style="text-align:left;">
+sex
+</th>
+<th style="text-align:right;">
+momage
+</th>
+<th style="text-align:left;">
+momedu
+</th>
+<th style="text-align:right;">
+momheight
+</th>
+<th style="text-align:left;">
+hfiacat
+</th>
+<th style="text-align:right;">
+Nlt18
+</th>
+<th style="text-align:right;">
+Ncomp
+</th>
+<th style="text-align:right;">
+watmin
+</th>
+<th style="text-align:right;">
+elec
+</th>
+<th style="text-align:right;">
+floor
+</th>
+<th style="text-align:right;">
+walls
+</th>
+<th style="text-align:right;">
+roof
+</th>
+<th style="text-align:right;">
+asset_wardrobe
+</th>
+<th style="text-align:right;">
+asset_table
+</th>
+<th style="text-align:right;">
+asset_chair
+</th>
+<th style="text-align:right;">
+asset_khat
+</th>
+<th style="text-align:right;">
+asset_chouki
+</th>
+<th style="text-align:right;">
+asset_tv
+</th>
+<th style="text-align:right;">
+asset_refrig
+</th>
+<th style="text-align:right;">
+asset_bike
+</th>
+<th style="text-align:right;">
+asset_moto
+</th>
+<th style="text-align:right;">
+asset_sewmach
+</th>
+<th style="text-align:right;">
+asset_mobile
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+N05265
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+268
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:left;">
+Primary (1-5y)
+</td>
+<td style="text-align:right;">
+146.40
+</td>
+<td style="text-align:left;">
+Food Secure
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-1.16
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+N05265
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+286
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:left;">
+Primary (1-5y)
+</td>
+<td style="text-align:right;">
+148.75
+</td>
+<td style="text-align:left;">
+Moderately Food Insecure
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-1.05
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+N08002
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+264
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:left;">
+Primary (1-5y)
+</td>
+<td style="text-align:right;">
+152.15
+</td>
+<td style="text-align:left;">
+Food Secure
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-1.26
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+N08002
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+252
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:left;">
+Primary (1-5y)
+</td>
+<td style="text-align:right;">
+140.25
+</td>
+<td style="text-align:left;">
+Food Secure
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-0.59
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+N06531
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+336
+</td>
+<td style="text-align:left;">
+female
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:left;">
+Secondary (&gt;5y)
+</td>
+<td style="text-align:right;">
+150.95
+</td>
+<td style="text-align:left;">
+Food Secure
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+-0.51
+</td>
+<td style="text-align:left;">
+Control
+</td>
+<td style="text-align:left;">
+N06531
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+304
+</td>
+<td style="text-align:left;">
+male
+</td>
+<td style="text-align:right;">
+20
+</td>
+<td style="text-align:left;">
+Secondary (&gt;5y)
+</td>
+<td style="text-align:right;">
+154.20
+</td>
+<td style="text-align:left;">
+Severely Food Insecure
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="step-1-specify-outcome-and-predictors" class="section level1">
+<h1>Step 1: Specify outcome and predictors</h1>
+<p>We need the columns for the outcome and predictors to be specified as strings.</p>
+<pre class="r"><code>outcome &lt;- &quot;whz&quot;
+covars &lt;- washb_data %&gt;%
+  select(-whz) %&gt;%
+  names()</code></pre>
+</div>
+<div id="step-2-make-an-sl3-task" class="section level1">
+<h1>Step 2: Make an sl3 task</h1>
+<p>This is the object we’ll use whenever we want to fit a statistical model in <code>sl3</code>.</p>
+<pre class="r"><code>washb_task &lt;- make_sl3_Task(
+  data = washb_data,
+  covariates = covars,
+  outcome = outcome
+)</code></pre>
+<pre><code>## Warning in process_data(data, nodes, column_names = column_names, flag = flag, :
+## Missing covariate data detected: imputing covariates.</code></pre>
+<p>Note that we can’t have missing data in most statistical learning algorithms, so <code>sl3</code>’s default pre-processing imputes at the median and adds a column for missingness (in case the missingness is informative).</p>
+<pre class="r"><code>washb_task</code></pre>
+<pre><code>## A sl3 Task with 4695 obs and these nodes:
+## $covariates
+##  [1] &quot;tr&quot;              &quot;fracode&quot;         &quot;month&quot;           &quot;aged&quot;           
+##  [5] &quot;sex&quot;             &quot;momage&quot;          &quot;momedu&quot;          &quot;momheight&quot;      
+##  [9] &quot;hfiacat&quot;         &quot;Nlt18&quot;           &quot;Ncomp&quot;           &quot;watmin&quot;         
+## [13] &quot;elec&quot;            &quot;floor&quot;           &quot;walls&quot;           &quot;roof&quot;           
+## [17] &quot;asset_wardrobe&quot;  &quot;asset_table&quot;     &quot;asset_chair&quot;     &quot;asset_khat&quot;     
+## [21] &quot;asset_chouki&quot;    &quot;asset_tv&quot;        &quot;asset_refrig&quot;    &quot;asset_bike&quot;     
+## [25] &quot;asset_moto&quot;      &quot;asset_sewmach&quot;   &quot;asset_mobile&quot;    &quot;delta_momage&quot;   
+## [29] &quot;delta_momheight&quot;
+## 
+## $outcome
+## [1] &quot;whz&quot;
+## 
+## $id
+## NULL
+## 
+## $weights
+## NULL
+## 
+## $offset
+## NULL
+## 
+## $time
+## NULL</code></pre>
+<div id="an-aside-exploring-sl3s-many-options" class="section level2">
+<h2>An aside: Exploring <code>sl3</code>’s many options</h2>
+<p>There’s a ton of different aspects of model fitting <code>sl3</code> has the capabilities to address. For example, we can look into algorithms for when the outcome is binomial, categorical, or continuous. There are also options for when you have clustered data, or if you need to preprocess/screen your data before implementing base learners.</p>
+<pre class="r"><code>sl3_list_properties()</code></pre>
+<pre><code>##  [1] &quot;binomial&quot;             &quot;categorical&quot;          &quot;continuous&quot;          
+##  [4] &quot;cv&quot;                   &quot;density&quot;              &quot;ids&quot;                 
+##  [7] &quot;multivariate_outcome&quot; &quot;offset&quot;               &quot;preprocessing&quot;       
+## [10] &quot;sampling&quot;             &quot;screener&quot;             &quot;timeseries&quot;          
+## [13] &quot;weights&quot;              &quot;wrapper&quot;</code></pre>
+<p>We can learn more about each of these properties on this <a href="https://tlverse.org/sl3/reference/index.html">reference page</a>.</p>
+</div>
+<div id="another-aside-looking-at-available-learners" class="section level2">
+<h2>Another aside: looking at available “learners”</h2>
+<p>We’ll need to pick out base learners for our stack, as well as pick a metalearner. Since we are trying to predict z-scores, a continuous variable, let’s look at our potential learners for a continuous variable.</p>
+<pre class="r"><code>sl3_list_learners(&quot;continuous&quot;) </code></pre>
+<pre><code>##  [1] &quot;Lrnr_arima&quot;                     &quot;Lrnr_bartMachine&quot;              
+##  [3] &quot;Lrnr_bilstm&quot;                    &quot;Lrnr_bound&quot;                    
+##  [5] &quot;Lrnr_caret&quot;                     &quot;Lrnr_cv_selector&quot;              
+##  [7] &quot;Lrnr_dbarts&quot;                    &quot;Lrnr_earth&quot;                    
+##  [9] &quot;Lrnr_expSmooth&quot;                 &quot;Lrnr_gam&quot;                      
+## [11] &quot;Lrnr_gbm&quot;                       &quot;Lrnr_glm&quot;                      
+## [13] &quot;Lrnr_glm_fast&quot;                  &quot;Lrnr_glmnet&quot;                   
+## [15] &quot;Lrnr_grf&quot;                       &quot;Lrnr_gts&quot;                      
+## [17] &quot;Lrnr_h2o_glm&quot;                   &quot;Lrnr_h2o_grid&quot;                 
+## [19] &quot;Lrnr_hal9001&quot;                   &quot;Lrnr_HarmonicReg&quot;              
+## [21] &quot;Lrnr_hts&quot;                       &quot;Lrnr_lstm&quot;                     
+## [23] &quot;Lrnr_mean&quot;                      &quot;Lrnr_multiple_ts&quot;              
+## [25] &quot;Lrnr_nnet&quot;                      &quot;Lrnr_nnls&quot;                     
+## [27] &quot;Lrnr_optim&quot;                     &quot;Lrnr_pkg_SuperLearner&quot;         
+## [29] &quot;Lrnr_pkg_SuperLearner_method&quot;   &quot;Lrnr_pkg_SuperLearner_screener&quot;
+## [31] &quot;Lrnr_polspline&quot;                 &quot;Lrnr_randomForest&quot;             
+## [33] &quot;Lrnr_ranger&quot;                    &quot;Lrnr_rpart&quot;                    
+## [35] &quot;Lrnr_rugarch&quot;                   &quot;Lrnr_screener_corP&quot;            
+## [37] &quot;Lrnr_screener_corRank&quot;          &quot;Lrnr_screener_randomForest&quot;    
+## [39] &quot;Lrnr_solnp&quot;                     &quot;Lrnr_stratified&quot;               
+## [41] &quot;Lrnr_svm&quot;                       &quot;Lrnr_tsDyn&quot;                    
+## [43] &quot;Lrnr_xgboost&quot;</code></pre>
+<p>You’ll notice each learner starts with <code>Lrnr</code> and seems to correspond to a package in <code>R</code>.</p>
+</div>
+</div>
+<div id="step-3-choosing-the-base-learners" class="section level1">
+<h1>Step 3: Choosing the base learners</h1>
+<p>Let’s pick just a few base learners to match the examples in my slides: a random forest, a generalized boosting model, and a generalized linear model. Let’s keep their default parameters for now.</p>
+<p><code>make_learner_stack()</code> is an easy way to create a stack of default baselearners. It takes the names of the learners as strings and you’re good to go!</p>
+<pre class="r"><code>stack &lt;- make_learner_stack(
+  &quot;Lrnr_randomForest&quot;, 
+  &quot;Lrnr_gbm&quot;,
+  &quot;Lrnr_glm&quot;
+)</code></pre>
+</div>
+<div id="step-4-choose-a-metalearner" class="section level1">
+<h1>Step 4: Choose a metalearner</h1>
+<p>There are many models we can choose from but we’ll keep it simple and use a generalized linear model. We are again using the <code>make_learner()</code> function.</p>
+<pre class="r"><code>metalearner &lt;- make_learner(Lrnr_glm)</code></pre>
+</div>
+<div id="step-5-make-a-superlearner-object" class="section level1">
+<h1>Step 5: Make a superlearner object</h1>
+<p>Remember, under-the-hood <code>Lrnr_sl</code> takes the cross-validated predictions from the base models and uses them to predict the true outcome. That prediction model then is used to fit the predictions from base learners fit on the whole data set.</p>
+<pre class="r"><code>sl &lt;- make_learner(Lrnr_sl, 
+                   learners = stack,
+                   metalearner = metalearner)</code></pre>
+<p>A superlearner object has different functions built into it, such as <code>train()</code>. We can train our superlearner shell model on the task we made earlier.</p>
+</div>
+<div id="step-6-train-your-superlearner" class="section level1">
+<h1>Step 6: Train your superlearner</h1>
+<pre class="r"><code>sl_fit &lt;- sl$train(washb_task)</code></pre>
+</div>
+<div id="step-7-examine-the-results-of-the-superlearner" class="section level1">
+<h1>Step 7: Examine the results of the superlearner</h1>
+<div id="examine-coefficients-and-cv-risk" class="section level2">
+<h2>Examine coefficients and CV-risk</h2>
+<p>The default risk is MSE (Mean Squared Error). The coefficients show you how the metalearner decided to weight each base model for the final ensemble.</p>
+<pre class="r"><code>sl_fit$print() %&gt;% kable() %&gt;% kable_styling(c(&quot;striped&quot;,&quot;condensed&quot;,&quot;hover&quot;))</code></pre>
+<pre><code>## [1] &quot;SuperLearner:&quot;
+## List of 3
+##  $ : chr &quot;Lrnr_randomForest_100_TRUE_5_NULL_FALSE&quot;
+##  $ : chr &quot;Lrnr_gbm_10000_2_0.001&quot;
+##  $ : chr &quot;Lrnr_glm_TRUE&quot;
+## [1] &quot;Lrnr_glm_TRUE&quot;
+## $coefficients
+##                               intercept Lrnr_randomForest_100_TRUE_5_NULL_FALSE 
+##                             -0.02935653                              0.20828590 
+##                  Lrnr_gbm_10000_2_0.001                           Lrnr_glm_TRUE 
+##                              0.68702726                              0.05494122 
+## 
+## $R
+##                                         intercept
+## intercept                               -68.52007
+## Lrnr_randomForest_100_TRUE_5_NULL_FALSE   0.00000
+## Lrnr_gbm_10000_2_0.001                    0.00000
+## Lrnr_glm_TRUE                             0.00000
+##                                         Lrnr_randomForest_100_TRUE_5_NULL_FALSE
+## intercept                                                              40.03889
+## Lrnr_randomForest_100_TRUE_5_NULL_FALSE                               -22.33058
+## Lrnr_gbm_10000_2_0.001                                                  0.00000
+## Lrnr_glm_TRUE                                                           0.00000
+##                                         Lrnr_gbm_10000_2_0.001 Lrnr_glm_TRUE
+## intercept                                             40.17235     40.178684
+## Lrnr_randomForest_100_TRUE_5_NULL_FALSE              -14.13014    -13.334809
+## Lrnr_gbm_10000_2_0.001                                10.62515     10.533005
+## Lrnr_glm_TRUE                                          0.00000     -8.616894
+## 
+## $rank
+## [1] 4
+## 
+## $family
+## 
+## Family: gaussian 
+## Link function: identity 
+## 
+## 
+## $deviance
+## [1] 4710.298
+## 
+## $aic
+## [1] 13349.11
+## 
+## $null.deviance
+## [1] 5000.347
+## 
+## $iter
+## [1] 2
+## 
+## $df.residual
+## [1] 4691
+## 
+## $df.null
+## [1] 4694
+## 
+## $converged
+## [1] TRUE
+## 
+## $boundary
+## [1] FALSE
+## 
+## $linkinv_fun
+## function (eta) 
+## eta
+## &lt;environment: namespace:stats&gt;
+## 
+## $link_fun
+## function (mu) 
+## mu
+## &lt;environment: namespace:stats&gt;
+## 
+## $training_offset
+## [1] FALSE
+## 
+## [1] &quot;Cross-validated risk (MSE, squared error loss):&quot;
+##                                    learner coefficients     risk         se
+## 1: Lrnr_randomForest_100_TRUE_5_NULL_FALSE   0.20828590 1.027691 0.02382883
+## 2:                  Lrnr_gbm_10000_2_0.001   0.68702726 1.005110 0.02340409
+## 3:                           Lrnr_glm_TRUE   0.05494122 1.019541 0.02381864
+## 4:                            SuperLearner           NA 1.003258 0.02337713
+##       fold_sd fold_min_risk fold_max_risk
+## 1: 0.07185274     0.8720716      1.138160
+## 2: 0.05893980     0.9058668      1.093545
+## 3: 0.06093410     0.9113599      1.109910
+## 4: 0.06151989     0.8917951      1.098658</code></pre>
+<table class="table table-striped table-condensed table-hover" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+learner
+</th>
+<th style="text-align:right;">
+coefficients
+</th>
+<th style="text-align:right;">
+risk
+</th>
+<th style="text-align:right;">
+se
+</th>
+<th style="text-align:right;">
+fold_sd
+</th>
+<th style="text-align:right;">
+fold_min_risk
+</th>
+<th style="text-align:right;">
+fold_max_risk
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Lrnr_randomForest_100_TRUE_5_NULL_FALSE
+</td>
+<td style="text-align:right;">
+0.2082859
+</td>
+<td style="text-align:right;">
+1.027691
+</td>
+<td style="text-align:right;">
+0.0238288
+</td>
+<td style="text-align:right;">
+0.0718527
+</td>
+<td style="text-align:right;">
+0.8720716
+</td>
+<td style="text-align:right;">
+1.138160
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lrnr_gbm_10000_2_0.001
+</td>
+<td style="text-align:right;">
+0.6870273
+</td>
+<td style="text-align:right;">
+1.005110
+</td>
+<td style="text-align:right;">
+0.0234041
+</td>
+<td style="text-align:right;">
+0.0589398
+</td>
+<td style="text-align:right;">
+0.9058668
+</td>
+<td style="text-align:right;">
+1.093545
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Lrnr_glm_TRUE
+</td>
+<td style="text-align:right;">
+0.0549412
+</td>
+<td style="text-align:right;">
+1.019541
+</td>
+<td style="text-align:right;">
+0.0238186
+</td>
+<td style="text-align:right;">
+0.0609341
+</td>
+<td style="text-align:right;">
+0.9113599
+</td>
+<td style="text-align:right;">
+1.109910
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+SuperLearner
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1.003258
+</td>
+<td style="text-align:right;">
+0.0233771
+</td>
+<td style="text-align:right;">
+0.0615199
+</td>
+<td style="text-align:right;">
+0.8917951
+</td>
+<td style="text-align:right;">
+1.098658
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="look-at-the-predictions" class="section level2">
+<h2>Look at the predictions</h2>
+<p><code>predict()</code> allows you to see what the model predicts on any given task. Here we look at predictions from the same data we trained the superlearner on, so the predicted weight to height z-scores of the first six children in our data set.</p>
+<pre class="r"><code>sl_fit$predict(washb_task) %&gt;% head()</code></pre>
+<pre><code>## [1] -0.5846676 -0.7844686 -0.7167187 -0.7663325 -0.6388701 -0.6632535</code></pre>
+</div>
+</div>
+<div id="extras" class="section level1">
+<h1>Extras</h1>
+<ul>
+<li><p>Cross validate your entire ensembled superlearner using the cross-validation package <code>origami</code>, written by the same authors as <code>sl3</code>. Or just hold out a testing data set to evaluate performance.</p></li>
+<li><p>Use <code>make_learner()</code> to customize the tuning parameters of your base learners or metalearner. Ex: <code>lrnr_RF_200trees &lt;- make_lrnr(Lrnr_randomForest, ntree = 200)</code></p></li>
+<li><p>Add many layers to your superlearner and organize it into a “pipeline”</p></li>
+</ul>
+<p><strong>For more demos, check out the following teaching materials from the authors of <code>sl3</code>.</strong> My tutorial uses one of their example data sets in case you’d like to extend your learning via their training resources.</p>
+<ul>
+<li><p><a href="https://tlverse.org/tlverse-handbook/ensemble-machine-learning.html" class="uri">https://tlverse.org/tlverse-handbook/ensemble-machine-learning.html</a></p></li>
+<li><p><a href="https://tlverse.org/acic2019-workshop/ensemble-machine-learning.html" class="uri">https://tlverse.org/acic2019-workshop/ensemble-machine-learning.html</a></p></li>
+<li><p><a href="https://github.com/tlverse/sl3_lecture" class="uri">https://github.com/tlverse/sl3_lecture</a></p></li>
+</ul>
+</div>

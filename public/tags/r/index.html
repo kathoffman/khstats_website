@@ -133,7 +133,7 @@
   <meta property="og:description" content="Research Biostatistician II"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-07-14T21:13:14-05:00">
+    <meta property="og:updated_time" content="2020-08-29T21:13:14-05:00">
   
 
   
@@ -384,11 +384,11 @@
   
   
   <div>
-    <h2><a href="/blog/sl/sl/">Become a superlearner! A short and sweet visual guide to the superlearner algorithm</a></h2>
+    <h2><a href="/blog/sl/sl/">Become a superlearner! A visual guide and introductory tutorial for superlearning</a></h2>
     <div class="article-style">
       
-      The backstory: Over the winter, I started reading Targeted Learning by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I decided to make “cheat sheets” or “visual guides” for the different chapters. This guide on Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley, is the first of a few (okay, two) that I made.
- The supercuts  Superlearning is a technique used for prediction that involves combining many individual statistical algorithms (commonly called “data-adaptive” or “machine learning” algorithms) to create a new, single prediction algorithm that is at least as good as any of the individual algorithms.
+      A Visual Guide Over the winter, I started reading Targeted Learning by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I decided to make “cheat sheets” or “visual guides” for some of the chapters. This is the guide I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley:
+A high-quality version of this visual guide exists on my Github. It’s ready-to-print on an 8.
       
     </div>
   </div>
@@ -421,6 +421,17 @@
       
       I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement.
 This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a “treatment timeline” for each patient, and the end product looks something like this:
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/sl3_demo/sl/">A short and sweet tutorial on using `sl3` for superlearning</a></h2>
+    <div class="article-style">
+      
+      Background In September 2019, I gave an R-Ladies NYC presentation about using the package sl3 to implement the superlearner algorithm for predictions. You can download the slides for it here. This post is a modification to the original demo I gave.
+For a better background on what the superlearner algorithm is, please see my more recent blog post.
+ Step 0: Load your libraries, set a seed, and load the data You’ll likely need to install sl3 from the tlverse github page, as it was not yet on CRAN at the time of writing this post.
       
     </div>
   </div>
@@ -471,26 +482,17 @@ I’ll back up for a second. A few years ago I was a recent college graduate, an
     </div>
   </div>
   
-  <div>
-    <h2><a href="/blog/dplyr/data-wrangling/">Data Wrangling with dplyr</a></h2>
-    <div class="article-style">
-      
-      A Presentation for Weill Cornell Medicine’s Biostatistics Computing Club Image courtesy of Allison Horst’s Twitter: @allison_horst
- Introduction Why dplyr?  Powerful but efficient
- Consistent syntax
- Fast
-  Function chaining
- Works well with entire tidyverse suite   Efficiency*
- Simple syntax
- Function chaining
- Ability to analyze external databases
- Works well with other packages in tidyverse suite ggplot2 tidyr stringr forcats purrr   *if you start dealing with data sets with &gt; 1 million rows, data.
-      
-    </div>
-  </div>
-  
 
   
+<nav>
+  <ul class="pagination justify-content-center">
+    
+    
+    <li class="page-item"><a class="page-link" href="/tags/r/page/2/">&raquo;</a></li>
+    
+  </ul>
+</nav>
+
 
 </div>
 
