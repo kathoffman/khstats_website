@@ -541,9 +541,9 @@ A high-quality version of this visual guide exists on my Github. It’s ready-to
 <div id="supercuts-of-superlearning" class="section level1">
 <h1>Supercuts of superlearning</h1>
 <ul>
-<li><p>Superlearning is a technique for prediction that involves combining many individual statistical algorithms (commonly called “data-adaptive” or “machine learning” algorithms) to create a new, single prediction algorithm that is at least as good as any of the individual algorithms.</p></li>
-<li><p>The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one minimizes a specified loss function, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
-<li><p>The motivation for this type of “ensembling” is that no single algorithm is always the best for all kinds of data. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not <em>always</em> ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.</p></li>
+<li><p><strong>Superlearning</strong> is a technique for prediction that involves <strong>combining many individual statistical algorithms</strong> (commonly called “data-adaptive” or “machine learning” algorithms) to <strong>create a new, single prediction algorithm that is at least as good as any of the individual algorithms</strong>.</p></li>
+<li><p>The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one <strong>minimizes a specified loss function</strong>, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
+<li><p>The motivation for this type of “ensembling” is that <strong>no single algorithm is always the best for all kinds of data</strong>. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not <em>always</em> ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.</p></li>
 <li><p>Superlearning (or variations of it) is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.</p></li>
 </ul>
 <p><img src="/img/spiderman_meme.jpg" /></p>
@@ -582,51 +582,51 @@ kable(head(obs), digits=3)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-1.347</td>
+<td align="right">0.752</td>
+<td align="right">1</td>
 <td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">-1.347</td>
+<td align="right">0.752</td>
+<td align="right">2.436</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="right">0.723</td>
+<td align="right">1.192</td>
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">1.331</td>
-<td align="right">3.695</td>
+<td align="right">2.039</td>
+<td align="right">4.084</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="right">0.244</td>
+<td align="right">0.809</td>
 <td align="right">1</td>
-<td align="right">0</td>
-<td align="right">0.244</td>
-<td align="right">1.486</td>
+<td align="right">1</td>
+<td align="right">1.125</td>
+<td align="right">3.711</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="right">-0.514</td>
+<td align="right">-0.110</td>
+<td align="right">1</td>
 <td align="right">0</td>
-<td align="right">0</td>
-<td align="right">0.000</td>
-<td align="right">-0.514</td>
+<td align="right">-0.110</td>
+<td align="right">0.779</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="right">-0.383</td>
-<td align="right">0</td>
+<td align="right">0.669</td>
 <td align="right">1</td>
-<td align="right">-0.231</td>
-<td align="right">-0.612</td>
+<td align="right">0</td>
+<td align="right">0.669</td>
+<td align="right">2.289</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="right">-0.671</td>
+<td align="right">-0.307</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">-0.066</td>
-<td align="right">-0.737</td>
+<td align="right">-0.019</td>
+<td align="right">-0.327</td>
 </tr>
 </tbody>
 </table>
@@ -666,34 +666,34 @@ pred_1c &lt;- predict(fit_1c, newdata = cv_valid_1)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">3.4598742</td>
-<td align="right">3.1313911</td>
-<td align="right">2.3292258</td>
+<td align="right">2.566257</td>
+<td align="right">2.551532</td>
+<td align="right">0.2684695</td>
 </tr>
 <tr class="even">
-<td align="right">-0.3380099</td>
-<td align="right">-0.0862835</td>
-<td align="right">0.2176814</td>
+<td align="right">3.037537</td>
+<td align="right">3.148774</td>
+<td align="right">2.6687773</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.9324892</td>
-<td align="right">-0.9398769</td>
-<td align="right">0.2176814</td>
+<td align="right">5.748400</td>
+<td align="right">5.375077</td>
+<td align="right">7.1476765</td>
 </tr>
 <tr class="even">
-<td align="right">6.0551935</td>
-<td align="right">5.5864575</td>
-<td align="right">7.8987352</td>
+<td align="right">-1.225573</td>
+<td align="right">-1.633384</td>
+<td align="right">0.2684695</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.1467132</td>
-<td align="right">-0.8349800</td>
-<td align="right">0.2176814</td>
+<td align="right">3.637267</td>
+<td align="right">3.193775</td>
+<td align="right">2.6149143</td>
 </tr>
 <tr class="even">
-<td align="right">3.4312563</td>
-<td align="right">3.2686408</td>
-<td align="right">2.6659040</td>
+<td align="right">3.416806</td>
+<td align="right">3.137844</td>
+<td align="right">2.5330444</td>
 </tr>
 </tbody>
 </table>
@@ -737,44 +737,44 @@ kable(head(cv_preds), digits=3)</code></pre>
 <tr class="odd">
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">-0.791</td>
-<td align="right">-1.324</td>
-<td align="right">0.214</td>
+<td align="right">3.011</td>
+<td align="right">2.570</td>
+<td align="right">0.250</td>
 </tr>
 <tr class="even">
-<td align="right">19</td>
+<td align="right">2</td>
 <td align="right">1</td>
-<td align="right">5.680</td>
-<td align="right">5.580</td>
-<td align="right">9.524</td>
+<td align="right">4.531</td>
+<td align="right">4.081</td>
+<td align="right">3.846</td>
 </tr>
 <tr class="odd">
-<td align="right">21</td>
+<td align="right">3</td>
 <td align="right">1</td>
-<td align="right">4.183</td>
-<td align="right">5.207</td>
-<td align="right">6.366</td>
+<td align="right">3.451</td>
+<td align="right">3.646</td>
+<td align="right">2.690</td>
 </tr>
 <tr class="even">
-<td align="right">37</td>
+<td align="right">10</td>
 <td align="right">1</td>
-<td align="right">-1.339</td>
-<td align="right">-0.396</td>
-<td align="right">0.214</td>
+<td align="right">2.566</td>
+<td align="right">2.465</td>
+<td align="right">1.000</td>
 </tr>
 <tr class="odd">
-<td align="right">59</td>
+<td align="right">26</td>
 <td align="right">1</td>
-<td align="right">4.462</td>
-<td align="right">4.808</td>
-<td align="right">5.522</td>
+<td align="right">-0.733</td>
+<td align="right">-0.508</td>
+<td align="right">0.250</td>
 </tr>
 <tr class="even">
-<td align="right">64</td>
+<td align="right">27</td>
 <td align="right">1</td>
-<td align="right">3.776</td>
-<td align="right">3.997</td>
-<td align="right">3.294</td>
+<td align="right">-0.854</td>
+<td align="right">-1.475</td>
+<td align="right">0.250</td>
 </tr>
 </tbody>
 </table>
@@ -803,34 +803,34 @@ obs_preds %&gt;% select(contains(&quot;sqrd_error&quot;)) %&gt;% head() %&gt;% k
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.309</td>
-<td align="right">0.000</td>
-<td align="right">2.434</td>
+<td align="right">0.332</td>
+<td align="right">0.018</td>
+<td align="right">4.775</td>
 </tr>
 <tr class="even">
-<td align="right">0.003</td>
-<td align="right">0.006</td>
-<td align="right">1.865</td>
-</tr>
-<tr class="odd">
-<td align="right">0.995</td>
-<td align="right">0.083</td>
-<td align="right">1.594</td>
-</tr>
-<tr class="even">
-<td align="right">0.070</td>
-<td align="right">0.022</td>
-<td align="right">0.543</td>
-</tr>
-<tr class="odd">
 <td align="right">0.200</td>
-<td align="right">0.027</td>
-<td align="right">0.688</td>
+<td align="right">0.000</td>
+<td align="right">0.057</td>
+</tr>
+<tr class="odd">
+<td align="right">0.067</td>
+<td align="right">0.004</td>
+<td align="right">1.043</td>
 </tr>
 <tr class="even">
-<td align="right">0.020</td>
-<td align="right">0.015</td>
-<td align="right">0.870</td>
+<td align="right">1.543</td>
+<td align="right">0.118</td>
+<td align="right">0.324</td>
+</tr>
+<tr class="odd">
+<td align="right">0.374</td>
+<td align="right">0.023</td>
+<td align="right">4.081</td>
+</tr>
+<tr class="even">
+<td align="right">0.191</td>
+<td align="right">0.029</td>
+<td align="right">0.288</td>
 </tr>
 </tbody>
 </table>
@@ -852,20 +852,23 @@ kable(risk, digits=3)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.394</td>
-<td align="right">0.023</td>
-<td align="right">1.809</td>
+<td align="right">0.408</td>
+<td align="right">0.025</td>
+<td align="right">1.774</td>
 </tr>
 </tbody>
 </table>
 <p>We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is learner b. In other words, if we had to choose one of the statistical learning algorithms in our library to be our prediction model based on the CV predictions, we “lose” the least, or we “take the smallest risk,” with learner b.</p>
 <p><strong>We <em>could</em> stop here and fit learner b to our full data set, and that would be called using the <em>discrete superlearner</em>.</strong></p>
 <pre class="r"><code>discrete_sl_predictions &lt;- predict(glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs))</code></pre>
+<p>However, we can almost always create an even better prediction algorithm if we use information from <em>all</em> of the algorithms’ CV predictions to create a new algorithm.</p>
 </div>
 <div id="using-a-metalearner-to-obtain-the-weights" class="section level3">
 <h3>Using a metalearner to obtain the weights</h3>
-<p>However, we can almost always create an even better prediction algorithm if we use information from <em>all</em> of the algorithms’ CV predictions to create a new algorithm. This is the key step of the superlearner algorithm: we will use a new learner, a <strong>metalearner</strong>, to take information from all of the base learners and create that new algorithm.</p>
-<p>For simplicity, we’ll use yet another linear regression as our metalearner. This could be any statistical learning algorithm here (LASSO, non-negative least squares, random forest, etc.). As with any statistical learning algorithm, the choice of algorithm reflects the loss function we want to minimize.</p>
+<blockquote>
+<p>This is the key step of the superlearner algorithm: we will use a new learner, a <strong>metalearner</strong>, to take information from all of the base learners and create that new algorithm.</p>
+</blockquote>
+<p>For simplicity, we’ll use yet another linear regression as our metalearner. This could be any statistical learning algorithm here (LASSO, non-negative least squares, random forest, etc.) As with any statistical learning algorithm, the choice of algorithm reflects the loss function we want to minimize.</p>
 <p>Whatever metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, <code>y</code>.</p>
 <pre class="r"><code>metalrnr_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 summary(metalrnr_fit)</code></pre>
@@ -875,30 +878,32 @@ summary(metalrnr_fit)</code></pre>
 ## 
 ## Deviance Residuals: 
 ##      Min        1Q    Median        3Q       Max  
-## -0.52532  -0.10392   0.02862   0.11975   0.38467  
+## -0.43525  -0.12996   0.02157   0.12125   0.33484  
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.012058   0.005993   2.012 0.044501 *  
-## pred_a      -0.037930   0.008490  -4.468 8.81e-06 ***
-## pred_b       1.046130   0.009093 115.049  &lt; 2e-16 ***
-## pred_c      -0.017976   0.004611  -3.898 0.000103 ***
+## (Intercept)  0.003443   0.006361   0.541    0.588    
+## pred_a      -0.013605   0.008727  -1.559    0.119    
+## pred_b       1.015133   0.009467 107.227   &lt;2e-16 ***
+## pred_c      -0.004474   0.004968  -0.901    0.368    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## (Dispersion parameter for gaussian family taken to be 0.02255443)
+## (Dispersion parameter for gaussian family taken to be 0.02463983)
 ## 
-##     Null deviance: 4685.103  on 999  degrees of freedom
-## Residual deviance:   22.464  on 996  degrees of freedom
-## AIC: -947.95
+##     Null deviance: 4430.249  on 999  degrees of freedom
+## Residual deviance:   24.541  on 996  degrees of freedom
+## AIC: -859.52
 ## 
 ## Number of Fisher Scoring iterations: 2</code></pre>
+<p>This metalearner provides us with the coefficients, or weights, to apply to each of the base learners.</p>
 </div>
 </div>
 <div id="step-6-fit-the-base-learners-on-the-entire-data-set" class="section level2">
 <h2>Step 6: Fit the base learners on the entire data set</h2>
-<p>This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. We now have our superlearner algorithm.</p>
-<p>To implement it on the full data set and obtain predictions, we first need to fit the base learners on the whole data set.</p>
+<p><strong>We have now made our superlearner algorithm, so it is time to input data and obtain predictions!</strong></p>
+<p>To implement the algorithm on the full* data set and obtain predictions, we first need to fit the base learners on the whole data set.</p>
+<p>*alternatively, we could have left a hold-out data set</p>
 <pre class="r"><code>fit_a &lt;- glm(y ~ w2 + w4, data=obs)
 fit_b &lt;- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs)
 fit_c &lt;- glm(y ~ w1:w2:w3, data=obs)</code></pre>
@@ -924,22 +929,22 @@ kable(head(ensemble_sl_predictions))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-1.3457866</td>
+<td align="right">2.5705198</td>
 </tr>
 <tr class="even">
-<td align="right">3.6099351</td>
+<td align="right">4.0682588</td>
 </tr>
 <tr class="odd">
-<td align="right">1.7655297</td>
+<td align="right">3.6460319</td>
 </tr>
 <tr class="even">
-<td align="right">-0.6592625</td>
+<td align="right">1.1079306</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.4200573</td>
+<td align="right">2.4425596</td>
 </tr>
 <tr class="even">
-<td align="right">-0.6067366</td>
+<td align="right">-0.1436201</td>
 </tr>
 </tbody>
 </table>
@@ -950,7 +955,7 @@ kable(head(ensemble_sl_predictions))</code></pre>
 <p>We could compute the MSE of the ensemble superlearner predictions.</p>
 <pre class="r"><code>ensemble_sl_mse &lt;- mean((obs$y - ensemble_sl_predictions)^2)
 ensemble_sl_mse</code></pre>
-<pre><code>## [1] 0.02224148</code></pre>
+<pre><code>## [1] 0.02427313</code></pre>
 <p>We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms’ hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.</p>
 <p>We can then cross-validate this entire process to evaluate the predictive performance of the new ensemble superlearner algorithm. Alternatively, we could leave a hold out training data set to evaluate the performance.</p>
 </div>
@@ -971,16 +976,21 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 ##     &quot;SL.glmnet&quot;, &quot;SL.earth&quot;)) 
 ## 
 ## 
-##                     Risk      Coef
-## SL.ranger_All 0.02046513 0.1113185
-## SL.glmnet_All 0.09675614 0.0000000
-## SL.earth_All  0.00324060 0.8886815</code></pre>
+##                      Risk       Coef
+## SL.ranger_All 0.019626596 0.07788938
+## SL.glmnet_All 0.083119013 0.00000000
+## SL.earth_All  0.002489148 0.92211062</code></pre>
 </div>
 <div id="other-superlearning-packages" class="section level1">
 <h1>Other superlearning packages</h1>
-<p>Other <code>R</code> packages besides <code>SuperLearner</code> that can be used to implement the superlearner algorithm include <code>sl3</code> (an update to the older <code>Superlearner</code> package), <code>ml3</code>, <code>h2o</code>, and <code>caretEnsemble</code>. I wrote a brief tutorial on using <code>sl3</code> for an NYC R-Ladies meetup <a href="https://www.khstats.com/blog/sl3_demo/sl/">here</a>.</p>
-<p>A python intro to superlearning blog post can be found
-<a href="https://machinelearningmastery.com/super-learner-ensemble-in-python/">here</a>.</p>
+<p>Other <code>R</code> packages besides <code>SuperLearner</code> that can be used to implement the superlearner algorithm include <code>sl3</code> (an update to the older <code>Superlearner</code> package), <code>ml3</code>, <code>h2o</code>, and <code>caretEnsemble</code>. I wrote a <a href="https://www.khstats.com/blog/sl3_demo/sl/">brief tutorial</a>. on using <code>sl3</code> for an NYC R-Ladies meetup.</p>
+<p>Python aficionados might find this <a href="https://machinelearningmastery.com/super-learner-ensemble-in-python/">blog post</a> useful.</p>
+</div>
+<div id="a-review" class="section level1">
+<h1>A Review</h1>
+<p>The steps of the superlearner algorithm are summarized nicely in this graphic in the <em>Targeted Learning</em> book:</p>
+<p><img src="/img/sl_diagram.png" />
+l_diagram.png)</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
@@ -1101,9 +1111,9 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
         <h3>Related</h3>
         <ul>
           
-          <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
-          
           <li><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></li>
+          
+          <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
           
           <li><a href="/blog/trt-timelines/trt-timelines/">Patient Treatment Timelines for Longitudinal Survival Data</a></li>
           

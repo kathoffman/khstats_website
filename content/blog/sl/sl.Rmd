@@ -26,11 +26,11 @@ The guide is meant to be a step-by-step walkthrough of how the superlearner algo
 
 # Supercuts of superlearning
 
-  - Superlearning is a technique for prediction that involves combining many individual statistical algorithms (commonly called "data-adaptive" or "machine learning" algorithms) to create a new, single prediction algorithm that is at least as good as any of the individual algorithms.
+  - **Superlearning** is a technique for prediction that involves **combining many individual statistical algorithms** (commonly called "data-adaptive" or "machine learning" algorithms) to **create a new, single prediction algorithm that is at least as good as any of the individual algorithms**.
   
-  - The superlearner algorithm "decides" how to combine, or weight, the individual algorithms based upon how well each one minimizes a specified loss function, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.
+  - The superlearner algorithm "decides" how to combine, or weight, the individual algorithms based upon how well each one **minimizes a specified loss function**, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.
   
-  - The motivation for this type of "ensembling" is that no single algorithm is always the best for all kinds of data. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not *always* ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.
+  - The motivation for this type of "ensembling" is that **no single algorithm is always the best for all kinds of data**. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not *always* ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.
   
   - Superlearning (or variations of it) is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.
   
@@ -173,11 +173,13 @@ We see that in this simple example, the base learner that performs the best usin
 discrete_sl_predictions <- predict(glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs))
 ```
 
+However, we can almost always create an even better prediction algorithm if we use information from *all* of the algorithms' CV predictions to create a new algorithm.
+
 ### Using a metalearner to obtain the weights
 
-However, we can almost always create an even better prediction algorithm if we use information from *all* of the algorithms' CV predictions to create a new algorithm. This is the key step of the superlearner algorithm: we will use a new learner, a **metalearner**, to take information from all of the base learners and create that new algorithm.
+> This is the key step of the superlearner algorithm: we will use a new learner, a **metalearner**, to take information from all of the base learners and create that new algorithm.
 
-For simplicity, we'll use yet another linear regression as our metalearner. This could be any statistical learning algorithm here (LASSO, non-negative least squares, random forest, etc.). As with any statistical learning algorithm, the choice of algorithm reflects the loss function we want to minimize. 
+For simplicity, we'll use yet another linear regression as our metalearner. This could be any statistical learning algorithm here (LASSO, non-negative least squares, random forest, etc.) As with any statistical learning algorithm, the choice of algorithm reflects the loss function we want to minimize. 
 
 Whatever metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, `y`.
 
@@ -186,11 +188,15 @@ metalrnr_fit <- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 summary(metalrnr_fit)
 ```
 
+This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. 
+
 ## Step 6: Fit the base learners on the entire data set
 
-This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. We now have our superlearner algorithm.
+**We have now made our superlearner algorithm, so it is time to input data and obtain predictions!**
 
-To implement it on the full data set and obtain predictions, we first need to fit the base learners on the whole data set.
+To implement the algorithm on the full* data set and obtain predictions, we first need to fit the base learners on the whole data set.
+
+*alternatively, we could have left a hold-out data set
 
 ```{r}
 fit_a <- glm(y ~ w2 + w4, data=obs)
@@ -254,10 +260,16 @@ sl_fit
 
 # Other superlearning packages
 
-Other `R` packages besides `SuperLearner` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `ml3`, `h2o`, and `caretEnsemble`. I wrote a brief tutorial on using `sl3` for an NYC R-Ladies meetup [here](https://www.khstats.com/blog/sl3_demo/sl/).
+Other `R` packages besides `SuperLearner` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `ml3`, `h2o`, and `caretEnsemble`. I wrote a [brief tutorial](https://www.khstats.com/blog/sl3_demo/sl/). on using `sl3` for an NYC R-Ladies meetup.
 
-A python intro to superlearning blog post can be found
-[here](https://machinelearningmastery.com/super-learner-ensemble-in-python/).
+Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful.
+
+# A Review
+
+The steps of the superlearner algorithm are summarized nicely in this graphic in the *Targeted Learning* book:
+
+![](/img/sl_diagram.png)
+l_diagram.png)
 
 # References
 
