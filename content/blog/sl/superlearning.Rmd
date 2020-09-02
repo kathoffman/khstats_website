@@ -34,7 +34,7 @@ The guide is meant to be a step-by-step walkthrough of how the superlearner algo
   
   - Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.
   
-  ![](/img/spiderman_meme.jpg)
+  ![](/img/spiderman_meme.jpg){width=60%}
 
 
 # Superlearning, step by step
@@ -51,7 +51,7 @@ To start this example, we will simulate a continuous outcome, `y`, and four vari
 
 ```{r}
 library(dplyr, warn.conflicts = F)
-library(knitr)
+library(kableExtra, warn.conflicts = F)
 set.seed(7)
 ```
 
@@ -70,6 +70,8 @@ kable(head(obs), digits=3, caption = "Simulated data set")
 
 ## Step 1: Split the data into K folds
 
+  ![](/img/sl_steps/step1.png){width=50%}
+
 The superlearner algorithm relies on K-fold cross-validation (CV) to avoid building a prediction algorithm that is overfit to the data. We will start this process by splitting the data into 10 blocks, or folds. The easiest way to do this is by creating indices for each cross-validation fold.
 
 ```{r}
@@ -78,6 +80,8 @@ cv_index <- sample(rep(1:k, each = n/k)) # indices for each fold, same length as
 ```
 
 ## Step 2: Fit base learners for first CV-fold
+
+  ![](/img/sl_steps/step2.png){width=50%}
 
 Recall that in  K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners (the three linear regressions) on all the cross-validation folds (k = 1,2,...) *except* for the very last one: `cv_index == 10`.
 
@@ -89,6 +93,8 @@ fit_1c <- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR
 ```
 
 ## Step 3: Obtain predictions for first CV-fold
+
+  ![](/img/sl_steps/step3.png){width=50%}
 
 We can then get use our validation data, `cv_index == 10`, to obtain our first set of cross-validated predictions.
 
@@ -103,10 +109,12 @@ Since we have 1000 `obs`ervations, that gives us three vectors of length 100: a 
 
 ```{r}
 length(pred_1a) # double check we only have n/k predictions ...we do :-)
-knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = "First CV round of predictions")
+knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = "First CV round of predictions") 
 ```
 
 ## Step 4: Obtain CV predictions for entire data set
+
+![](/img/sl_steps/step4.png){width=40%}
 
 We'll want to get those predictions for *every* fold. So, using your favorite `for` loop, `apply` statement, or `map`ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions -- one for every point in `obs`ervations.
 
@@ -135,10 +143,12 @@ cv_preds <-
 cv_preds %>%
   arrange(obs_id) %>%
   head() %>%
-  kable(digits=2, caption = "All CV predictions for all three base learners")
+  kable(digits=2, caption = "All CV predictions for all three base learners") %>%
+  kable_styling(position = "center")
 ```
 
 ## Step 5: Choose and compute a loss function of interest via a metalearner
+
 
 Okay, so we have a cross-validated prediction for every observation in the data set. Now we want to merge those CV predictions back into our main data set, and compute a loss function of interest for each CV prediction. This is how we're going to optimize our prediction algorithm: we want to make sure we're "losing the least" when we use it to eventually make predictions.
 
@@ -154,7 +164,7 @@ obs_preds <-
          cv_sqrd_error_c = (y-pred_c)^2
         )
 
-obs_preds %>% select(contains("sqrd_error")) %>% head() %>% kable(digits=2, caption = "Squared error of each base learner")
+obs_preds %>% select(contains("sqrd_error")) %>% head() %>% kable(digits=2, caption = "Squared error of each base learner") 
 ```
 
 And then take the mean of those three cross-validated squared error columns, grouped by `cv_fold`, to get the CV-MSE for each fold.
@@ -167,7 +177,7 @@ cv_risks <-
             cv_mse_b = mean(cv_sqrd_error_b),
             cv_mse_c = mean(cv_sqrd_error_c)
             )
-kable(cv_risks, digits=3, caption = "CV-MSE for each CV fold for each base learner")
+kable(cv_risks, digits=3, caption = "CV-MSE for each CV fold for each base learner") 
 ```
 
 We can take the mean of those (or just take the mean without grouping by CV fold in the first place!) to get the overall CV-MSE for each learner.
@@ -176,7 +186,8 @@ We can take the mean of those (or just take the mean without grouping by CV fold
 cv_risks %>%
   select(-cv_fold) %>%
   summarise_all(mean) %>%
-  kable(digits=3, caption = "CV-MSE for each base learner")
+  kable(digits=3, caption = "CV-MSE for each base learner") %>%
+  kable_styling(position = "center")
 ```
 
 We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is learner b. In other words, if we had to choose one of the statistical learning algorithms in our library to be our prediction model based on the CV predictions, we "lose" the least, or we "take the smallest risk," with learner b.
@@ -191,6 +202,8 @@ However, we can almost always create an even better prediction algorithm if we u
 
 ### Using a metalearner to obtain the weights
 
+![](/img/sl_steps/step5.png){width=60%}
+
 > This is the key step of the superlearner algorithm: we will use a new learner, a **metalearner**, to take information from all of the base learners and create that new algorithm.
 
 For simplicity, we'll use yet another linear regression as our metalearner. The metalearner *could* be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the `SuperLearner` package is actually non-negative least squares (NNLS). For more information on NNLS, see the [Appendix](#appendix).
@@ -199,12 +212,14 @@ As with any statistical learning algorithm, the choice of metalearner reflects a
 
 ```{r}
 metalrnr_fit <- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
-kable(broom::tidy(metalrnr_fit), caption = "Metalearner regression coefficients")
+kable(broom::tidy(metalrnr_fit), caption = "Metalearner regression coefficients") 
 ```
 
 This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. 
 
 ## Step 6: Fit the base learners on the entire data set
+
+![](/img/sl_steps/step6.png){width=50%}
 
 We now have our superlearner algorithm, so it is time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the whole data set.
 
@@ -215,6 +230,8 @@ fit_c <- glm(y ~ w1*w2*w3, data=obs)
 ```
 
 ## Step 7: Extract predictions from each base learner on the entire data set
+
+![](/img/sl_steps/step7.png){width=40%}
 
 We'll use *those* base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using *cross-validated* predictions, rather than fitting the base learners on the entire data set. This was to avoid overfitting.
 
@@ -227,11 +244,13 @@ full_data_preds <- tibble(pred_a, pred_b, pred_c)
 
 ## Step 8: Use the metalearner fit to weight the base learners
 
+![](/img/sl_steps/step8.png){width=60%}
+
 Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for `y`.
 
 ```{r}
 sl_predictions <- predict(metalrnr_fit, newdata = full_data_preds)
-kable(head(sl_predictions), col.names = "sl_predictions", digits= 2, caption = "Final SL predictions (manual)")
+kable(head(sl_predictions), col.names = "sl_predictions", digits= 2, caption = "Final SL predictions (manual)") 
 ```
 
 And... that's it! Those are our superlearner predictions.
@@ -279,7 +298,7 @@ The LASSO model implemented by `glmnet` has the highest CV-risk, and after the m
 We can extract the predictions easily via the `SL.predict` element of the `SuperLearner` fit object.
 
 ```{r}
-kable(head(sl_fit$SL.predict), digits=2, col.names = "sl_predictions", caption = "Final SL predictions (package)")
+kable(head(sl_fit$SL.predict), digits=2, col.names = "sl_predictions", caption = "Final SL predictions (package)") 
 ```
 
 ## Cross-validated Superlearner
