@@ -18,7 +18,7 @@ output:
 
 Over the winter, I started reading [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I decided to make "cheat sheets" or "visual guides" for some of the chapters. This is the guide I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley:
 
-![](/img/sl.png)
+![](/img/Superlearning.jpg)
 
 A high-quality version of this visual guide exists on my [Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearning.pdf). It's ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.
 
@@ -193,7 +193,7 @@ However, we can almost always create an even better prediction algorithm if we u
 
 > This is the key step of the superlearner algorithm: we will use a new learner, a **metalearner**, to take information from all of the base learners and create that new algorithm.
 
-For simplicity, we'll use yet another linear regression as our metalearner. The metalearner *could* be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the `SuperLearner` package is actually non-negative least squares (NNLS). For more information on NNLS, see the [Appendix](#Appendix).
+For simplicity, we'll use yet another linear regression as our metalearner. The metalearner *could* be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the `SuperLearner` package is actually non-negative least squares (NNLS). For more information on NNLS, see the [Appendix](#appendix).
 
 As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, `y`.
 
@@ -260,7 +260,7 @@ sl_fit <- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```
 
-You can specify the metalearner with the `method` argument. The default is [non-negative least squares](#Appendix). For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
+You can specify the metalearner with the `method` argument. The default is [non-negative least squares](#appendix). For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
 
 ## CV-Risk and Coefficient Weights
 

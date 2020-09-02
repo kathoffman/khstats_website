@@ -19,7 +19,7 @@ output:
 <div id="a-visual-guide" class="section level1">
 <h1>A Visual Guide</h1>
 <p>Over the winter, I started reading <a href="https://www.springer.com/gp/book/9781441997814">Targeted Learning</a> by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I decided to make “cheat sheets” or “visual guides” for some of the chapters. This is the guide I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley:</p>
-<p><img src="/img/sl.png" /></p>
+<p><img src="/img/Superlearning.jpg" /></p>
 <p>A high-quality version of this visual guide exists on my <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearning.pdf">Github</a>. It’s ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.</p>
 <p>The guide is meant to be a step-by-step walkthrough of how the superlearner algorithm weights individual “learners” (or regressions, or statistical models, whatever terminology you’re most comfortable using).</p>
 </div>
@@ -444,7 +444,7 @@ obs_preds %&gt;% select(contains(&quot;sqrd_error&quot;)) %&gt;% head() %&gt;% k
 <blockquote>
 <p>This is the key step of the superlearner algorithm: we will use a new learner, a <strong>metalearner</strong>, to take information from all of the base learners and create that new algorithm.</p>
 </blockquote>
-<p>For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner <em>could</em> be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the <code>SuperLearner</code> package is actually non-negative least squares (NNLS). For more information on NNLS, see the <a href="#Appendix">Appendix</a>.</p>
+<p>For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner <em>could</em> be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the <code>SuperLearner</code> package is actually non-negative least squares (NNLS). For more information on NNLS, see the <a href="#appendix">Appendix</a>.</p>
 <p>As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, <code>y</code>.</p>
 <pre class="r"><code>metalrnr_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 kable(broom::tidy(metalrnr_fit), caption = &quot;Metalearner regression coefficients&quot;)</code></pre>
@@ -560,7 +560,7 @@ sl_mse</code></pre>
 x_df &lt;- obs %&gt;% select(w1:w4) %&gt;% as.data.frame()
 sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c(&quot;SL.ranger&quot;, &quot;SL.glmnet&quot;, &quot;SL.earth&quot;))</code></pre>
-<p>You can specify the metalearner with the <code>method</code> argument. The default is <a href="#Appendix">non-negative least squares</a>. For more information on the <code>SuperLearner</code> package, check out this <a href="https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html">vignette</a>.</p>
+<p>You can specify the metalearner with the <code>method</code> argument. The default is <a href="#appendix">non-negative least squares</a>. For more information on the <code>SuperLearner</code> package, check out this <a href="https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html">vignette</a>.</p>
 <div id="cv-risk-and-coefficient-weights" class="section level2">
 <h2>CV-Risk and Coefficient Weights</h2>
 <p>We can examine the cross-validated <code>Risk</code> (loss function), and the <code>Coef</code>ficient (weight) given to each of the models.</p>
