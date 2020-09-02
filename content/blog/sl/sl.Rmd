@@ -24,7 +24,7 @@ A high-quality version of this visual guide exists on my [Github](https://github
 
 The guide is meant to be a step-by-step walkthrough of how the superlearner algorithm weights individual "learners" (or regressions, or statistical models, whatever terminology you're most comfortable using).
 
-# Supercuts
+# Supercuts of superlearning
 
   - Superlearning is a technique for prediction that involves combining many individual statistical algorithms (commonly called "data-adaptive" or "machine learning" algorithms) to create a new, single prediction algorithm that is at least as good as any of the individual algorithms.
   

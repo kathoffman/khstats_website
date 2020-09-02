@@ -538,8 +538,8 @@ A high-quality version of this visual guide exists on my Github. It’s ready-to
 <p>A high-quality version of this visual guide exists on my <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearning.pdf">Github</a>. It’s ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.</p>
 <p>The guide is meant to be a step-by-step walkthrough of how the superlearner algorithm weights individual “learners” (or regressions, or statistical models, whatever terminology you’re most comfortable using).</p>
 </div>
-<div id="supercuts" class="section level1">
-<h1>Supercuts</h1>
+<div id="supercuts-of-superlearning" class="section level1">
+<h1>Supercuts of superlearning</h1>
 <ul>
 <li><p>Superlearning is a technique for prediction that involves combining many individual statistical algorithms (commonly called “data-adaptive” or “machine learning” algorithms) to create a new, single prediction algorithm that is at least as good as any of the individual algorithms.</p></li>
 <li><p>The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one minimizes a specified loss function, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
@@ -582,51 +582,51 @@ kable(head(obs), digits=3)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">-0.205</td>
+<td align="right">-1.347</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0.000</td>
-<td align="right">-0.205</td>
+<td align="right">-1.347</td>
 </tr>
 <tr class="even">
 <td align="right">2</td>
-<td align="right">0.775</td>
+<td align="right">0.723</td>
 <td align="right">1</td>
 <td align="right">1</td>
-<td align="right">0.917</td>
-<td align="right">3.569</td>
+<td align="right">1.331</td>
+<td align="right">3.695</td>
 </tr>
 <tr class="odd">
 <td align="right">3</td>
-<td align="right">-0.802</td>
-<td align="right">0</td>
+<td align="right">0.244</td>
 <td align="right">1</td>
-<td align="right">-0.213</td>
-<td align="right">-1.013</td>
+<td align="right">0</td>
+<td align="right">0.244</td>
+<td align="right">1.486</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="right">1.103</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1.622</td>
-<td align="right">4.101</td>
+<td align="right">-0.514</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+<td align="right">-0.514</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="right">-0.677</td>
+<td align="right">-0.383</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">-0.229</td>
-<td align="right">-0.903</td>
+<td align="right">-0.231</td>
+<td align="right">-0.612</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="right">-0.122</td>
+<td align="right">-0.671</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">1.383</td>
-<td align="right">0.860</td>
+<td align="right">-0.066</td>
+<td align="right">-0.737</td>
 </tr>
 </tbody>
 </table>
@@ -666,34 +666,34 @@ pred_1c &lt;- predict(fit_1c, newdata = cv_valid_1)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-0.418916</td>
-<td align="right">-0.2849924</td>
-<td align="right">0.2764895</td>
+<td align="right">3.4598742</td>
+<td align="right">3.1313911</td>
+<td align="right">2.3292258</td>
 </tr>
 <tr class="even">
-<td align="right">2.603379</td>
-<td align="right">2.4044001</td>
-<td align="right">0.7590400</td>
+<td align="right">-0.3380099</td>
+<td align="right">-0.0862835</td>
+<td align="right">0.2176814</td>
 </tr>
 <tr class="odd">
-<td align="right">2.469602</td>
-<td align="right">2.7179770</td>
-<td align="right">1.4406867</td>
+<td align="right">-0.9324892</td>
+<td align="right">-0.9398769</td>
+<td align="right">0.2176814</td>
 </tr>
 <tr class="even">
-<td align="right">1.375065</td>
-<td align="right">1.5746283</td>
-<td align="right">0.2764895</td>
+<td align="right">6.0551935</td>
+<td align="right">5.5864575</td>
+<td align="right">7.8987352</td>
 </tr>
 <tr class="odd">
-<td align="right">-1.136268</td>
-<td align="right">-1.2334191</td>
-<td align="right">0.2764895</td>
+<td align="right">-0.1467132</td>
+<td align="right">-0.8349800</td>
+<td align="right">0.2176814</td>
 </tr>
 <tr class="even">
-<td align="right">-1.560680</td>
-<td align="right">-1.7945439</td>
-<td align="right">0.2764895</td>
+<td align="right">3.4312563</td>
+<td align="right">3.2686408</td>
+<td align="right">2.6659040</td>
 </tr>
 </tbody>
 </table>
@@ -735,46 +735,46 @@ kable(head(cv_preds), digits=3)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">3</td>
 <td align="right">1</td>
-<td align="right">-0.995</td>
-<td align="right">-0.908</td>
-<td align="right">0.323</td>
+<td align="right">1</td>
+<td align="right">-0.791</td>
+<td align="right">-1.324</td>
+<td align="right">0.214</td>
 </tr>
 <tr class="even">
-<td align="right">13</td>
+<td align="right">19</td>
 <td align="right">1</td>
-<td align="right">4.338</td>
-<td align="right">3.941</td>
-<td align="right">3.103</td>
+<td align="right">5.680</td>
+<td align="right">5.580</td>
+<td align="right">9.524</td>
 </tr>
 <tr class="odd">
-<td align="right">15</td>
+<td align="right">21</td>
 <td align="right">1</td>
-<td align="right">-1.545</td>
-<td align="right">-1.177</td>
-<td align="right">0.323</td>
+<td align="right">4.183</td>
+<td align="right">5.207</td>
+<td align="right">6.366</td>
 </tr>
 <tr class="even">
-<td align="right">26</td>
+<td align="right">37</td>
 <td align="right">1</td>
-<td align="right">4.340</td>
-<td align="right">4.687</td>
-<td align="right">4.857</td>
+<td align="right">-1.339</td>
+<td align="right">-0.396</td>
+<td align="right">0.214</td>
 </tr>
 <tr class="odd">
-<td align="right">32</td>
+<td align="right">59</td>
 <td align="right">1</td>
-<td align="right">3.045</td>
-<td align="right">3.007</td>
-<td align="right">1.475</td>
+<td align="right">4.462</td>
+<td align="right">4.808</td>
+<td align="right">5.522</td>
 </tr>
 <tr class="even">
-<td align="right">34</td>
+<td align="right">64</td>
 <td align="right">1</td>
-<td align="right">2.530</td>
-<td align="right">2.627</td>
-<td align="right">1.430</td>
+<td align="right">3.776</td>
+<td align="right">3.997</td>
+<td align="right">3.294</td>
 </tr>
 </tbody>
 </table>
@@ -803,34 +803,34 @@ obs_preds %&gt;% select(contains(&quot;sqrd_error&quot;)) %&gt;% head() %&gt;% k
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.273</td>
-<td align="right">0.049</td>
-<td align="right">0.232</td>
-</tr>
-<tr class="even">
-<td align="right">0.121</td>
-<td align="right">0.005</td>
-<td align="right">1.236</td>
-</tr>
-<tr class="odd">
+<td align="right">0.309</td>
 <td align="right">0.000</td>
-<td align="right">0.011</td>
-<td align="right">1.783</td>
+<td align="right">2.434</td>
 </tr>
 <tr class="even">
 <td align="right">0.003</td>
-<td align="right">0.001</td>
-<td align="right">0.642</td>
+<td align="right">0.006</td>
+<td align="right">1.865</td>
 </tr>
 <tr class="odd">
-<td align="right">0.014</td>
-<td align="right">0.014</td>
-<td align="right">1.449</td>
+<td align="right">0.995</td>
+<td align="right">0.083</td>
+<td align="right">1.594</td>
 </tr>
 <tr class="even">
-<td align="right">0.003</td>
-<td align="right">0.035</td>
-<td align="right">0.343</td>
+<td align="right">0.070</td>
+<td align="right">0.022</td>
+<td align="right">0.543</td>
+</tr>
+<tr class="odd">
+<td align="right">0.200</td>
+<td align="right">0.027</td>
+<td align="right">0.688</td>
+</tr>
+<tr class="even">
+<td align="right">0.020</td>
+<td align="right">0.015</td>
+<td align="right">0.870</td>
 </tr>
 </tbody>
 </table>
@@ -852,9 +852,9 @@ kable(risk, digits=3)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.374</td>
-<td align="right">0.024</td>
-<td align="right">1.758</td>
+<td align="right">0.394</td>
+<td align="right">0.023</td>
+<td align="right">1.809</td>
 </tr>
 </tbody>
 </table>
@@ -875,22 +875,22 @@ summary(metalrnr_fit)</code></pre>
 ## 
 ## Deviance Residuals: 
 ##      Min        1Q    Median        3Q       Max  
-## -0.38150  -0.11606   0.02693   0.11789   0.37693  
+## -0.52532  -0.10392   0.02862   0.11975   0.38467  
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)  0.012342   0.006172   2.000 0.045818 *  
-## pred_a      -0.042475   0.008959  -4.741 2.44e-06 ***
-## pred_b       1.050174   0.009669 108.613  &lt; 2e-16 ***
-## pred_c      -0.017866   0.004821  -3.706 0.000222 ***
+## (Intercept)  0.012058   0.005993   2.012 0.044501 *  
+## pred_a      -0.037930   0.008490  -4.468 8.81e-06 ***
+## pred_b       1.046130   0.009093 115.049  &lt; 2e-16 ***
+## pred_c      -0.017976   0.004611  -3.898 0.000103 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## (Dispersion parameter for gaussian family taken to be 0.02312303)
+## (Dispersion parameter for gaussian family taken to be 0.02255443)
 ## 
-##     Null deviance: 4453.753  on 999  degrees of freedom
-## Residual deviance:   23.031  on 996  degrees of freedom
-## AIC: -923.06
+##     Null deviance: 4685.103  on 999  degrees of freedom
+## Residual deviance:   22.464  on 996  degrees of freedom
+## AIC: -947.95
 ## 
 ## Number of Fisher Scoring iterations: 2</code></pre>
 </div>
@@ -924,22 +924,22 @@ kable(head(ensemble_sl_predictions))</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">-0.4110336</td>
+<td align="right">-1.3457866</td>
 </tr>
 <tr class="even">
-<td align="right">3.5003274</td>
+<td align="right">3.6099351</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.9098089</td>
+<td align="right">1.7655297</td>
 </tr>
 <tr class="even">
-<td align="right">4.0564376</td>
+<td align="right">-0.6592625</td>
 </tr>
 <tr class="odd">
-<td align="right">-0.7750074</td>
+<td align="right">-0.4200573</td>
 </tr>
 <tr class="even">
-<td align="right">1.0682990</td>
+<td align="right">-0.6067366</td>
 </tr>
 </tbody>
 </table>
@@ -950,7 +950,7 @@ kable(head(ensemble_sl_predictions))</code></pre>
 <p>We could compute the MSE of the ensemble superlearner predictions.</p>
 <pre class="r"><code>ensemble_sl_mse &lt;- mean((obs$y - ensemble_sl_predictions)^2)
 ensemble_sl_mse</code></pre>
-<pre><code>## [1] 0.02264607</code></pre>
+<pre><code>## [1] 0.02224148</code></pre>
 <p>We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms’ hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.</p>
 <p>We can then cross-validate this entire process to evaluate the predictive performance of the new ensemble superlearner algorithm. Alternatively, we could leave a hold out training data set to evaluate the performance.</p>
 </div>
@@ -971,10 +971,10 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 ##     &quot;SL.glmnet&quot;, &quot;SL.earth&quot;)) 
 ## 
 ## 
-##                      Risk      Coef
-## SL.ranger_All 0.018215536 0.1265416
-## SL.glmnet_All 0.097719494 0.0000000
-## SL.earth_All  0.002520283 0.8734584</code></pre>
+##                     Risk      Coef
+## SL.ranger_All 0.02046513 0.1113185
+## SL.glmnet_All 0.09675614 0.0000000
+## SL.earth_All  0.00324060 0.8886815</code></pre>
 </div>
 <div id="other-superlearning-packages" class="section level1">
 <h1>Other superlearning packages</h1>
@@ -1101,9 +1101,9 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
         <h3>Related</h3>
         <ul>
           
-          <li><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></li>
-          
           <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
+          
+          <li><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></li>
           
           <li><a href="/blog/trt-timelines/trt-timelines/">Patient Treatment Timelines for Longitudinal Survival Data</a></li>
           
