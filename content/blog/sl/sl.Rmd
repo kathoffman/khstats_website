@@ -202,11 +202,7 @@ This metalearner provides us with the coefficients, or weights, to apply to each
 
 ## Step 6: Fit the base learners on the entire data set
 
-**We have now made our superlearner algorithm, so it is time to input data and obtain predictions!**
-
-To implement the algorithm on the full* data set and obtain predictions, we first need to fit the base learners on the whole data set.
-
-*alternatively, we could have left a hold-out data set
+We now have our superlearner algorithm, so it is time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the whole data set.
 
 ```{r}
 fit_a <- glm(y ~ w2 + w4, data=obs)
