@@ -254,7 +254,7 @@ sl_fit
 
 # Other superlearning packages
 
-Other `R` packages besides `SuperLearner` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `ml3`, `h2o`, and `caretEnsemble`. I wrote a brief tutorial on using `sl3` for an NYC R-Ladies meetup [here](www.khstats.com/blog/sl3_demo/sl).
+Other `R` packages besides `SuperLearner` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `ml3`, `h2o`, and `caretEnsemble`. I wrote a brief tutorial on using `sl3` for an NYC R-Ladies meetup [here](https://www.khstats.com/blog/sl3_demo/sl/).
 
 A python intro to superlearning blog post can be found
 [here](https://machinelearningmastery.com/super-learner-ensemble-in-python/).
