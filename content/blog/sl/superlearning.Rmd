@@ -212,7 +212,7 @@ As with any statistical learning algorithm, the choice of metalearner reflects a
 
 ```{r}
 metalrnr_fit <- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
-kable(broom::tidy(metalrnr_fit), caption = "Metalearner regression coefficients") 
+kable(broom::tidy(metalrnr_fit), digits=3, caption = "Metalearner regression coefficients") 
 ```
 
 This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. 
@@ -289,7 +289,7 @@ We can examine the cross-validated `Risk` (loss function), and the `Coef`ficient
 sl_fit
 ```
 
-From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for `Sl.Earth`. This translates to the largest coefficient, or weight, given to the predictions from `earth` (which implements the MARS algorithm... but the name "MARS" is copyrighted!).
+From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for `SL.Earth`. This translates to the largest coefficient, or weight, given to the predictions from `earth` (which implements the MARS algorithm... but the name "MARS" is copyrighted!).
 
 The LASSO model implemented by `glmnet` has the highest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all. 
 
@@ -313,17 +313,25 @@ cv_sl_fit <- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
 
 
-## Other packages to superlearn
+## Alternative ways to superlearn
 
 Other packages freely available in `R` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `h2o`, `ml3`, and `caretEnsemble`. I previously wrote a [very brief tutorial](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo.
 
-Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. The Chief Machine Learning scientist at `h2o`, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
+Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available across in programming languages and their Chief Machine Learning Scientist, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
+
+# Inference over prediction
+
+Like most algorithms designed for prediction, the superlearner algorithm does not produce errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with Targeted Learning methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.
+
+I made a similar [visual guide for TMLE](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf). If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: [\@kathoffman317](https://medium.com/@kathoffman317).
+
+![](/img/tmle.jpg)
 
 # Appendix
 
 ## Another visual guide
 
-The steps of the superlearner algorithm are summarized nicely in this graphic in the *Targeted Learning* book:
+The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the *Targeted Learning* book:
 
 ![](/img/sl_diagram.png)
 
@@ -331,7 +339,7 @@ The steps of the superlearner algorithm are summarized nicely in this graphic in
 
 The default in the `SuperLearner` package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as "regular" linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the *Euclidean distance*), you constrain your solution to only allow *positive* coefficients to minimize that distance.  
 
-It's actually very intuitive to have a regression that doesn't allow negative coefficients if you're trying to "weight" an ensemble of predictions! For a manual superlearner algorithm that implements the `nnls` function for the metalearner, see this [introductory tutorial code](https://github.com/ainaimi/SuperLearnerIntro).
+It's actually very intuitive to have a regression that doesn't allow negative coefficients if you're trying to "weight" an ensemble of predictions! For a manual superlearner algorithm that implements an nnls regression as the metalearner, see this [introductory tutorial code](https://github.com/ainaimi/SuperLearnerIntro).
 
 # References
 

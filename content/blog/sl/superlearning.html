@@ -805,7 +805,7 @@ cv_mse_c
 <p>For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner <em>could</em> be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the <code>SuperLearner</code> package is actually non-negative least squares (NNLS). For more information on NNLS, see the <a href="#appendix">Appendix</a>.</p>
 <p>As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, <code>y</code>.</p>
 <pre class="r"><code>metalrnr_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
-kable(broom::tidy(metalrnr_fit), caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
+kable(broom::tidy(metalrnr_fit), digits=3, caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
 <table>
 <caption>
 <span id="tab:unnamed-chunk-12">Table 7: </span>Metalearner regression coefficients
@@ -835,16 +835,16 @@ p.value
 (Intercept)
 </td>
 <td style="text-align:right;">
--0.0033759
+-0.003
 </td>
 <td style="text-align:right;">
-0.0049871
+0.005
 </td>
 <td style="text-align:right;">
--0.6769255
+-0.677
 </td>
 <td style="text-align:right;">
-0.4986104
+0.499
 </td>
 </tr>
 <tr>
@@ -852,16 +852,16 @@ p.value
 pred_a
 </td>
 <td style="text-align:right;">
--0.0172563
+-0.017
 </td>
 <td style="text-align:right;">
-0.0078843
+0.008
 </td>
 <td style="text-align:right;">
--2.1886960
+-2.189
 </td>
 <td style="text-align:right;">
-0.0288505
+0.029
 </td>
 </tr>
 <tr>
@@ -869,16 +869,16 @@ pred_a
 pred_b
 </td>
 <td style="text-align:right;">
-0.8615880
+0.862
 </td>
 <td style="text-align:right;">
-0.0145341
+0.015
 </td>
 <td style="text-align:right;">
-59.2802808
+59.280
 </td>
 <td style="text-align:right;">
-0.0000000
+0.000
 </td>
 </tr>
 <tr>
@@ -886,16 +886,16 @@ pred_b
 pred_c
 </td>
 <td style="text-align:right;">
-0.1582654
+0.158
 </td>
 <td style="text-align:right;">
-0.0120856
+0.012
 </td>
 <td style="text-align:right;">
-13.0953451
+13.095
 </td>
 <td style="text-align:right;">
-0.0000000
+0.000
 </td>
 </tr>
 </tbody>
@@ -1004,7 +1004,7 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 ## SL.ranger_All 0.01751739 0.1489047
 ## SL.glmnet_All 0.09526932 0.0000000
 ## SL.earth_All  0.00385042 0.8510953</code></pre>
-<p>From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for <code>Sl.Earth</code>. This translates to the largest coefficient, or weight, given to the predictions from <code>earth</code> (which implements the MARS algorithm… but the name “MARS” is copyrighted!).</p>
+<p>From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for <code>SL.Earth</code>. This translates to the largest coefficient, or weight, given to the predictions from <code>earth</code> (which implements the MARS algorithm… but the name “MARS” is copyrighted!).</p>
 <p>The LASSO model implemented by <code>glmnet</code> has the highest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all.</p>
 </div>
 <div id="obtaining-the-predictions" class="section level2">
@@ -1063,23 +1063,29 @@ sl_predictions
                      SL.library = c(&quot;SL.ranger&quot;, &quot;SL.glmnet&quot;, &quot;SL.earth&quot;))</code></pre>
 <p>For more information on the <code>SuperLearner</code> package, check out this <a href="https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html">vignette</a>.</p>
 </div>
-<div id="other-packages-to-superlearn" class="section level2">
-<h2>Other packages to superlearn</h2>
+<div id="alternative-ways-to-superlearn" class="section level2">
+<h2>Alternative ways to superlearn</h2>
 <p>Other packages freely available in <code>R</code> that can be used to implement the superlearner algorithm include <code>sl3</code> (an update to the older <code>Superlearner</code> package), <code>h2o</code>, <code>ml3</code>, and <code>caretEnsemble</code>. I previously wrote a <a href="https://www.khstats.com/blog/sl3_demo/sl/">very brief tutorial</a> on using <code>sl3</code> for an NYC R-Ladies demo.</p>
-<p>Python aficionados might find this <a href="https://machinelearningmastery.com/super-learner-ensemble-in-python/">blog post</a> useful. I have never performed superlearning in Python, but if I had to, I would probably try <code>h2o</code> first. The Chief Machine Learning scientist at <code>h2o</code>, <a href="https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">Erin Ledell</a>, was an author of the original <code>SuperLearner</code> package.</p>
+<p>Python aficionados might find this <a href="https://machinelearningmastery.com/super-learner-ensemble-in-python/">blog post</a> useful. I have never performed superlearning in Python, but if I had to, I would probably try <code>h2o</code> first. H2o is available across in programming languages and their Chief Machine Learning Scientist, <a href="https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">Erin Ledell</a>, was an author of the original <code>SuperLearner</code> package.</p>
 </div>
+</div>
+<div id="inference-over-prediction" class="section level1">
+<h1>Inference over prediction</h1>
+<p>Like most algorithms designed for prediction, the superlearner algorithm does not produce errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with Targeted Learning methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.</p>
+<p>I made a similar <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">visual guide for TMLE</a>. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: <a href="https://medium.com/@kathoffman317">@kathoffman317</a>.</p>
+<p><img src="/img/tmle.jpg" /></p>
 </div>
 <div id="appendix" class="section level1">
 <h1>Appendix</h1>
 <div id="another-visual-guide" class="section level2">
 <h2>Another visual guide</h2>
-<p>The steps of the superlearner algorithm are summarized nicely in this graphic in the <em>Targeted Learning</em> book:</p>
+<p>The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the <em>Targeted Learning</em> book:</p>
 <p><img src="/img/sl_diagram.png" /></p>
 </div>
 <div id="non-negative-least-squares-regression" class="section level2">
 <h2>Non-negative least squares regression</h2>
 <p>The default in the <code>SuperLearner</code> package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as “regular” linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the <em>Euclidean distance</em>), you constrain your solution to only allow <em>positive</em> coefficients to minimize that distance.</p>
-<p>It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements the <code>nnls</code> function for the metalearner, see this <a href="https://github.com/ainaimi/SuperLearnerIntro">introductory tutorial code</a>.</p>
+<p>It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements an nnls regression as the metalearner, see this <a href="https://github.com/ainaimi/SuperLearnerIntro">introductory tutorial code</a>.</p>
 </div>
 </div>
 <div id="references" class="section level1">
