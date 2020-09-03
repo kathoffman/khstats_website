@@ -51,7 +51,7 @@ I thought this would be useful for when you receive new data sets and want to ma
 
 Noam Ross shared code for editable figures using David Gohel's `officer` and `rvg` packages. I shared some [example code](https://github.com/hoffmakl/reporting/blob/master/vg.R) for my team on github after I saw him present it at an R-Ladies event in the fall. Essentially you can run some pretty simple lines of code to output figures (base R, `ggplot2`, or otherwise) as editable figures in Powerpoint. Noam reminded us that whoever you give these figures to will now be able to edit *anything*, even data points, so keep that in mind before you freely give away editable figures... :)
 
-```{r}
+```{r,eval=F}
 #install.packages("rvg")
 #install.packages("officer")
 library(rvg)

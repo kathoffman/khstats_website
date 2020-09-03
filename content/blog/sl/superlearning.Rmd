@@ -1,11 +1,11 @@
 ---
-title: "Become a Superlearner! An Illustrated Guide to Superlearning"
+title: "Become a Superlearner! A Visual Guide & Introductory R Tutorial on Superlearning"
 author: "Katherine Hoffman"
 date: 2020-08-29T21:13:14-05:00
-categories: ["R"]
+categories: ["R","statistics"]
 draft: false
 math: true
-tags: ["R"]
+tags: ["R","SuperLearner","superlearning","stacking","stacked generalizations","ensemble learning","sl3","rstats"]
 output: 
   html_document:
     toc: true
@@ -14,15 +14,15 @@ output:
     print_df: paged
 ---
 
-# A Visual Guide
+In this post I will walk through the Superlearner algorithm for prediction. There is a step-by-step demonstration with `R` code of how to build a superlearning algorithm as well as demo code at the end for using the `SuperLearner` package.
+
+# A [Printable] Visual Guide
 
 Over the winter, I started reading [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I decided to make "cheat sheets" or "visual guides" for some of the chapters. This is the guide I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley:
 
 ![](/img/Superlearning.jpg)
 
 A high-quality version of this visual guide exists on my [Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf). It's ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.
-
-The guide is meant to be a step-by-step walkthrough of how the superlearner algorithm weights individual "learners" (or regressions, or statistical models, whatever terminology you're most comfortable using).
 
 # Supercuts of superlearning
 
@@ -45,7 +45,11 @@ For simplicity I'll show the concept of superlearning using only four variables 
 
 The same code could be translated to a more complicated set, or **superlearner library**, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes. The only limit to the number of base learners in a superlearning library is computational time and power.
 
-## Step 0: Load libraries, set seed, and simulate data
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 0: Load libraries, set seed, simulate data</h1>
+</body>
+</html>
 
 To start this example, we will simulate a continuous outcome, `y`, and four variables for prediction, `w1`, `w2`, `w3`, and `w4`. 
 
@@ -68,7 +72,12 @@ obs <- tibble::tibble(
 kable(head(obs), digits=3, caption = "Simulated data set")
 ```
 
-## Step 1: Split the data into K folds
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 1: Split data into K folds</h1>
+</body>
+</html>
 
   ![](/img/sl_steps/step1.png){width=50%}
 
@@ -79,7 +88,13 @@ k <- 10 # 10 fold cv
 cv_index <- sample(rep(1:k, each = n/k)) # indices for each fold, same length as our dataset `obs`
 ```
 
-## Step 2: Fit base learners for first CV-fold
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 2: Fit base learners for first CV-fold
+</h1>
+</body>
+</html>
 
   ![](/img/sl_steps/step2.png){width=50%}
 
@@ -92,7 +107,13 @@ fit_1b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train_1) # second LR fit on
 fit_1c <- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR
 ```
 
-## Step 3: Obtain predictions for first CV-fold
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 3: Obtain predictions for first CV-fold
+</h1>
+</body>
+</html>
 
   ![](/img/sl_steps/step3.png){width=50%}
 
@@ -112,7 +133,13 @@ length(pred_1a) # double check we only have n/k predictions ...we do :-)
 knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = "First CV round of predictions") 
 ```
 
-## Step 4: Obtain CV predictions for entire data set
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 4: Obtain CV predictions for entire data set
+</h1>
+</body>
+</html>
 
 ![](/img/sl_steps/step4.png){width=32%}
 
@@ -146,7 +173,13 @@ cv_preds %>%
   kable(digits=2, caption = "All CV predictions for all three base learners") 
 ```
 
-## Step 5: Choose and compute a loss function of interest via a metalearner
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 5: Choose and compute loss function of interest via metalearner
+</h1>
+</body>
+</html>
 
 
 Okay, so we have a cross-validated prediction for every observation in the data set. Now we want to merge those CV predictions back into our main data set, and compute a loss function of interest for each CV prediction. This is how we're going to optimize our prediction algorithm: we want to make sure we're "losing the least" when we use it to eventually make predictions.
@@ -216,7 +249,12 @@ kable(broom::tidy(sl_fit), digits=3, caption = "Metalearner regression coefficie
 
 This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. 
 
-## Step 6: Fit the base learners on the entire data set
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 6: Fit base learners on entire data set</h1>
+</body>
+</html>
 
 ![](/img/sl_steps/step6.png){width=50%}
 
@@ -228,7 +266,12 @@ fit_b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs)
 fit_c <- glm(y ~ w1*w2*w3, data=obs)
 ```
 
-## Step 7: Extract predictions from each base learner on the entire data set
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 7: Obtain predictions from each base learner on entire data set</h1>
+</body>
+</html>
 
 ![](/img/sl_steps/step7.png){width=40%}
 
@@ -241,7 +284,12 @@ pred_c <- predict(fit_c)
 full_data_preds <- tibble(pred_a, pred_b, pred_c)
 ```
 
-## Step 8: Use the metalearner fit to weight the base learners
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 8: Use metalearner fit to weight base learners</h1>
+</body>
+</html>
 
 ![](/img/sl_steps/step8.png){width=60%}
 
@@ -254,7 +302,12 @@ kable(head(sl_predictions), col.names = "sl_predictions", digits= 2, caption = "
 
 And... that's it! Those are our superlearner predictions.
 
-## Step 9 and beyond...
+
+<html>
+<body>
+<h2 style="color:white;background-color:#c30a0a">Step 9 and beyond...</h1>
+</body>
+</html>
 
 We could compute the MSE of the ensemble superlearner predictions.
 
@@ -318,7 +371,7 @@ Other packages freely available in `R` that can be used to implement the superle
 
 Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available across in programming languages and their Chief Machine Learning Scientist, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
 
-# Coming soon... when inference is the end goal
+# Coming soon... when prediction is not the end goal
 
 Like most algorithms designed for prediction, the superlearner algorithm does not produce standard errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with Targeted Learning methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.
 
