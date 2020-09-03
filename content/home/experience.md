@@ -26,7 +26,7 @@ date_format = "Jan 2006"
   date_end = ""
   description = """
   
-My primary collaboration is with pulmonologists and intensivists in WCM's [Division of Pulmonary and Critical Care Medicine](https://medicine.weill.cornell.edu/divisions-programs/pulmonary-critical-care-medicine). Our research covers chronic illnesses such as Chronic Obstructive Pulmonary Disease, as well as acute-onset critical illnesses such as sepsis, Acute Respiratory Distress Syndrome, and in recent months, COVID-19.
+My primary collaboration is with pulmonologists and intensivists in WCM's [Division of Pulmonary and Critical Care Medicine](https://medicine.weill.cornell.edu/divisions-programs/pulmonary-critical-care-medicine). Our research covers chronic illnesses such as Chronic Obstructive Pulmonary Disease as well as acute-onset critical illnesses such as sepsis, Acute Respiratory Distress Syndrome, and in recent months, COVID-19.
   
 I served as the Teaching Assistant for Data Science I in Fall 2019, Biostatistics II in Winter 2019, and 
 Modern Methods for Causal Inference in Summer 2019 and 2020 and have contributed multiple talks to our [WCM Biostatistics Computing Club](https://wcm-computing-club.github.io/).
