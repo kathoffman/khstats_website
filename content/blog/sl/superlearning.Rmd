@@ -34,7 +34,7 @@ The guide is meant to be a step-by-step walkthrough of how the superlearner algo
   
   - Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.
   
-  ![](/img/spiderman_meme.jpg){width=60%}
+  ![](/img/spiderman_meme.jpg){width=50%}
 
 
 # Superlearning, step by step
