@@ -547,7 +547,7 @@ A high-quality version of this visual guide exists on my Github."><meta property
 <li><p>The motivation for this type of “ensembling” is that <strong>no single algorithm is always the best for all kinds of data</strong>. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not <em>always</em> ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.</p></li>
 <li><p>Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.</p></li>
 </ul>
-<p><img src="/img/spiderman_meme.jpg" style="width:50.0%" /></p>
+<p><img src="/img/spiderman_meme.jpg" style="width:42.0%" /></p>
 </div>
 <div id="superlearning-step-by-step" class="section level1">
 <h1>Superlearning, step by step</h1>
@@ -837,7 +837,7 @@ pred_1c
 </div>
 <div id="step-4-obtain-cv-predictions-for-entire-data-set" class="section level2">
 <h2>Step 4: Obtain CV predictions for entire data set</h2>
-<p><img src="/img/sl_steps/step4.png" style="width:40.0%" /></p>
+<p><img src="/img/sl_steps/step4.png" style="width:32.0%" /></p>
 <p>We’ll want to get those predictions for <em>every</em> fold. So, using your favorite <code>for</code> loop, <code>apply</code> statement, or <code>map</code>ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in <code>obs</code>ervations.</p>
 <pre class="r"><code>cv_folds &lt;- as.list(1:k)
 names(cv_folds) &lt;- paste0(&quot;fold&quot;,1:k)
@@ -863,9 +863,8 @@ cv_preds &lt;-
 cv_preds %&gt;%
   arrange(obs_id) %&gt;%
   head() %&gt;%
-  kable(digits=2, caption = &quot;All CV predictions for all three base learners&quot;) %&gt;%
-  kable_styling(position = &quot;center&quot;)</code></pre>
-<table class="table" style="margin-left: auto; margin-right: auto;">
+  kable(digits=2, caption = &quot;All CV predictions for all three base learners&quot;) </code></pre>
+<table>
 <caption>
 <span id="tab:unnamed-chunk-7">Table 3: </span>All CV predictions for all three base learners
 </caption>
@@ -1103,7 +1102,7 @@ cv_sqrd_error_c
             cv_mse_c = mean(cv_sqrd_error_c)
             )</code></pre>
 <pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre class="r"><code>kable(cv_risks, digits=3, caption = &quot;CV-MSE for each CV fold for each base learner&quot;) </code></pre>
+<pre class="r"><code>kable(cv_risks, digits=2, caption = &quot;CV-MSE for each CV fold for each base learner&quot;) </code></pre>
 <table>
 <caption>
 <span id="tab:unnamed-chunk-9">Table 5: </span>CV-MSE for each CV fold for each base learner
@@ -1130,13 +1129,13 @@ cv_mse_c
 1
 </td>
 <td style="text-align:right;">
-0.374
+0.37
 </td>
 <td style="text-align:right;">
-0.028
+0.03
 </td>
 <td style="text-align:right;">
-0.135
+0.13
 </td>
 </tr>
 <tr>
@@ -1144,13 +1143,13 @@ cv_mse_c
 2
 </td>
 <td style="text-align:right;">
-0.251
+0.25
 </td>
 <td style="text-align:right;">
-0.016
+0.02
 </td>
 <td style="text-align:right;">
-0.111
+0.11
 </td>
 </tr>
 <tr>
@@ -1158,13 +1157,13 @@ cv_mse_c
 3
 </td>
 <td style="text-align:right;">
-0.383
+0.38
 </td>
 <td style="text-align:right;">
-0.023
+0.02
 </td>
 <td style="text-align:right;">
-0.099
+0.10
 </td>
 </tr>
 <tr>
@@ -1172,13 +1171,13 @@ cv_mse_c
 4
 </td>
 <td style="text-align:right;">
-0.319
+0.32
 </td>
 <td style="text-align:right;">
-0.024
+0.02
 </td>
 <td style="text-align:right;">
-0.109
+0.11
 </td>
 </tr>
 <tr>
@@ -1186,13 +1185,13 @@ cv_mse_c
 5
 </td>
 <td style="text-align:right;">
-0.475
+0.48
 </td>
 <td style="text-align:right;">
-0.018
+0.02
 </td>
 <td style="text-align:right;">
-0.104
+0.10
 </td>
 </tr>
 <tr>
@@ -1200,13 +1199,13 @@ cv_mse_c
 6
 </td>
 <td style="text-align:right;">
-0.315
+0.31
 </td>
 <td style="text-align:right;">
-0.019
+0.02
 </td>
 <td style="text-align:right;">
-0.101
+0.10
 </td>
 </tr>
 <tr>
@@ -1214,13 +1213,13 @@ cv_mse_c
 7
 </td>
 <td style="text-align:right;">
-0.411
+0.41
 </td>
 <td style="text-align:right;">
-0.020
+0.02
 </td>
 <td style="text-align:right;">
-0.146
+0.15
 </td>
 </tr>
 <tr>
@@ -1228,13 +1227,13 @@ cv_mse_c
 8
 </td>
 <td style="text-align:right;">
-0.337
+0.34
 </td>
 <td style="text-align:right;">
-0.019
+0.02
 </td>
 <td style="text-align:right;">
-0.103
+0.10
 </td>
 </tr>
 <tr>
@@ -1242,13 +1241,13 @@ cv_mse_c
 9
 </td>
 <td style="text-align:right;">
-0.383
+0.38
 </td>
 <td style="text-align:right;">
-0.023
+0.02
 </td>
 <td style="text-align:right;">
-0.117
+0.12
 </td>
 </tr>
 <tr>
@@ -1256,13 +1255,13 @@ cv_mse_c
 10
 </td>
 <td style="text-align:right;">
-0.435
+0.44
 </td>
 <td style="text-align:right;">
-0.030
+0.03
 </td>
 <td style="text-align:right;">
-0.106
+0.11
 </td>
 </tr>
 </tbody>
@@ -1271,7 +1270,7 @@ cv_mse_c
 <pre class="r"><code>cv_risks %&gt;%
   select(-cv_fold) %&gt;%
   summarise_all(mean) %&gt;%
-  kable(digits=3, caption = &quot;CV-MSE for each base learner&quot;) %&gt;%
+  kable(digits=2, caption = &quot;CV-MSE for each base learner&quot;) %&gt;%
   kable_styling(position = &quot;center&quot;)</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
@@ -1293,13 +1292,13 @@ cv_mse_c
 <tbody>
 <tr>
 <td style="text-align:right;">
-0.368
+0.37
 </td>
 <td style="text-align:right;">
-0.022
+0.02
 </td>
 <td style="text-align:right;">
-0.113
+0.11
 </td>
 </tr>
 </tbody>
@@ -1584,23 +1583,23 @@ sl_predictions
 <p>Python aficionados might find this <a href="https://machinelearningmastery.com/super-learner-ensemble-in-python/">blog post</a> useful. I have never performed superlearning in Python, but if I had to, I would probably try <code>h2o</code> first. H2o is available across in programming languages and their Chief Machine Learning Scientist, <a href="https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">Erin Ledell</a>, was an author of the original <code>SuperLearner</code> package.</p>
 </div>
 </div>
-<div id="inference-over-prediction" class="section level1">
-<h1>Inference over prediction</h1>
+<div id="coming-soon-when-inference-is-the-end-goal" class="section level1">
+<h1>Coming soon… when inference is the end goal</h1>
 <p>Like most algorithms designed for prediction, the superlearner algorithm does not produce errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with Targeted Learning methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.</p>
 <p>I made a similar <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">visual guide for TMLE</a>. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: <a href="https://medium.com/@kathoffman317">@kathoffman317</a>.</p>
 <p><img src="/img/tmle.jpg" /></p>
 </div>
 <div id="appendix" class="section level1">
 <h1>Appendix</h1>
-<div id="another-visual-guide" class="section level2">
-<h2>Another visual guide</h2>
-<p>The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the <em>Targeted Learning</em> book:</p>
-<p><img src="/img/sl_diagram.png" /></p>
-</div>
 <div id="non-negative-least-squares-regression" class="section level2">
 <h2>Non-negative least squares regression</h2>
 <p>The default in the <code>SuperLearner</code> package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as “regular” linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the <em>Euclidean distance</em>), you constrain your solution to only allow <em>positive</em> coefficients to minimize that distance.</p>
 <p>It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements an nnls regression as the metalearner, see this <a href="https://github.com/ainaimi/SuperLearnerIntro">introductory tutorial code</a>.</p>
+</div>
+<div id="another-visual-guide" class="section level2">
+<h2>Another visual guide</h2>
+<p>The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the <em>Targeted Learning</em> book:</p>
+<p><img src="/img/sl_diagram.png" /></p>
 </div>
 </div>
 <div id="references" class="section level1">
@@ -1761,9 +1760,9 @@ sl_predictions
         <h3>Related</h3>
         <ul>
           
-          <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
-          
           <li><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></li>
+          
+          <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
           
           <li><a href="/blog/trt-timelines/trt-timelines/">Patient Treatment Timelines for Longitudinal Survival Data</a></li>
           

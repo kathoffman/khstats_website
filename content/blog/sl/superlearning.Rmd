@@ -34,7 +34,7 @@ The guide is meant to be a step-by-step walkthrough of how the superlearner algo
   
   - Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.
   
-  ![](/img/spiderman_meme.jpg){width=50%}
+  ![](/img/spiderman_meme.jpg){width=42%}
 
 
 # Superlearning, step by step
@@ -114,7 +114,7 @@ knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = "First
 
 ## Step 4: Obtain CV predictions for entire data set
 
-![](/img/sl_steps/step4.png){width=40%}
+![](/img/sl_steps/step4.png){width=32%}
 
 We'll want to get those predictions for *every* fold. So, using your favorite `for` loop, `apply` statement, or `map`ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions -- one for every point in `obs`ervations.
 
@@ -143,8 +143,7 @@ cv_preds <-
 cv_preds %>%
   arrange(obs_id) %>%
   head() %>%
-  kable(digits=2, caption = "All CV predictions for all three base learners") %>%
-  kable_styling(position = "center")
+  kable(digits=2, caption = "All CV predictions for all three base learners") 
 ```
 
 ## Step 5: Choose and compute a loss function of interest via a metalearner
@@ -177,7 +176,7 @@ cv_risks <-
             cv_mse_b = mean(cv_sqrd_error_b),
             cv_mse_c = mean(cv_sqrd_error_c)
             )
-kable(cv_risks, digits=3, caption = "CV-MSE for each CV fold for each base learner") 
+kable(cv_risks, digits=2, caption = "CV-MSE for each CV fold for each base learner") 
 ```
 
 We can take the mean of those (or just take the mean without grouping by CV fold in the first place!) to get the overall CV-MSE for each learner.
@@ -186,7 +185,7 @@ We can take the mean of those (or just take the mean without grouping by CV fold
 cv_risks %>%
   select(-cv_fold) %>%
   summarise_all(mean) %>%
-  kable(digits=3, caption = "CV-MSE for each base learner") %>%
+  kable(digits=2, caption = "CV-MSE for each base learner") %>%
   kable_styling(position = "center")
 ```
 
@@ -319,7 +318,7 @@ Other packages freely available in `R` that can be used to implement the superle
 
 Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available across in programming languages and their Chief Machine Learning Scientist, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
 
-# Inference over prediction
+# Coming soon... when inference is the end goal
 
 Like most algorithms designed for prediction, the superlearner algorithm does not produce errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with Targeted Learning methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.
 
@@ -329,17 +328,17 @@ I made a similar [visual guide for TMLE](https://github.com/hoffmakl/CI-visual-g
 
 # Appendix
 
-## Another visual guide
-
-The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the *Targeted Learning* book:
-
-![](/img/sl_diagram.png)
-
 ## Non-negative least squares regression
 
 The default in the `SuperLearner` package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as "regular" linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the *Euclidean distance*), you constrain your solution to only allow *positive* coefficients to minimize that distance.  
 
 It's actually very intuitive to have a regression that doesn't allow negative coefficients if you're trying to "weight" an ensemble of predictions! For a manual superlearner algorithm that implements an nnls regression as the metalearner, see this [introductory tutorial code](https://github.com/ainaimi/SuperLearnerIntro).
+
+## Another visual guide
+
+The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the *Targeted Learning* book:
+
+![](/img/sl_diagram.png)
 
 # References
 
