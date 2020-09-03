@@ -217,8 +217,8 @@ cv_index &lt;- sample(rep(1:k, each = n/k)) # indices for each fold, same length
 <p><img src="/img/sl_steps/step2.png" style="width:50.0%" /></p>
 <p>Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners (the three linear regressions) on all the cross-validation folds (k = 1,2,…) <em>except</em> for the very last one: <code>cv_index == 10</code>.</p>
 <pre class="r"><code>cv_train_1 &lt;- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
-fit_1a &lt;- glm(y ~ w1 + w2 + w3 + w4, data=cv_train_1) # fit the first linear regression on that training data
-fit_1b &lt;- glm(y ~ w1 + w2 + w3 + w4*w1, data=cv_train_1) # second LR fit on the training data
+fit_1a &lt;- glm(y ~ w2 + w4, data=cv_train_1) # fit the first linear regression on that training data
+fit_1b &lt;- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train_1) # second LR fit on the training data
 fit_1c &lt;- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR</code></pre>
 </div>
 <div id="step-3-obtain-predictions-for-first-cv-fold" class="section level2">
@@ -253,10 +253,10 @@ pred_1c
 <tbody>
 <tr>
 <td style="text-align:right;">
--1.13
+-0.75
 </td>
 <td style="text-align:right;">
--1.16
+-0.99
 </td>
 <td style="text-align:right;">
 -0.95
@@ -264,10 +264,10 @@ pred_1c
 </tr>
 <tr>
 <td style="text-align:right;">
-5.21
+4.43
 </td>
 <td style="text-align:right;">
-4.85
+5.22
 </td>
 <td style="text-align:right;">
 5.24
@@ -275,10 +275,10 @@ pred_1c
 </tr>
 <tr>
 <td style="text-align:right;">
-6.18
+5.30
 </td>
 <td style="text-align:right;">
-5.29
+5.25
 </td>
 <td style="text-align:right;">
 5.97
@@ -286,10 +286,10 @@ pred_1c
 </tr>
 <tr>
 <td style="text-align:right;">
-4.80
+4.18
 </td>
 <td style="text-align:right;">
-4.59
+4.96
 </td>
 <td style="text-align:right;">
 4.83
@@ -297,10 +297,10 @@ pred_1c
 </tr>
 <tr>
 <td style="text-align:right;">
-4.57
+4.82
 </td>
 <td style="text-align:right;">
-4.46
+3.98
 </td>
 <td style="text-align:right;">
 3.96
@@ -308,10 +308,10 @@ pred_1c
 </tr>
 <tr>
 <td style="text-align:right;">
-2.18
+2.32
 </td>
 <td style="text-align:right;">
-2.19
+2.11
 </td>
 <td style="text-align:right;">
 2.44
@@ -803,8 +803,8 @@ cv_mse_c
 </blockquote>
 <p>For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner <em>could</em> be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the <code>SuperLearner</code> package is actually non-negative least squares (NNLS). For more information on NNLS, see the <a href="#appendix">Appendix</a>.</p>
 <p>As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, <code>y</code>.</p>
-<pre class="r"><code>metalrnr_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
-kable(broom::tidy(metalrnr_fit), digits=3, caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
+<pre class="r"><code>sl_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
+kable(broom::tidy(sl_fit), digits=3, caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
 <table>
 <caption>
 <span id="tab:unnamed-chunk-12">Table 7: </span>Metalearner regression coefficients
@@ -923,7 +923,7 @@ full_data_preds &lt;- tibble(pred_a, pred_b, pred_c)</code></pre>
 <h2>Step 8: Use the metalearner fit to weight the base learners</h2>
 <p><img src="/img/sl_steps/step8.png" style="width:60.0%" /></p>
 <p>Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for <code>y</code>.</p>
-<pre class="r"><code>sl_predictions &lt;- predict(metalrnr_fit, newdata = full_data_preds)
+<pre class="r"><code>sl_predictions &lt;- predict(sl_fit, newdata = full_data_preds)
 kable(head(sl_predictions), col.names = &quot;sl_predictions&quot;, digits= 2, caption = &quot;Final SL predictions (manual)&quot;) </code></pre>
 <table>
 <caption>

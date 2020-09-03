@@ -87,8 +87,8 @@ Recall that in  K-fold CV, each fold serves as the validation set one time. In t
 
 ```{r}
 cv_train_1 <- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
-fit_1a <- glm(y ~ w1 + w2 + w3 + w4, data=cv_train_1) # fit the first linear regression on that training data
-fit_1b <- glm(y ~ w1 + w2 + w3 + w4*w1, data=cv_train_1) # second LR fit on the training data
+fit_1a <- glm(y ~ w2 + w4, data=cv_train_1) # fit the first linear regression on that training data
+fit_1b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train_1) # second LR fit on the training data
 fit_1c <- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR
 ```
 
@@ -210,8 +210,8 @@ For simplicity, we'll use yet another linear regression as our metalearner. The 
 As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, `y`.
 
 ```{r}
-metalrnr_fit <- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
-kable(broom::tidy(metalrnr_fit), digits=3, caption = "Metalearner regression coefficients") 
+sl_fit <- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
+kable(broom::tidy(sl_fit), digits=3, caption = "Metalearner regression coefficients") 
 ```
 
 This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. 
@@ -248,7 +248,7 @@ full_data_preds <- tibble(pred_a, pred_b, pred_c)
 Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for `y`.
 
 ```{r}
-sl_predictions <- predict(metalrnr_fit, newdata = full_data_preds)
+sl_predictions <- predict(sl_fit, newdata = full_data_preds)
 kable(head(sl_predictions), col.names = "sl_predictions", digits= 2, caption = "Final SL predictions (manual)") 
 ```
 
