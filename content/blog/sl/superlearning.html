@@ -17,22 +17,38 @@ output:
 <script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
-<p>In this post I will walk through the Superlearner algorithm for prediction. There is a step-by-step demonstration with <code>R</code> code of how to build a superlearning algorithm as well as demo code at the end for using the <code>SuperLearner</code> package.</p>
+<blockquote>
+<p>Why use <em>one</em> machine learning algorithm when you could use all* of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in <code>R</code>.<br><br> *within computational limits</p>
+</blockquote>
+<html>
+<head>
+<title>
+HTML Image as link
+</title>
+</head>
+<body>
+<a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf">
+<img alt="cheatsheet" src="/img/Superlearning.jpg"
+         width=100%">
+</a>
+</body>
+</html>
 <div id="a-printable-visual-guide" class="section level1">
 <h1>A [Printable] Visual Guide</h1>
-<p>Over the winter, I started reading <a href="https://www.springer.com/gp/book/9781441997814">Targeted Learning</a> by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I decided to make “cheat sheets” or “visual guides” for some of the chapters. This is the guide I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley:</p>
-<p><img src="/img/Superlearning.jpg" /></p>
-<p>A high-quality version of this visual guide exists on my <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf">Github</a>. It’s ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.</p>
+<p>Over the winter, I joined a ~stats book club~ (N=3 participants) reading <a href="https://www.springer.com/gp/book/9781441997814">Targeted Learning</a> by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making “cheat sheets” or “visual guides” for some of the chapters.</p>
+<p>The <a href="">visual guide</a> I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is essentially a condensed version of this tutorial. It’s ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.</p>
 </div>
 <div id="supercuts-of-superlearning" class="section level1">
 <h1>Supercuts of superlearning</h1>
 <ul>
-<li><p><strong>Superlearning</strong> is a technique for prediction that involves <strong>combining many individual statistical algorithms</strong> (commonly called “data-adaptive” or “machine learning” algorithms) to <strong>create a new, single prediction algorithm that is at least as good as any of the individual algorithms</strong>.</p></li>
+<li><p><strong>Superlearning</strong> is a technique for prediction that involves <strong>combining many individual statistical algorithms</strong> (commonly called “data-adaptive” or “machine learning” algorithms) to <strong>create a new, single prediction algorithm that is at least as good as any of the individual algorithms</strong>.</p>
+<ul>
 <li><p>The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one <strong>minimizes a specified loss function</strong>, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
 <li><p>The motivation for this type of “ensembling” is that <strong>no single algorithm is always the best for all kinds of data</strong>. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not <em>always</em> ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.</p></li>
 <li><p>Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.</p></li>
 </ul>
-<p><img src="/img/spiderman_meme.jpg" style="width:42.0%" /></p>
+<p><img src="/img/spiderman_meme.jpg" style="width:42.0%" /></p></li>
+</ul>
 </div>
 <div id="superlearning-step-by-step" class="section level1">
 <h1>Superlearning, step by step</h1>
@@ -505,21 +521,125 @@ Step 5: Choose and compute loss function of interest via metalearner
 </h1>
 </body>
 </html>
-<p>Okay, so we have a cross-validated prediction for every observation in the data set. Now we want to merge those CV predictions back into our main data set, and compute a loss function of interest for each CV prediction. This is how we’re going to optimize our prediction algorithm: we want to make sure we’re “losing the least” when we use it to eventually make predictions.</p>
-<div id="optional-step-for-demonstration-manually-computing-the-mse" class="section level3">
-<h3><em>Optional step for demonstration</em>: manually computing the MSE</h3>
-<p>Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error <span class="math inline">\((y - \hat{y})^2\)</span> for each CV prediction a, b, and c.</p>
+<p><img src="/img/sl_steps/step5.png" style="width:60.0%" /></p>
+<blockquote>
+<p>This is the key step of the superlearner algorithm: we will use a new learner, a <strong>metalearner</strong>, to take information from all of the base learners and create that new algorithm.</p>
+</blockquote>
+<p>Okay, so we have a cross-validated prediction for every observation in the data set. Now we want to merge those CV predictions back into our main data set…</p>
 <pre class="r"><code>obs_preds &lt;- 
   full_join(obs, cv_preds, by=c(&quot;id&quot; = &quot;obs_id&quot;)) %&gt;%
   mutate(cv_sqrd_error_a = (y-pred_a)^2,
          cv_sqrd_error_b = (y-pred_b)^2,
          cv_sqrd_error_c = (y-pred_c)^2
-        )
-
-obs_preds %&gt;% select(contains(&quot;sqrd_error&quot;)) %&gt;% head() %&gt;% kable(digits=2, caption = &quot;Squared error of each base learner&quot;) </code></pre>
+        )</code></pre>
+<p>…and compute a loss function of interest for each CV prediction. This is how we’re going to optimize our prediction algorithm: we want to make sure we’re “losing the least” when we use it to eventually make predictions.</p>
+<p>For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner <em>could</em> be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the <code>SuperLearner</code> package is actually non-negative least squares (NNLS). For more information on NNLS, see the <a href="#appendix">Appendix</a>.</p>
+<p>As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, <code>y</code>.</p>
+<pre class="r"><code>sl_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
+kable(broom::tidy(sl_fit), digits=3, caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-8">Table 4: </span>Squared error of each base learner
+<span id="tab:unnamed-chunk-9">Table 4: </span>Metalearner regression coefficients
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+-0.677
+</td>
+<td style="text-align:right;">
+0.499
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pred_a
+</td>
+<td style="text-align:right;">
+-0.017
+</td>
+<td style="text-align:right;">
+0.008
+</td>
+<td style="text-align:right;">
+-2.189
+</td>
+<td style="text-align:right;">
+0.029
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pred_b
+</td>
+<td style="text-align:right;">
+0.862
+</td>
+<td style="text-align:right;">
+0.015
+</td>
+<td style="text-align:right;">
+59.280
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+pred_c
+</td>
+<td style="text-align:right;">
+0.158
+</td>
+<td style="text-align:right;">
+0.012
+</td>
+<td style="text-align:right;">
+13.095
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+</tr>
+</tbody>
+</table>
+<p>This metalearner provides us with the coefficients to apply to each of the base learners. In other words, if we have a set of predictions from learner a, b, and c, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 <span class="math inline">\(\times\)</span> predictions from learner a, 0.862 <span class="math inline">\(\times\)</span> predictions from learner b, and 0.158 <span class="math inline">\(\times\)</span> predictions from learner c.</p>
+<p>To gain more intuition on these coefficients in the metalearner, check out the optional step below.</p>
+<div id="optional-step-for-demonstration-manually-computing-the-mse" class="section level3">
+<h3><em>Optional step for demonstration</em>: manually computing the MSE</h3>
+<p>Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error <span class="math inline">\((y - \hat{y})^2\)</span> for each CV prediction a, b, and c.</p>
+<pre class="r"><code>obs_preds %&gt;% select(contains(&quot;sqrd_error&quot;)) %&gt;% head() %&gt;% kable(digits=2, caption = &quot;Squared error of each base learner&quot;) </code></pre>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-10">Table 5: </span>Squared error of each base learner
 </caption>
 <thead>
 <tr>
@@ -615,7 +735,7 @@ cv_sqrd_error_c
 <pre class="r"><code>kable(cv_risks, digits=2, caption = &quot;CV-MSE for each CV fold for each base learner&quot;) </code></pre>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-9">Table 5: </span>CV-MSE for each CV fold for each base learner
+<span id="tab:unnamed-chunk-11">Table 6: </span>CV-MSE for each CV fold for each base learner
 </caption>
 <thead>
 <tr>
@@ -784,7 +904,7 @@ cv_mse_c
   kable_styling(position = &quot;center&quot;)</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-10">Table 6: </span>CV-MSE for each base learner
+<span id="tab:unnamed-chunk-12">Table 7: </span>CV-MSE for each base learner
 </caption>
 <thead>
 <tr>
@@ -819,112 +939,6 @@ cv_mse_c
 </blockquote>
 <pre class="r"><code>discrete_sl_predictions &lt;- predict(glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs))</code></pre>
 <p>However, we can almost always create an even better prediction algorithm if we use information from <em>all</em> of the algorithms’ CV predictions to create a new algorithm.</p>
-</div>
-<div id="using-a-metalearner-to-obtain-the-weights" class="section level3">
-<h3>Using a metalearner to obtain the weights</h3>
-<p><img src="/img/sl_steps/step5.png" style="width:60.0%" /></p>
-<blockquote>
-<p>This is the key step of the superlearner algorithm: we will use a new learner, a <strong>metalearner</strong>, to take information from all of the base learners and create that new algorithm.</p>
-</blockquote>
-<p>For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner <em>could</em> be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the <code>SuperLearner</code> package is actually non-negative least squares (NNLS). For more information on NNLS, see the <a href="#appendix">Appendix</a>.</p>
-<p>As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, <code>y</code>.</p>
-<pre class="r"><code>sl_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
-kable(broom::tidy(sl_fit), digits=3, caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
-<table>
-<caption>
-<span id="tab:unnamed-chunk-12">Table 7: </span>Metalearner regression coefficients
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-term
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-std.error
-</th>
-<th style="text-align:right;">
-statistic
-</th>
-<th style="text-align:right;">
-p.value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-(Intercept)
-</td>
-<td style="text-align:right;">
--0.003
-</td>
-<td style="text-align:right;">
-0.005
-</td>
-<td style="text-align:right;">
--0.677
-</td>
-<td style="text-align:right;">
-0.499
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pred_a
-</td>
-<td style="text-align:right;">
--0.017
-</td>
-<td style="text-align:right;">
-0.008
-</td>
-<td style="text-align:right;">
--2.189
-</td>
-<td style="text-align:right;">
-0.029
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pred_b
-</td>
-<td style="text-align:right;">
-0.862
-</td>
-<td style="text-align:right;">
-0.015
-</td>
-<td style="text-align:right;">
-59.280
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pred_c
-</td>
-<td style="text-align:right;">
-0.158
-</td>
-<td style="text-align:right;">
-0.012
-</td>
-<td style="text-align:right;">
-13.095
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-</tr>
-</tbody>
-</table>
-<p>This metalearner provides us with the coefficients, or weights, to apply to each of the base learners.</p>
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -933,7 +947,7 @@ Step 6: Fit base learners on entire data set
 </body>
 </html>
 <p><img src="/img/sl_steps/step6.png" style="width:50.0%" /></p>
-<p>We now have our superlearner algorithm, so it is time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the whole data set.</p>
+<p>We now have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the whole data set.</p>
 <pre class="r"><code>fit_a &lt;- glm(y ~ w2 + w4, data=obs)
 fit_b &lt;- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs)
 fit_c &lt;- glm(y ~ w1*w2*w3, data=obs)</code></pre>
@@ -963,7 +977,7 @@ Step 8: Use metalearner fit to weight base learners
 kable(head(sl_predictions), col.names = &quot;sl_predictions&quot;, digits= 2, caption = &quot;Final SL predictions (manual)&quot;) </code></pre>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-15">Table 8: </span>Final SL predictions (manual)
+<span id="tab:unnamed-chunk-16">Table 8: </span>Final SL predictions (manual)
 </caption>
 <thead>
 <tr>
@@ -1052,7 +1066,7 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 <pre class="r"><code>kable(head(sl_fit$SL.predict), digits=2, col.names = &quot;sl_predictions&quot;, caption = &quot;Final SL predictions (package)&quot;) </code></pre>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-19">Table 9: </span>Final SL predictions (package)
+<span id="tab:unnamed-chunk-20">Table 9: </span>Final SL predictions (package)
 </caption>
 <thead>
 <tr>
@@ -1138,7 +1152,7 @@ sl_predictions
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Catalina 10.15.5
+## Running under: macOS Catalina 10.15.6
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib

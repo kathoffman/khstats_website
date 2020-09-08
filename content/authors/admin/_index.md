@@ -19,7 +19,7 @@ name: Katherine Hoffman
 organizations:
 - name: Weill Cornell Medicine
   url: "https://hpr.weill.cornell.edu/research-collaboration/our-divisions/biostatistics-and-epidemiology"
-role: Research Biostatistician II
+role: Research Biostatistician
 social:
 - icon: envelope
   icon_pack: fas
