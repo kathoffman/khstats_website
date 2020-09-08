@@ -31,9 +31,9 @@ output:
 
 # A [Printable] Visual Guide
 
-Over the winter, I joined a ~stats book club~ (N=3 participants) reading [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making “cheat sheets” or “visual guides” for some of the chapters.
+Over the winter, I read [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making “cheat sheets” or “visual guides” for some of the chapters.
 
-The [visual guide]() I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is essentially a condensed version of this tutorial. It's ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.
+The [visual guide](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf) I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is essentially a condensed version of this tutorial. It's ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.
 
 # Supercuts of superlearning
 
