@@ -52,14 +52,14 @@ The [visual guide](https://github.com/hoffmakl/CI-visual-guides/blob/master/visu
 
 In this tutorial I'll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar's [R Lab 3: Superlearning](https://www.ucbbiostat.com/labs), which you can try out if you want more practice.
 
-For simplicity I'll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. We'll call these variables $W_1$, $W_2$, $W_3$ and $W_4$. 
+For simplicity I'll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. We'll call these variables $X_1$, $X_2$, $X_3$ and $X_4$. 
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">Step 0: Load libraries, set seed, simulate data</h1>
 </body>
 </html>
 
-To start this example, let's simulate a continuous outcome, `y`, and those four variables for prediction, `w1`, `w2`, `w3`, and `w4`. 
+To start this example, let's simulate a continuous outcome, `y`, and those four variables for prediction, `x1`, `x2`, `x3`, and `x4`. 
 
 ```{r}
 library(dplyr, warn.conflicts = F)
@@ -71,11 +71,11 @@ set.seed(7)
 n <- 1000
 obs <- tibble::tibble(
   id = 1:n,
-  w1 = rnorm(n),
-  w2 = rbinom(n, 1, plogis(10*w1)),
-  w3 = rbinom(n, 1, plogis(w1*w2 + .5*w2)),
-  w4 = rnorm(n, mean=w1*w2, sd=.5*w3),
-  y = w1 + w2 + w2*w3 + sin(w4)
+  x1 = rnorm(n),
+  x2 = rbinom(n, 1, plogis(10*x1)),
+  x3 = rbinom(n, 1, plogis(x1*x2 + .5*x2)),
+  x4 = rnorm(n, mean=x1*x2, sd=.5*x3),
+  y = x1 + x2 + x2*x3 + sin(x4)
 )
 kable(head(obs), digits=3, caption = "Simulated data set")
 ```
@@ -109,11 +109,11 @@ Recall that in  K-fold CV, each fold serves as the validation set one time. In t
 
 The individual algorithms or **base learners** that we'll use here are three plain old linear regressions with differently specified parameters:
 
-1. **Learner a**: $Y=\beta_0 + \beta_1 W_2 + \beta_2 W_4$
+1. **Learner a**: $Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4$
 
-2. **Learner b**: $Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_1 W_3 + \beta_4 sin(W_4)$
+2. **Learner b**: $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4)$
 
-3. **Learner c**: $Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_3 + \beta_4 W_1 W_2 + \beta_5 W_1 W_3 + \beta_6 W_2 W_3 + \beta_7 W_1 W_2 W_3$
+3. **Learner c**: $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3$
 
 I am *only* using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.
 
@@ -121,9 +121,9 @@ The same code could be translated to a more complicated set, or **superlearner l
 
 ```{r}
 cv_train_1 <- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
-fit_1a <- glm(y ~ w2 + w4, data=cv_train_1) # fit the first linear regression on that training data
-fit_1b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train_1) # second LR fit on the training data
-fit_1c <- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR
+fit_1a <- glm(y ~ x2 + x4, data=cv_train_1) # fit the first linear regression on that training data
+fit_1b <- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train_1) # second LR fit on the training data
+fit_1c <- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR
 ```
 
 
@@ -141,7 +141,7 @@ We can then get use our validation data, `cv_index == 10`, to obtain our first s
 ```{r}
 cv_valid_1 <- obs[which(cv_index == 10),] # make a data set that only contains observations except in k=10
 pred_1a <- predict(fit_1a, newdata = cv_valid_1) # use that data set as the validation for all the models in the SL library
-pred_1b <- predict(fit_1b, newdata = cv_valid_1)
+pred_1b <- predict(fit_1b, newdata = cv_valid_1) 
 pred_1c <- predict(fit_1c, newdata = cv_valid_1)
 ```
 
@@ -173,9 +173,9 @@ cv_preds <-
   # make a training data set that contains all data except fold k
   cv_train <- obs[-which(cv_index == x),]
   # fit all the base learners to that data
-  fit_a <- glm(y ~ w2 + w4, data=cv_train)
-  fit_b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train)
-  fit_c <- glm(y ~ w1*w2*w3, data=cv_train)
+  fit_a <- glm(y ~ x2 + x4, data=cv_train)
+  fit_b <- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train)
+  fit_c <- glm(y ~ x1*x2*x3, data=cv_train)
   # make a validation data set that only contains data from fold k
   cv_valid <- obs[which(cv_index == x),]
   # obtain predictions from all the base learners for that validation data
@@ -267,7 +267,7 @@ We see that in this simple example, the base learner that performs the best usin
 > We *could* stop here and fit learner b to our full data set, and that would be called using the **discrete superlearner**.
 
 ```{r}
-discrete_sl_predictions <- predict(glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs))
+discrete_sl_predictions <- predict(glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs))
 ```
 
 However, we can almost always create an even better prediction algorithm if we use information from *all* of the algorithms' CV predictions to create a new algorithm.
@@ -285,9 +285,9 @@ However, we can almost always create an even better prediction algorithm if we u
 We now have our superlearner algorithm, so it's time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the whole data set.
 
 ```{r}
-fit_a <- glm(y ~ w2 + w4, data=obs)
-fit_b <- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs)
-fit_c <- glm(y ~ w1*w2*w3, data=obs)
+fit_a <- glm(y ~ x2 + x4, data=obs)
+fit_b <- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
+fit_c <- glm(y ~ x1*x2*x3, data=obs)
 ```
 
 
@@ -350,7 +350,7 @@ We could use the `SuperLearner` package and avoid all that hand-coding. Here is 
 
 ```{r, warning=F, message = F}
 library(SuperLearner)
-x_df <- obs %>% select(w1:w4) %>% as.data.frame()
+x_df <- obs %>% select(x1:x4) %>% as.data.frame()
 sl_fit <- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```

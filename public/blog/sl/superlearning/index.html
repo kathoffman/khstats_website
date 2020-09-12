@@ -568,7 +568,7 @@ HTML Image as link
 <div id="superlearning-step-by-step" class="section level1">
 <h1>Superlearning, step by step</h1>
 <p>In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s <a href="https://www.ucbbiostat.com/labs">R Lab 3: Superlearning</a>, which you can try out if you want more practice.</p>
-For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. We’ll call these variables <span class="math inline">\(W_1\)</span>, <span class="math inline">\(W_2\)</span>, <span class="math inline">\(W_3\)</span> and <span class="math inline">\(W_4\)</span>.
+For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. We’ll call these variables <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_3\)</span> and <span class="math inline">\(X_4\)</span>.
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -576,18 +576,18 @@ Step 0: Load libraries, set seed, simulate data
 </h1>
 </body>
 </html>
-<p>To start this example, let’s simulate a continuous outcome, <code>y</code>, and those four variables for prediction, <code>w1</code>, <code>w2</code>, <code>w3</code>, and <code>w4</code>.</p>
+<p>To start this example, let’s simulate a continuous outcome, <code>y</code>, and those four variables for prediction, <code>x1</code>, <code>x2</code>, <code>x3</code>, and <code>x4</code>.</p>
 <pre class="r"><code>library(dplyr, warn.conflicts = F)
 library(kableExtra, warn.conflicts = F)
 set.seed(7)</code></pre>
 <pre class="r"><code>n &lt;- 1000
 obs &lt;- tibble::tibble(
   id = 1:n,
-  w1 = rnorm(n),
-  w2 = rbinom(n, 1, plogis(10*w1)),
-  w3 = rbinom(n, 1, plogis(w1*w2 + .5*w2)),
-  w4 = rnorm(n, mean=w1*w2, sd=.5*w3),
-  y = w1 + w2 + w2*w3 + sin(w4)
+  x1 = rnorm(n),
+  x2 = rbinom(n, 1, plogis(10*x1)),
+  x3 = rbinom(n, 1, plogis(x1*x2 + .5*x2)),
+  x4 = rnorm(n, mean=x1*x2, sd=.5*x3),
+  y = x1 + x2 + x2*x3 + sin(x4)
 )
 kable(head(obs), digits=3, caption = &quot;Simulated data set&quot;)</code></pre>
 <table>
@@ -600,16 +600,16 @@ kable(head(obs), digits=3, caption = &quot;Simulated data set&quot;)</code></pre
 id
 </th>
 <th style="text-align:right;">
-w1
+x1
 </th>
 <th style="text-align:right;">
-w2
+x2
 </th>
 <th style="text-align:right;">
-w3
+x3
 </th>
 <th style="text-align:right;">
-w4
+x4
 </th>
 <th style="text-align:right;">
 y
@@ -761,16 +761,16 @@ Step 2: Fit base learners for first CV-fold
 <p>Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,…) <em>except</em> for the very last one: <code>cv_index == 10</code>.</p>
 <p>The individual algorithms or <strong>base learners</strong> that we’ll use here are three plain old linear regressions with differently specified parameters:</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>Learner a</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 W_2 + \beta_2 W_4\)</span></p></li>
-<li><p><strong>Learner b</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_1 W_3 + \beta_4 sin(W_4)\)</span></p></li>
-<li><p><strong>Learner c</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_3 + \beta_4 W_1 W_2 + \beta_5 W_1 W_3 + \beta_6 W_2 W_3 + \beta_7 W_1 W_2 W_3\)</span></p></li>
+<li><p><strong>Learner a</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4\)</span></p></li>
+<li><p><strong>Learner b</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4)\)</span></p></li>
+<li><p><strong>Learner c</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3\)</span></p></li>
 </ol>
 <p>I am <em>only</em> using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.</p>
 <p>The same code could be translated to a more complicated set, or <strong>superlearner library</strong>, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.</p>
 <pre class="r"><code>cv_train_1 &lt;- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
-fit_1a &lt;- glm(y ~ w2 + w4, data=cv_train_1) # fit the first linear regression on that training data
-fit_1b &lt;- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train_1) # second LR fit on the training data
-fit_1c &lt;- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR</code></pre>
+fit_1a &lt;- glm(y ~ x2 + x4, data=cv_train_1) # fit the first linear regression on that training data
+fit_1b &lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train_1) # second LR fit on the training data
+fit_1c &lt;- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR</code></pre>
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -782,7 +782,7 @@ Step 3: Obtain predictions for first CV-fold
 <p>We can then get use our validation data, <code>cv_index == 10</code>, to obtain our first set of cross-validated predictions.</p>
 <pre class="r"><code>cv_valid_1 &lt;- obs[which(cv_index == 10),] # make a data set that only contains observations except in k=10
 pred_1a &lt;- predict(fit_1a, newdata = cv_valid_1) # use that data set as the validation for all the models in the SL library
-pred_1b &lt;- predict(fit_1b, newdata = cv_valid_1)
+pred_1b &lt;- predict(fit_1b, newdata = cv_valid_1) 
 pred_1c &lt;- predict(fit_1c, newdata = cv_valid_1)</code></pre>
 <p>Since we have 1000 <code>obs</code>ervations, that gives us three vectors of length 100: a set of predictions for each of our learners a, b, and c.</p>
 <pre class="r"><code>length(pred_1a) # double check we only have n/k predictions ...we do :-)</code></pre>
@@ -891,9 +891,9 @@ cv_preds &lt;-
   # make a training data set that contains all data except fold k
   cv_train &lt;- obs[-which(cv_index == x),]
   # fit all the base learners to that data
-  fit_a &lt;- glm(y ~ w2 + w4, data=cv_train)
-  fit_b &lt;- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train)
-  fit_c &lt;- glm(y ~ w1*w2*w3, data=cv_train)
+  fit_a &lt;- glm(y ~ x2 + x4, data=cv_train)
+  fit_b &lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train)
+  fit_c &lt;- glm(y ~ x1*x2*x3, data=cv_train)
   # make a validation data set that only contains data from fold k
   cv_valid &lt;- obs[which(cv_index == x),]
   # obtain predictions from all the base learners for that validation data
@@ -1459,7 +1459,7 @@ cv_mse_c
 <blockquote>
 <p>We <em>could</em> stop here and fit learner b to our full data set, and that would be called using the <strong>discrete superlearner</strong>.</p>
 </blockquote>
-<pre class="r"><code>discrete_sl_predictions &lt;- predict(glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs))</code></pre>
+<pre class="r"><code>discrete_sl_predictions &lt;- predict(glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs))</code></pre>
 <p>However, we can almost always create an even better prediction algorithm if we use information from <em>all</em> of the algorithms’ CV predictions to create a new algorithm.</p>
 <html>
 <body>
@@ -1470,9 +1470,9 @@ Step 6: Fit base learners on entire data set
 </html>
 <p><img src="/img/sl_steps/step6.png" style="width:50.0%" /></p>
 <p>We now have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the whole data set.</p>
-<pre class="r"><code>fit_a &lt;- glm(y ~ w2 + w4, data=obs)
-fit_b &lt;- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=obs)
-fit_c &lt;- glm(y ~ w1*w2*w3, data=obs)</code></pre>
+<pre class="r"><code>fit_a &lt;- glm(y ~ x2 + x4, data=obs)
+fit_b &lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
+fit_c &lt;- glm(y ~ x1*x2*x3, data=obs)</code></pre>
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -1561,7 +1561,7 @@ sl_mse</code></pre>
 <h1>Using the <code>SuperLearner</code> package</h1>
 <p>We could use the <code>SuperLearner</code> package and avoid all that hand-coding. Here is how you would specify an ensemble superlearner for our data with the base learner libraries of <code>ranger</code> (random forests), <code>glmnet</code> (LASSO, by default), and <code>earth</code> (MARS).</p>
 <pre class="r"><code>library(SuperLearner)
-x_df &lt;- obs %&gt;% select(w1:w4) %&gt;% as.data.frame()
+x_df &lt;- obs %&gt;% select(x1:x4) %&gt;% as.data.frame()
 sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c(&quot;SL.ranger&quot;, &quot;SL.glmnet&quot;, &quot;SL.earth&quot;))</code></pre>
 <p>You can specify the metalearner with the <code>method</code> argument. The default is <a href="#appendix">non-negative least squares</a>.</p>
