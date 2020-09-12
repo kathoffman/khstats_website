@@ -568,15 +568,7 @@ HTML Image as link
 <div id="superlearning-step-by-step" class="section level1">
 <h1>Superlearning, step by step</h1>
 <p>In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s <a href="https://www.ucbbiostat.com/labs">R Lab 3: Superlearning</a>, which you can try out if you want more practice.</p>
-<p>For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. We’ll call these variables <span class="math inline">\(W_1\)</span>, <span class="math inline">\(W_2\)</span>, <span class="math inline">\(W_3\)</span> and <span class="math inline">\(W_4\)</span>. The individual algorithms or <strong>base learners</strong> that we will use here are three plain old linear regressions with differently specified parameters:</p>
-<p>Learner a:</p>
-<p><span class="math inline">\(Y=\beta_0 + \beta_1 W_2 + \beta_2 W_4\)</span></p>
-<p>Learner b:</p>
-<p><span class="math inline">\(Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_1 W_3 + \beta_4 sin(W_4)\)</span></p>
-<p>Learner c:</p>
-<p><span class="math inline">\(Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_3 + \beta_4 W_1 W_2 + \beta_5 W_1 W_3 + \beta_6 W_2 W_3 + \beta_7 W_1 W_2 W_3\)</span></p>
-<p>I am <em>only</em> using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.</p>
-<p>The same code could be translated to a more complicated set, or <strong>superlearner library</strong>, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.</p>
+For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. We’ll call these variables <span class="math inline">\(W_1\)</span>, <span class="math inline">\(W_2\)</span>, <span class="math inline">\(W_3\)</span> and <span class="math inline">\(W_4\)</span>.
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -771,6 +763,15 @@ Step 2: Fit base learners for first CV-fold
 fit_1a &lt;- glm(y ~ w2 + w4, data=cv_train_1) # fit the first linear regression on that training data
 fit_1b &lt;- glm(y ~ w1 + w2 + w1*w3 + sin(w4), data=cv_train_1) # second LR fit on the training data
 fit_1c &lt;- glm(y ~ w1*w2*w3, data=cv_train_1) # and the third LR</code></pre>
+<p>The individual algorithms or <strong>base learners</strong> that we’re using here are three plain old linear regressions with differently specified parameters:</p>
+<p>Learner a:
+<span class="math inline">\(Y=\beta_0 + \beta_1 W_2 + \beta_2 W_4\)</span></p>
+<p>Learner b:
+<span class="math inline">\(Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_1 W_3 + \beta_4 sin(W_4)\)</span></p>
+<p>Learner c:
+<span class="math inline">\(Y=\beta_0 + \beta_1 W_1 + \beta_2 W_2 + \beta_3 W_3 + \beta_4 W_1 W_2 + \beta_5 W_1 W_3 + \beta_6 W_2 W_3 + \beta_7 W_1 W_2 W_3\)</span></p>
+<p>I am <em>only</em> using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.</p>
+<p>The same code could be translated to a more complicated set, or <strong>superlearner library</strong>, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.</p>
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
