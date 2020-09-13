@@ -22,7 +22,7 @@
 &lt;script src=&#34;/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
 
 
-&lt;p&gt;In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a &lt;strike&gt;100%&lt;/strike&gt; 200% COVID-19 statistician. I received many analysis requests, though not all of them from official PIs:&lt;/p&gt;
+&lt;p&gt;In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a &lt;strike&gt;100%&lt;/strike&gt; 200% COVID-19 statistician. I received many analysis requests, though not all of them from official investigators:&lt;/p&gt;
 &lt;blockquote class=&#34;twitter-tweet&#34;&gt;
 &lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;
 My family recently learned I am the statistician for my hospital’s pulmonologists and now I get COVID-19 analysis requests from them, too &lt;a href=&#34;https://t.co/wlHmUaBh6Y&#34;&gt;pic.twitter.com/wlHmUaBh6Y&lt;/a&gt;
@@ -30,8 +30,8 @@ My family recently learned I am the statistician for my hospital’s pulmonologi
 — Kat Hoffman (&lt;span class=&#34;citation&#34;&gt;@rkatlady&lt;/span&gt;) &lt;a href=&#34;https://twitter.com/rkatlady/status/1248746176834306056?ref_src=twsrc%5Etfw&#34;&gt;April 10, 2020&lt;/a&gt;
 &lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
-&lt;p&gt;Jokes aside, I was really busy during the outbreak. While doing work for both hospital operations and rapidly moving COVID-19 academic research, it was more important than ever to code efficiently and accurately while working with a deluge of Electronic Health Record (EHR) data.&lt;/p&gt;
-&lt;p&gt;This post contains my favorite (because they were either the most useful or most used) lines of &lt;code&gt;R&lt;/code&gt; code for turning the very raw form EHR data into analytical files for descriptive reporting and statistical inference. For the examples, I’ve created data that is a simplified version of the actual data I used during the NYC outbreak – just in case you too would like to pretend you are a COVID-19 biostatistician!&lt;/p&gt;
+&lt;p&gt;Jokes aside, I was really, really busy during the outbreak. While doing work for both hospital operations and rapidly moving COVID-19 academic research, it was more important than ever to code efficiently and accurately while working with a deluge of Electronic Health Record (EHR) data.&lt;/p&gt;
+&lt;p&gt;This post contains my favorite (because they were either the most useful or most used) lines of &lt;code&gt;R&lt;/code&gt; code for turning very raw-form EHR data into analytical files for descriptive reporting and statistical inference. For the examples, I’ve created data that is a simplified version of my actual data sets – just in case you too would like to pretend you are a COVID-19 biostatistician!&lt;/p&gt;
 &lt;p&gt;The first data set contains some basic demographic and clinical outcome information for all COVID-19 positive patients who arrived at a hospital. The second data set contains laboratory results for all patients who arrived at the hospital during a certain window of time. In theory, the first data set (&lt;code&gt;patients&lt;/code&gt;) should be a subset of the second (&lt;code&gt;labs&lt;/code&gt;).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# load tidyverse for data creation and set seed for reproducible data
 library(tidyverse)
@@ -599,6 +599,37 @@ labs &amp;lt;- map_dfr(100:110, function(x){
 &lt;/div&gt;
 &lt;p&gt;Perfect! I could go on to informatively join this data to another using &lt;code&gt;tidylog&lt;/code&gt;, make tables with clean labels using &lt;code&gt;tbl_summary()&lt;/code&gt;, &lt;code&gt;set_variable_labels()&lt;/code&gt;, and &lt;code&gt;snakecase()&lt;/code&gt;, find further labs of interest with &lt;code&gt;filter()&lt;/code&gt;, &lt;code&gt;str_detect()&lt;/code&gt;, and &lt;code&gt;tolower()&lt;/code&gt;, and make the lab values numeric with &lt;code&gt;parse_number()&lt;/code&gt;… the possibilities are endless!&lt;/p&gt;
 &lt;p&gt;I hope you enjoyed a quick insight into the data side of COVID-19 research, and/or perhaps picked up some useful function combinations for your own applied work with &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;R version 3.6.3 (2020-02-29)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.6&lt;/p&gt;
+&lt;p&gt;Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib&lt;/p&gt;
+&lt;p&gt;locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8&lt;/p&gt;
+&lt;p&gt;attached base packages:
+[1] stats graphics grDevices utils datasets methods base&lt;/p&gt;
+&lt;p&gt;other attached packages:
+[1] lubridate_1.7.9 gtsummary_1.2.6 tidylog_1.0.0 forcats_0.5.0&lt;br /&gt;
+[5] stringr_1.4.0 dplyr_1.0.2 purrr_0.3.4 readr_1.3.1&lt;br /&gt;
+[9] tidyr_1.1.2 tibble_3.0.3 ggplot2_3.3.2 tidyverse_1.3.0&lt;/p&gt;
+&lt;p&gt;loaded via a namespace (and not attached):
+[1] clisymbols_1.2.0 tidyselect_1.1.0 xfun_0.14 haven_2.2.0&lt;br /&gt;
+[5] snakecase_0.11.0 labelled_2.2.2 colorspace_1.4-1 vctrs_0.3.4&lt;br /&gt;
+[9] generics_0.0.2 htmltools_0.4.0 yaml_2.2.1 rlang_0.4.7&lt;br /&gt;
+[13] pillar_1.4.6 glue_1.4.2 withr_2.2.0 DBI_1.1.0&lt;br /&gt;
+[17] dbplyr_1.4.3 modelr_0.1.6 readxl_1.3.1 lifecycle_0.2.0
+[21] commonmark_1.7 munsell_0.5.0 blogdown_0.19 gtable_0.3.0&lt;br /&gt;
+[25] cellranger_1.1.0 rvest_0.3.5 evaluate_0.14 knitr_1.28&lt;br /&gt;
+[29] fansi_0.4.1 broom_0.7.0 Rcpp_1.0.5 checkmate_2.0.0
+[33] scales_1.1.1 backports_1.1.8 jsonlite_1.6.1 fs_1.4.1&lt;br /&gt;
+[37] hms_0.5.3 digest_0.6.25 stringi_1.4.6 bookdown_0.19&lt;br /&gt;
+[41] grid_3.6.3 cli_2.0.2 tools_3.6.3 sass_0.2.0&lt;br /&gt;
+[45] magrittr_1.5 crayon_1.3.4 pkgconfig_2.0.3 ellipsis_0.3.1&lt;br /&gt;
+[49] xml2_1.3.0 reprex_0.3.0 gt_0.2.0.5 assertthat_0.2.1
+[53] rmarkdown_2.1 httr_1.4.1 rstudioapi_0.11 R6_2.4.1&lt;br /&gt;
+[57] compiler_3.6.3&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>

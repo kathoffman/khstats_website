@@ -19,13 +19,13 @@ knitr::opts_chunk$set(echo = TRUE, results="asis")
 ```
 
 
-In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a <strike>100%</strike> 200% COVID-19 statistician. I received many analysis requests, though not all of them from official PIs:
+In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a <strike>100%</strike> 200% COVID-19 statistician. I received many analysis requests, though not all of them from official investigators:
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">My family recently learned I am the statistician for my hospital’s pulmonologists and now I get COVID-19 analysis requests from them, too <a href="https://t.co/wlHmUaBh6Y">pic.twitter.com/wlHmUaBh6Y</a></p>&mdash; Kat Hoffman (@rkatlady) <a href="https://twitter.com/rkatlady/status/1248746176834306056?ref_src=twsrc%5Etfw">April 10, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-Jokes aside, I was really busy during the outbreak. While doing work for both hospital operations and rapidly moving COVID-19 academic research, it was more important than ever to code efficiently and accurately while working with a deluge of Electronic Health Record (EHR) data.
+Jokes aside, I was really, really busy during the outbreak. While doing work for both hospital operations and rapidly moving COVID-19 academic research, it was more important than ever to code efficiently and accurately while working with a deluge of Electronic Health Record (EHR) data.
 
-This post contains my favorite (because they were either the most useful or most used) lines of `R` code for turning the very raw form EHR data into analytical files for descriptive reporting and statistical inference. For the examples, I've created data that is a simplified version of the actual data I used during the NYC outbreak -- just in case you too would like to pretend you are a COVID-19 biostatistician!
+This post contains my favorite (because they were either the most useful or most used) lines of `R` code for turning very raw-form EHR data into analytical files for descriptive reporting and statistical inference. For the examples, I've created data that is a simplified version of my actual data sets -- just in case you too would like to pretend you are a COVID-19 biostatistician!
 
 The first data set contains some basic demographic and clinical outcome information for all COVID-19 positive patients who arrived at a hospital. The second data set contains laboratory results for all patients who arrived at the hospital during a certain window of time. In theory, the first data set (`patients`) should be a subset of the second (`labs`).
 
@@ -212,6 +212,11 @@ patient_labs %>%
 Perfect! I could go on to informatively join this data to another using `tidylog`, make tables with clean labels using `tbl_summary()`, `set_variable_labels()`, and `snakecase()`, find further labs of interest with `filter()`, `str_detect()`, and `tolower()`, and make the lab values numeric with `parse_number()`... the possibilities are endless!
 
 I hope you enjoyed a quick insight into the data side of COVID-19 research, and/or perhaps picked up some useful function combinations for your own applied work with `R`.
+
+```{r}
+sessionInfo()
+```
+
 
 
 

@@ -5,7 +5,7 @@
     <link>/tags/</link>
       <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 18 Sep 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Oct 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Tags</title>
@@ -13,18 +13,18 @@
     </image>
     
     <item>
-      <title>ensemble learning</title>
-      <link>/tags/ensemble-learning/</link>
-      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/ensemble-learning/</guid>
+      <title>R</title>
+      <link>/tags/r/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/r/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>R</title>
-      <link>/tags/r/</link>
+      <title>ensemble learning</title>
+      <link>/tags/ensemble-learning/</link>
       <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/r/</guid>
+      <guid>/tags/ensemble-learning/</guid>
       <description></description>
     </item>
     

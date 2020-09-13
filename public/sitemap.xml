@@ -18,37 +18,47 @@
   </url>
   
   <url>
+    <loc>/categories/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/tmle/tmle-tutorial-3/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/sl/superlearning/</loc>
     <lastmod>2020-09-18T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
-    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/ensemble-learning/</loc>
-    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/</loc>
-    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/</loc>
-    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r/</loc>
-    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
     <lastmod>2020-09-18T21:13:14-05:00</lastmod>
   </url>
   
@@ -84,11 +94,6 @@
   
   <url>
     <loc>/tags/superlearning/</loc>
-    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2020-09-18T21:13:14-05:00</lastmod>
   </url>
   

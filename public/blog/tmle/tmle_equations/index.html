@@ -28,10 +28,32 @@
   
     
   
-  <meta name="description" content="Research Biostatistician">
+  <meta name="description" content="\(Y\)
+\(\mathbf{W}=(W_1,W_2,...W_n)\)
+\(A\)
+\(A=1\)
+\(A=0\)
+\(ATE = E[E[Y|A=1,\mathbf{W}]-E[Y|A=0,\mathbf{W}]]\)
+\(\hat{ATE} = \hat{E}[\hat{E}^*[Y|A=1,\mathbf{W}]-\hat{E}^*[Y|A=0,\mathbf{W}]]\)
+\(Q(A,W) = E[Y|A,\mathbf{W}]\)
+\(Q(A,W) = \hat{E}[Y|A,\mathbf{W}]\)
+\(Q(1,W) = \hat{E}[Y|A=1,\mathbf{W}]\)
+\(Q(0,W) = \hat{E}[Y|A=0,\mathbf{W}]\)
+\(g(W) = P(A=1|\mathbf{W})\)
+\(H(A=1,\mathbf{W})=\frac{1}{\hat{P}(A=1|\mathbf{W})}\)
+\(H(A=0,\mathbf{W})=-\frac{1}{\hat{P}(A=0|\mathbf{W})}\)
+\(H(A,\mathbf{W})=\frac{I[A=1]}{\hat{P}(A=1|\mathbf{W})}-\frac{I[A=0]}{\hat{P}(A=0|\mathbf{W})}\)
+\(logit(E[Y|A,\mathbf{\mathbf{W}}])=logit(\hat{E}[Y|A,\mathbf{W}])&#43;\epsilon H(A,\mathbf{W})\)
+\(\hat{E}^*[Y|A=1,\mathbf{W}]=expit(logit(\hat{E}[Y|A=1,\mathbf{W}])&#43;\hat{\epsilon}H(1,\mathbf{W}))\)
+\(\hat{E}^*[Y|A=0,\mathbf{W}])=expit(logit(\hat{E}[Y|A=0,\mathbf{W}])&#43;\hat{\epsilon} H(0,\mathbf{W}))\)
+\(\hat{\epsilon}\)
+\(\hat{E}^*[Y|A,\mathbf{W}]\)
+\(\hat{EIC} = H(A,W)[Y-\hat{E}^*[Y|A,\mathbf{W}]] &#43; \hat{E}^*[Y|A=1,\mathbf{W}]] - \hat{E}^*[Y|A=0,\mathbf{W}]] - \hat{ATE}\)
+\(\hat{\sigma}_{ATE} = \sqrt{\frac{\hat{Var}(\hat{EIC})}{n}}\)
+$_{ATE} = $">
 
   
-  <link rel="alternate" hreflang="en-us" href="/tags/tidylog/">
+  <link rel="alternate" hreflang="en-us" href="/blog/tmle/tmle_equations/">
 
   
 
@@ -105,14 +127,12 @@
   
 
   
-  <link rel="alternate" href="/tags/tidylog/index.xml" type="application/rss+xml" title="KHstats">
-  
 
   <link rel="manifest" href="/index.webmanifest">
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/tags/tidylog/">
+  <link rel="canonical" href="/blog/tmle/tmle_equations/">
 
   
   
@@ -128,12 +148,35 @@
   <meta property="twitter:creator" content="@rkatlady">
   
   <meta property="og:site_name" content="KHstats">
-  <meta property="og:url" content="/tags/tidylog/">
-  <meta property="og:title" content="tidylog | KHstats">
-  <meta property="og:description" content="Research Biostatistician"><meta property="og:image" content="/img/icon-192.png">
+  <meta property="og:url" content="/blog/tmle/tmle_equations/">
+  <meta property="og:title" content="tmle equations | KHstats">
+  <meta property="og:description" content="\(Y\)
+\(\mathbf{W}=(W_1,W_2,...W_n)\)
+\(A\)
+\(A=1\)
+\(A=0\)
+\(ATE = E[E[Y|A=1,\mathbf{W}]-E[Y|A=0,\mathbf{W}]]\)
+\(\hat{ATE} = \hat{E}[\hat{E}^*[Y|A=1,\mathbf{W}]-\hat{E}^*[Y|A=0,\mathbf{W}]]\)
+\(Q(A,W) = E[Y|A,\mathbf{W}]\)
+\(Q(A,W) = \hat{E}[Y|A,\mathbf{W}]\)
+\(Q(1,W) = \hat{E}[Y|A=1,\mathbf{W}]\)
+\(Q(0,W) = \hat{E}[Y|A=0,\mathbf{W}]\)
+\(g(W) = P(A=1|\mathbf{W})\)
+\(H(A=1,\mathbf{W})=\frac{1}{\hat{P}(A=1|\mathbf{W})}\)
+\(H(A=0,\mathbf{W})=-\frac{1}{\hat{P}(A=0|\mathbf{W})}\)
+\(H(A,\mathbf{W})=\frac{I[A=1]}{\hat{P}(A=1|\mathbf{W})}-\frac{I[A=0]}{\hat{P}(A=0|\mathbf{W})}\)
+\(logit(E[Y|A,\mathbf{\mathbf{W}}])=logit(\hat{E}[Y|A,\mathbf{W}])&#43;\epsilon H(A,\mathbf{W})\)
+\(\hat{E}^*[Y|A=1,\mathbf{W}]=expit(logit(\hat{E}[Y|A=1,\mathbf{W}])&#43;\hat{\epsilon}H(1,\mathbf{W}))\)
+\(\hat{E}^*[Y|A=0,\mathbf{W}])=expit(logit(\hat{E}[Y|A=0,\mathbf{W}])&#43;\hat{\epsilon} H(0,\mathbf{W}))\)
+\(\hat{\epsilon}\)
+\(\hat{E}^*[Y|A,\mathbf{W}]\)
+\(\hat{EIC} = H(A,W)[Y-\hat{E}^*[Y|A,\mathbf{W}]] &#43; \hat{E}^*[Y|A=1,\mathbf{W}]] - \hat{E}^*[Y|A=0,\mathbf{W}]] - \hat{ATE}\)
+\(\hat{\sigma}_{ATE} = \sqrt{\frac{\hat{Var}(\hat{EIC})}{n}}\)
+$_{ATE} = $"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-09-10T21:13:14-05:00">
+    
+    
   
 
   
@@ -145,7 +188,7 @@
 
 
 
-  <title>tidylog | KHstats</title>
+  <title>tmle equations | KHstats</title>
 
 </head>
 
@@ -348,55 +391,317 @@
 </nav>
 
 
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">tmle equations</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="" itemprop="datePublished">
+<meta content="" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jan 1, 0001</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/blog/tmle/tmle_equations/&amp;text=tmle%20equations" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/blog/tmle/tmle_equations/&amp;t=tmle%20equations" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=tmle%20equations&amp;body=/blog/tmle/tmle_equations/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/blog/tmle/tmle_equations/&amp;title=tmle%20equations" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=tmle%20equations%20/blog/tmle/tmle_equations/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/blog/tmle/tmle_equations/&amp;title=tmle%20equations" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<p><span class="math inline">\(Y\)</span></p>
+<p><span class="math inline">\(\mathbf{W}=(W_1,W_2,...W_n)\)</span></p>
+<p><span class="math inline">\(A\)</span></p>
+<p><span class="math inline">\(A=1\)</span></p>
+<p><span class="math inline">\(A=0\)</span></p>
+<p><span class="math inline">\(ATE = E[E[Y|A=1,\mathbf{W}]-E[Y|A=0,\mathbf{W}]]\)</span></p>
+<p><span class="math inline">\(\hat{ATE} = \hat{E}[\hat{E}^*[Y|A=1,\mathbf{W}]-\hat{E}^*[Y|A=0,\mathbf{W}]]\)</span></p>
+<p><span class="math inline">\(Q(A,W) = E[Y|A,\mathbf{W}]\)</span></p>
+<p><span class="math inline">\(Q(A,W) = \hat{E}[Y|A,\mathbf{W}]\)</span></p>
+<p><span class="math inline">\(Q(1,W) = \hat{E}[Y|A=1,\mathbf{W}]\)</span></p>
+<p><span class="math inline">\(Q(0,W) = \hat{E}[Y|A=0,\mathbf{W}]\)</span></p>
+<p><span class="math inline">\(g(W) = P(A=1|\mathbf{W})\)</span></p>
+<p><span class="math inline">\(H(A=1,\mathbf{W})=\frac{1}{\hat{P}(A=1|\mathbf{W})}\)</span></p>
+<p><span class="math inline">\(H(A=0,\mathbf{W})=-\frac{1}{\hat{P}(A=0|\mathbf{W})}\)</span></p>
+<p><span class="math inline">\(H(A,\mathbf{W})=\frac{I[A=1]}{\hat{P}(A=1|\mathbf{W})}-\frac{I[A=0]}{\hat{P}(A=0|\mathbf{W})}\)</span></p>
+<p><span class="math inline">\(logit(E[Y|A,\mathbf{\mathbf{W}}])=logit(\hat{E}[Y|A,\mathbf{W}])+\epsilon H(A,\mathbf{W})\)</span></p>
+<p><span class="math inline">\(\hat{E}^*[Y|A=1,\mathbf{W}]=expit(logit(\hat{E}[Y|A=1,\mathbf{W}])+\hat{\epsilon}H(1,\mathbf{W}))\)</span></p>
+<p><span class="math inline">\(\hat{E}^*[Y|A=0,\mathbf{W}])=expit(logit(\hat{E}[Y|A=0,\mathbf{W}])+\hat{\epsilon} H(0,\mathbf{W}))\)</span></p>
+<p><span class="math inline">\(\hat{\epsilon}\)</span></p>
+<p><span class="math inline">\(\hat{E}^*[Y|A,\mathbf{W}]\)</span></p>
+<p><span class="math inline">\(\hat{EIC} = H(A,W)[Y-\hat{E}^*[Y|A,\mathbf{W}]] + \hat{E}^*[Y|A=1,\mathbf{W}]] - \hat{E}^*[Y|A=0,\mathbf{W}]] - \hat{ATE}\)</span></p>
+<p><span class="math inline">\(\hat{\sigma}_{ATE} = \sqrt{\frac{\hat{Var}(\hat{EIC})}{n}}\)</span></p>
+<p>$_{ATE} =  $</p>
+
+    </div>
+
+    
+
+
+    
+
+
+
+    
+      
+
+
+
+
+
+
+
+
   
 
 
 
 
-
-
-
-
-
-
-
-
-  
 
   
   
   
     
   
-<div class="universal-wrapper pt-3">
-  <h1 itemprop="name">tidylog</h1>
-
   
-
-  
-</div>
-
-
-
-<div class="universal-wrapper">
-  
-
-  
-  
-  <div>
-    <h2><a href="/blog/covid-wrangling/covid-functions/">My favorite lines of data wrangling code during the NYC COVID-19 outbreak</a></h2>
-    <div class="article-style">
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
       
-      In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a 100% 200% COVID-19 statistician. I received many analysis requests, though not all of them from official investigators:
-My family recently learned I am the statistician for my hospital’s pulmonologists and now I get COVID-19 analysis requests from them, too pic.twitter.com/wlHmUaBh6Y — Kat Hoffman (@rkatlady) April 10, 2020   Jokes aside, I was really, really busy during the outbreak.
-      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hub64370a9fa8c7276c9d6cc9d2e350075_235979_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
+      <h6 class="card-subtitle">Research Biostatistician</h6>
+      <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="/#contact" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/Rkatlady" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/hoffmakl" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
     </div>
   </div>
-  
 
-  
 
-</div>
+
+      
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
 
       
 
