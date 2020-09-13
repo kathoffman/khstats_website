@@ -30,7 +30,7 @@
   
   <meta name="description" content="Why use one machine learning algorithm when you could use all* of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in R.
 *within computational limits
-    HTML Image as link       A [Printable] Visual Guide Over the winter, I read Targeted Learning by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making “cheat sheets” or “visual guides” for some of the chapters.">
+    HTML Image as link     The Visual Guide… Over the winter, I read Targeted Learning by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets like this for some of the chapters.">
 
   
   <link rel="alternate" hreflang="en-us" href="/blog/sl/superlearning/">
@@ -132,7 +132,7 @@
   <meta property="og:title" content="Become a Superlearner! A Visual Guide &amp; Introductory R Tutorial on Superlearning | KHstats">
   <meta property="og:description" content="Why use one machine learning algorithm when you could use all* of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in R.
 *within computational limits
-    HTML Image as link       A [Printable] Visual Guide Over the winter, I read Targeted Learning by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making “cheat sheets” or “visual guides” for some of the chapters."><meta property="og:image" content="/img/icon-192.png">
+    HTML Image as link     The Visual Guide… Over the winter, I read Targeted Learning by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets like this for some of the chapters."><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
@@ -544,22 +544,19 @@ HTML Image as link
 </title>
 </head>
 <body>
-<a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf">
-<img alt="cheatsheet" src="/img/Superlearning.jpg"
+<img alt="cheatsheet" src="/img/Superlearning.jpg"  
          width=100%">
+<figcaption>
+<em>The Visual Guide…</em> Over the winter, I read <a href="https://www.springer.com/gp/book/9781441997814">Targeted Learning</a> by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets like this for some of the chapters. My visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of this tutorial. It is available as an 8.5x11" pdf on my <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf">Github</a>, should you ever wish to print it out for reference (or desk decor).
+</figcaption>
 </a>
 </body>
 </html>
-<div id="a-printable-visual-guide" class="section level1">
-<h1>A [Printable] Visual Guide</h1>
-<p>Over the winter, I read <a href="https://www.springer.com/gp/book/9781441997814">Targeted Learning</a> by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making “cheat sheets” or “visual guides” for some of the chapters.</p>
-<p>The <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf">visual guide</a> I made for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is essentially a condensed version of this tutorial. It’s ready-to-print on an 8.5x11" paper, should you wish to decorate your desk area with it, post-pandemic.</p>
-</div>
 <div id="supercuts-of-superlearning" class="section level1">
 <h1>Supercuts of superlearning</h1>
 <ul>
 <li><p><strong>Superlearning</strong> is a technique for prediction that involves <strong>combining many individual statistical algorithms</strong> (commonly called “data-adaptive” or “machine learning” algorithms) to <strong>create a new, single prediction algorithm that is at least as good as any of the individual algorithms</strong>.</p></li>
-<li><p>The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one <strong>minimizes a specified loss function</strong>, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
+<li><p>The superLearner Algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one <strong>minimizes a specified loss function</strong>, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
 <li><p>The motivation for this type of “ensembling” is that <strong>no single algorithm is always the best for all kinds of data</strong>. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not <em>always</em> ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.</p></li>
 <li><p>Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.</p></li>
 </ul>
@@ -567,8 +564,7 @@ HTML Image as link
 </div>
 <div id="superlearning-step-by-step" class="section level1">
 <h1>Superlearning, step by step</h1>
-<p>In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s <a href="https://www.ucbbiostat.com/labs">R Lab 3: Superlearning</a>, which you can try out if you want more practice.</p>
-For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. We’ll call these variables <span class="math inline">\(X_1\)</span>, <span class="math inline">\(X_2\)</span>, <span class="math inline">\(X_3\)</span> and <span class="math inline">\(X_4\)</span>.
+<p>In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s <a href="https://www.ucbbiostat.com/labs">R Lab 3: Superlearning</a> which you can try out if you want more practice.</p>
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -576,7 +572,7 @@ Step 0: Load libraries, set seed, simulate data
 </h1>
 </body>
 </html>
-<p>To start this example, let’s simulate a continuous outcome, <code>y</code>, and those four variables for prediction, <code>x1</code>, <code>x2</code>, <code>x3</code>, and <code>x4</code>.</p>
+<p>For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate the continuous outcome, <code>y</code>, and those four variables for prediction, <code>x1</code>, <code>x2</code>, <code>x3</code>, and <code>x4</code>.</p>
 <pre class="r"><code>library(dplyr, warn.conflicts = F)
 library(kableExtra, warn.conflicts = F)
 set.seed(7)</code></pre>
@@ -761,16 +757,16 @@ Step 2: Fit base learners for first CV-fold
 <p>Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,…) <em>except</em> for the very last one: <code>cv_index == 10</code>.</p>
 <p>The individual algorithms or <strong>base learners</strong> that we’ll use here are three plain old linear regressions with differently specified parameters:</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>Learner a</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4\)</span></p></li>
-<li><p><strong>Learner b</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4)\)</span></p></li>
-<li><p><strong>Learner c</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3\)</span></p></li>
+<li><p><strong>Learner A</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4\)</span></p></li>
+<li><p><strong>Learner B</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4)\)</span></p></li>
+<li><p><strong>Learner C</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3\)</span></p></li>
 </ol>
-<p>I am <em>only</em> using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.</p>
-<p>The same code could be translated to a more complicated set, or <strong>superlearner library</strong>, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.</p>
 <pre class="r"><code>cv_train_1 &lt;- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
 fit_1a &lt;- glm(y ~ x2 + x4, data=cv_train_1) # fit the first linear regression on that training data
 fit_1b &lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train_1) # second LR fit on the training data
 fit_1c &lt;- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR</code></pre>
+<p>I am <em>only</em> using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.</p>
+<p>The same code could be translated to a more complicated set, or <strong>superlearner library</strong>, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.</p>
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -1153,8 +1149,8 @@ pred_c
 </tr>
 </tbody>
 </table>
-<p>This metalearner provides us with the coefficients to apply to each of the base learners. In other words, if we have a set of predictions from learner a, b, and c, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 <span class="math inline">\(\times\)</span> predictions from learner a, 0.862 <span class="math inline">\(\times\)</span> predictions from learner b, and 0.158 <span class="math inline">\(\times\)</span> predictions from learner c.</p>
-<p>To gain more intuition on these coefficients in the metalearner, check out the optional step below.</p>
+<p>This metalearner provides us with the coefficients to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 <span class="math inline">\(\times\)</span> predictions from Learner A, 0.862 <span class="math inline">\(\times\)</span> predictions from Learner B, and 0.158 <span class="math inline">\(\times\)</span> predictions from Learner C.</p>
+<p>To gain more intuition on these coefficients in the metalearner, check out the step below.</p>
 <div id="optional-step-for-demonstration-manually-computing-the-mse" class="section level3">
 <h3><em>Optional step for demonstration</em>: manually computing the MSE</h3>
 <p>Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error <span class="math inline">\((y - \hat{y})^2\)</span> for each CV prediction a, b, and c.</p>
@@ -1455,12 +1451,12 @@ cv_mse_c
 </tr>
 </tbody>
 </table>
-<p>We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is learner b. In other words, if we had to choose one of the statistical learning algorithms in our library to be our prediction model based on the CV predictions, we “lose” the least, or we “take the smallest risk,” with learner b.</p>
+<p>We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is Learner B. That makes sense, because when we fit a linear regression in our metalearning step, Learner B predictions received a much larger coefficient relative to Learners A and C.</p>
 <blockquote>
-<p>We <em>could</em> stop here and fit learner b to our full data set, and that would be called using the <strong>discrete superlearner</strong>.</p>
+<p>We <em>could</em> stop here and fit Learner B to our full data set, and that would be called using the <strong>discrete superlearner</strong>.</p>
 </blockquote>
 <pre class="r"><code>discrete_sl_predictions &lt;- predict(glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs))</code></pre>
-<p>However, we can almost always create an even better prediction algorithm if we use information from <em>all</em> of the algorithms’ CV predictions to create a new algorithm.</p>
+<p>However, we can almost always create an even better prediction algorithm if we use information from <em>all</em> of the algorithms’ CV predictions.</p>
 <html>
 <body>
 <h2 style="color:white;background-color:#c30a0a">
@@ -1469,7 +1465,7 @@ Step 6: Fit base learners on entire data set
 </body>
 </html>
 <p><img src="/img/sl_steps/step6.png" style="width:50.0%" /></p>
-<p>We now have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the whole data set.</p>
+<p>After we fit the metalearner, we officially have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the full data set.</p>
 <pre class="r"><code>fit_a &lt;- glm(y ~ x2 + x4, data=obs)
 fit_b &lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
 fit_c &lt;- glm(y ~ x1*x2*x3, data=obs)</code></pre>
@@ -1481,7 +1477,7 @@ Step 7: Obtain predictions from each base learner on entire data set
 </body>
 </html>
 <p><img src="/img/sl_steps/step7.png" style="width:40.0%" /></p>
-<p>We’ll use <em>those</em> base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using <em>cross-validated</em> predictions, rather than fitting the base learners on the entire data set. This was to avoid overfitting.</p>
+<p>We’ll use <em>those</em> base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using <em>cross-validated</em> predictions, rather than fitting the base learners on the whole data set. This was to avoid overfitting.</p>
 <pre class="r"><code>pred_a &lt;- predict(fit_a)
 pred_b &lt;- predict(fit_b)
 pred_c &lt;- predict(fit_c)
@@ -1554,12 +1550,12 @@ Step 9 and beyond…
 sl_mse</code></pre>
 <pre><code>## [1] 0.01834451</code></pre>
 <p>We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms’ hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.</p>
-<p>We can then cross-validate this entire process to evaluate the predictive performance of our superlearner algorithm. Alternatively, we could leave a hold out training data set to evaluate the performance.</p>
+<p>We can then cross-validate this entire process to evaluate the predictive performance of our superlearner algorithm. Alternatively, we could leave a hold-out training data set to evaluate the performance.</p>
 </div>
 </div>
 <div id="using-the-superlearner-package" class="section level1">
 <h1>Using the <code>SuperLearner</code> package</h1>
-<p>We could use the <code>SuperLearner</code> package and avoid all that hand-coding. Here is how you would specify an ensemble superlearner for our data with the base learner libraries of <code>ranger</code> (random forests), <code>glmnet</code> (LASSO, by default), and <code>earth</code> (MARS).</p>
+<p>Alternatively, we could use the <code>SuperLearner</code> package and avoid all that hand-coding. Here is how you would specify an ensemble superlearner for our data with the base learner libraries of <code>ranger</code> (random forests), <code>glmnet</code> (LASSO, by default), and <code>earth</code> (MARS).</p>
 <pre class="r"><code>library(SuperLearner)
 x_df &lt;- obs %&gt;% select(x1:x4) %&gt;% as.data.frame()
 sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
@@ -1646,16 +1642,28 @@ sl_predictions
 </div>
 <div id="coming-soon-when-prediction-is-not-the-end-goal" class="section level1">
 <h1>Coming soon… when prediction is not the end goal</h1>
-<p>Like most algorithms designed for prediction, the superlearner algorithm does not produce standard errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with Targeted Learning methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.</p>
-<p>I made a similar <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">visual guide for TMLE</a>. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: <a href="https://medium.com/@kathoffman317">@kathoffman317</a>.</p>
-<p><img src="/img/tmle.jpg" /></p>
+<p>Like most algorithms designed for prediction, the superlearner algorithm does not produce standard errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with semi-parametric estimation methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.</p>
+<p>I made a similar <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">visual guide for TMLE</a>. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: <a href="https://medium.com/@kathoffman317">@kathoffman317</a>. If you’re curious about TMLE in the meantime, I really like <a href="https://migariane.github.io/TMLE.nb.html">this tutorial</a> by Miguel Angel Luque Fernandez.</p>
+<html>
+<head>
+<title>
+HTML Image as link
+</title>
+</head>
+<body>
+<a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+<img alt="cheatsheet" src="/img/TMLE.jpg"
+         width=100%">
+</a>
+</body>
+</html>
 </div>
 <div id="appendix" class="section level1">
 <h1>Appendix</h1>
 <div id="non-negative-least-squares-regression" class="section level2">
 <h2>Non-negative least squares regression</h2>
 <p>The default in the <code>SuperLearner</code> package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as “regular” linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the <em>Euclidean distance</em>), you constrain your solution to only allow <em>positive</em> coefficients to minimize that distance.</p>
-<p>It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements an nnls regression as the metalearner, see this <a href="https://github.com/ainaimi/SuperLearnerIntro">introductory tutorial code</a>.</p>
+<p>It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements an NNLS regression as the metalearner, see this <a href="https://github.com/ainaimi/SuperLearnerIntro">introductory tutorial code</a>.</p>
 </div>
 <div id="another-visual-guide" class="section level2">
 <h2>Another visual guide</h2>
