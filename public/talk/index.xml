@@ -5,12 +5,20 @@
     <link>/talk/</link>
       <atom:link href="/talk/index.xml" rel="self" type="application/rss+xml" />
     <description>Recent &amp; Upcoming Talks</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 10 Sep 2019 19:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 05 Aug 2020 10:00:00 +0000</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Recent &amp; Upcoming Talks</title>
       <link>/talk/</link>
     </image>
+    
+    <item>
+      <title>Estimating the Causal Effect of Sepsis on Mortality in Intensive Care Unit patients with and without a solid organ transplant</title>
+      <link>/talk/sepsis/</link>
+      <pubDate>Wed, 05 Aug 2020 10:00:00 +0000</pubDate>
+      <guid>/talk/sepsis/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Become a Superlearner</title>

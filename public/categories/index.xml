@@ -5,7 +5,7 @@
     <link>/categories/</link>
       <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
     <description>Categories</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 14 Mar 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 18 Sep 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Categories</title>
@@ -15,7 +15,7 @@
     <item>
       <title>R</title>
       <link>/categories/r/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
       <guid>/categories/r/</guid>
       <description></description>
     </item>
@@ -23,15 +23,31 @@
     <item>
       <title>statistics</title>
       <link>/categories/statistics/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
       <guid>/categories/statistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data visualization</title>
+      <link>/categories/data-visualization/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/categories/data-visualization/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>career</title>
+      <link>/categories/career/</link>
+      <pubDate>Sun, 06 Oct 2019 21:13:14 -0500</pubDate>
+      <guid>/categories/career/</guid>
       <description></description>
     </item>
     
     <item>
       <title>blog</title>
       <link>/categories/blog/</link>
-      <pubDate>Sun, 06 Oct 2019 21:13:14 -0500</pubDate>
+      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
       <guid>/categories/blog/</guid>
       <description></description>
     </item>

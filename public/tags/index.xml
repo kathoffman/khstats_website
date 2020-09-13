@@ -5,12 +5,132 @@
     <link>/tags/</link>
       <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 14 Mar 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 18 Sep 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Tags</title>
       <link>/tags/</link>
     </image>
+    
+    <item>
+      <title>ensemble learning</title>
+      <link>/tags/ensemble-learning/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/ensemble-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>/tags/r/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rstats</title>
+      <link>/tags/rstats/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/rstats/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sl3</title>
+      <link>/tags/sl3/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/sl3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>stacked generalizations</title>
+      <link>/tags/stacked-generalizations/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/stacked-generalizations/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>stacking</title>
+      <link>/tags/stacking/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/stacking/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SuperLearner</title>
+      <link>/tags/superlearner/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/superlearner/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>superlearning</title>
+      <link>/tags/superlearning/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/superlearning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>COVID-19</title>
+      <link>/tags/covid-19/</link>
+      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/covid-19/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data wrangling</title>
+      <link>/tags/data-wrangling/</link>
+      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/data-wrangling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Electronic Health Record</title>
+      <link>/tags/electronic-health-record/</link>
+      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/electronic-health-record/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gtsummary</title>
+      <link>/tags/gtsummary/</link>
+      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/gtsummary/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidylog</title>
+      <link>/tags/tidylog/</link>
+      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/tidylog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/tidyverse/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>correlation</title>
+      <link>/tags/correlation/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/correlation/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>expectations</title>
@@ -21,10 +141,18 @@
     </item>
     
     <item>
-      <title>R</title>
-      <link>/tags/r/</link>
+      <title>ggplot2</title>
+      <link>/tags/ggplot2/</link>
       <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/r/</guid>
+      <guid>/tags/ggplot2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>purrr</title>
+      <link>/tags/purrr/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/purrr/</guid>
       <description></description>
     </item>
     
@@ -33,6 +161,30 @@
       <link>/tags/statistics/</link>
       <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
       <guid>/tags/statistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>longitudinal survival</title>
+      <link>/tags/longitudinal-survival/</link>
+      <pubDate>Thu, 28 Nov 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/longitudinal-survival/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>swimmer plots</title>
+      <link>/tags/swimmer-plots/</link>
+      <pubDate>Thu, 28 Nov 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/swimmer-plots/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>treatment timelines</title>
+      <link>/tags/treatment-timelines/</link>
+      <pubDate>Thu, 28 Nov 2019 21:13:14 -0500</pubDate>
+      <guid>/tags/treatment-timelines/</guid>
       <description></description>
     </item>
     
@@ -81,14 +233,6 @@
       <link>/tags/r-markdown/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
       <guid>/tags/r-markdown/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>rstats</title>
-      <link>/tags/rstats/</link>
-      <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
-      <guid>/tags/rstats/</guid>
       <description></description>
     </item>
     

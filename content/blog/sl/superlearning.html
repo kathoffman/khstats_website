@@ -1,7 +1,7 @@
 ---
 title: "Become a Superlearner! A Visual Guide & Introductory R Tutorial on Superlearning"
 author: "Katherine Hoffman"
-date: 2020-08-29T21:13:14-05:00
+date: 2020-09-18T21:13:14-05:00
 categories: ["R","statistics"]
 draft: false
 math: true
@@ -30,7 +30,7 @@ HTML Image as link
 <img alt="cheatsheet" src="/img/Superlearning.jpg"  
          width=100%">
 <figcaption>
-<em>The Visual Guide…</em> Over the winter, I read <a href="https://www.springer.com/gp/book/9781441997814">Targeted Learning</a> by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets like this for some of the chapters. My visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of this tutorial. It is available as an 8.5x11" pdf on my <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf">Github</a>, should you ever wish to print it out for reference (or desk decor).
+<em>The Visual Guide…</em> Over the winter, I read <a href="https://www.springer.com/gp/book/9781441997814">Targeted Learning</a> by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an 8.5x11" pdf on <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf">Github</a>, should you wish to print it out for reference (or desk decor).
 </figcaption>
 </a>
 </body>
@@ -240,9 +240,9 @@ Step 2: Fit base learners for first CV-fold
 <p>Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,…) <em>except</em> for the very last one: <code>cv_index == 10</code>.</p>
 <p>The individual algorithms or <strong>base learners</strong> that we’ll use here are three plain old linear regressions with differently specified parameters:</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>Learner A</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4\)</span></p></li>
-<li><p><strong>Learner B</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4)\)</span></p></li>
-<li><p><strong>Learner C</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3\)</span></p></li>
+<li><p><strong>Learner A</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4 + \epsilon\)</span></p></li>
+<li><p><strong>Learner B</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4) + \epsilon\)</span></p></li>
+<li><p><strong>Learner C</strong>: <span class="math inline">\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3 + \epsilon\)</span></p></li>
 </ol>
 <pre class="r"><code>cv_train_1 &lt;- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
 fit_1a &lt;- glm(y ~ x2 + x4, data=cv_train_1) # fit the first linear regression on that training data
@@ -263,7 +263,7 @@ Step 3: Obtain predictions for first CV-fold
 pred_1a &lt;- predict(fit_1a, newdata = cv_valid_1) # use that data set as the validation for all the models in the SL library
 pred_1b &lt;- predict(fit_1b, newdata = cv_valid_1) 
 pred_1c &lt;- predict(fit_1c, newdata = cv_valid_1)</code></pre>
-<p>Since we have 1000 <code>obs</code>ervations, that gives us three vectors of length 100: a set of predictions for each of our learners a, b, and c.</p>
+<p>Since we have 1000 <code>obs</code>ervations, that gives us three vectors of length 100: a set of predictions for each of our Learners A, B, and C.</p>
 <pre class="r"><code>length(pred_1a) # double check we only have n/k predictions ...we do :-)</code></pre>
 <pre><code>## [1] 100</code></pre>
 <pre class="r"><code>knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = &quot;First CV round of predictions&quot;) </code></pre>
@@ -636,7 +636,7 @@ pred_c
 <p>To gain more intuition on these coefficients in the metalearner, check out the step below.</p>
 <div id="optional-step-for-demonstration-manually-computing-the-mse" class="section level3">
 <h3><em>Optional step for demonstration</em>: manually computing the MSE</h3>
-<p>Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error <span class="math inline">\((y - \hat{y})^2\)</span> for each CV prediction a, b, and c.</p>
+<p>Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error <span class="math inline">\((y - \hat{y})^2\)</span> for each CV prediction A, B, and C.</p>
 <pre class="r"><code>obs_preds %&gt;% select(contains(&quot;sqrd_error&quot;)) %&gt;% head() %&gt;% kable(digits=2, caption = &quot;Squared error of each base learner&quot;) </code></pre>
 <table>
 <caption>
@@ -897,7 +897,7 @@ cv_mse_c
 </tr>
 </tbody>
 </table>
-<p>We can take the mean of those (or just take the mean without grouping by CV fold in the first place!) to get the overall CV-MSE for each learner.</p>
+<p>We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.12, and Learner A varies between 0.2 and 0.5. We can take another mean to get the overall CV-MSE for each learner.</p>
 <pre class="r"><code>cv_risks %&gt;%
   select(-cv_fold) %&gt;%
   summarise_all(mean) %&gt;%
@@ -934,7 +934,8 @@ cv_mse_c
 </tr>
 </tbody>
 </table>
-<p>We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is Learner B. That makes sense, because when we fit a linear regression in our metalearning step, Learner B predictions received a much larger coefficient relative to Learners A and C.</p>
+<p>The base learner that performs the best using our chosen loss function of interest is clearly Learner B. We can see from our data simulation code why this is true – Learner B is almost exactly the mimicking the data generating mechanism of <code>y</code>.</p>
+<p>Our results align with the linear regression fit from our metalearning step; Learner B predictions received a much larger coefficient relative to Learners A and C.</p>
 <blockquote>
 <p>We <em>could</em> stop here and fit Learner B to our full data set, and that would be called using the <strong>discrete superlearner</strong>.</p>
 </blockquote>

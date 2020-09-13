@@ -5,12 +5,2278 @@
     <link>/tags/rstats/</link>
       <atom:link href="/tags/rstats/index.xml" rel="self" type="application/rss+xml" />
     <description>rstats</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2019 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 18 Sep 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>rstats</title>
       <link>/tags/rstats/</link>
     </image>
+    
+    <item>
+      <title>Become a Superlearner! A Visual Guide &amp; Introductory R Tutorial on Superlearning</title>
+      <link>/blog/sl/superlearning/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/sl/superlearning/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;Why use &lt;em&gt;one&lt;/em&gt; machine learning algorithm when you could use all* of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in &lt;code&gt;R&lt;/code&gt;.&lt;br&gt;&lt;br&gt; *within computational limits&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;
+HTML Image as link
+&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
+         width=100%&#34;&gt;
+&lt;figcaption&gt;
+&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an 8.5x11&#34; pdf on &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
+&lt;/figcaption&gt;
+&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;div id=&#34;supercuts-of-superlearning&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Supercuts of superlearning&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Superlearning&lt;/strong&gt; is a technique for prediction that involves &lt;strong&gt;combining many individual statistical algorithms&lt;/strong&gt; (commonly called “data-adaptive” or “machine learning” algorithms) to &lt;strong&gt;create a new, single prediction algorithm that is at least as good as any of the individual algorithms&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The superLearner Algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one &lt;strong&gt;minimizes a specified loss function&lt;/strong&gt;, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;no single algorithm is always the best for all kinds of data&lt;/strong&gt;. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not &lt;em&gt;always&lt;/em&gt; ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/img/spiderman_meme.jpg&#34; style=&#34;width:42.0%&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;superlearning-step-by-step&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Superlearning, step by step&lt;/h1&gt;
+&lt;p&gt;In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 0: Load libraries, set seed, simulate data
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate the continuous outcome, &lt;code&gt;y&lt;/code&gt;, and those four variables for prediction, &lt;code&gt;x1&lt;/code&gt;, &lt;code&gt;x2&lt;/code&gt;, &lt;code&gt;x3&lt;/code&gt;, and &lt;code&gt;x4&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr, warn.conflicts = F)
+library(kableExtra, warn.conflicts = F)
+set.seed(7)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n &amp;lt;- 1000
+obs &amp;lt;- tibble::tibble(
+  id = 1:n,
+  x1 = rnorm(n),
+  x2 = rbinom(n, 1, plogis(10*x1)),
+  x3 = rbinom(n, 1, plogis(x1*x2 + .5*x2)),
+  x4 = rnorm(n, mean=x1*x2, sd=.5*x3),
+  y = x1 + x2 + x2*x3 + sin(x4)
+)
+kable(head(obs), digits=3, caption = &amp;quot;Simulated data set&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-2&#34;&gt;Table 1: &lt;/span&gt;Simulated data set
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+id
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x1
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x2
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x3
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x4
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+y
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.287
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.995
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.434
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.197
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.052
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.065
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.694
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.694
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.412
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.412
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.971
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.971
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.947
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.947
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 1: Split data into K folds
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
+The superlearner algorithm relies on K-fold cross-validation (CV) to avoid building a prediction algorithm that is overfit to the data. We will start this process by splitting the data into 10 blocks, or folds. The easiest way to do this is by creating indices for each cross-validation fold.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;k &amp;lt;- 10 # 10 fold cv
+cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # indices for each fold, same length as our dataset `obs`&lt;/code&gt;&lt;/pre&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 2: Fit base learners for first CV-fold
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,…) &lt;em&gt;except&lt;/em&gt; for the very last one: &lt;code&gt;cv_index == 10&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The individual algorithms or &lt;strong&gt;base learners&lt;/strong&gt; that we’ll use here are three plain old linear regressions with differently specified parameters:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Learner A&lt;/strong&gt;: &lt;span class=&#34;math inline&#34;&gt;\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4 + \epsilon\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Learner B&lt;/strong&gt;: &lt;span class=&#34;math inline&#34;&gt;\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4) + \epsilon\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Learner C&lt;/strong&gt;: &lt;span class=&#34;math inline&#34;&gt;\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3 + \epsilon\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_train_1 &amp;lt;- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
+fit_1a &amp;lt;- glm(y ~ x2 + x4, data=cv_train_1) # fit the first linear regression on that training data
+fit_1b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train_1) # second LR fit on the training data
+fit_1c &amp;lt;- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I am &lt;em&gt;only&lt;/em&gt; using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.&lt;/p&gt;
+&lt;p&gt;The same code could be translated to a more complicated set, or &lt;strong&gt;superlearner library&lt;/strong&gt;, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 3: Obtain predictions for first CV-fold
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step3.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can then get use our validation data, &lt;code&gt;cv_index == 10&lt;/code&gt;, to obtain our first set of cross-validated predictions.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_valid_1 &amp;lt;- obs[which(cv_index == 10),] # make a data set that only contains observations except in k=10
+pred_1a &amp;lt;- predict(fit_1a, newdata = cv_valid_1) # use that data set as the validation for all the models in the SL library
+pred_1b &amp;lt;- predict(fit_1b, newdata = cv_valid_1) 
+pred_1c &amp;lt;- predict(fit_1c, newdata = cv_valid_1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Since we have 1000 &lt;code&gt;obs&lt;/code&gt;ervations, that gives us three vectors of length 100: a set of predictions for each of our Learners A, B, and C.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;length(pred_1a) # double check we only have n/k predictions ...we do :-)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 100&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = &amp;quot;First CV round of predictions&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-6&#34;&gt;Table 2: &lt;/span&gt;First CV round of predictions
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_1a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_1b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_1c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.75
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.99
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.95
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.43
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.22
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.24
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.30
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.97
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.18
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.96
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.83
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.82
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.98
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.96
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.32
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.11
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.44
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 4: Obtain CV predictions for entire data set
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We’ll want to get those predictions for &lt;em&gt;every&lt;/em&gt; fold. So, using your favorite &lt;code&gt;for&lt;/code&gt; loop, &lt;code&gt;apply&lt;/code&gt; statement, or &lt;code&gt;map&lt;/code&gt;ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in &lt;code&gt;obs&lt;/code&gt;ervations.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_folds &amp;lt;- as.list(1:k)
+names(cv_folds) &amp;lt;- paste0(&amp;quot;fold&amp;quot;,1:k)
+cv_preds &amp;lt;-
+  # map_dfr loops through every fold (1:k) and binds the rows of the listed results together
+  purrr::map_dfr(cv_folds, function(x){
+  # make a training data set that contains all data except fold k
+  cv_train &amp;lt;- obs[-which(cv_index == x),]
+  # fit all the base learners to that data
+  fit_a &amp;lt;- glm(y ~ x2 + x4, data=cv_train)
+  fit_b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train)
+  fit_c &amp;lt;- glm(y ~ x1*x2*x3, data=cv_train)
+  # make a validation data set that only contains data from fold k
+  cv_valid &amp;lt;- obs[which(cv_index == x),]
+  # obtain predictions from all the base learners for that validation data
+  pred_a &amp;lt;- predict(fit_a, newdata = cv_valid)
+  pred_b &amp;lt;- predict(fit_b, newdata = cv_valid)
+  pred_c &amp;lt;- predict(fit_c, newdata = cv_valid)
+  # save the predictions and the ids of the observations in a data frame
+  return(tibble::tibble(&amp;quot;obs_id&amp;quot; = cv_valid$id, &amp;quot;cv_fold&amp;quot; = x, pred_a, pred_b, pred_c))
+})
+
+cv_preds %&amp;gt;%
+  arrange(obs_id) %&amp;gt;%
+  head() %&amp;gt;%
+  kable(digits=2, caption = &amp;quot;All CV predictions for all three base learners&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-7&#34;&gt;Table 3: &lt;/span&gt;All CV predictions for all three base learners
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+obs_id
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_fold
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.48
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.58
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.32
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.91
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.05
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.18
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.77
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.81
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.69
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.77
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.60
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.41
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.76
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.97
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.75
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.99
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.95
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 5: Choose and compute loss function of interest via metalearner
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step5.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is the key step of the superlearner algorithm: we will use a new learner, a &lt;strong&gt;metalearner&lt;/strong&gt;, to take information from all of the base learners and create that new algorithm.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now that we have cross-validated prediction for every observation in the data set, we want to merge those CV predictions back into our main data set…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds &amp;lt;- 
+  full_join(obs, cv_preds, by=c(&amp;quot;id&amp;quot; = &amp;quot;obs_id&amp;quot;)) %&amp;gt;%
+  mutate(cv_sqrd_error_a = (y-pred_a)^2,
+         cv_sqrd_error_b = (y-pred_b)^2,
+         cv_sqrd_error_c = (y-pred_c)^2
+        )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…and compute a loss function of interest for each CV prediction. This is how we’re going to optimize our prediction algorithm: we want to make sure we’re “losing the least” when we use it to eventually make predictions.&lt;/p&gt;
+&lt;p&gt;For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner &lt;em&gt;could&lt;/em&gt; be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the &lt;code&gt;SuperLearner&lt;/code&gt; package is actually non-negative least squares (NNLS). For more information on NNLS, see the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit &amp;lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
+kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression coefficients&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-9&#34;&gt;Table 4: &lt;/span&gt;Metalearner regression coefficients
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+term
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+estimate
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+std.error
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+statistic
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p.value
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+(Intercept)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.003
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.005
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.677
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.499
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pred_a
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.017
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.008
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.189
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.029
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pred_b
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.862
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.015
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+59.280
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pred_c
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.158
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.012
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+13.095
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;This metalearner provides us with the coefficients to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.862 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.158 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
+&lt;p&gt;To gain more intuition on these coefficients in the metalearner, check out the step below.&lt;/p&gt;
+&lt;div id=&#34;optional-step-for-demonstration-manually-computing-the-mse&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;em&gt;Optional step for demonstration&lt;/em&gt;: manually computing the MSE&lt;/h3&gt;
+&lt;p&gt;Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error &lt;span class=&#34;math inline&#34;&gt;\((y - \hat{y})^2\)&lt;/span&gt; for each CV prediction A, B, and C.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds %&amp;gt;% select(contains(&amp;quot;sqrd_error&amp;quot;)) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;Squared error of each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-10&#34;&gt;Table 5: &lt;/span&gt;Squared error of each base learner
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_sqrd_error_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_sqrd_error_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_sqrd_error_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.09
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.79
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.78
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.13
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.03
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.04
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.04
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;And then take the mean of those three cross-validated squared error columns, grouped by &lt;code&gt;cv_fold&lt;/code&gt;, to get the CV-MSE for each fold.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks &amp;lt;-
+  obs_preds %&amp;gt;%
+  group_by(cv_fold) %&amp;gt;%
+  summarise(cv_mse_a = mean(cv_sqrd_error_a),
+            cv_mse_b = mean(cv_sqrd_error_b),
+            cv_mse_c = mean(cv_sqrd_error_c)
+            )&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## `summarise()` ungrouping output (override with `.groups` argument)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;kable(cv_risks, digits=2, caption = &amp;quot;CV-MSE for each CV fold for each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-11&#34;&gt;Table 6: &lt;/span&gt;CV-MSE for each CV fold for each base learner
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_fold
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.03
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.13
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.38
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.32
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.48
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.31
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+7
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.41
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.15
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.34
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.38
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.12
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.44
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.03
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.12, and Learner A varies between 0.2 and 0.5. We can take another mean to get the overall CV-MSE for each learner.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks %&amp;gt;%
+  select(-cv_fold) %&amp;gt;%
+  summarise_all(mean) %&amp;gt;%
+  kable(digits=2, caption = &amp;quot;CV-MSE for each base learner&amp;quot;) %&amp;gt;%
+  kable_styling(position = &amp;quot;center&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;table class=&#34;table&#34; style=&#34;margin-left: auto; margin-right: auto;&#34;&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-12&#34;&gt;Table 7: &lt;/span&gt;CV-MSE for each base learner
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The base learner that performs the best using our chosen loss function of interest is clearly Learner B. We can see from our data simulation code why this is true – Learner B is almost exactly the mimicking the data generating mechanism of &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Our results align with the linear regression fit from our metalearning step; Learner B predictions received a much larger coefficient relative to Learners A and C.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We &lt;em&gt;could&lt;/em&gt; stop here and fit Learner B to our full data set, and that would be called using the &lt;strong&gt;discrete superlearner&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;discrete_sl_predictions &amp;lt;- predict(glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;However, we can almost always create an even better prediction algorithm if we use information from &lt;em&gt;all&lt;/em&gt; of the algorithms’ CV predictions.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 6: Fit base learners on entire data set
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step6.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;After we fit the metalearner, we officially have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the full data set.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_a &amp;lt;- glm(y ~ x2 + x4, data=obs)
+fit_b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
+fit_c &amp;lt;- glm(y ~ x1*x2*x3, data=obs)&lt;/code&gt;&lt;/pre&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 7: Obtain predictions from each base learner on entire data set
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step7.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We’ll use &lt;em&gt;those&lt;/em&gt; base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using &lt;em&gt;cross-validated&lt;/em&gt; predictions, rather than fitting the base learners on the whole data set. This was to avoid overfitting.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pred_a &amp;lt;- predict(fit_a)
+pred_b &amp;lt;- predict(fit_b)
+pred_c &amp;lt;- predict(fit_c)
+full_data_preds &amp;lt;- tibble(pred_a, pred_b, pred_c)&lt;/code&gt;&lt;/pre&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 8: Use metalearner fit to weight base learners
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step8.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_predictions &amp;lt;- predict(sl_fit, newdata = full_data_preds)
+kable(head(sl_predictions), col.names = &amp;quot;sl_predictions&amp;quot;, digits= 2, caption = &amp;quot;Final SL predictions (manual)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-16&#34;&gt;Table 8: &lt;/span&gt;Final SL predictions (manual)
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+sl_predictions
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.70
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.91
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.79
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.57
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.01
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;And… that’s it! Those are our superlearner predictions.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 9 and beyond…
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;We could compute the MSE of the ensemble superlearner predictions.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_mse &amp;lt;- mean((obs$y - sl_predictions)^2)
+sl_mse&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.01834451&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms’ hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.&lt;/p&gt;
+&lt;p&gt;We can then cross-validate this entire process to evaluate the predictive performance of our superlearner algorithm. Alternatively, we could leave a hold-out training data set to evaluate the performance.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;using-the-superlearner-package&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Using the &lt;code&gt;SuperLearner&lt;/code&gt; package&lt;/h1&gt;
+&lt;p&gt;Alternatively, we could use the &lt;code&gt;SuperLearner&lt;/code&gt; package and avoid all that hand-coding. Here is how you would specify an ensemble superlearner for our data with the base learner libraries of &lt;code&gt;ranger&lt;/code&gt; (random forests), &lt;code&gt;glmnet&lt;/code&gt; (LASSO, by default), and &lt;code&gt;earth&lt;/code&gt; (MARS).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SuperLearner)
+x_df &amp;lt;- obs %&amp;gt;% select(x1:x4) %&amp;gt;% as.data.frame()
+sl_fit &amp;lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
+                     SL.library = c(&amp;quot;SL.ranger&amp;quot;, &amp;quot;SL.glmnet&amp;quot;, &amp;quot;SL.earth&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can specify the metalearner with the &lt;code&gt;method&lt;/code&gt; argument. The default is &lt;a href=&#34;#appendix&#34;&gt;non-negative least squares&lt;/a&gt;.&lt;/p&gt;
+&lt;div id=&#34;cv-risk-and-coefficient-weights&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;CV-Risk and Coefficient Weights&lt;/h2&gt;
+&lt;p&gt;We can examine the cross-validated &lt;code&gt;Risk&lt;/code&gt; (loss function), and the &lt;code&gt;Coef&lt;/code&gt;ficient (weight) given to each of the models.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:  
+## SuperLearner(Y = obs$y, X = x_df, family = gaussian(), SL.library = c(&amp;quot;SL.ranger&amp;quot;,  
+##     &amp;quot;SL.glmnet&amp;quot;, &amp;quot;SL.earth&amp;quot;)) 
+## 
+## 
+##                     Risk      Coef
+## SL.ranger_All 0.01751739 0.1489047
+## SL.glmnet_All 0.09526932 0.0000000
+## SL.earth_All  0.00385042 0.8510953&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for &lt;code&gt;SL.Earth&lt;/code&gt;. This translates to the largest coefficient, or weight, given to the predictions from &lt;code&gt;earth&lt;/code&gt; (which implements the MARS algorithm… but the name “MARS” is copyrighted!).&lt;/p&gt;
+&lt;p&gt;The LASSO model implemented by &lt;code&gt;glmnet&lt;/code&gt; has the highest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;obtaining-the-predictions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Obtaining the predictions&lt;/h2&gt;
+&lt;p&gt;We can extract the predictions easily via the &lt;code&gt;SL.predict&lt;/code&gt; element of the &lt;code&gt;SuperLearner&lt;/code&gt; fit object.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;kable(head(sl_fit$SL.predict), digits=2, col.names = &amp;quot;sl_predictions&amp;quot;, caption = &amp;quot;Final SL predictions (package)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-20&#34;&gt;Table 9: &lt;/span&gt;Final SL predictions (package)
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+sl_predictions
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.50
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.03
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.69
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.42
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.96
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.94
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;cross-validated-superlearner&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Cross-validated Superlearner&lt;/h2&gt;
+&lt;p&gt;Recall that we can cross-validate the entire model fitting process to evaluate the predictive performance of our superlearner algorithm. This is easy with the function &lt;code&gt;CV.SuperLearner()&lt;/code&gt;. Beware, this gets computationally burdensome very quickly!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_sl_fit &amp;lt;- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
+                     SL.library = c(&amp;quot;SL.ranger&amp;quot;, &amp;quot;SL.glmnet&amp;quot;, &amp;quot;SL.earth&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For more information on the &lt;code&gt;SuperLearner&lt;/code&gt; package, check out this &lt;a href=&#34;https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html&#34;&gt;vignette&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;alternative-ways-to-superlearn&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Alternative ways to superlearn&lt;/h2&gt;
+&lt;p&gt;Other packages freely available in &lt;code&gt;R&lt;/code&gt; that can be used to implement the superlearner algorithm include &lt;code&gt;sl3&lt;/code&gt; (an update to the older &lt;code&gt;Superlearner&lt;/code&gt; package), &lt;code&gt;h2o&lt;/code&gt;, &lt;code&gt;ml3&lt;/code&gt;, and &lt;code&gt;caretEnsemble&lt;/code&gt;. I previously wrote a &lt;a href=&#34;https://www.khstats.com/blog/sl3_demo/sl/&#34;&gt;very brief tutorial&lt;/a&gt; on using &lt;code&gt;sl3&lt;/code&gt; for an NYC R-Ladies demo.&lt;/p&gt;
+&lt;p&gt;Python aficionados might find this &lt;a href=&#34;https://machinelearningmastery.com/super-learner-ensemble-in-python/&#34;&gt;blog post&lt;/a&gt; useful. I have never performed superlearning in Python, but if I had to, I would probably try &lt;code&gt;h2o&lt;/code&gt; first. H2o is available across in programming languages and their Chief Machine Learning Scientist, &lt;a href=&#34;https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor&#34;&gt;Erin Ledell&lt;/a&gt;, was an author of the original &lt;code&gt;SuperLearner&lt;/code&gt; package.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;coming-soon-when-prediction-is-not-the-end-goal&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Coming soon… when prediction is not the end goal&lt;/h1&gt;
+&lt;p&gt;Like most algorithms designed for prediction, the superlearner algorithm does not produce standard errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with semi-parametric estimation methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.&lt;/p&gt;
+&lt;p&gt;I made a similar &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;visual guide for TMLE&lt;/a&gt;. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: &lt;a href=&#34;https://medium.com/@kathoffman317&#34;&gt;@kathoffman317&lt;/a&gt;. If you’re curious about TMLE in the meantime, I really like &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;this tutorial&lt;/a&gt; by Miguel Angel Luque Fernandez.&lt;/p&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;
+HTML Image as link
+&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/TMLE.jpg&#34;
+         width=100%&#34;&gt;
+&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;/div&gt;
+&lt;div id=&#34;appendix&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Appendix&lt;/h1&gt;
+&lt;div id=&#34;non-negative-least-squares-regression&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Non-negative least squares regression&lt;/h2&gt;
+&lt;p&gt;The default in the &lt;code&gt;SuperLearner&lt;/code&gt; package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as “regular” linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the &lt;em&gt;Euclidean distance&lt;/em&gt;), you constrain your solution to only allow &lt;em&gt;positive&lt;/em&gt; coefficients to minimize that distance.&lt;/p&gt;
+&lt;p&gt;It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements an NNLS regression as the metalearner, see this &lt;a href=&#34;https://github.com/ainaimi/SuperLearnerIntro&#34;&gt;introductory tutorial code&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;another-visual-guide&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Another visual guide&lt;/h2&gt;
+&lt;p&gt;The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the &lt;em&gt;Targeted Learning&lt;/em&gt; book:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_diagram.png&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;References&lt;/h1&gt;
+&lt;p&gt;Polley, Eric. “Chapter 3: Superlearning.” Targeted Learning: Causal Inference for Observational and Experimental Data, by M. J. van der. Laan and Sherri Rose, Springer, 2011.&lt;/p&gt;
+&lt;p&gt;Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL &lt;a href=&#34;https://CRAN.R-project.org/package=SuperLearner&#34; class=&#34;uri&#34;&gt;https://CRAN.R-project.org/package=SuperLearner&lt;/a&gt;. R package version 2.0-22.&lt;/p&gt;
+&lt;p&gt;Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. &lt;em&gt;Eur J Epidemiol.&lt;/em&gt; 2018;33(5):459-464. &lt;a href=&#34;doi:10.1007/s10654-018-0390-z&#34; class=&#34;uri&#34;&gt;doi:10.1007/s10654-018-0390-z&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;session-info&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Session Info&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] SuperLearner_2.0-26 nnls_1.4            kableExtra_1.1.0   
+## [4] dplyr_1.0.2        
+## 
+## loaded via a namespace (and not attached):
+##  [1] shape_1.4.4        tidyselect_1.1.0   xfun_0.14          purrr_0.3.4       
+##  [5] lattice_0.20-38    colorspace_1.4-1   vctrs_0.3.4        generics_0.0.2    
+##  [9] htmltools_0.4.0    viridisLite_0.3.0  yaml_2.2.1         rlang_0.4.7       
+## [13] pillar_1.4.6       glue_1.4.2         plotmo_3.5.7       foreach_1.5.0     
+## [17] lifecycle_0.2.0    stringr_1.4.0      munsell_0.5.0      blogdown_0.19     
+## [21] rvest_0.3.5        codetools_0.2-16   evaluate_0.14      knitr_1.28        
+## [25] highr_0.8          broom_0.7.0        Rcpp_1.0.5         readr_1.3.1       
+## [29] scales_1.1.1       backports_1.1.8    plotrix_3.7-7      webshot_0.5.2     
+## [33] ranger_0.12.1      TeachingDemos_2.12 hms_0.5.3          digest_0.6.25     
+## [37] stringi_1.4.6      bookdown_0.19      grid_3.6.3         tools_3.6.3       
+## [41] magrittr_1.5       glmnet_3.0-2       tibble_3.0.3       Formula_1.2-3     
+## [45] crayon_1.3.4       tidyr_1.1.2        pkgconfig_2.0.3    ellipsis_0.3.1    
+## [49] Matrix_1.2-18      xml2_1.3.0         rmarkdown_2.1      httr_1.4.1        
+## [53] rstudioapi_0.11    iterators_1.0.12   earth_5.1.2        R6_2.4.1          
+## [57] compiler_3.6.3&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Customizable correlation plots in R</title>
+      <link>/blog/corr-plots/corr-plots/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/corr-plots/corr-plots/</guid>
+      <description>
+
+
+&lt;hr /&gt;
+&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TL;DR&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;If you’re ever felt limited by correlogram packages in &lt;code&gt;R&lt;/code&gt;, this post will show you how to write your own function to tidy the many correlations into a &lt;code&gt;ggplot2&lt;/code&gt;-friendly form for plotting.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;By the end, you will be able to run one function to get a tidied data frame of correlations:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;sig_p&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p_if_sig&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r_if_sig&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;You can then run &lt;code&gt;ggplot2&lt;/code&gt; code on this data to make your own correlation heat maps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you just want the code, &lt;a href=&#34;#just-the-code&#34;&gt;skip to the end&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;less-customizable-options&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Less-customizable options&lt;/h1&gt;
+&lt;p&gt;I really appreciate some of the packages and functions that allow me to make correlation plots super quickly using &lt;code&gt;R&lt;/code&gt;. Here are a few examples:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrplot::corrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrgram::corrgram(mtcars)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Registered S3 method overwritten by &amp;#39;seriation&amp;#39;:
+##   method         from 
+##   reorder.hclust gclus&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggcorrplot::ggcorrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;All of these are nice, but none of them are ultimately as customizable as I need them to be. I’ll next show how you can bypass using someone else’s function constraints to prepare correlations in your data in a &lt;code&gt;ggplot2&lt;/code&gt;-friendly format.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;getting-the-correlations&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Getting the correlations&lt;/h1&gt;
+&lt;p&gt;We could use the base &lt;code&gt;R&lt;/code&gt; function &lt;code&gt;cor()&lt;/code&gt; to get our correlations, but I do not like the defaults for missing data. Instead, I use Frank Harrell’s &lt;code&gt;Hmisc::rcorr()&lt;/code&gt; function for two reasons:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;it drops missing pairs as the default&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it returns p-values, so you only need one function to get both the correlation coefficient and matching p-value&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Let’s load the libraries we’ll need for this, which are &lt;code&gt;knitr&lt;/code&gt; for showing tables using &lt;code&gt;kable&lt;/code&gt;, and &lt;code&gt;tidyverse&lt;/code&gt; (we’ll specifically use &lt;code&gt;tidyr&lt;/code&gt;, &lt;code&gt;dplyr&lt;/code&gt;, &lt;code&gt;ggplot2&lt;/code&gt;, &lt;code&gt;tibble&lt;/code&gt; and &lt;code&gt;purrr&lt;/code&gt;).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(knitr)
+library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;First, let’s look at our output from our correlation function we’ll use, &lt;code&gt;Hmisc::rcorr()&lt;/code&gt;. It requires the input to be a matrix, and outputs a list of three matrices.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mtcars_cor &amp;lt;- Hmisc::rcorr(as.matrix(mtcars))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;These three matrices include the correlation coefficient (default is Pearson’s), &lt;code&gt;r&lt;/code&gt;, the p-value, &lt;code&gt;P&lt;/code&gt;, and the number of observations used for each correlation, &lt;code&gt;n&lt;/code&gt;. Let’s turn each matrix into a &lt;code&gt;data frame&lt;/code&gt; and look at the top six rows with &lt;code&gt;head&lt;/code&gt; and &lt;code&gt;kable&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The correlation coefficients, &lt;code&gt;r&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$r) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4186840&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6640389&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5998324&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4802848&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912421&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8108118&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5226070&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4926866&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4336979&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7104159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912270&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5555692&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7082234&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7230967&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.2432043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1257043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0912048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4402785&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7127111&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6996101&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1747159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5549157&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6924953&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5832870&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4276059&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The p-values, &lt;code&gt;P&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$P) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000002&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000178&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0170820&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000342&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0002850&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0054009&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0010844&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000082&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0003661&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0021512&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0041733&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0019423&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000001&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000053&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0131440&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000052&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0003662&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0009636&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0252679&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0099888&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4.15e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000058&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000029&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.1798309&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4930119&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000008&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8.2e-06&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.3e-06&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0099888&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4.80e-06&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6195826&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0116755&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000047&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000084&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6211834&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000415&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3388683&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0009798&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000113&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0004587&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0146386&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The number of observations, &lt;code&gt;n&lt;/code&gt;. There are no missing data in the &lt;code&gt;mtcars&lt;/code&gt; data set so there are 32 pairs used for all correlations.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$n) %&amp;gt;% head(n=3) %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Next we can write a function that formats a &lt;code&gt;data frame&lt;/code&gt; correctly for &lt;code&gt;Hmisc::rcorr()&lt;/code&gt; and then turns each of the three elements of the list (&lt;code&gt;r&lt;/code&gt;,&lt;code&gt;n&lt;/code&gt; and &lt;code&gt;P&lt;/code&gt;)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors &amp;lt;- function(df) {
+  M &amp;lt;- Hmisc::rcorr(as.matrix(df))
+  # turn all three matrices (r, n, and P into a data frame)
+  Mdf &amp;lt;- map(M, ~data.frame(.x))
+  # return the three data frames in a list
+  return(Mdf)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Nothing too crazy happened in this function. Now we just have a list of three data frames. We can look at the the first element of our list using &lt;code&gt;first()&lt;/code&gt;, which shows us the correlations between all our variables:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;% first() %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4186840&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6640389&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5998324&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4802848&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912421&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8108118&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5226070&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4926866&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4336979&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7104159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912270&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5555692&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7082234&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7230967&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.2432043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1257043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0912048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4402785&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7127111&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6996101&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1747159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5549157&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6924953&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5832870&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4276059&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;prep-the-correlations-for-ggplot2&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Prep the correlations for &lt;code&gt;ggplot2&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;The next step is to get the data ready for plotting with &lt;code&gt;ggplot2&lt;/code&gt;. We can keep the data in a list for now and use the &lt;code&gt;map()&lt;/code&gt; function from &lt;code&gt;purrr&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;First, we need to move the rownames to their own column using &lt;code&gt;tibble::rownames_to_column()&lt;/code&gt;. The output of that looks like:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # look at the first element of the list (r)
+  first() %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4186840&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6640389&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5998324&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4802848&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912421&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8108118&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5226070&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4926866&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4336979&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7104159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912270&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5555692&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7082234&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7230967&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.2432043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1257043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0912048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4402785&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7127111&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6996101&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1747159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5549157&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6924953&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5832870&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4276059&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Next, we can turn move of the columns to a single column called &lt;code&gt;measure2&lt;/code&gt; using &lt;code&gt;tidyr::pivot_longer()&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # look at the first element of the list (r)
+  first() %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Now, we’re ready to unlist our data by using &lt;code&gt;bind_rows()&lt;/code&gt;. This will turn our correlations into a very long data frame with all the rows from &lt;code&gt;r&lt;/code&gt;, then &lt;code&gt;n&lt;/code&gt;, then &lt;code&gt;P&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For &lt;code&gt;ggplot2&lt;/code&gt;, we’ll need to have &lt;code&gt;r&lt;/code&gt;, &lt;code&gt;n&lt;/code&gt;, and &lt;code&gt;p&lt;/code&gt; as their own column. We can use &lt;code&gt;pivot_longer()&lt;/code&gt; to do this.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+  pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;P&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Finally, we can add a few columns that will potentially be useful later for making our correlation plots more informative. Let’s add columns that tell us whether the p-value was less than 0.05, and if so, give us back 1) the p-value and 2) the correlation coefficient, in case we want to label our plot with these values.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+  pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+  # change so everything is lower case
+  rename(p = P) %&amp;gt;%
+  mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
+           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
+           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;sig_p&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p_if_sig&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r_if_sig&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;This seems like everything I think I’ll ever ever want to plot. Of course you could add more. At this point I turned my formatted correlations into a function:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors &amp;lt;- function(df){
+  cors(df) %&amp;gt;%
+    map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+    map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+    bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+    pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+    rename(p = P) %&amp;gt;%
+    mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
+           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
+           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can test the function works as expected:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;sig_p&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p_if_sig&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r_if_sig&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;plotting&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Plotting&lt;/h1&gt;
+&lt;p&gt;We’re finally ready to plot our correlation heat maps in &lt;code&gt;ggplot2&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The simplest form of this plot only requires us to specify &lt;code&gt;measure1&lt;/code&gt; and &lt;code&gt;measure2&lt;/code&gt; on the &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;-axis, respectively. Then we can map the correlation &lt;code&gt;r&lt;/code&gt; to the &lt;code&gt;fill&lt;/code&gt; &lt;code&gt;aes&lt;/code&gt;thetic, and add a tile as the &lt;code&gt;geom&lt;/code&gt;etry.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;) +
+  # map a red, white and blue color scale to correspond to -1:1 sequential gradient
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  theme_classic() +
+  # remove excess space on x and y axes
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  # change global font to roboto
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column &lt;code&gt;r_if_sig&lt;/code&gt; that outputs from &lt;code&gt;formatted_cors()&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;,
+       subtitle=&amp;quot;Only significant Pearson&amp;#39;s correlation coefficients shown&amp;quot;) +
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Another version of this could involve squares with different sizes to denote strength of correlation using &lt;code&gt;geom_point&lt;/code&gt; with &lt;code&gt;shape&lt;/code&gt; set to a value from &lt;a href=&#34;http://www.sthda.com/english/wiki/ggplot2-point-shapes&#34;&gt;these available &lt;code&gt;geom_shape&lt;/code&gt;s&lt;/a&gt;. Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
+  geom_tile(col=&amp;quot;black&amp;quot;, fill=&amp;quot;white&amp;quot;) +
+  geom_point(aes(size = abs(r)), shape=15) +
+  labs(x = NULL, y = NULL, col = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;) +
+  theme_classic()+
+  scale_color_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1))  +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;)) +
+  scale_size(range=c(1,11), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;just-the-code&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Just the code&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors &amp;lt;- function(df) {
+  M &amp;lt;- Hmisc::rcorr(as.matrix(df))
+  Mdf &amp;lt;- map(M, ~data.frame(.x))
+  return(Mdf)
+}
+
+formatted_cors &amp;lt;- function(df){
+  cors(df) %&amp;gt;%
+    map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+    map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+    bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+    pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+    rename(p = P) %&amp;gt;%
+    mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
+           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
+           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) 
+}
+
+formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;,
+       subtitle=&amp;quot;Only significant Pearson&amp;#39;s correlation coefficients shown&amp;quot;) +
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Tips and Tricks from the New York R Conference</title>
@@ -77,7 +2343,6 @@ read_pptx() %&amp;gt;%
   ph_with_vg(code = plot(dat$x, dat$y, main=&amp;quot;Edit me!&amp;quot;, pch=16), type=&amp;quot;body&amp;quot;, width=6, height=4) %&amp;gt;%
   #output your ppt (target argument is just the file destination/name)
   print(target=&amp;quot;plot.pptx&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;/Users/katherinehoffman/Desktop/basic/content/blog/nyrconf/plot.pptx&amp;quot;&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;going-from-rmarkdown-to-word-and-back-again-with-redoc&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Going from RMarkdown to Word, and back again with &lt;code&gt;redoc&lt;/code&gt;&lt;/h1&gt;

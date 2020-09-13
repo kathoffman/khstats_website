@@ -1,0 +1,1088 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>correlation | KHstats</title>
+    <link>/tags/correlation/</link>
+      <atom:link href="/tags/correlation/index.xml" rel="self" type="application/rss+xml" />
+    <description>correlation</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 14 Mar 2020 21:13:14 -0500</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>correlation</title>
+      <link>/tags/correlation/</link>
+    </image>
+    
+    <item>
+      <title>Customizable correlation plots in R</title>
+      <link>/blog/corr-plots/corr-plots/</link>
+      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/corr-plots/corr-plots/</guid>
+      <description>
+
+
+&lt;hr /&gt;
+&lt;div id=&#34;tldr&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TL;DR&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;If you’re ever felt limited by correlogram packages in &lt;code&gt;R&lt;/code&gt;, this post will show you how to write your own function to tidy the many correlations into a &lt;code&gt;ggplot2&lt;/code&gt;-friendly form for plotting.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;By the end, you will be able to run one function to get a tidied data frame of correlations:&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;sig_p&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p_if_sig&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r_if_sig&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;ul&gt;
+&lt;li&gt;You can then run &lt;code&gt;ggplot2&lt;/code&gt; code on this data to make your own correlation heat maps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;If you just want the code, &lt;a href=&#34;#just-the-code&#34;&gt;skip to the end&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;less-customizable-options&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Less-customizable options&lt;/h1&gt;
+&lt;p&gt;I really appreciate some of the packages and functions that allow me to make correlation plots super quickly using &lt;code&gt;R&lt;/code&gt;. Here are a few examples:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrplot::corrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrgram::corrgram(mtcars)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Registered S3 method overwritten by &amp;#39;seriation&amp;#39;:
+##   method         from 
+##   reorder.hclust gclus&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggcorrplot::ggcorrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;All of these are nice, but none of them are ultimately as customizable as I need them to be. I’ll next show how you can bypass using someone else’s function constraints to prepare correlations in your data in a &lt;code&gt;ggplot2&lt;/code&gt;-friendly format.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;getting-the-correlations&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Getting the correlations&lt;/h1&gt;
+&lt;p&gt;We could use the base &lt;code&gt;R&lt;/code&gt; function &lt;code&gt;cor()&lt;/code&gt; to get our correlations, but I do not like the defaults for missing data. Instead, I use Frank Harrell’s &lt;code&gt;Hmisc::rcorr()&lt;/code&gt; function for two reasons:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;it drops missing pairs as the default&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;it returns p-values, so you only need one function to get both the correlation coefficient and matching p-value&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Let’s load the libraries we’ll need for this, which are &lt;code&gt;knitr&lt;/code&gt; for showing tables using &lt;code&gt;kable&lt;/code&gt;, and &lt;code&gt;tidyverse&lt;/code&gt; (we’ll specifically use &lt;code&gt;tidyr&lt;/code&gt;, &lt;code&gt;dplyr&lt;/code&gt;, &lt;code&gt;ggplot2&lt;/code&gt;, &lt;code&gt;tibble&lt;/code&gt; and &lt;code&gt;purrr&lt;/code&gt;).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(knitr)
+library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;First, let’s look at our output from our correlation function we’ll use, &lt;code&gt;Hmisc::rcorr()&lt;/code&gt;. It requires the input to be a matrix, and outputs a list of three matrices.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;mtcars_cor &amp;lt;- Hmisc::rcorr(as.matrix(mtcars))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;These three matrices include the correlation coefficient (default is Pearson’s), &lt;code&gt;r&lt;/code&gt;, the p-value, &lt;code&gt;P&lt;/code&gt;, and the number of observations used for each correlation, &lt;code&gt;n&lt;/code&gt;. Let’s turn each matrix into a &lt;code&gt;data frame&lt;/code&gt; and look at the top six rows with &lt;code&gt;head&lt;/code&gt; and &lt;code&gt;kable&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The correlation coefficients, &lt;code&gt;r&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$r) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4186840&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6640389&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5998324&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4802848&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912421&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8108118&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5226070&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4926866&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4336979&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7104159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912270&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5555692&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7082234&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7230967&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.2432043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1257043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0912048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4402785&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7127111&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6996101&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1747159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5549157&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6924953&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5832870&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4276059&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The p-values, &lt;code&gt;P&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$P) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000002&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000178&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0170820&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000342&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0002850&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0054009&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0010844&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000082&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0003661&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0021512&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0041733&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0019423&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000001&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000053&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0131440&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000052&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0003662&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0009636&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0252679&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0099888&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4.15e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000058&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000029&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.1798309&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4930119&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000008&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8.2e-06&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.3e-06&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0099888&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4.80e-06&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6195826&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0116755&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000047&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000084&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6211834&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000415&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3388683&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0009798&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0000113&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0004587&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0146386&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The number of observations, &lt;code&gt;n&lt;/code&gt;. There are no missing data in the &lt;code&gt;mtcars&lt;/code&gt; data set so there are 32 pairs used for all correlations.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$n) %&amp;gt;% head(n=3) %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Next we can write a function that formats a &lt;code&gt;data frame&lt;/code&gt; correctly for &lt;code&gt;Hmisc::rcorr()&lt;/code&gt; and then turns each of the three elements of the list (&lt;code&gt;r&lt;/code&gt;,&lt;code&gt;n&lt;/code&gt; and &lt;code&gt;P&lt;/code&gt;)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors &amp;lt;- function(df) {
+  M &amp;lt;- Hmisc::rcorr(as.matrix(df))
+  # turn all three matrices (r, n, and P into a data frame)
+  Mdf &amp;lt;- map(M, ~data.frame(.x))
+  # return the three data frames in a list
+  return(Mdf)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Nothing too crazy happened in this function. Now we just have a list of three data frames. We can look at the the first element of our list using &lt;code&gt;first()&lt;/code&gt;, which shows us the correlations between all our variables:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;% first() %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4186840&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6640389&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5998324&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4802848&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912421&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8108118&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5226070&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4926866&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4336979&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7104159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912270&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5555692&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7082234&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7230967&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.2432043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1257043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0912048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4402785&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7127111&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6996101&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1747159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5549157&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6924953&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5832870&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4276059&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;prep-the-correlations-for-ggplot2&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Prep the correlations for &lt;code&gt;ggplot2&lt;/code&gt;&lt;/h1&gt;
+&lt;p&gt;The next step is to get the data ready for plotting with &lt;code&gt;ggplot2&lt;/code&gt;. We can keep the data in a list for now and use the &lt;code&gt;map()&lt;/code&gt; function from &lt;code&gt;purrr&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;First, we need to move the rownames to their own column using &lt;code&gt;tibble::rownames_to_column()&lt;/code&gt;. The output of that looks like:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # look at the first element of the list (r)
+  first() %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;hp&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;drat&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;wt&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;qsec&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;vs&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;am&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;gear&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;carb&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4186840&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6640389&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5998324&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4802848&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912421&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8108118&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5226070&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4926866&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4336979&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7104159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5912270&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5555692&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7082234&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7230967&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.2432043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1257043&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.4487591&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.0912048&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4402785&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7127111&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6996101&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6587479&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7124406&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.1747159&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5549157&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.6924953&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.5832870&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.4276059&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Next, we can turn move of the columns to a single column called &lt;code&gt;measure2&lt;/code&gt; using &lt;code&gt;tidyr::pivot_longer()&lt;/code&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # look at the first element of the list (r)
+  first() %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Now, we’re ready to unlist our data by using &lt;code&gt;bind_rows()&lt;/code&gt;. This will turn our correlations into a very long data frame with all the rows from &lt;code&gt;r&lt;/code&gt;, then &lt;code&gt;n&lt;/code&gt;, then &lt;code&gt;P&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;id&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;value&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;r&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For &lt;code&gt;ggplot2&lt;/code&gt;, we’ll need to have &lt;code&gt;r&lt;/code&gt;, &lt;code&gt;n&lt;/code&gt;, and &lt;code&gt;p&lt;/code&gt; as their own column. We can use &lt;code&gt;pivot_longer()&lt;/code&gt; to do this.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+  pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;P&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Finally, we can add a few columns that will potentially be useful later for making our correlation plots more informative. Let’s add columns that tell us whether the p-value was less than 0.05, and if so, give us back 1) the p-value and 2) the correlation coefficient, in case we want to label our plot with these values.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;%
+  map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+  # format each data set (r,P,n) long
+  map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+  # merge our three list elements by binding the rows
+  bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+  pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+  # change so everything is lower case
+  rename(p = P) %&amp;gt;%
+  mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
+           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
+           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) %&amp;gt;%
+  head() %&amp;gt;%
+  kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;sig_p&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p_if_sig&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r_if_sig&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;This seems like everything I think I’ll ever ever want to plot. Of course you could add more. At this point I turned my formatted correlations into a function:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors &amp;lt;- function(df){
+  cors(df) %&amp;gt;%
+    map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+    map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+    bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+    pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+    rename(p = P) %&amp;gt;%
+    mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
+           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
+           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) 
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can test the function works as expected:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;measure2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;sig_p&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p_if_sig&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;r_if_sig&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;plotting&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Plotting&lt;/h1&gt;
+&lt;p&gt;We’re finally ready to plot our correlation heat maps in &lt;code&gt;ggplot2&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The simplest form of this plot only requires us to specify &lt;code&gt;measure1&lt;/code&gt; and &lt;code&gt;measure2&lt;/code&gt; on the &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;-axis, respectively. Then we can map the correlation &lt;code&gt;r&lt;/code&gt; to the &lt;code&gt;fill&lt;/code&gt; &lt;code&gt;aes&lt;/code&gt;thetic, and add a tile as the &lt;code&gt;geom&lt;/code&gt;etry.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(x = measure1, y = measure2, fill = r)) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;) +
+  # map a red, white and blue color scale to correspond to -1:1 sequential gradient
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  theme_classic() +
+  # remove excess space on x and y axes
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  # change global font to roboto
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column &lt;code&gt;r_if_sig&lt;/code&gt; that outputs from &lt;code&gt;formatted_cors()&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;,
+       subtitle=&amp;quot;Only significant Pearson&amp;#39;s correlation coefficients shown&amp;quot;) +
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Another version of this could involve squares with different sizes to denote strength of correlation using &lt;code&gt;geom_point&lt;/code&gt; with &lt;code&gt;shape&lt;/code&gt; set to a value from &lt;a href=&#34;http://www.sthda.com/english/wiki/ggplot2-point-shapes&#34;&gt;these available &lt;code&gt;geom_shape&lt;/code&gt;s&lt;/a&gt;. Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
+  geom_tile(col=&amp;quot;black&amp;quot;, fill=&amp;quot;white&amp;quot;) +
+  geom_point(aes(size = abs(r)), shape=15) +
+  labs(x = NULL, y = NULL, col = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;) +
+  theme_classic()+
+  scale_color_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1))  +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;)) +
+  scale_size(range=c(1,11), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;just-the-code&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Just the code&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors &amp;lt;- function(df) {
+  M &amp;lt;- Hmisc::rcorr(as.matrix(df))
+  Mdf &amp;lt;- map(M, ~data.frame(.x))
+  return(Mdf)
+}
+
+formatted_cors &amp;lt;- function(df){
+  cors(df) %&amp;gt;%
+    map(~rownames_to_column(.x, var=&amp;quot;measure1&amp;quot;)) %&amp;gt;%
+    map(~pivot_longer(.x, -measure1, &amp;quot;measure2&amp;quot;)) %&amp;gt;%
+    bind_rows(.id = &amp;quot;id&amp;quot;) %&amp;gt;%
+    pivot_wider(names_from = id, values_from = value) %&amp;gt;%
+    rename(p = P) %&amp;gt;%
+    mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
+           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
+           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) 
+}
+
+formatted_cors(mtcars) %&amp;gt;%
+  ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
+  geom_tile() +
+  labs(x = NULL, y = NULL, fill = &amp;quot;Pearson&amp;#39;s\nCorrelation&amp;quot;, title=&amp;quot;Correlations in Mtcars&amp;quot;,
+       subtitle=&amp;quot;Only significant Pearson&amp;#39;s correlation coefficients shown&amp;quot;) +
+  scale_fill_gradient2(mid=&amp;quot;#FBFEF9&amp;quot;,low=&amp;quot;#0C6291&amp;quot;,high=&amp;quot;#A63446&amp;quot;, limits=c(-1,1)) +
+  geom_text() +
+  theme_classic() +
+  scale_x_discrete(expand=c(0,0)) +
+  scale_y_discrete(expand=c(0,0)) +
+  theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

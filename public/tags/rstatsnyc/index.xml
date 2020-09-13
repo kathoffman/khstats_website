@@ -77,7 +77,6 @@ read_pptx() %&amp;gt;%
   ph_with_vg(code = plot(dat$x, dat$y, main=&amp;quot;Edit me!&amp;quot;, pch=16), type=&amp;quot;body&amp;quot;, width=6, height=4) %&amp;gt;%
   #output your ppt (target argument is just the file destination/name)
   print(target=&amp;quot;plot.pptx&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;/Users/katherinehoffman/Desktop/basic/content/blog/nyrconf/plot.pptx&amp;quot;&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;going-from-rmarkdown-to-word-and-back-again-with-redoc&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Going from RMarkdown to Word, and back again with &lt;code&gt;redoc&lt;/code&gt;&lt;/h1&gt;

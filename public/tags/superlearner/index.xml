@@ -1,0 +1,1210 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>SuperLearner | KHstats</title>
+    <link>/tags/superlearner/</link>
+      <atom:link href="/tags/superlearner/index.xml" rel="self" type="application/rss+xml" />
+    <description>SuperLearner</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 18 Sep 2020 21:13:14 -0500</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>SuperLearner</title>
+      <link>/tags/superlearner/</link>
+    </image>
+    
+    <item>
+      <title>Become a Superlearner! A Visual Guide &amp; Introductory R Tutorial on Superlearning</title>
+      <link>/blog/sl/superlearning/</link>
+      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/sl/superlearning/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;Why use &lt;em&gt;one&lt;/em&gt; machine learning algorithm when you could use all* of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in &lt;code&gt;R&lt;/code&gt;.&lt;br&gt;&lt;br&gt; *within computational limits&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;
+HTML Image as link
+&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
+         width=100%&#34;&gt;
+&lt;figcaption&gt;
+&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an 8.5x11&#34; pdf on &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
+&lt;/figcaption&gt;
+&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;div id=&#34;supercuts-of-superlearning&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Supercuts of superlearning&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Superlearning&lt;/strong&gt; is a technique for prediction that involves &lt;strong&gt;combining many individual statistical algorithms&lt;/strong&gt; (commonly called “data-adaptive” or “machine learning” algorithms) to &lt;strong&gt;create a new, single prediction algorithm that is at least as good as any of the individual algorithms&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The superLearner Algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one &lt;strong&gt;minimizes a specified loss function&lt;/strong&gt;, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;no single algorithm is always the best for all kinds of data&lt;/strong&gt;. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not &lt;em&gt;always&lt;/em&gt; ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;/img/spiderman_meme.jpg&#34; style=&#34;width:42.0%&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;superlearning-step-by-step&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Superlearning, step by step&lt;/h1&gt;
+&lt;p&gt;In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 0: Load libraries, set seed, simulate data
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate the continuous outcome, &lt;code&gt;y&lt;/code&gt;, and those four variables for prediction, &lt;code&gt;x1&lt;/code&gt;, &lt;code&gt;x2&lt;/code&gt;, &lt;code&gt;x3&lt;/code&gt;, and &lt;code&gt;x4&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr, warn.conflicts = F)
+library(kableExtra, warn.conflicts = F)
+set.seed(7)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n &amp;lt;- 1000
+obs &amp;lt;- tibble::tibble(
+  id = 1:n,
+  x1 = rnorm(n),
+  x2 = rbinom(n, 1, plogis(10*x1)),
+  x3 = rbinom(n, 1, plogis(x1*x2 + .5*x2)),
+  x4 = rnorm(n, mean=x1*x2, sd=.5*x3),
+  y = x1 + x2 + x2*x3 + sin(x4)
+)
+kable(head(obs), digits=3, caption = &amp;quot;Simulated data set&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-2&#34;&gt;Table 1: &lt;/span&gt;Simulated data set
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+id
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x1
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x2
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x3
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x4
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+y
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.287
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.995
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.434
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.197
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.052
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.065
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.694
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.694
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.412
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.412
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.971
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.971
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.947
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.947
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 1: Split data into K folds
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
+The superlearner algorithm relies on K-fold cross-validation (CV) to avoid building a prediction algorithm that is overfit to the data. We will start this process by splitting the data into 10 blocks, or folds. The easiest way to do this is by creating indices for each cross-validation fold.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;k &amp;lt;- 10 # 10 fold cv
+cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # indices for each fold, same length as our dataset `obs`&lt;/code&gt;&lt;/pre&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 2: Fit base learners for first CV-fold
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,…) &lt;em&gt;except&lt;/em&gt; for the very last one: &lt;code&gt;cv_index == 10&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The individual algorithms or &lt;strong&gt;base learners&lt;/strong&gt; that we’ll use here are three plain old linear regressions with differently specified parameters:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Learner A&lt;/strong&gt;: &lt;span class=&#34;math inline&#34;&gt;\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4 + \epsilon\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Learner B&lt;/strong&gt;: &lt;span class=&#34;math inline&#34;&gt;\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4) + \epsilon\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Learner C&lt;/strong&gt;: &lt;span class=&#34;math inline&#34;&gt;\(Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3 + \epsilon\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_train_1 &amp;lt;- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
+fit_1a &amp;lt;- glm(y ~ x2 + x4, data=cv_train_1) # fit the first linear regression on that training data
+fit_1b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train_1) # second LR fit on the training data
+fit_1c &amp;lt;- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I am &lt;em&gt;only&lt;/em&gt; using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.&lt;/p&gt;
+&lt;p&gt;The same code could be translated to a more complicated set, or &lt;strong&gt;superlearner library&lt;/strong&gt;, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 3: Obtain predictions for first CV-fold
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step3.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We can then get use our validation data, &lt;code&gt;cv_index == 10&lt;/code&gt;, to obtain our first set of cross-validated predictions.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_valid_1 &amp;lt;- obs[which(cv_index == 10),] # make a data set that only contains observations except in k=10
+pred_1a &amp;lt;- predict(fit_1a, newdata = cv_valid_1) # use that data set as the validation for all the models in the SL library
+pred_1b &amp;lt;- predict(fit_1b, newdata = cv_valid_1) 
+pred_1c &amp;lt;- predict(fit_1c, newdata = cv_valid_1)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Since we have 1000 &lt;code&gt;obs&lt;/code&gt;ervations, that gives us three vectors of length 100: a set of predictions for each of our Learners A, B, and C.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;length(pred_1a) # double check we only have n/k predictions ...we do :-)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 100&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = &amp;quot;First CV round of predictions&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-6&#34;&gt;Table 2: &lt;/span&gt;First CV round of predictions
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_1a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_1b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_1c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.75
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.99
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.95
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.43
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.22
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.24
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.30
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.97
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.18
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.96
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.83
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.82
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.98
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.96
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.32
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.11
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.44
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 4: Obtain CV predictions for entire data set
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We’ll want to get those predictions for &lt;em&gt;every&lt;/em&gt; fold. So, using your favorite &lt;code&gt;for&lt;/code&gt; loop, &lt;code&gt;apply&lt;/code&gt; statement, or &lt;code&gt;map&lt;/code&gt;ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in &lt;code&gt;obs&lt;/code&gt;ervations.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_folds &amp;lt;- as.list(1:k)
+names(cv_folds) &amp;lt;- paste0(&amp;quot;fold&amp;quot;,1:k)
+cv_preds &amp;lt;-
+  # map_dfr loops through every fold (1:k) and binds the rows of the listed results together
+  purrr::map_dfr(cv_folds, function(x){
+  # make a training data set that contains all data except fold k
+  cv_train &amp;lt;- obs[-which(cv_index == x),]
+  # fit all the base learners to that data
+  fit_a &amp;lt;- glm(y ~ x2 + x4, data=cv_train)
+  fit_b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train)
+  fit_c &amp;lt;- glm(y ~ x1*x2*x3, data=cv_train)
+  # make a validation data set that only contains data from fold k
+  cv_valid &amp;lt;- obs[which(cv_index == x),]
+  # obtain predictions from all the base learners for that validation data
+  pred_a &amp;lt;- predict(fit_a, newdata = cv_valid)
+  pred_b &amp;lt;- predict(fit_b, newdata = cv_valid)
+  pred_c &amp;lt;- predict(fit_c, newdata = cv_valid)
+  # save the predictions and the ids of the observations in a data frame
+  return(tibble::tibble(&amp;quot;obs_id&amp;quot; = cv_valid$id, &amp;quot;cv_fold&amp;quot; = x, pred_a, pred_b, pred_c))
+})
+
+cv_preds %&amp;gt;%
+  arrange(obs_id) %&amp;gt;%
+  head() %&amp;gt;%
+  kable(digits=2, caption = &amp;quot;All CV predictions for all three base learners&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-7&#34;&gt;Table 3: &lt;/span&gt;All CV predictions for all three base learners
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+obs_id
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_fold
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+pred_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.48
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.58
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.32
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.91
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.05
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.18
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.77
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.81
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.69
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.77
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.60
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.41
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.76
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.97
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.75
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.99
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.95
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 5: Choose and compute loss function of interest via metalearner
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step5.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is the key step of the superlearner algorithm: we will use a new learner, a &lt;strong&gt;metalearner&lt;/strong&gt;, to take information from all of the base learners and create that new algorithm.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now that we have cross-validated prediction for every observation in the data set, we want to merge those CV predictions back into our main data set…&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds &amp;lt;- 
+  full_join(obs, cv_preds, by=c(&amp;quot;id&amp;quot; = &amp;quot;obs_id&amp;quot;)) %&amp;gt;%
+  mutate(cv_sqrd_error_a = (y-pred_a)^2,
+         cv_sqrd_error_b = (y-pred_b)^2,
+         cv_sqrd_error_c = (y-pred_c)^2
+        )&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…and compute a loss function of interest for each CV prediction. This is how we’re going to optimize our prediction algorithm: we want to make sure we’re “losing the least” when we use it to eventually make predictions.&lt;/p&gt;
+&lt;p&gt;For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner &lt;em&gt;could&lt;/em&gt; be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the &lt;code&gt;SuperLearner&lt;/code&gt; package is actually non-negative least squares (NNLS). For more information on NNLS, see the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit &amp;lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
+kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression coefficients&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-9&#34;&gt;Table 4: &lt;/span&gt;Metalearner regression coefficients
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+term
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+estimate
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+std.error
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+statistic
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+p.value
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+(Intercept)
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.003
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.005
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.677
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.499
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pred_a
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.017
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.008
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.189
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.029
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pred_b
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.862
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.015
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+59.280
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+pred_c
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.158
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.012
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+13.095
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;This metalearner provides us with the coefficients to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.862 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.158 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
+&lt;p&gt;To gain more intuition on these coefficients in the metalearner, check out the step below.&lt;/p&gt;
+&lt;div id=&#34;optional-step-for-demonstration-manually-computing-the-mse&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;&lt;em&gt;Optional step for demonstration&lt;/em&gt;: manually computing the MSE&lt;/h3&gt;
+&lt;p&gt;Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error &lt;span class=&#34;math inline&#34;&gt;\((y - \hat{y})^2\)&lt;/span&gt; for each CV prediction A, B, and C.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds %&amp;gt;% select(contains(&amp;quot;sqrd_error&amp;quot;)) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;Squared error of each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-10&#34;&gt;Table 5: &lt;/span&gt;Squared error of each base learner
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_sqrd_error_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_sqrd_error_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_sqrd_error_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.09
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.79
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.78
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.13
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.03
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.04
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.04
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;And then take the mean of those three cross-validated squared error columns, grouped by &lt;code&gt;cv_fold&lt;/code&gt;, to get the CV-MSE for each fold.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks &amp;lt;-
+  obs_preds %&amp;gt;%
+  group_by(cv_fold) %&amp;gt;%
+  summarise(cv_mse_a = mean(cv_sqrd_error_a),
+            cv_mse_b = mean(cv_sqrd_error_b),
+            cv_mse_c = mean(cv_sqrd_error_c)
+            )&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## `summarise()` ungrouping output (override with `.groups` argument)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;kable(cv_risks, digits=2, caption = &amp;quot;CV-MSE for each CV fold for each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-11&#34;&gt;Table 6: &lt;/span&gt;CV-MSE for each CV fold for each base learner
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_fold
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.03
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.13
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.25
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.38
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.32
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.48
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.31
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+7
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.41
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.15
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.34
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.10
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.38
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.12
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.44
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.03
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.12, and Learner A varies between 0.2 and 0.5. We can take another mean to get the overall CV-MSE for each learner.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks %&amp;gt;%
+  select(-cv_fold) %&amp;gt;%
+  summarise_all(mean) %&amp;gt;%
+  kable(digits=2, caption = &amp;quot;CV-MSE for each base learner&amp;quot;) %&amp;gt;%
+  kable_styling(position = &amp;quot;center&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;table class=&#34;table&#34; style=&#34;margin-left: auto; margin-right: auto;&#34;&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-12&#34;&gt;Table 7: &lt;/span&gt;CV-MSE for each base learner
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_a
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_b
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+cv_mse_c
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.02
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.11
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;The base learner that performs the best using our chosen loss function of interest is clearly Learner B. We can see from our data simulation code why this is true – Learner B is almost exactly the mimicking the data generating mechanism of &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Our results align with the linear regression fit from our metalearning step; Learner B predictions received a much larger coefficient relative to Learners A and C.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We &lt;em&gt;could&lt;/em&gt; stop here and fit Learner B to our full data set, and that would be called using the &lt;strong&gt;discrete superlearner&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;discrete_sl_predictions &amp;lt;- predict(glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;However, we can almost always create an even better prediction algorithm if we use information from &lt;em&gt;all&lt;/em&gt; of the algorithms’ CV predictions.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 6: Fit base learners on entire data set
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step6.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;After we fit the metalearner, we officially have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the full data set.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_a &amp;lt;- glm(y ~ x2 + x4, data=obs)
+fit_b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
+fit_c &amp;lt;- glm(y ~ x1*x2*x3, data=obs)&lt;/code&gt;&lt;/pre&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 7: Obtain predictions from each base learner on entire data set
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step7.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We’ll use &lt;em&gt;those&lt;/em&gt; base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using &lt;em&gt;cross-validated&lt;/em&gt; predictions, rather than fitting the base learners on the whole data set. This was to avoid overfitting.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pred_a &amp;lt;- predict(fit_a)
+pred_b &amp;lt;- predict(fit_b)
+pred_c &amp;lt;- predict(fit_c)
+full_data_preds &amp;lt;- tibble(pred_a, pred_b, pred_c)&lt;/code&gt;&lt;/pre&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 8: Use metalearner fit to weight base learners
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step8.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_predictions &amp;lt;- predict(sl_fit, newdata = full_data_preds)
+kable(head(sl_predictions), col.names = &amp;quot;sl_predictions&amp;quot;, digits= 2, caption = &amp;quot;Final SL predictions (manual)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-16&#34;&gt;Table 8: &lt;/span&gt;Final SL predictions (manual)
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+sl_predictions
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.70
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.91
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.79
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.57
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.01
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-1.00
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;And… that’s it! Those are our superlearner predictions.&lt;/p&gt;
+&lt;html&gt;
+&lt;body&gt;
+&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
+Step 9 and beyond…
+&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;p&gt;We could compute the MSE of the ensemble superlearner predictions.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_mse &amp;lt;- mean((obs$y - sl_predictions)^2)
+sl_mse&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.01834451&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms’ hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.&lt;/p&gt;
+&lt;p&gt;We can then cross-validate this entire process to evaluate the predictive performance of our superlearner algorithm. Alternatively, we could leave a hold-out training data set to evaluate the performance.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;using-the-superlearner-package&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Using the &lt;code&gt;SuperLearner&lt;/code&gt; package&lt;/h1&gt;
+&lt;p&gt;Alternatively, we could use the &lt;code&gt;SuperLearner&lt;/code&gt; package and avoid all that hand-coding. Here is how you would specify an ensemble superlearner for our data with the base learner libraries of &lt;code&gt;ranger&lt;/code&gt; (random forests), &lt;code&gt;glmnet&lt;/code&gt; (LASSO, by default), and &lt;code&gt;earth&lt;/code&gt; (MARS).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SuperLearner)
+x_df &amp;lt;- obs %&amp;gt;% select(x1:x4) %&amp;gt;% as.data.frame()
+sl_fit &amp;lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
+                     SL.library = c(&amp;quot;SL.ranger&amp;quot;, &amp;quot;SL.glmnet&amp;quot;, &amp;quot;SL.earth&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You can specify the metalearner with the &lt;code&gt;method&lt;/code&gt; argument. The default is &lt;a href=&#34;#appendix&#34;&gt;non-negative least squares&lt;/a&gt;.&lt;/p&gt;
+&lt;div id=&#34;cv-risk-and-coefficient-weights&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;CV-Risk and Coefficient Weights&lt;/h2&gt;
+&lt;p&gt;We can examine the cross-validated &lt;code&gt;Risk&lt;/code&gt; (loss function), and the &lt;code&gt;Coef&lt;/code&gt;ficient (weight) given to each of the models.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Call:  
+## SuperLearner(Y = obs$y, X = x_df, family = gaussian(), SL.library = c(&amp;quot;SL.ranger&amp;quot;,  
+##     &amp;quot;SL.glmnet&amp;quot;, &amp;quot;SL.earth&amp;quot;)) 
+## 
+## 
+##                     Risk      Coef
+## SL.ranger_All 0.01751739 0.1489047
+## SL.glmnet_All 0.09526932 0.0000000
+## SL.earth_All  0.00385042 0.8510953&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for &lt;code&gt;SL.Earth&lt;/code&gt;. This translates to the largest coefficient, or weight, given to the predictions from &lt;code&gt;earth&lt;/code&gt; (which implements the MARS algorithm… but the name “MARS” is copyrighted!).&lt;/p&gt;
+&lt;p&gt;The LASSO model implemented by &lt;code&gt;glmnet&lt;/code&gt; has the highest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;obtaining-the-predictions&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Obtaining the predictions&lt;/h2&gt;
+&lt;p&gt;We can extract the predictions easily via the &lt;code&gt;SL.predict&lt;/code&gt; element of the &lt;code&gt;SuperLearner&lt;/code&gt; fit object.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;kable(head(sl_fit$SL.predict), digits=2, col.names = &amp;quot;sl_predictions&amp;quot;, caption = &amp;quot;Final SL predictions (package)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;
+&lt;span id=&#34;tab:unnamed-chunk-20&#34;&gt;Table 9: &lt;/span&gt;Final SL predictions (package)
+&lt;/caption&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+sl_predictions
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.50
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.03
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.69
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.42
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.96
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-0.94
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;cross-validated-superlearner&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Cross-validated Superlearner&lt;/h2&gt;
+&lt;p&gt;Recall that we can cross-validate the entire model fitting process to evaluate the predictive performance of our superlearner algorithm. This is easy with the function &lt;code&gt;CV.SuperLearner()&lt;/code&gt;. Beware, this gets computationally burdensome very quickly!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_sl_fit &amp;lt;- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
+                     SL.library = c(&amp;quot;SL.ranger&amp;quot;, &amp;quot;SL.glmnet&amp;quot;, &amp;quot;SL.earth&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For more information on the &lt;code&gt;SuperLearner&lt;/code&gt; package, check out this &lt;a href=&#34;https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html&#34;&gt;vignette&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;alternative-ways-to-superlearn&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Alternative ways to superlearn&lt;/h2&gt;
+&lt;p&gt;Other packages freely available in &lt;code&gt;R&lt;/code&gt; that can be used to implement the superlearner algorithm include &lt;code&gt;sl3&lt;/code&gt; (an update to the older &lt;code&gt;Superlearner&lt;/code&gt; package), &lt;code&gt;h2o&lt;/code&gt;, &lt;code&gt;ml3&lt;/code&gt;, and &lt;code&gt;caretEnsemble&lt;/code&gt;. I previously wrote a &lt;a href=&#34;https://www.khstats.com/blog/sl3_demo/sl/&#34;&gt;very brief tutorial&lt;/a&gt; on using &lt;code&gt;sl3&lt;/code&gt; for an NYC R-Ladies demo.&lt;/p&gt;
+&lt;p&gt;Python aficionados might find this &lt;a href=&#34;https://machinelearningmastery.com/super-learner-ensemble-in-python/&#34;&gt;blog post&lt;/a&gt; useful. I have never performed superlearning in Python, but if I had to, I would probably try &lt;code&gt;h2o&lt;/code&gt; first. H2o is available across in programming languages and their Chief Machine Learning Scientist, &lt;a href=&#34;https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor&#34;&gt;Erin Ledell&lt;/a&gt;, was an author of the original &lt;code&gt;SuperLearner&lt;/code&gt; package.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;coming-soon-when-prediction-is-not-the-end-goal&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Coming soon… when prediction is not the end goal&lt;/h1&gt;
+&lt;p&gt;Like most algorithms designed for prediction, the superlearner algorithm does not produce standard errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with semi-parametric estimation methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.&lt;/p&gt;
+&lt;p&gt;I made a similar &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;visual guide for TMLE&lt;/a&gt;. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: &lt;a href=&#34;https://medium.com/@kathoffman317&#34;&gt;@kathoffman317&lt;/a&gt;. If you’re curious about TMLE in the meantime, I really like &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;this tutorial&lt;/a&gt; by Miguel Angel Luque Fernandez.&lt;/p&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;
+HTML Image as link
+&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/TMLE.jpg&#34;
+         width=100%&#34;&gt;
+&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;/div&gt;
+&lt;div id=&#34;appendix&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Appendix&lt;/h1&gt;
+&lt;div id=&#34;non-negative-least-squares-regression&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Non-negative least squares regression&lt;/h2&gt;
+&lt;p&gt;The default in the &lt;code&gt;SuperLearner&lt;/code&gt; package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as “regular” linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the &lt;em&gt;Euclidean distance&lt;/em&gt;), you constrain your solution to only allow &lt;em&gt;positive&lt;/em&gt; coefficients to minimize that distance.&lt;/p&gt;
+&lt;p&gt;It’s actually very intuitive to have a regression that doesn’t allow negative coefficients if you’re trying to “weight” an ensemble of predictions! For a manual superlearner algorithm that implements an NNLS regression as the metalearner, see this &lt;a href=&#34;https://github.com/ainaimi/SuperLearnerIntro&#34;&gt;introductory tutorial code&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;another-visual-guide&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Another visual guide&lt;/h2&gt;
+&lt;p&gt;The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the &lt;em&gt;Targeted Learning&lt;/em&gt; book:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_diagram.png&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;References&lt;/h1&gt;
+&lt;p&gt;Polley, Eric. “Chapter 3: Superlearning.” Targeted Learning: Causal Inference for Observational and Experimental Data, by M. J. van der. Laan and Sherri Rose, Springer, 2011.&lt;/p&gt;
+&lt;p&gt;Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL &lt;a href=&#34;https://CRAN.R-project.org/package=SuperLearner&#34; class=&#34;uri&#34;&gt;https://CRAN.R-project.org/package=SuperLearner&lt;/a&gt;. R package version 2.0-22.&lt;/p&gt;
+&lt;p&gt;Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. &lt;em&gt;Eur J Epidemiol.&lt;/em&gt; 2018;33(5):459-464. &lt;a href=&#34;doi:10.1007/s10654-018-0390-z&#34; class=&#34;uri&#34;&gt;doi:10.1007/s10654-018-0390-z&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;session-info&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Session Info&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] SuperLearner_2.0-26 nnls_1.4            kableExtra_1.1.0   
+## [4] dplyr_1.0.2        
+## 
+## loaded via a namespace (and not attached):
+##  [1] shape_1.4.4        tidyselect_1.1.0   xfun_0.14          purrr_0.3.4       
+##  [5] lattice_0.20-38    colorspace_1.4-1   vctrs_0.3.4        generics_0.0.2    
+##  [9] htmltools_0.4.0    viridisLite_0.3.0  yaml_2.2.1         rlang_0.4.7       
+## [13] pillar_1.4.6       glue_1.4.2         plotmo_3.5.7       foreach_1.5.0     
+## [17] lifecycle_0.2.0    stringr_1.4.0      munsell_0.5.0      blogdown_0.19     
+## [21] rvest_0.3.5        codetools_0.2-16   evaluate_0.14      knitr_1.28        
+## [25] highr_0.8          broom_0.7.0        Rcpp_1.0.5         readr_1.3.1       
+## [29] scales_1.1.1       backports_1.1.8    plotrix_3.7-7      webshot_0.5.2     
+## [33] ranger_0.12.1      TeachingDemos_2.12 hms_0.5.3          digest_0.6.25     
+## [37] stringi_1.4.6      bookdown_0.19      grid_3.6.3         tools_3.6.3       
+## [41] magrittr_1.5       glmnet_3.0-2       tibble_3.0.3       Formula_1.2-3     
+## [45] crayon_1.3.4       tidyr_1.1.2        pkgconfig_2.0.3    ellipsis_0.3.1    
+## [49] Matrix_1.2-18      xml2_1.3.0         rmarkdown_2.1      httr_1.4.1        
+## [53] rstudioapi_0.11    iterators_1.0.12   earth_5.1.2        R6_2.4.1          
+## [57] compiler_3.6.3&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

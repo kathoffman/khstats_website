@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
@@ -18,7 +18,127 @@
   </url>
   
   <url>
+    <loc>/blog/sl/superlearning/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ensemble-learning/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/rstats/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sl3/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/stacked-generalizations/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/stacking/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/statistics/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/superlearner/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/superlearning/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-09-18T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/covid-19/</loc>
+    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/data-wrangling/</loc>
+    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/electronic-health-record/</loc>
+    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/gtsummary/</loc>
+    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/covid-wrangling/covid-functions/</loc>
+    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidylog/</loc>
+    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidyverse/</loc>
+    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/talk/sepsis/</loc>
+    <lastmod>2020-08-05T10:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/talk/</loc>
+    <lastmod>2020-08-05T10:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/correlation/</loc>
     <lastmod>2020-03-14T21:13:14-05:00</lastmod>
   </url>
   
@@ -28,27 +148,22 @@
   </url>
   
   <url>
+    <loc>/categories/data-visualization/</loc>
+    <lastmod>2020-03-14T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/expectations/</loc>
     <lastmod>2020-03-14T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>/tags/ggplot2/</loc>
     <lastmod>2020-03-14T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/</loc>
-    <lastmod>2020-03-14T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r/</loc>
-    <lastmod>2020-03-14T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
+    <loc>/tags/purrr/</loc>
     <lastmod>2020-03-14T21:13:14-05:00</lastmod>
   </url>
   
@@ -58,22 +173,27 @@
   </url>
   
   <url>
-    <loc>/categories/statistics/</loc>
-    <lastmod>2020-03-14T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-03-14T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/blog/iterated-expectations/iterated-expectations/</loc>
     <lastmod>2020-03-14T21:13:14-05:00</lastmod>
   </url>
   
   <url>
+    <loc>/tags/longitudinal-survival/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/trt-timelines/trt-timelines/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/swimmer-plots/</loc>
+    <lastmod>2019-11-28T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/treatment-timelines/</loc>
     <lastmod>2019-11-28T21:13:14-05:00</lastmod>
   </url>
   
@@ -93,12 +213,12 @@
   </url>
   
   <url>
-    <loc>/categories/blog/</loc>
+    <loc>/tags/career/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/career/</loc>
+    <loc>/categories/career/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   
@@ -118,12 +238,12 @@
   </url>
   
   <url>
-    <loc>/talk/superlearner/</loc>
-    <lastmod>2019-09-10T19:00:00+00:00</lastmod>
+    <loc>/blog/sl3_demo/sl/</loc>
+    <lastmod>2019-09-12T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/</loc>
+    <loc>/talk/superlearner/</loc>
     <lastmod>2019-09-10T19:00:00+00:00</lastmod>
   </url>
   
@@ -143,17 +263,17 @@
   </url>
   
   <url>
+    <loc>/categories/blog/</loc>
+    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/new-york-r-conference/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/r-markdown/</loc>
-    <lastmod>2019-06-01T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/rstats/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
@@ -165,6 +285,11 @@
   <url>
     <loc>/blog/nyrconf/nyr-conf-2019/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/courses/</loc>
+    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -193,12 +318,12 @@
   </url>
   
   <url>
-    <loc>/categories/rmarkdown/</loc>
+    <loc>/tags/rmarkdown/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/rmarkdown/</loc>
+    <loc>/categories/rmarkdown/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
   </url>
   
@@ -239,51 +364,18 @@
   
   <url>
     <loc>/authors/admin/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication_types/2/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication/journal-article/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/authors/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/publication_types/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/publication/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/robert-ford/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication_types/1/</loc>
-    <lastmod>2013-07-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication/conference-paper/</loc>
-    <lastmod>2013-07-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/courses/</loc>
   </url>
   
   <url>

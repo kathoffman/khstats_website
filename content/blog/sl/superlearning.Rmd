@@ -1,7 +1,7 @@
 ---
 title: "Become a Superlearner! A Visual Guide & Introductory R Tutorial on Superlearning"
 author: "Katherine Hoffman"
-date: 2020-08-29T21:13:14-05:00
+date: 2020-09-18T21:13:14-05:00
 categories: ["R","statistics"]
 draft: false
 math: true
@@ -24,7 +24,7 @@ output:
    <body>
          <img alt="cheatsheet" src="/img/Superlearning.jpg"  
          width=100%">
-          <figcaption>*The Visual Guide...* Over the winter, I read [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets like this for some of the chapters. My visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of this tutorial. It is available as an 8.5x11" pdf on my [Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf), should you ever wish to print it out for reference (or desk decor).</figcaption>
+          <figcaption>*The Visual Guide...* Over the winter, I read [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an 8.5x11" pdf on [Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf), should you wish to print it out for reference (or desk decor).</figcaption>
       </a>
    </body>
 </html>
@@ -103,11 +103,11 @@ Recall that in  K-fold CV, each fold serves as the validation set one time. In t
 
 The individual algorithms or **base learners** that we'll use here are three plain old linear regressions with differently specified parameters:
 
-1. **Learner A**: $Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4$
+1. **Learner A**: $Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4 + \epsilon$
 
-2. **Learner B**: $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4)$
+2. **Learner B**: $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1 X_3 + \beta_4 sin(X_4)  + \epsilon$
 
-3. **Learner C**: $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3$
+3. **Learner C**: $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_3 + \beta_4 X_1 X_2 + \beta_5 X_1 X_3 + \beta_6 X_2 X_3 + \beta_7 X_1 X_2 X_3  + \epsilon$
 
 ```{r}
 cv_train_1 <- obs[-which(cv_index == 10),] # make a data set that contains all observations except those in k=1
@@ -140,7 +140,7 @@ pred_1b <- predict(fit_1b, newdata = cv_valid_1)
 pred_1c <- predict(fit_1c, newdata = cv_valid_1)
 ```
 
-Since we have 1000 `obs`ervations, that gives us three vectors of length 100: a set of predictions for each of our learners a, b, and c.
+Since we have 1000 `obs`ervations, that gives us three vectors of length 100: a set of predictions for each of our Learners A, B, and C.
 
 ```{r}
 length(pred_1a) # double check we only have n/k predictions ...we do :-)
@@ -228,7 +228,7 @@ To gain more intuition on these coefficients in the metalearner, check out the s
 
 ### *Optional step for demonstration*: manually computing the MSE
 
-Let's say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error $(y - \hat{y})^2$ for each CV prediction a, b, and c.
+Let's say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error $(y - \hat{y})^2$ for each CV prediction A, B, and C.
 
 ```{r}
 obs_preds %>% select(contains("sqrd_error")) %>% head() %>% kable(digits=2, caption = "Squared error of each base learner") 
@@ -247,7 +247,7 @@ cv_risks <-
 kable(cv_risks, digits=2, caption = "CV-MSE for each CV fold for each base learner") 
 ```
 
-We can take the mean of those (or just take the mean without grouping by CV fold in the first place!) to get the overall CV-MSE for each learner.
+We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.12, and Learner A varies between 0.2 and 0.5. We can take another mean to get the overall CV-MSE for each learner.
 
 ```{r}
 cv_risks %>%
@@ -257,7 +257,9 @@ cv_risks %>%
   kable_styling(position = "center")
 ```
 
-We see that in this simple example, the base learner that performs the best using our chosen loss function of interest is Learner B. That makes sense, because when we fit a linear regression in our metalearning step, Learner B predictions received a much larger coefficient relative to Learners A and C.
+The base learner that performs the best using our chosen loss function of interest is clearly Learner B. We can see from our data simulation code why this is true -- Learner B is almost exactly the mimicking the data generating mechanism of `y`.
+
+Our results align with the linear regression fit from our metalearning step; Learner B predictions received a much larger coefficient relative to Learners A and C.
 
 > We *could* stop here and fit Learner B to our full data set, and that would be called using the **discrete superlearner**.
 
