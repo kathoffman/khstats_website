@@ -5,7 +5,7 @@
     <link>/tags/rstats/</link>
       <atom:link href="/tags/rstats/index.xml" rel="self" type="application/rss+xml" />
     <description>rstats</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 18 Sep 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 12 Sep 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>rstats</title>
@@ -15,7 +15,7 @@
     <item>
       <title>Become a Superlearner! A Visual Guide &amp; Introductory R Tutorial on Superlearning</title>
       <link>/blog/sl/superlearning/</link>
-      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
       <guid>/blog/sl/superlearning/</guid>
       <description>
 &lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
@@ -34,7 +34,7 @@ HTML Image as link
 &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
          width=100%&#34;&gt;
 &lt;figcaption&gt;
-&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an 8.5x11&#34; pdf on &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
+&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
 &lt;/figcaption&gt;
 &lt;/a&gt;
 &lt;/body&gt;
@@ -43,7 +43,7 @@ HTML Image as link
 &lt;h1&gt;Supercuts of superlearning&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Superlearning&lt;/strong&gt; is a technique for prediction that involves &lt;strong&gt;combining many individual statistical algorithms&lt;/strong&gt; (commonly called “data-adaptive” or “machine learning” algorithms) to &lt;strong&gt;create a new, single prediction algorithm that is at least as good as any of the individual algorithms&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The superLearner Algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one &lt;strong&gt;minimizes a specified loss function&lt;/strong&gt;, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one &lt;strong&gt;minimizes a specified loss function&lt;/strong&gt;, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;no single algorithm is always the best for all kinds of data&lt;/strong&gt;. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not &lt;em&gt;always&lt;/em&gt; ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -51,7 +51,7 @@ HTML Image as link
 &lt;/div&gt;
 &lt;div id=&#34;superlearning-step-by-step&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Superlearning, step by step&lt;/h1&gt;
-&lt;p&gt;In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
+&lt;p&gt;I’m going to go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
@@ -530,16 +530,12 @@ Step 5: Choose and compute loss function of interest via metalearner
 &lt;blockquote&gt;
 &lt;p&gt;This is the key step of the superlearner algorithm: we will use a new learner, a &lt;strong&gt;metalearner&lt;/strong&gt;, to take information from all of the base learners and create that new algorithm.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Now that we have cross-validated prediction for every observation in the data set, we want to merge those CV predictions back into our main data set…&lt;/p&gt;
+&lt;p&gt;Now that we have cross-validated predictions for every observation in the data set, we want to merge those CV predictions back into our main data set…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds &amp;lt;- 
-  full_join(obs, cv_preds, by=c(&amp;quot;id&amp;quot; = &amp;quot;obs_id&amp;quot;)) %&amp;gt;%
-  mutate(cv_sqrd_error_a = (y-pred_a)^2,
-         cv_sqrd_error_b = (y-pred_b)^2,
-         cv_sqrd_error_c = (y-pred_c)^2
-        )&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;…and compute a loss function of interest for each CV prediction. This is how we’re going to optimize our prediction algorithm: we want to make sure we’re “losing the least” when we use it to eventually make predictions.&lt;/p&gt;
+  full_join(obs, cv_preds, by=c(&amp;quot;id&amp;quot; = &amp;quot;obs_id&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…so that we can minimize a final loss function of interest between the true outcome and each CV prediction. This is how we’re going to optimize our overall prediction algorithm: we want to make sure we’re “losing the least” in the way we combine our base learners’ predictions to ultimately make final predictions. We can do this efficiently by choosing a new learner, a metalearner, which reflects the final loss function of interest.&lt;/p&gt;
 &lt;p&gt;For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner &lt;em&gt;could&lt;/em&gt; be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the &lt;code&gt;SuperLearner&lt;/code&gt; package is actually non-negative least squares (NNLS). For more information on NNLS, see the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit &amp;lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression coefficients&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
@@ -636,18 +632,27 @@ pred_c
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;This metalearner provides us with the coefficients to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.862 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.158 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
+&lt;p&gt;This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.862 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.158 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
 &lt;p&gt;To gain more intuition on these coefficients in the metalearner, check out the step below.&lt;/p&gt;
 &lt;div id=&#34;optional-step-for-demonstration-manually-computing-the-mse&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;&lt;em&gt;Optional step for demonstration&lt;/em&gt;: manually computing the MSE&lt;/h3&gt;
 &lt;p&gt;Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error &lt;span class=&#34;math inline&#34;&gt;\((y - \hat{y})^2\)&lt;/span&gt; for each CV prediction A, B, and C.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds %&amp;gt;% select(contains(&amp;quot;sqrd_error&amp;quot;)) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;Squared error of each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_sq_error &amp;lt;-
+  obs_preds %&amp;gt;%
+  # compute squared error for each observation
+  mutate(cv_sqrd_error_a = (y-pred_a)^2,
+         cv_sqrd_error_b = (y-pred_b)^2,
+         cv_sqrd_error_c = (y-pred_c)^2)
+cv_sq_error %&amp;gt;% select(id, contains(&amp;quot;sqrd_error&amp;quot;)) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;Squared error of each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
 &lt;caption&gt;
 &lt;span id=&#34;tab:unnamed-chunk-10&#34;&gt;Table 5: &lt;/span&gt;Squared error of each base learner
 &lt;/caption&gt;
 &lt;thead&gt;
 &lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+id
+&lt;/th&gt;
 &lt;th style=&#34;text-align:right;&#34;&gt;
 cv_sqrd_error_a
 &lt;/th&gt;
@@ -662,6 +667,9 @@ cv_sqrd_error_c
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 1.09
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
@@ -672,6 +680,9 @@ cv_sqrd_error_c
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.02
 &lt;/td&gt;
@@ -684,6 +695,9 @@ cv_sqrd_error_c
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 0.01
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
@@ -694,6 +708,9 @@ cv_sqrd_error_c
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.13
 &lt;/td&gt;
@@ -706,6 +723,9 @@ cv_sqrd_error_c
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 0.04
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
@@ -716,6 +736,9 @@ cv_sqrd_error_c
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.04
 &lt;/td&gt;
@@ -730,7 +753,7 @@ cv_sqrd_error_c
 &lt;/table&gt;
 &lt;p&gt;And then take the mean of those three cross-validated squared error columns, grouped by &lt;code&gt;cv_fold&lt;/code&gt;, to get the CV-MSE for each fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks &amp;lt;-
-  obs_preds %&amp;gt;%
+  cv_sq_error %&amp;gt;%
   group_by(cv_fold) %&amp;gt;%
   summarise(cv_mse_a = mean(cv_sqrd_error_a),
             cv_mse_b = mean(cv_sqrd_error_b),

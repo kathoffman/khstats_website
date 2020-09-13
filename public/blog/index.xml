@@ -13,7 +13,7 @@
     </image>
     
     <item>
-      <title>What in tarnation is Targeted Maximum Likelihood Estimation? A Visual Guide and Introductory R Tutorial on TMLE</title>
+      <title>What in Tarnation is Targeted Maximum Likelihood Estimation?</title>
       <link>/blog/tmle/tmle-tutorial-3/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/blog/tmle/tmle-tutorial-3/</guid>
@@ -21,7 +21,7 @@
 
 
 &lt;blockquote&gt;
-&lt;p&gt;Are you an applied statistician? Are you trying to be a &lt;em&gt;better&lt;/em&gt; applied statistician and implement causal inference methods like propensity scores but you’re overwhelmed and don’t know where to start?! Check out the following tutorial on TMLE aimed at applied scientists with statistics training.&lt;/p&gt;
+&lt;p&gt;A Visual Guide and Introductory R Tutorial on TMLE aimed at applied scientists with statistics training.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;hr /&gt;
 &lt;div id=&#34;tmle-in-two-sentences&#34; class=&#34;section level1&#34;&gt;
@@ -38,39 +38,157 @@
 &lt;/div&gt;
 &lt;div id=&#34;is-tmle-causal-inference&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Is TMLE Causal Inference?&lt;/h1&gt;
-&lt;p&gt;TMLE was &lt;em&gt;developed&lt;/em&gt; to answer causal inference questions because it hones in on a treatment effect rather than&lt;/p&gt;
-&lt;p&gt;However, the estimates from TMLE do not have a causal interpretation themselves. TMLE is merely a tool we use to&lt;/p&gt;
-&lt;p&gt;A recent past-self of mine would’ve replied yes, yes, and yes. However, I have spent the past year learning and implementing causal inference methods as a Masters-level research biostatistician, and I’m excited to share my favorite method, Targeted Maximum Likelihood Estimation, or TMLE. I’ve tried to explain at the minimum level I think is necessary for an applied statistician to implement it in hopes that others will feel empowered to try it out.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;A warning:&lt;/em&gt; There is no math in this post… 😇 If you want to learn about the math behind TMLE, I highly recommend the paper &lt;a href=&#34;https://academic.oup.com/aje/article/185/1/65/2662306&#34;&gt;“Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies”&lt;/a&gt; by Megan S. Schuler and Sherri Rose, or for a deeper dive, the book &lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4419-9782-1&#34;&gt;“Targeted Learning”&lt;/a&gt; by Mark van der Laan and Sherri Rose. For broader introductions to causal inference, I like both Judea Pearl’s &lt;a href=&#34;http://bayes.cs.ucla.edu/PRIMER/&#34;&gt;“Causal Inference in Statistics: A Primer”&lt;/a&gt; and Miguel Hernan and James Robins’ &lt;a href=&#34;https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf&#34;&gt;“Causal Inference: What If”&lt;/a&gt; books.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;This article is solely meant to help someone understand TMLE on a conceptual or applied level, and then implement it in R for a statistical analysis.&lt;/strong&gt; Before I give a motivation for TMLE…&lt;/p&gt;
+&lt;p&gt;TMLE was &lt;em&gt;developed&lt;/em&gt; to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.&lt;/p&gt;
+&lt;p&gt;When approaching a causal inference question (or really any statistical estimation application at all!), the majority of time and effort should often be focused on the underlying scientific model, research question of interest, and data available to answer it.&lt;/p&gt;
+&lt;p&gt;Once this process – usually called &lt;strong&gt;identification&lt;/strong&gt;* in the causal inference literature – is completed and an analyst is ready to estimate an effect of interest, she/he has a choice in estimation methods.&lt;/p&gt;
+&lt;p&gt;You’ve likely heard of some of these estimation methods: propensity score matching, inverse probability weighting, g-computation (AKA substitution estimation), etc. TMLE is an estimation method just like these, however, it has some very appealing properties that I am convinced make it a better option than the aforementioned methods.&lt;/p&gt;
+&lt;p&gt;*I won’t go into identification in this post, but if you are new to causal inference, my favorite book so far to understand the big picture of identification is Part I of Miguel Hernan and James Robins’ &lt;a href=&#34;https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf&#34;&gt;“Causal Inference: What If”&lt;/a&gt; book.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&#34;a-quick-overview-of-causal-inference-and-propensity-scores&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;A quick overview of causal inference and propensity scores&lt;/h1&gt;
-&lt;p&gt;&lt;em&gt;Causal inference&lt;/em&gt; refers to the many tools available to us to help answer questions like “what would have happened if we had done &lt;em&gt;this&lt;/em&gt; instead of &lt;em&gt;that&lt;/em&gt;?” To truly answer these questions, we’d need to rewind time to see what would have happened if we’d done something differently. In a world without Time-Turners, our next best option is to set up an experiment where individuals randomly get &lt;em&gt;this&lt;/em&gt; treatment, or &lt;em&gt;that&lt;/em&gt; treatment, and then look at the differences in what happened to the two groups. In industry research, that’s called A/B testing, and in medical research, it’s a randomized control trial.&lt;/p&gt;
-&lt;p&gt;Due to practicality and ethics, this sort of experiment is not always possible. Sometimes our only option is to use the data we already have, which records what happened under various treatments that were not randomized. As statisticians, we know there’s a lot of bias in observational data like this, because individuals received (or even chose) their treatment for a myriad of reasons. We try to control for the factors that affected an individual’s treatment and outcome by adjusting for confounders in our regression model.&lt;/p&gt;
-&lt;p&gt;The issue with an estimator like a generalized linear model is that its only purpose is to minimize the distance between a treatment, confounders, and an outcome. The interpretation of the estimated treatment coefficient can only ever be “the average difference in outcome for an individual who recieved &lt;em&gt;this&lt;/em&gt; vs. &lt;em&gt;that&lt;/em&gt; treatment, &lt;em&gt;holding all other covariates constant&lt;/em&gt;,” which is rarely an interpretation we can utilize to make future clinical, economic, etc. decisions.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Propensity scores are one of the first ways statisticians came up with to help better answer the &lt;em&gt;this&lt;/em&gt; vs. &lt;em&gt;that&lt;/em&gt; question using observational data.&lt;/strong&gt; The idea of propensity scores is to use an estimator – often as simple as a logistic regression model – to get a probability estimate, or “score,” which represents an individual’s likelihood of receiving a treatment given their baseline covariates. We then use that score in some way to try to reduce bias in our calculation of the treatment effect.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;In medicine, the intuitive understanding of propensity scores is that we want to make the estimates from our observational data closer to what they would be if they came from data on a perfectly executed randomized clinical trial.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;A few common ways of using a propensity score, or probability estimate, that you may have heard of before:&lt;/p&gt;
-&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Matching&lt;/strong&gt; is when you run your analysis on a subgroup of individuals in which every person who did receive the treatment has a “matching” person with a similar propensity score, but who did not receive the treatment.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;strong&gt;Inverse probability of treatment weighting (IPTW):&lt;/strong&gt; uses the propensity score to down-weight patients who did receive the treatment, or treatment, and had a high probability of receiving the treatment, and up-weight patients who did not receive the treatment, but who had a high probability of receiving the treatment given their baseline covariates.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;If we think a bit about the first option, matching, it should become obvious that by taking a subgroup of our population in this way, we are making our estimates of the treatment effect extremely prone to bias. IPTW is usually the better option of the two, and if you’d like to read a good blog post on understanding IPTW better with examples in R, I recommend Lucy D’Agostino McGowan’s &lt;a href=&#34;https://livefreeordichotomize.com/2019/01/17/understanding-propensity-score-weighting/&#34;&gt;“Understanding Propensity Score Weighting.”&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;However, there’s actually another four letter acronym out there that far fewer statisticians understand or have even heard of… TMLE! Like propensity scores, TMLE aims to help solve the issue of imbalanced treatments and biased effect of treatment estimates. It is less intuitive, but it has statistical properties that give it an advantage over many easier-to-explain methods.&lt;/p&gt;
+&lt;div id=&#34;tmle-real-intuitively&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TMLE, real intuitively&lt;/h1&gt;
+&lt;p&gt;All causal inference methods try to use information about why patients were treated (non-randomly, unless it was an RCT) to&lt;/p&gt;
+&lt;p&gt;Before I walk through the &lt;code&gt;R&lt;/code&gt; code for the TMLE algorithm, I want to reinforce the big-picture idea of TMLE: we want to use information about why patients get treatment to update their outcomes&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;the-tmle-algorithm&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;The TMLE Algorithm&lt;/h1&gt;
-&lt;p&gt;The TMLE algorithm uses two estimates:&lt;/p&gt;
-&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;&lt;p&gt;the estimated probability an individual receives a treatment of interest, predicted by their baseline covariates (their propensity score)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the estimated outcome of an individual, predicted by their treatment and baseline covariates&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;and uses those prediction estimates to estimate the average difference in outcomes if everyone had received the treatment, compared to if everyone had not received the treatment.&lt;/p&gt;
-&lt;p&gt;The TMLE algorithm is complex, but it’s often helpful for me to think of it as analagous to the iterative Expectation-Maximization (EM) algorithm in maximum likelihood estimation. Essentially, you start with the estimate of an individual’s outcome given their treatment and baseline covariates, and you update that estimate using the probability an individual received the treatment given their baseline covariates. Every time you update that estimate, you remove more of the bias that naturally exists in your observational data.&lt;/p&gt;
-&lt;p&gt;What do I mean by “updating the estimate”? Basically, there’s another parameter the TMLE algorithm uses, very similar to inverse probability weighting, which is determined by whether someone actually received the treatment, divided by their probability estimate for receiving the treatment. &lt;em&gt;That&lt;/em&gt; parameter gets used to update (and debias) the outcome estimate in an iterative process. The update, behind the scenes, is to (re)predict the actual outcome using a regression model with the old estimates of the outcome as a fixed intercept. This updating process continues until the estimate of the outcome given the treatment and baseline confounders converges, or no longer changes.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Through this iterative updating process, the TMLE algorithm &lt;em&gt;targets&lt;/em&gt; the effect of the treatment on the outcome, and thus reduces bias and treatment imbalance that naturally exist in observational data.&lt;/strong&gt; The final estimate is for the “average treatment effect,” which can be directly interpreted as the difference in outcomes if everyone had received the treatment compared to if everyone had not received the treatment.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;If you feel a bit lost, the wonderful news is that you don’t need a detailed understanding of the TMLE algorithm or its properties as an applied statistician who wants to implement TMLE right now!&lt;/strong&gt; However, it’s very interesting, and if you’d like to understand more, you should definitely read the aforementioned references.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(SuperLearner)
+set.seed(7)
+
+# Superlearner functions from Ivan
+source(&amp;quot;sl.r&amp;quot;)
+
+# using data generating code from Miguel Angel Luque Fernandez&amp;#39; tutorial
+generate_data &amp;lt;- function(n){
+    w1 &amp;lt;- rbinom(n, size=1, prob=0.5)
+    w2 &amp;lt;- rbinom(n, size=1, prob=0.65)
+    w3 &amp;lt;- round(runif(n, min=0, max=4), digits=3)
+    w4 &amp;lt;- round(runif(n, min=0, max=5), digits=3)
+    A  &amp;lt;- rbinom(n, size=1, prob= plogis(-0.4 + 0.2*w2 + 0.15*w3 + 0.2*w4 + 0.15*w2*w4))
+    # counterfactual
+    Y_1 &amp;lt;- rbinom(n, size=1, prob= plogis(-1 + 1 -0.1*w1 + 0.3*w2 + 0.25*w3 + 0.2*w4 + 0.15*w2*w4))
+    Y_0 &amp;lt;- rbinom(n, size=1, prob= plogis(-1 + 0 -0.1*w1 + 0.3*w2 + 0.25*w3 + 0.2*w4 + 0.15*w2*w4))
+    # Observed outcome
+    Y &amp;lt;- Y_1*A + Y_0*(1 - A)
+    # return data.frame
+    tibble(w1, w2, w3, w4, A, Y, Y_1, Y_0)
+}
+
+# observations N
+n &amp;lt;- 10000
+
+# full data set, including Y0 and Y0
+dat_full &amp;lt;- generate_data(n)
+
+# calculate the true psi if we saw both outcomes
+true_psi &amp;lt;- mean(dat_full$Y_1 - dat_full$Y_0)
+
+# make a data set with observed data only
+dat_obs &amp;lt;- dat_full %&amp;gt;%
+  select(-Y_1,-Y_0)
+ 
+
+# set SL libraries
+lib &amp;lt;- c(&amp;#39;SL.speedglm&amp;#39;, # faster glm
+         &amp;#39;SL.glmnet&amp;#39;, # lasso
+         &amp;#39;SL.ranger&amp;#39;, # random forest
+         &amp;#39;SL.earth&amp;#39;)  #
+
+
+# estimate Q --------------------------------------------------------------
+
+Y &amp;lt;- dat_obs$Y
+X_Y &amp;lt;- dat_obs %&amp;gt;% select(-Y)
+
+Q &amp;lt;- SuperLearner(Y = Y, X = X_Y,
+                    family=binomial(),
+                    SL.library=lib,
+                    # metalearner = NNloglik for binary outcomes, NNLS for continuous
+                    method = method.NNloglik,
+                    # 5-fold cross validation
+                    cvControl = list(V = 5))
+
+# estimate g --------------------------------------------------------------
+
+A &amp;lt;- dat_obs$A
+X_A &amp;lt;- dat_obs %&amp;gt;% select(-Y, -A)
+
+g &amp;lt;- SuperLearner(Y = A, X = X_A,
+                    family=binomial(),
+                    SL.library=lib,
+                    # metalearner = NNloglik for binary outcomes, NNLS for continuous
+                    method = method.NNloglik,
+                    # 5-fold cross validation
+                    cvControl = list(V = 5))
+
+
+# predictions for Q -------------------------------------------------------
+
+Q_A &amp;lt;- predict(Q)$pred
+
+X_Y_A1 &amp;lt;- X_Y %&amp;gt;% mutate(A = 1) 
+Q_1 &amp;lt;- predict(Q, newdata = as.data.frame(X_Y_A1))$pred
+
+X_Y_A0 &amp;lt;- X_Y %&amp;gt;% mutate(A = 0)
+Q_0 &amp;lt;- predict(Q, newdata = X_Y_A0)$pred
+
+
+# create clever covariate -------------------------------------------------
+
+H_1 &amp;lt;- 1/predict(g)$pred
+H_0 &amp;lt;- -1/(1-predict(g)$pred)
+
+# prep data to fit the clever covariate
+dat_cc &amp;lt;-
+  dat_obs %&amp;gt;%
+  mutate(Q_A = as.vector(Q_A),
+         H = case_when(A == 1 ~ H_1,
+                       A == 0 ~ H_0)) %&amp;gt;%
+  select(Y, A, Q_A, H)
+
+# fit parametric working model
+glm_fit &amp;lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H, data=dat_cc, family=binomial)
+# get epsilon
+eps &amp;lt;- coef(glm_fit)
+# also get H as a vector (for Q_A_update)
+H &amp;lt;- dat_cc$H
+
+# update expected outcome estimates (Q star) ------------------------------
+
+# update
+Q_1_update &amp;lt;- plogis(qlogis(Q_1) + eps*H_1)
+Q_0_update &amp;lt;- plogis(qlogis(Q_0) + eps*H_0)
+Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H)
+
+# Estimate ATE ------------------------------------------------------------
+
+# get the ATE TMLE
+tmle_psi &amp;lt;- mean(Q_1_update - Q_0_update)
+
+# compare to true parameter
+tmle_psi
+true_psi 
+
+
+# Calculate SEs -----------------------------------------------------------
+
+ic &amp;lt;- (dat_obs$Y - Q_A_update) * H + Q_1_update + Q_0_update
+tmle_se &amp;lt;- sqrt(var(ic)/nrow(dat_obs))
+
+ci_lo &amp;lt;- tmle_psi - 1.96*tmle_se
+ci_hi &amp;lt;- tmle_psi + 1.96*tmle_se
+
+pval &amp;lt;- 2 * (1 - pnorm(abs(tmle_psi / tmle_se)))
+
+
+# Compare with TMLE package -----------------------------------------------------------
+
+tmle_fit &amp;lt;- tmle::tmle(Y, A, X_A,
+                       gbound = .000000001, # trying 
+                       Q.SL.library = lib, g.SL.library = lib)
+tmle_fit$epsilon # mine are different :(
+tmle_fit$estimates$ATE&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Essentially, you start with the estimate of an individual’s outcome given their treatment and baseline covariates, and you update that estimate using the probability an individual received the treatment given their baseline covariates. Every time you update that estimate, you remove more of the bias that naturally exists in your observational data.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;why-should-i-bother-with-tmle&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Why should I bother with TMLE?&lt;/h1&gt;
@@ -142,7 +260,7 @@ tmlefit&lt;/code&gt;&lt;/pre&gt;
     <item>
       <title>Become a Superlearner! A Visual Guide &amp; Introductory R Tutorial on Superlearning</title>
       <link>/blog/sl/superlearning/</link>
-      <pubDate>Fri, 18 Sep 2020 21:13:14 -0500</pubDate>
+      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
       <guid>/blog/sl/superlearning/</guid>
       <description>
 &lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
@@ -161,7 +279,7 @@ HTML Image as link
 &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
          width=100%&#34;&gt;
 &lt;figcaption&gt;
-&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an 8.5x11&#34; pdf on &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
+&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
 &lt;/figcaption&gt;
 &lt;/a&gt;
 &lt;/body&gt;
@@ -170,7 +288,7 @@ HTML Image as link
 &lt;h1&gt;Supercuts of superlearning&lt;/h1&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Superlearning&lt;/strong&gt; is a technique for prediction that involves &lt;strong&gt;combining many individual statistical algorithms&lt;/strong&gt; (commonly called “data-adaptive” or “machine learning” algorithms) to &lt;strong&gt;create a new, single prediction algorithm that is at least as good as any of the individual algorithms&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The superLearner Algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one &lt;strong&gt;minimizes a specified loss function&lt;/strong&gt;, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one &lt;strong&gt;minimizes a specified loss function&lt;/strong&gt;, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;no single algorithm is always the best for all kinds of data&lt;/strong&gt;. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not &lt;em&gt;always&lt;/em&gt; ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -178,7 +296,7 @@ HTML Image as link
 &lt;/div&gt;
 &lt;div id=&#34;superlearning-step-by-step&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Superlearning, step by step&lt;/h1&gt;
-&lt;p&gt;In this tutorial I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
+&lt;p&gt;I’m going to go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
@@ -657,16 +775,12 @@ Step 5: Choose and compute loss function of interest via metalearner
 &lt;blockquote&gt;
 &lt;p&gt;This is the key step of the superlearner algorithm: we will use a new learner, a &lt;strong&gt;metalearner&lt;/strong&gt;, to take information from all of the base learners and create that new algorithm.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Now that we have cross-validated prediction for every observation in the data set, we want to merge those CV predictions back into our main data set…&lt;/p&gt;
+&lt;p&gt;Now that we have cross-validated predictions for every observation in the data set, we want to merge those CV predictions back into our main data set…&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds &amp;lt;- 
-  full_join(obs, cv_preds, by=c(&amp;quot;id&amp;quot; = &amp;quot;obs_id&amp;quot;)) %&amp;gt;%
-  mutate(cv_sqrd_error_a = (y-pred_a)^2,
-         cv_sqrd_error_b = (y-pred_b)^2,
-         cv_sqrd_error_c = (y-pred_c)^2
-        )&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;…and compute a loss function of interest for each CV prediction. This is how we’re going to optimize our prediction algorithm: we want to make sure we’re “losing the least” when we use it to eventually make predictions.&lt;/p&gt;
+  full_join(obs, cv_preds, by=c(&amp;quot;id&amp;quot; = &amp;quot;obs_id&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;…so that we can minimize a final loss function of interest between the true outcome and each CV prediction. This is how we’re going to optimize our overall prediction algorithm: we want to make sure we’re “losing the least” in the way we combine our base learners’ predictions to ultimately make final predictions. We can do this efficiently by choosing a new learner, a metalearner, which reflects the final loss function of interest.&lt;/p&gt;
 &lt;p&gt;For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner &lt;em&gt;could&lt;/em&gt; be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the &lt;code&gt;SuperLearner&lt;/code&gt; package is actually non-negative least squares (NNLS). For more information on NNLS, see the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;As with any statistical learning algorithm, the choice of metalearner reflects a loss function of interest. No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit &amp;lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression coefficients&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
@@ -763,18 +877,27 @@ pred_c
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;This metalearner provides us with the coefficients to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.862 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.158 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
+&lt;p&gt;This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.862 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.158 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
 &lt;p&gt;To gain more intuition on these coefficients in the metalearner, check out the step below.&lt;/p&gt;
 &lt;div id=&#34;optional-step-for-demonstration-manually-computing-the-mse&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;&lt;em&gt;Optional step for demonstration&lt;/em&gt;: manually computing the MSE&lt;/h3&gt;
 &lt;p&gt;Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error &lt;span class=&#34;math inline&#34;&gt;\((y - \hat{y})^2\)&lt;/span&gt; for each CV prediction A, B, and C.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds %&amp;gt;% select(contains(&amp;quot;sqrd_error&amp;quot;)) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;Squared error of each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_sq_error &amp;lt;-
+  obs_preds %&amp;gt;%
+  # compute squared error for each observation
+  mutate(cv_sqrd_error_a = (y-pred_a)^2,
+         cv_sqrd_error_b = (y-pred_b)^2,
+         cv_sqrd_error_c = (y-pred_c)^2)
+cv_sq_error %&amp;gt;% select(id, contains(&amp;quot;sqrd_error&amp;quot;)) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;Squared error of each base learner&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
 &lt;caption&gt;
 &lt;span id=&#34;tab:unnamed-chunk-10&#34;&gt;Table 5: &lt;/span&gt;Squared error of each base learner
 &lt;/caption&gt;
 &lt;thead&gt;
 &lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+id
+&lt;/th&gt;
 &lt;th style=&#34;text-align:right;&#34;&gt;
 cv_sqrd_error_a
 &lt;/th&gt;
@@ -789,6 +912,9 @@ cv_sqrd_error_c
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 1.09
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
@@ -799,6 +925,9 @@ cv_sqrd_error_c
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2
+&lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.02
 &lt;/td&gt;
@@ -811,6 +940,9 @@ cv_sqrd_error_c
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+3
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 0.01
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
@@ -821,6 +953,9 @@ cv_sqrd_error_c
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.13
 &lt;/td&gt;
@@ -833,6 +968,9 @@ cv_sqrd_error_c
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+5
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 0.04
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
@@ -843,6 +981,9 @@ cv_sqrd_error_c
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6
+&lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.04
 &lt;/td&gt;
@@ -857,7 +998,7 @@ cv_sqrd_error_c
 &lt;/table&gt;
 &lt;p&gt;And then take the mean of those three cross-validated squared error columns, grouped by &lt;code&gt;cv_fold&lt;/code&gt;, to get the CV-MSE for each fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks &amp;lt;-
-  obs_preds %&amp;gt;%
+  cv_sq_error %&amp;gt;%
   group_by(cv_fold) %&amp;gt;%
   summarise(cv_mse_a = mean(cv_sqrd_error_a),
             cv_mse_b = mean(cv_sqrd_error_b),

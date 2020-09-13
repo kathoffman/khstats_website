@@ -1,5 +1,5 @@
 ---
-title: "What in tarnation is Targeted Maximum Likelihood Estimation? A Visual Guide and Introductory R Tutorial on TMLE"
+title: "What in Tarnation is Targeted Maximum Likelihood Estimation?"
 author: "Katherine Hoffman"
 draft: true
 date: 2020-10-10T21:13:14-05:00
@@ -15,7 +15,7 @@ output:
 
 
 <blockquote>
-<p>Are you an applied statistician? Are you trying to be a <em>better</em> applied statistician and implement causal inference methods like propensity scores but you’re overwhelmed and don’t know where to start?! Check out the following tutorial on TMLE aimed at applied scientists with statistics training.</p>
+<p>A Visual Guide and Introductory R Tutorial on TMLE aimed at applied scientists with statistics training.</p>
 </blockquote>
 <hr />
 <div id="tmle-in-two-sentences" class="section level1">
@@ -32,39 +32,157 @@ output:
 </div>
 <div id="is-tmle-causal-inference" class="section level1">
 <h1>Is TMLE Causal Inference?</h1>
-<p>TMLE was <em>developed</em> to answer causal inference questions because it hones in on a treatment effect rather than</p>
-<p>However, the estimates from TMLE do not have a causal interpretation themselves. TMLE is merely a tool we use to</p>
-<p>A recent past-self of mine would’ve replied yes, yes, and yes. However, I have spent the past year learning and implementing causal inference methods as a Masters-level research biostatistician, and I’m excited to share my favorite method, Targeted Maximum Likelihood Estimation, or TMLE. I’ve tried to explain at the minimum level I think is necessary for an applied statistician to implement it in hopes that others will feel empowered to try it out.</p>
-<p><em>A warning:</em> There is no math in this post… 😇 If you want to learn about the math behind TMLE, I highly recommend the paper <a href="https://academic.oup.com/aje/article/185/1/65/2662306">“Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies”</a> by Megan S. Schuler and Sherri Rose, or for a deeper dive, the book <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1">“Targeted Learning”</a> by Mark van der Laan and Sherri Rose. For broader introductions to causal inference, I like both Judea Pearl’s <a href="http://bayes.cs.ucla.edu/PRIMER/">“Causal Inference in Statistics: A Primer”</a> and Miguel Hernan and James Robins’ <a href="https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf">“Causal Inference: What If”</a> books.</p>
-<p><strong>This article is solely meant to help someone understand TMLE on a conceptual or applied level, and then implement it in R for a statistical analysis.</strong> Before I give a motivation for TMLE…</p>
+<p>TMLE was <em>developed</em> to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.</p>
+<p>When approaching a causal inference question (or really any statistical estimation application at all!), the majority of time and effort should often be focused on the underlying scientific model, research question of interest, and data available to answer it.</p>
+<p>Once this process – usually called <strong>identification</strong>* in the causal inference literature – is completed and an analyst is ready to estimate an effect of interest, she/he has a choice in estimation methods.</p>
+<p>You’ve likely heard of some of these estimation methods: propensity score matching, inverse probability weighting, g-computation (AKA substitution estimation), etc. TMLE is an estimation method just like these, however, it has some very appealing properties that I am convinced make it a better option than the aforementioned methods.</p>
+<p>*I won’t go into identification in this post, but if you are new to causal inference, my favorite book so far to understand the big picture of identification is Part I of Miguel Hernan and James Robins’ <a href="https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf">“Causal Inference: What If”</a> book.</p>
 </div>
-<div id="a-quick-overview-of-causal-inference-and-propensity-scores" class="section level1">
-<h1>A quick overview of causal inference and propensity scores</h1>
-<p><em>Causal inference</em> refers to the many tools available to us to help answer questions like “what would have happened if we had done <em>this</em> instead of <em>that</em>?” To truly answer these questions, we’d need to rewind time to see what would have happened if we’d done something differently. In a world without Time-Turners, our next best option is to set up an experiment where individuals randomly get <em>this</em> treatment, or <em>that</em> treatment, and then look at the differences in what happened to the two groups. In industry research, that’s called A/B testing, and in medical research, it’s a randomized control trial.</p>
-<p>Due to practicality and ethics, this sort of experiment is not always possible. Sometimes our only option is to use the data we already have, which records what happened under various treatments that were not randomized. As statisticians, we know there’s a lot of bias in observational data like this, because individuals received (or even chose) their treatment for a myriad of reasons. We try to control for the factors that affected an individual’s treatment and outcome by adjusting for confounders in our regression model.</p>
-<p>The issue with an estimator like a generalized linear model is that its only purpose is to minimize the distance between a treatment, confounders, and an outcome. The interpretation of the estimated treatment coefficient can only ever be “the average difference in outcome for an individual who recieved <em>this</em> vs. <em>that</em> treatment, <em>holding all other covariates constant</em>,” which is rarely an interpretation we can utilize to make future clinical, economic, etc. decisions.</p>
-<p><strong>Propensity scores are one of the first ways statisticians came up with to help better answer the <em>this</em> vs. <em>that</em> question using observational data.</strong> The idea of propensity scores is to use an estimator – often as simple as a logistic regression model – to get a probability estimate, or “score,” which represents an individual’s likelihood of receiving a treatment given their baseline covariates. We then use that score in some way to try to reduce bias in our calculation of the treatment effect.</p>
-<p><strong>In medicine, the intuitive understanding of propensity scores is that we want to make the estimates from our observational data closer to what they would be if they came from data on a perfectly executed randomized clinical trial.</strong></p>
-<p>A few common ways of using a propensity score, or probability estimate, that you may have heard of before:</p>
-<ol style="list-style-type: decimal">
-<li><p><strong>Matching</strong> is when you run your analysis on a subgroup of individuals in which every person who did receive the treatment has a “matching” person with a similar propensity score, but who did not receive the treatment.</p></li>
-<li><p><strong>Inverse probability of treatment weighting (IPTW):</strong> uses the propensity score to down-weight patients who did receive the treatment, or treatment, and had a high probability of receiving the treatment, and up-weight patients who did not receive the treatment, but who had a high probability of receiving the treatment given their baseline covariates.</p></li>
-</ol>
-<p>If we think a bit about the first option, matching, it should become obvious that by taking a subgroup of our population in this way, we are making our estimates of the treatment effect extremely prone to bias. IPTW is usually the better option of the two, and if you’d like to read a good blog post on understanding IPTW better with examples in R, I recommend Lucy D’Agostino McGowan’s <a href="https://livefreeordichotomize.com/2019/01/17/understanding-propensity-score-weighting/">“Understanding Propensity Score Weighting.”</a></p>
-<p>However, there’s actually another four letter acronym out there that far fewer statisticians understand or have even heard of… TMLE! Like propensity scores, TMLE aims to help solve the issue of imbalanced treatments and biased effect of treatment estimates. It is less intuitive, but it has statistical properties that give it an advantage over many easier-to-explain methods.</p>
+<div id="tmle-real-intuitively" class="section level1">
+<h1>TMLE, real intuitively</h1>
+<p>All causal inference methods try to use information about why patients were treated (non-randomly, unless it was an RCT) to</p>
+<p>Before I walk through the <code>R</code> code for the TMLE algorithm, I want to reinforce the big-picture idea of TMLE: we want to use information about why patients get treatment to update their outcomes</p>
 </div>
 <div id="the-tmle-algorithm" class="section level1">
 <h1>The TMLE Algorithm</h1>
-<p>The TMLE algorithm uses two estimates:</p>
-<ol style="list-style-type: decimal">
-<li><p>the estimated probability an individual receives a treatment of interest, predicted by their baseline covariates (their propensity score)</p></li>
-<li><p>the estimated outcome of an individual, predicted by their treatment and baseline covariates</p></li>
-</ol>
-<p>and uses those prediction estimates to estimate the average difference in outcomes if everyone had received the treatment, compared to if everyone had not received the treatment.</p>
-<p>The TMLE algorithm is complex, but it’s often helpful for me to think of it as analagous to the iterative Expectation-Maximization (EM) algorithm in maximum likelihood estimation. Essentially, you start with the estimate of an individual’s outcome given their treatment and baseline covariates, and you update that estimate using the probability an individual received the treatment given their baseline covariates. Every time you update that estimate, you remove more of the bias that naturally exists in your observational data.</p>
-<p>What do I mean by “updating the estimate”? Basically, there’s another parameter the TMLE algorithm uses, very similar to inverse probability weighting, which is determined by whether someone actually received the treatment, divided by their probability estimate for receiving the treatment. <em>That</em> parameter gets used to update (and debias) the outcome estimate in an iterative process. The update, behind the scenes, is to (re)predict the actual outcome using a regression model with the old estimates of the outcome as a fixed intercept. This updating process continues until the estimate of the outcome given the treatment and baseline confounders converges, or no longer changes.</p>
-<p><strong>Through this iterative updating process, the TMLE algorithm <em>targets</em> the effect of the treatment on the outcome, and thus reduces bias and treatment imbalance that naturally exist in observational data.</strong> The final estimate is for the “average treatment effect,” which can be directly interpreted as the difference in outcomes if everyone had received the treatment compared to if everyone had not received the treatment.</p>
-<p><strong>If you feel a bit lost, the wonderful news is that you don’t need a detailed understanding of the TMLE algorithm or its properties as an applied statistician who wants to implement TMLE right now!</strong> However, it’s very interesting, and if you’d like to understand more, you should definitely read the aforementioned references.</p>
+<pre class="r"><code>library(tidyverse)
+library(SuperLearner)
+set.seed(7)
+
+# Superlearner functions from Ivan
+source(&quot;sl.r&quot;)
+
+# using data generating code from Miguel Angel Luque Fernandez&#39; tutorial
+generate_data &lt;- function(n){
+    w1 &lt;- rbinom(n, size=1, prob=0.5)
+    w2 &lt;- rbinom(n, size=1, prob=0.65)
+    w3 &lt;- round(runif(n, min=0, max=4), digits=3)
+    w4 &lt;- round(runif(n, min=0, max=5), digits=3)
+    A  &lt;- rbinom(n, size=1, prob= plogis(-0.4 + 0.2*w2 + 0.15*w3 + 0.2*w4 + 0.15*w2*w4))
+    # counterfactual
+    Y_1 &lt;- rbinom(n, size=1, prob= plogis(-1 + 1 -0.1*w1 + 0.3*w2 + 0.25*w3 + 0.2*w4 + 0.15*w2*w4))
+    Y_0 &lt;- rbinom(n, size=1, prob= plogis(-1 + 0 -0.1*w1 + 0.3*w2 + 0.25*w3 + 0.2*w4 + 0.15*w2*w4))
+    # Observed outcome
+    Y &lt;- Y_1*A + Y_0*(1 - A)
+    # return data.frame
+    tibble(w1, w2, w3, w4, A, Y, Y_1, Y_0)
+}
+
+# observations N
+n &lt;- 10000
+
+# full data set, including Y0 and Y0
+dat_full &lt;- generate_data(n)
+
+# calculate the true psi if we saw both outcomes
+true_psi &lt;- mean(dat_full$Y_1 - dat_full$Y_0)
+
+# make a data set with observed data only
+dat_obs &lt;- dat_full %&gt;%
+  select(-Y_1,-Y_0)
+ 
+
+# set SL libraries
+lib &lt;- c(&#39;SL.speedglm&#39;, # faster glm
+         &#39;SL.glmnet&#39;, # lasso
+         &#39;SL.ranger&#39;, # random forest
+         &#39;SL.earth&#39;)  #
+
+
+# estimate Q --------------------------------------------------------------
+
+Y &lt;- dat_obs$Y
+X_Y &lt;- dat_obs %&gt;% select(-Y)
+
+Q &lt;- SuperLearner(Y = Y, X = X_Y,
+                    family=binomial(),
+                    SL.library=lib,
+                    # metalearner = NNloglik for binary outcomes, NNLS for continuous
+                    method = method.NNloglik,
+                    # 5-fold cross validation
+                    cvControl = list(V = 5))
+
+# estimate g --------------------------------------------------------------
+
+A &lt;- dat_obs$A
+X_A &lt;- dat_obs %&gt;% select(-Y, -A)
+
+g &lt;- SuperLearner(Y = A, X = X_A,
+                    family=binomial(),
+                    SL.library=lib,
+                    # metalearner = NNloglik for binary outcomes, NNLS for continuous
+                    method = method.NNloglik,
+                    # 5-fold cross validation
+                    cvControl = list(V = 5))
+
+
+# predictions for Q -------------------------------------------------------
+
+Q_A &lt;- predict(Q)$pred
+
+X_Y_A1 &lt;- X_Y %&gt;% mutate(A = 1) 
+Q_1 &lt;- predict(Q, newdata = as.data.frame(X_Y_A1))$pred
+
+X_Y_A0 &lt;- X_Y %&gt;% mutate(A = 0)
+Q_0 &lt;- predict(Q, newdata = X_Y_A0)$pred
+
+
+# create clever covariate -------------------------------------------------
+
+H_1 &lt;- 1/predict(g)$pred
+H_0 &lt;- -1/(1-predict(g)$pred)
+
+# prep data to fit the clever covariate
+dat_cc &lt;-
+  dat_obs %&gt;%
+  mutate(Q_A = as.vector(Q_A),
+         H = case_when(A == 1 ~ H_1,
+                       A == 0 ~ H_0)) %&gt;%
+  select(Y, A, Q_A, H)
+
+# fit parametric working model
+glm_fit &lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H, data=dat_cc, family=binomial)
+# get epsilon
+eps &lt;- coef(glm_fit)
+# also get H as a vector (for Q_A_update)
+H &lt;- dat_cc$H
+
+# update expected outcome estimates (Q star) ------------------------------
+
+# update
+Q_1_update &lt;- plogis(qlogis(Q_1) + eps*H_1)
+Q_0_update &lt;- plogis(qlogis(Q_0) + eps*H_0)
+Q_A_update &lt;- plogis(qlogis(Q_A) + eps*H)
+
+# Estimate ATE ------------------------------------------------------------
+
+# get the ATE TMLE
+tmle_psi &lt;- mean(Q_1_update - Q_0_update)
+
+# compare to true parameter
+tmle_psi
+true_psi 
+
+
+# Calculate SEs -----------------------------------------------------------
+
+ic &lt;- (dat_obs$Y - Q_A_update) * H + Q_1_update + Q_0_update
+tmle_se &lt;- sqrt(var(ic)/nrow(dat_obs))
+
+ci_lo &lt;- tmle_psi - 1.96*tmle_se
+ci_hi &lt;- tmle_psi + 1.96*tmle_se
+
+pval &lt;- 2 * (1 - pnorm(abs(tmle_psi / tmle_se)))
+
+
+# Compare with TMLE package -----------------------------------------------------------
+
+tmle_fit &lt;- tmle::tmle(Y, A, X_A,
+                       gbound = .000000001, # trying 
+                       Q.SL.library = lib, g.SL.library = lib)
+tmle_fit$epsilon # mine are different :(
+tmle_fit$estimates$ATE</code></pre>
+<p>Essentially, you start with the estimate of an individual’s outcome given their treatment and baseline covariates, and you update that estimate using the probability an individual received the treatment given their baseline covariates. Every time you update that estimate, you remove more of the bias that naturally exists in your observational data.</p>
 </div>
 <div id="why-should-i-bother-with-tmle" class="section level1">
 <h1>Why should I bother with TMLE?</h1>
