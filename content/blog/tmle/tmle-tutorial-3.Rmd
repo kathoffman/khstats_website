@@ -1,5 +1,5 @@
 ---
-title: "What in Tarnation is Targeted Maximum Likelihood Estimation?"
+title: "WTF is TMLE? A Visual Guide & Introductory R Tutorial on Targeted Minimum Loss-based Estimation"
 author: "Katherine Hoffman"
 draft: true
 date: 2020-10-10T21:13:14-05:00
@@ -22,17 +22,47 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TMLE in two sentences
 
-- The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to estimate treatment effects of interest using:
+- The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to **estimate treatment effects of interest using**:
 
   1) the expected outcome of an individual, given the treatment they received and their baseline confounders
   
   2) the probability an individual received the treatment of interest, given their baseline confounders [propensity score]
   
-- These estimates can come regressions we commonly classify as machine learning (ML), but the overall estimate of the treatment effect will still have **valid confidence intervals**, unlike the estimates you normally get from ML
+- These estimates can come from regressions we commonly classify as machine learning (ML), but the overall estimate of the treatment effect will still have **valid confidence intervals**, unlike the estimates normally obtained from ML
 
 ***
 
-# Is TMLE Causal Inference?
+# What's the big deal about TMLE?
+
+TMLE is super cool because it allows you to estimate an effect of interest with confidence intervals without having to fit standard parametric regressions (for example, linear, logistic, and poisson regressions). The issue with these types of models is that they make harsh distributions about the underlying distribution of your data.
+
+Do you *really* ever -- like, ever -- believe your outcome has a linear, or log-linear, relationship with its explanatory variables? Let's say your outcome is blood pressure. Maybe for one predictor you can convince yourself that there is a linear relationship with ... but what about when you add five more variables. But ALL OF THEM? Absolutely bananas to think that would hold true.
+
+Nobody whose job is to predict events accurately believes that to be true, that's for sure. I've got no experience working for Google but I'm pretty sure their statisticians, given a massively wide data set, do not think "I bet a plain old linear regression will predict this person's ... best if I feed it these 50 potential predictors!
+
+They are going to use LASSO, or random forest, or neural net, or a wide range of other models!
+
+Statisticians who deal with the need for treatment effect estimates have long been hesitant to adopt these 
+
+These are not the most technical definitions, but hopefully they're enough to jog your memory of your formal training.
+
+**Bias**: The difference between the true value of a parameter and the estimated value.
+
+**Consistency**: The bias of an estimator decreases to 0 as sample size approaches infinity.
+
+**Efficiency**: The variance of an estimator is as small as possible as sample size approaches infinity.
+
+**Double robust**: If either of 
+
+# A very brief background on semi-parametric
+
+Semi-parametric models: models where at least one parameter is not defined. For example, 
+
+# TMLE FAQ
+
+I've been asking *a lot* of questions about TMLE over the past two years.
+
+## I've only heard about TMLE in the context TMLE of causal inference, what's up with that?
 
 TMLE was *developed* to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.
 
@@ -43,6 +73,8 @@ Once this process -- usually called **identification*** in the causal inference 
 You've likely heard of some of these estimation methods: propensity score matching, inverse probability weighting, g-computation (AKA substitution estimation), etc. TMLE is an estimation method just like these, however, it has some very appealing properties that I am convinced make it a better option than the aforementioned methods.
 
 *I won't go into identification in this post, but if you are new to causal inference, my favorite book so far to understand the big picture of identification is Part I of Miguel Hernan and James Robins’ ["Causal Inference: What If"](https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf) book.
+
+# A comparison with G-Computation and IPTW
 
 # TMLE, real intuitively
 

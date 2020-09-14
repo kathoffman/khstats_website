@@ -13,7 +13,7 @@
     </image>
     
     <item>
-      <title>What in Tarnation is Targeted Maximum Likelihood Estimation?</title>
+      <title>WTF is TMLE? A Visual Guide &amp; Introductory R Tutorial on Targeted Minimum Loss-based Estimation</title>
       <link>/blog/tmle/tmle-tutorial-3/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/blog/tmle/tmle-tutorial-3/</guid>
@@ -27,22 +27,46 @@
 &lt;div id=&#34;tmle-in-two-sentences&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE in two sentences&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to estimate treatment effects of interest using:&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to &lt;strong&gt;estimate treatment effects of interest using&lt;/strong&gt;:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;the expected outcome of an individual, given the treatment they received and their baseline confounders&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;the probability an individual received the treatment of interest, given their baseline confounders [propensity score]&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;These estimates can come regressions we commonly classify as machine learning (ML), but the overall estimate of the treatment effect will still have &lt;strong&gt;valid confidence intervals&lt;/strong&gt;, unlike the estimates you normally get from ML&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;These estimates can come from regressions we commonly classify as machine learning (ML), but the overall estimate of the treatment effect will still have &lt;strong&gt;valid confidence intervals&lt;/strong&gt;, unlike the estimates normally obtained from ML&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
-&lt;div id=&#34;is-tmle-causal-inference&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Is TMLE Causal Inference?&lt;/h1&gt;
+&lt;div id=&#34;whats-the-big-deal-about-tmle&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;What’s the big deal about TMLE?&lt;/h1&gt;
+&lt;p&gt;TMLE is super cool because it allows you to estimate an effect of interest with confidence intervals without having to fit standard parametric regressions (for example, linear, logistic, and poisson regressions). The issue with these types of models is that they make harsh distributions about the underlying distribution of your data.&lt;/p&gt;
+&lt;p&gt;Do you &lt;em&gt;really&lt;/em&gt; ever – like, ever – believe your outcome has a linear, or log-linear, relationship with its explanatory variables? Let’s say your outcome is blood pressure. Maybe for one predictor you can convince yourself that there is a linear relationship with … but what about when you add five more variables. But ALL OF THEM? Absolutely bananas to think that would hold true.&lt;/p&gt;
+&lt;p&gt;Nobody whose job is to predict events accurately believes that to be true, that’s for sure. I’ve got no experience working for Google but I’m pretty sure their statisticians, given a massively wide data set, do not think &#34;I bet a plain old linear regression will predict this person’s … best if I feed it these 50 potential predictors!&lt;/p&gt;
+&lt;p&gt;They are going to use LASSO, or random forest, or neural net, or a wide range of other models!&lt;/p&gt;
+&lt;p&gt;Statisticians who deal with the need for treatment effect estimates have long been hesitant to adopt these&lt;/p&gt;
+&lt;p&gt;These are not the most technical definitions, but hopefully they’re enough to jog your memory of your formal training.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bias&lt;/strong&gt;: The difference between the true value of a parameter and the estimated value.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Consistency&lt;/strong&gt;: The bias of an estimator decreases to 0 as sample size approaches infinity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Efficiency&lt;/strong&gt;: The variance of an estimator is as small as possible as sample size approaches infinity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Double robust&lt;/strong&gt;: If either of&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-very-brief-background-on-semi-parametric&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A very brief background on semi-parametric&lt;/h1&gt;
+&lt;p&gt;Semi-parametric models: models where at least one parameter is not defined. For example,&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tmle-faq&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TMLE FAQ&lt;/h1&gt;
+&lt;p&gt;I’ve been asking &lt;em&gt;a lot&lt;/em&gt; of questions about TMLE over the past two years.&lt;/p&gt;
+&lt;div id=&#34;ive-only-heard-about-tmle-in-the-context-tmle-of-causal-inference-whats-up-with-that&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;I’ve only heard about TMLE in the context TMLE of causal inference, what’s up with that?&lt;/h2&gt;
 &lt;p&gt;TMLE was &lt;em&gt;developed&lt;/em&gt; to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.&lt;/p&gt;
 &lt;p&gt;When approaching a causal inference question (or really any statistical estimation application at all!), the majority of time and effort should often be focused on the underlying scientific model, research question of interest, and data available to answer it.&lt;/p&gt;
 &lt;p&gt;Once this process – usually called &lt;strong&gt;identification&lt;/strong&gt;* in the causal inference literature – is completed and an analyst is ready to estimate an effect of interest, she/he has a choice in estimation methods.&lt;/p&gt;
 &lt;p&gt;You’ve likely heard of some of these estimation methods: propensity score matching, inverse probability weighting, g-computation (AKA substitution estimation), etc. TMLE is an estimation method just like these, however, it has some very appealing properties that I am convinced make it a better option than the aforementioned methods.&lt;/p&gt;
 &lt;p&gt;*I won’t go into identification in this post, but if you are new to causal inference, my favorite book so far to understand the big picture of identification is Part I of Miguel Hernan and James Robins’ &lt;a href=&#34;https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf&#34;&gt;“Causal Inference: What If”&lt;/a&gt; book.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-comparison-with-g-computation-and-iptw&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A comparison with G-Computation and IPTW&lt;/h1&gt;
 &lt;/div&gt;
 &lt;div id=&#34;tmle-real-intuitively&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE, real intuitively&lt;/h1&gt;
@@ -279,7 +303,7 @@ HTML Image as link
 &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
          width=100%&#34;&gt;
 &lt;figcaption&gt;
-&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making dorky summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
+&lt;em&gt;The Visual Guide…&lt;/em&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;Targeted Learning&lt;/a&gt; by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
 &lt;/figcaption&gt;
 &lt;/a&gt;
 &lt;/body&gt;
@@ -2059,7 +2083,7 @@ labs &amp;lt;- map_dfr(100:110, function(x){
 {&#34;columns&#34;:[{&#34;label&#34;:[&#34;id&#34;],&#34;name&#34;:[1],&#34;type&#34;:[&#34;dbl&#34;],&#34;align&#34;:[&#34;right&#34;]},{&#34;label&#34;:[&#34;admit_dt&#34;],&#34;name&#34;:[2],&#34;type&#34;:[&#34;S3: POSIXct&#34;],&#34;align&#34;:[&#34;right&#34;]},{&#34;label&#34;:[&#34;death_or_discharge_dt&#34;],&#34;name&#34;:[3],&#34;type&#34;:[&#34;S3: POSIXct&#34;],&#34;align&#34;:[&#34;right&#34;]},{&#34;label&#34;:[&#34;age&#34;],&#34;name&#34;:[4],&#34;type&#34;:[&#34;dbl&#34;],&#34;align&#34;:[&#34;right&#34;]},{&#34;label&#34;:[&#34;sex&#34;],&#34;name&#34;:[5],&#34;type&#34;:[&#34;chr&#34;],&#34;align&#34;:[&#34;left&#34;]},{&#34;label&#34;:[&#34;current_smoker&#34;],&#34;name&#34;:[6],&#34;type&#34;:[&#34;chr&#34;],&#34;align&#34;:[&#34;left&#34;]},{&#34;label&#34;:[&#34;immunosuppressed&#34;],&#34;name&#34;:[7],&#34;type&#34;:[&#34;chr&#34;],&#34;align&#34;:[&#34;left&#34;]},{&#34;label&#34;:[&#34;bmi&#34;],&#34;name&#34;:[8],&#34;type&#34;:[&#34;dbl&#34;],&#34;align&#34;:[&#34;right&#34;]},{&#34;label&#34;:[&#34;lab_time&#34;],&#34;name&#34;:[9],&#34;type&#34;:[&#34;S3: POSIXct&#34;],&#34;align&#34;:[&#34;right&#34;]},{&#34;label&#34;:[&#34;lab_name&#34;],&#34;name&#34;:[10],&#34;type&#34;:[&#34;chr&#34;],&#34;align&#34;:[&#34;left&#34;]},{&#34;label&#34;:[&#34;lab_value&#34;],&#34;name&#34;:[11],&#34;type&#34;:[&#34;chr&#34;],&#34;align&#34;:[&#34;left&#34;]}],&#34;data&#34;:[{&#34;1&#34;:&#34;100&#34;,&#34;2&#34;:&#34;2020-03-21 00:10:00&#34;,&#34;3&#34;:&#34;2020-05-13 12:10:00&#34;,&#34;4&#34;:&#34;64&#34;,&#34;5&#34;:&#34;Male&#34;,&#34;6&#34;:&#34;Yes&#34;,&#34;7&#34;:&#34;No&#34;,&#34;8&#34;:&#34;30.25454&#34;,&#34;9&#34;:&#34;2020-03-21 22:00:00&#34;,&#34;10&#34;:&#34;D-Dimer&#34;,&#34;11&#34;:&#34;937&#34;},{&#34;1&#34;:&#34;104&#34;,&#34;2&#34;:&#34;2020-04-03 12:15:00&#34;,&#34;3&#34;:&#34;2020-04-29 18:34:00&#34;,&#34;4&#34;:&#34;25&#34;,&#34;5&#34;:&#34;Male&#34;,&#34;6&#34;:&#34;Yes&#34;,&#34;7&#34;:&#34;No&#34;,&#34;8&#34;:&#34;NA&#34;,&#34;9&#34;:&#34;2020-04-04 03:00:00&#34;,&#34;10&#34;:&#34;C-Reactive Protein&#34;,&#34;11&#34;:&#34;&gt;1000&#34;},{&#34;1&#34;:&#34;106&#34;,&#34;2&#34;:&#34;2020-03-28 12:22:00&#34;,&#34;3&#34;:&#34;2020-04-05 19:18:00&#34;,&#34;4&#34;:&#34;49&#34;,&#34;5&#34;:&#34;Female&#34;,&#34;6&#34;:&#34;No&#34;,&#34;7&#34;:&#34;Yes&#34;,&#34;8&#34;:&#34;32.43823&#34;,&#34;9&#34;:&#34;2020-03-29 10:00:00&#34;,&#34;10&#34;:&#34;Platelet Count&#34;,&#34;11&#34;:&#34;729&#34;},{&#34;1&#34;:&#34;106&#34;,&#34;2&#34;:&#34;2020-03-28 12:22:00&#34;,&#34;3&#34;:&#34;2020-04-05 19:18:00&#34;,&#34;4&#34;:&#34;49&#34;,&#34;5&#34;:&#34;Female&#34;,&#34;6&#34;:&#34;No&#34;,&#34;7&#34;:&#34;Yes&#34;,&#34;8&#34;:&#34;32.43823&#34;,&#34;9&#34;:&#34;2020-03-28 23:00:00&#34;,&#34;10&#34;:&#34;LYMPHOCYTE PERC&#34;,&#34;11&#34;:&#34;&gt;1000&#34;},{&#34;1&#34;:&#34;106&#34;,&#34;2&#34;:&#34;2020-03-28 12:22:00&#34;,&#34;3&#34;:&#34;2020-04-05 19:18:00&#34;,&#34;4&#34;:&#34;49&#34;,&#34;5&#34;:&#34;Female&#34;,&#34;6&#34;:&#34;No&#34;,&#34;7&#34;:&#34;Yes&#34;,&#34;8&#34;:&#34;32.43823&#34;,&#34;9&#34;:&#34;2020-03-29 09:00:00&#34;,&#34;10&#34;:&#34;LYMPHOCYTE PERC&#34;,&#34;11&#34;:&#34;856&#34;},{&#34;1&#34;:&#34;106&#34;,&#34;2&#34;:&#34;2020-03-28 12:22:00&#34;,&#34;3&#34;:&#34;2020-04-05 19:18:00&#34;,&#34;4&#34;:&#34;49&#34;,&#34;5&#34;:&#34;Female&#34;,&#34;6&#34;:&#34;No&#34;,&#34;7&#34;:&#34;Yes&#34;,&#34;8&#34;:&#34;32.43823&#34;,&#34;9&#34;:&#34;2020-03-28 14:00:00&#34;,&#34;10&#34;:&#34;LYMPHOCYTE PERC&#34;,&#34;11&#34;:&#34;&gt;1000&#34;},{&#34;1&#34;:&#34;107&#34;,&#34;2&#34;:&#34;2020-04-10 18:15:00&#34;,&#34;3&#34;:&#34;2020-04-14 19:12:00&#34;,&#34;4&#34;:&#34;88&#34;,&#34;5&#34;:&#34;Male&#34;,&#34;6&#34;:&#34;No&#34;,&#34;7&#34;:&#34;Yes&#34;,&#34;8&#34;:&#34;20.29995&#34;,&#34;9&#34;:&#34;2020-04-10 19:00:00&#34;,&#34;10&#34;:&#34;LYMPHOCYTE PERC&#34;,&#34;11&#34;:&#34;846&#34;}],&#34;options&#34;:{&#34;columns&#34;:{&#34;min&#34;:{},&#34;max&#34;:[10]},&#34;rows&#34;:{&#34;min&#34;:[10],&#34;max&#34;:[10]},&#34;pages&#34;:{}}}
   &lt;/script&gt;
 &lt;/div&gt;
-&lt;p&gt;Perfect! I could go on to informatively join this data to another using &lt;code&gt;tidylog&lt;/code&gt;, make tables with clean labels using &lt;code&gt;tbl_summary()&lt;/code&gt;, &lt;code&gt;set_variable_labels()&lt;/code&gt;, and &lt;code&gt;snakecase()&lt;/code&gt;, find further labs of interest with &lt;code&gt;filter()&lt;/code&gt;, &lt;code&gt;str_detect()&lt;/code&gt;, and &lt;code&gt;tolower()&lt;/code&gt;, and make the lab values numeric with &lt;code&gt;parse_number()&lt;/code&gt;… the possibilities are endless!&lt;/p&gt;
+&lt;p&gt;Perfect! I could go on to informatively join this data to another using &lt;code&gt;tidylog&lt;/code&gt;, make tables with clean labels using &lt;code&gt;tbl_summary()&lt;/code&gt;, &lt;code&gt;set_variable_labels()&lt;/code&gt;, and &lt;code&gt;to_title_case()&lt;/code&gt;, find further labs of interest with &lt;code&gt;filter()&lt;/code&gt;, &lt;code&gt;str_detect()&lt;/code&gt;, and &lt;code&gt;tolower()&lt;/code&gt;, and make the lab values numeric with &lt;code&gt;parse_number()&lt;/code&gt;… the possibilities are endless!&lt;/p&gt;
 &lt;p&gt;I hope you enjoyed a quick insight into the data side of COVID-19 research, and/or perhaps picked up some useful function combinations for your own applied work with &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;R version 3.6.3 (2020-02-29)

@@ -209,7 +209,7 @@ patient_labs %>%
   filter(lab_time %within% interval(admit_dt, admit_dt + days(1)))
 ```
 
-Perfect! I could go on to informatively join this data to another using `tidylog`, make tables with clean labels using `tbl_summary()`, `set_variable_labels()`, and `snakecase()`, find further labs of interest with `filter()`, `str_detect()`, and `tolower()`, and make the lab values numeric with `parse_number()`... the possibilities are endless!
+Perfect! I could go on to informatively join this data to another using `tidylog`, make tables with clean labels using `tbl_summary()`, `set_variable_labels()`, and `to_title_case()`, find further labs of interest with `filter()`, `str_detect()`, and `tolower()`, and make the lab values numeric with `parse_number()`... the possibilities are endless!
 
 I hope you enjoyed a quick insight into the data side of COVID-19 research, and/or perhaps picked up some useful function combinations for your own applied work with `R`.
 
