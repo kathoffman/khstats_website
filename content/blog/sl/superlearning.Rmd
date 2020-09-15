@@ -49,7 +49,7 @@ I'm going to go through the algorithm one step at a time using a simulated data 
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 0: Load libraries, set seed, simulate data</h1>
+<h2 style="color:#c30a0a"><strong>Step 0: Load libraries, set seed, simulate data</h1></strong>
 </body>
 </html>
 
@@ -75,9 +75,10 @@ kable(head(obs), digits=3, caption = "Simulated data set")
 ```
 
 
+
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 1: Split data into K folds</h1>
+<h2 style="color:#c30a0a" > <strong>Step 1: Split data into K folds</h1></strong>
 </body>
 </html>
 
@@ -92,8 +93,8 @@ cv_index <- sample(rep(1:k, each = n/k)) # indices for each fold, same length as
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 2: Fit base learners for first CV-fold
-</h1>
+<h2 style="color:#c30a0a"><strong>Step 2: Fit base learners for first CV-fold
+</h1></strong>
 </body>
 </html>
 
@@ -124,8 +125,8 @@ The same code could be translated to a more complicated set, or **superlearner l
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 3: Obtain predictions for first CV-fold
-</h1>
+<h2 style="-color:#c30a0a"><strong>Step 3: Obtain predictions for first CV-fold
+</h1></strong>
 </body>
 </html>
 
@@ -150,8 +151,8 @@ knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = "First
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 4: Obtain CV predictions for entire data set
-</h1>
+<h2 style="color:#c30a0a"><strong>Step 4: Obtain CV predictions for entire data set
+</h1></strong>
 </body>
 </html>
 
@@ -190,8 +191,8 @@ cv_preds %>%
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 5: Choose and compute loss function of interest via metalearner
-</h1>
+<h2 style="color:#c30a0a"><strong>Step 5: Choose and compute loss function of interest via metalearner
+</h1></strong>
 </body>
 </html>
 
@@ -274,7 +275,7 @@ However, we can almost always create an even better prediction algorithm if we u
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 6: Fit base learners on entire data set</h1>
+<h2 style="color:#c30a0a"><strong>Step 6: Fit base learners on entire data set</h1></strong>
 </body>
 </html>
 
@@ -291,7 +292,7 @@ fit_c <- glm(y ~ x1*x2*x3, data=obs)
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 7: Obtain predictions from each base learner on entire data set</h1>
+<h2 style="color:#c30a0a"><strong>Step 7: Obtain predictions from each base learner on entire data set</h1></strong>
 </body>
 </html>
 
@@ -309,7 +310,7 @@ full_data_preds <- tibble(pred_a, pred_b, pred_c)
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 8: Use metalearner fit to weight base learners</h1>
+<h2 style="color:#c30a0a"><strong>Step 8: Use metalearner fit to weight base learners</h1></strong>
 </body>
 </html>
 
@@ -327,7 +328,7 @@ And... that's it! Those are our superlearner predictions.
 
 <html>
 <body>
-<h2 style="color:white;background-color:#c30a0a">Step 9 and beyond...</h1>
+<h2 style="color:#c30a0a"><strong>Step 9 and beyond...</h1></strong>
 </body>
 </html>
 

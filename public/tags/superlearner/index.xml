@@ -54,9 +54,10 @@ HTML Image as link
 &lt;p&gt;I’m going to go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 0: Load libraries, set seed, simulate data
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 0: Load libraries, set seed, simulate data
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate the continuous outcome, &lt;code&gt;y&lt;/code&gt;, and those four variables for prediction, &lt;code&gt;x1&lt;/code&gt;, &lt;code&gt;x2&lt;/code&gt;, &lt;code&gt;x3&lt;/code&gt;, and &lt;code&gt;x4&lt;/code&gt;.&lt;/p&gt;
@@ -224,9 +225,10 @@ y
 &lt;/table&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 1: Split data into K folds
+&lt;h2 style=&#34;color:#c30a0a&#34; &gt;
+&lt;strong&gt;Step 1: Split data into K folds
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
@@ -235,9 +237,10 @@ The superlearner algorithm relies on K-fold cross-validation (CV) to avoid build
 cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # indices for each fold, same length as our dataset `obs`&lt;/code&gt;&lt;/pre&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 2: Fit base learners for first CV-fold
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 2: Fit base learners for first CV-fold
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
@@ -256,9 +259,10 @@ fit_1c &amp;lt;- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR&lt;/code&
 &lt;p&gt;The same code could be translated to a more complicated set, or &lt;strong&gt;superlearner library&lt;/strong&gt;, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 3: Obtain predictions for first CV-fold
+&lt;h2 style=&#34;-color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 3: Obtain predictions for first CV-fold
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step3.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
@@ -359,9 +363,10 @@ pred_1c
 &lt;/table&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 4: Obtain CV predictions for entire data set
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 4: Obtain CV predictions for entire data set
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
@@ -521,9 +526,10 @@ pred_c
 &lt;/table&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 5: Choose and compute loss function of interest via metalearner
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 5: Choose and compute loss function of interest via metalearner
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step5.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
@@ -970,9 +976,10 @@ cv_mse_c
 &lt;p&gt;However, we can almost always create an even better prediction algorithm if we use information from &lt;em&gt;all&lt;/em&gt; of the algorithms’ CV predictions.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 6: Fit base learners on entire data set
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 6: Fit base learners on entire data set
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step6.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
@@ -982,9 +989,10 @@ fit_b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
 fit_c &amp;lt;- glm(y ~ x1*x2*x3, data=obs)&lt;/code&gt;&lt;/pre&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 7: Obtain predictions from each base learner on entire data set
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 7: Obtain predictions from each base learner on entire data set
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step7.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
@@ -995,9 +1003,10 @@ pred_c &amp;lt;- predict(fit_c)
 full_data_preds &amp;lt;- tibble(pred_a, pred_b, pred_c)&lt;/code&gt;&lt;/pre&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 8: Use metalearner fit to weight base learners
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 8: Use metalearner fit to weight base learners
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step8.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
@@ -1051,9 +1060,10 @@ sl_predictions
 &lt;p&gt;And… that’s it! Those are our superlearner predictions.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
-&lt;h2 style=&#34;color:white;background-color:#c30a0a&#34;&gt;
-Step 9 and beyond…
+&lt;h2 style=&#34;color:#c30a0a&#34;&gt;
+&lt;strong&gt;Step 9 and beyond…
 &lt;/h1&gt;
+&lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;We could compute the MSE of the ensemble superlearner predictions.&lt;/p&gt;
