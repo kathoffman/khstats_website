@@ -125,7 +125,7 @@ The same code could be translated to a more complicated set, or **superlearner l
 
 <html>
 <body>
-<h2 style="-color:#c30a0a"><strong>Step 3: Obtain predictions for first CV-fold
+<h2 style="color:#c30a0a"><strong>Step 3: Obtain predictions for first CV-fold
 </h1></strong>
 </body>
 </html>
