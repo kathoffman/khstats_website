@@ -51,7 +51,7 @@ HTML Image as link
 &lt;/div&gt;
 &lt;div id=&#34;superlearning-step-by-step&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Superlearning, step by step&lt;/h1&gt;
-&lt;p&gt;First I’ll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar’s &lt;a href=&#34;https://www.ucbbiostat.com/labs&#34;&gt;R Lab 3: Superlearning&lt;/a&gt; which you can try out if you want more practice.&lt;/p&gt;
+&lt;p&gt;First I’ll go through the algorithm one step at a time using a simulated data set.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:#c30a0a&#34;&gt;
@@ -61,19 +61,11 @@ HTML Image as link
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate a continuous outcome, &lt;code&gt;y&lt;/code&gt;, and four potential predictors, &lt;code&gt;x1&lt;/code&gt;, &lt;code&gt;x2&lt;/code&gt;, &lt;code&gt;x3&lt;/code&gt;, and &lt;code&gt;x4&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse, warn.conflicts = F)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Attaching packages ─────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
-## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
-## ✓ readr   1.3.1     ✓ forcats 0.5.0&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Conflicts ────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(kableExtra, warn.conflicts = F)
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
+library(kableExtra)
 set.seed(7)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n &amp;lt;- 5000
-obs &amp;lt;- tibble::tibble(
+obs &amp;lt;- tibble(
   id = 1:n,
   x1 = rnorm(n),
   x2 = rbinom(n, 1, plogis(10*x1)),
@@ -240,7 +232,7 @@ y
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
-The superlearner algorithm relies on K-fold cross-validation (CV) to avoid overfitting. We will start this process by splitting the data into 10 folds. The easiest way to do this is by creating indices for each cross-validation fold.&lt;/p&gt;
+The superlearner algorithm relies on K-fold cross-validation (CV) to avoid overfitting. We will start this process by splitting the data into 10 folds. The easiest way to do this is by creating indices for each CV fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;k &amp;lt;- 10 # 10 fold cv
 cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # indices for each fold, same length as our dataset `obs`&lt;/code&gt;&lt;/pre&gt;
 &lt;html&gt;
@@ -252,7 +244,7 @@ cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # indices for each fold, same le
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,…,9) &lt;em&gt;except&lt;/em&gt; for the very last one: &lt;code&gt;cv_index == 10&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the CV folds (k = 1,2,…,9) &lt;em&gt;except&lt;/em&gt; for the very last one: &lt;code&gt;cv_index == 10&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The individual algorithms or &lt;strong&gt;base learners&lt;/strong&gt; that we’ll use here are three linear regressions with differently specified parameters:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Learner A&lt;/strong&gt;: &lt;span class=&#34;math inline&#34;&gt;\(Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4 + \epsilon\)&lt;/span&gt;&lt;/p&gt;&lt;/li&gt;
@@ -391,13 +383,10 @@ cv_preds &amp;lt;-
   pred_a &amp;lt;- predict(fit_a, newdata = cv_valid)  # obtain predictions from all the base learners for that validation data
   pred_b &amp;lt;- predict(fit_b, newdata = cv_valid)
   pred_c &amp;lt;- predict(fit_c, newdata = cv_valid)
-  return(tibble::tibble(&amp;quot;obs_id&amp;quot; = cv_valid$id, &amp;quot;cv_fold&amp;quot; = x, pred_a, pred_b, pred_c))  # save the predictions and the ids of the observations in a data frame
+  return(tibble(&amp;quot;obs_id&amp;quot; = cv_valid$id, &amp;quot;cv_fold&amp;quot; = x, pred_a, pred_b, pred_c))  # save the predictions and the ids of the observations in a data frame
 })
 
-cv_preds %&amp;gt;%
-  arrange(obs_id) %&amp;gt;%
-  head() %&amp;gt;%
-  kable(digits=2, caption = &amp;quot;All CV predictions for all three base learners&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+cv_preds %&amp;gt;% arrange(obs_id) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;All CV predictions for all three base learners&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
 &lt;caption&gt;
 &lt;span id=&#34;tab:unnamed-chunk-7&#34;&gt;Table 3: &lt;/span&gt;All CV predictions for all three base learners
@@ -542,7 +531,7 @@ pred_c
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;obs_preds &amp;lt;- 
   full_join(obs, cv_preds, by=c(&amp;quot;id&amp;quot; = &amp;quot;obs_id&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;…so that we can minimize a final loss function of interest between the true outcome and each CV prediction. This is how we’re going to optimize our overall prediction algorithm: we want to make sure we’re “losing the least” in the way we combine our base learners’ predictions to ultimately make final predictions. We can do this efficiently by choosing a new learner, a metalearner, which reflects the final loss function of interest.&lt;/p&gt;
-&lt;p&gt;For simplicity, we’ll use yet another linear regression as our metalearner. The metalearner &lt;em&gt;could&lt;/em&gt; be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the &lt;code&gt;SuperLearner&lt;/code&gt; package is actually non-negative least squares (NNLS).&lt;/p&gt;
+&lt;p&gt;For simplicity, we’ll use another linear regression as our metalearner. Using a linear regression as a metalearner will minimize the Mean Squared Error (MSE) when combining the base learner predictions. Note that we could use a variety of parametric or non-parametric regressions to minimize MSE, or other common loss functions of interest.&lt;/p&gt;
 &lt;p&gt;No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit &amp;lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression coefficients&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
@@ -641,7 +630,7 @@ pred_c
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.854 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.165 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;For manual computation of the loss function (MSE), code for NNLS as a metalearner, and more information on choosing a metalearner, check out the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;For more information on metalearners, check out the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:#c30a0a&#34;&gt;
@@ -743,12 +732,12 @@ sl_mse&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;using-the-superlearner-package&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Using the &lt;code&gt;SuperLearner&lt;/code&gt; package&lt;/h1&gt;
-&lt;p&gt;Alternatively, we could use the &lt;code&gt;SuperLearner&lt;/code&gt; package and avoid all that hand-coding. Here is how you would specify an ensemble superlearner for our data with the base learner libraries of &lt;code&gt;ranger&lt;/code&gt; (random forests), &lt;code&gt;glmnet&lt;/code&gt; (LASSO, by default), and &lt;code&gt;earth&lt;/code&gt; (MARS).&lt;/p&gt;
+&lt;p&gt;Or… we could use a package and avoid all the hand-coding. Here is how you would build an ensemble superlearner for our data with the base learner libraries of &lt;code&gt;ranger&lt;/code&gt; (random forests), &lt;code&gt;glmnet&lt;/code&gt; (LASSO, by default), and &lt;code&gt;earth&lt;/code&gt; (MARS) using the &lt;code&gt;SuperLearner&lt;/code&gt; package in &lt;code&gt;R&lt;/code&gt;:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SuperLearner)
 x_df &amp;lt;- obs %&amp;gt;% select(x1:x4) %&amp;gt;% as.data.frame()
 sl_fit &amp;lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c(&amp;quot;SL.ranger&amp;quot;, &amp;quot;SL.glmnet&amp;quot;, &amp;quot;SL.earth&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;You can specify the metalearner with the &lt;code&gt;method&lt;/code&gt; argument. The default is NNLS.&lt;/p&gt;
+&lt;p&gt;You can specify the metalearner with the &lt;code&gt;method&lt;/code&gt; argument. The default is Non-Negative Least Squares (NNLS).&lt;/p&gt;
 &lt;div id=&#34;cv-risk-and-coefficient-weights&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;CV-Risk and Coefficient Weights&lt;/h2&gt;
 &lt;p&gt;We can examine the cross-validated &lt;code&gt;Risk&lt;/code&gt; (loss function), and the &lt;code&gt;Coef&lt;/code&gt;ficient (weight) given to each of the models.&lt;/p&gt;
@@ -763,8 +752,8 @@ sl_fit &amp;lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 ## SL.ranger_All 0.013278476 0.1619231
 ## SL.glmnet_All 0.097149642 0.0000000
 ## SL.earth_All  0.003168299 0.8380769&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is lowest for &lt;code&gt;SL.Earth&lt;/code&gt;. This translates to the largest coefficient, or weight, given to the predictions from &lt;code&gt;earth&lt;/code&gt; (which implements the MARS algorithm… but the name “MARS” is copyrighted!).&lt;/p&gt;
-&lt;p&gt;The LASSO model implemented by &lt;code&gt;glmnet&lt;/code&gt; has the highest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all.&lt;/p&gt;
+&lt;p&gt;From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is smallest for &lt;code&gt;SL.Earth&lt;/code&gt;. This translates to the largest coefficient, or weight, given to the predictions from &lt;code&gt;earth&lt;/code&gt; (which implements the MARS algorithm… but the name “MARS” is copyrighted!).&lt;/p&gt;
+&lt;p&gt;The LASSO model implemented by &lt;code&gt;glmnet&lt;/code&gt; has the largest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;obtaining-the-predictions&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Obtaining the predictions&lt;/h2&gt;
@@ -824,13 +813,13 @@ sl_predictions
 &lt;/div&gt;
 &lt;div id=&#34;alternative-ways-to-superlearn&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Alternative ways to superlearn&lt;/h2&gt;
-&lt;p&gt;Other packages freely available in &lt;code&gt;R&lt;/code&gt; that can be used to implement the superlearner algorithm include &lt;code&gt;sl3&lt;/code&gt; (an update to the older &lt;code&gt;Superlearner&lt;/code&gt; package), &lt;code&gt;h2o&lt;/code&gt;, &lt;code&gt;ml3&lt;/code&gt;, and &lt;code&gt;caretEnsemble&lt;/code&gt;. I previously wrote a &lt;a href=&#34;https://www.khstats.com/blog/sl3_demo/sl/&#34;&gt;very brief tutorial&lt;/a&gt; on using &lt;code&gt;sl3&lt;/code&gt; for an NYC R-Ladies demo.&lt;/p&gt;
+&lt;p&gt;Other packages freely available in &lt;code&gt;R&lt;/code&gt; that can be used to implement the superlearner algorithm include &lt;code&gt;sl3&lt;/code&gt; (an update to the older &lt;code&gt;Superlearner&lt;/code&gt; package), &lt;code&gt;h2o&lt;/code&gt;, &lt;code&gt;ml3&lt;/code&gt;, and &lt;code&gt;caretEnsemble&lt;/code&gt;. I previously wrote a &lt;a href=&#34;https://www.khstats.com/blog/sl3_demo/sl/&#34;&gt;brief demo&lt;/a&gt; on using &lt;code&gt;sl3&lt;/code&gt; for an NYC R-Ladies demo.&lt;/p&gt;
 &lt;p&gt;Python aficionados might find this &lt;a href=&#34;https://machinelearningmastery.com/super-learner-ensemble-in-python/&#34;&gt;blog post&lt;/a&gt; useful. I have never performed superlearning in Python, but if I had to, I would probably try &lt;code&gt;h2o&lt;/code&gt; first. H2o is available across in programming languages and their Chief Machine Learning Scientist, &lt;a href=&#34;https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor&#34;&gt;Erin Ledell&lt;/a&gt;, was an author of the original &lt;code&gt;SuperLearner&lt;/code&gt; package.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;coming-soon-when-prediction-is-not-the-end-goal&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Coming soon… when prediction is not the end goal&lt;/h1&gt;
-&lt;p&gt;Like most algorithms designed for prediction, the superlearner algorithm does not produce standard errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with semi-parametric estimation methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows us to utilize flexible models and place minimal assumptions on the distribution of our data.&lt;/p&gt;
+&lt;p&gt;Like most algorithms designed for prediction, the superlearner algorithm does not produce standard errors, making statistical inference such as confidence intervals and p-values impossible. When prediction is not the end goal, superlearning works well with semi-parametric estimation methods (for example, Targeted Maximum Likelihood Estimation (TMLE)) for statistical inference. This allows the use of utilize flexible models for minimal assumptions placed on the distribution of the data.&lt;/p&gt;
 &lt;p&gt;I made a similar &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;visual guide for TMLE&lt;/a&gt;. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: &lt;a href=&#34;https://medium.com/@kathoffman317&#34;&gt;@kathoffman317&lt;/a&gt;. If you’re curious about TMLE in the meantime, I really like &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;this tutorial&lt;/a&gt; by Miguel Angel Luque Fernandez.&lt;/p&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -866,7 +855,7 @@ HTML Image as link
   theme_bw() +
   guides(col=F) +
   labs(x = &amp;quot;Base Learner&amp;quot;, y=&amp;quot;Squared Error&amp;quot;, title=&amp;quot;Squared Errors of Learner A, B, and C&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/sl/superlearning_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;480&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/sl/superlearning_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;528&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;And then take the mean of those three cross-validated squared error columns, grouped by &lt;code&gt;cv_fold&lt;/code&gt;, to get the CV-MSE for each fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks &amp;lt;-
   cv_sq_error %&amp;gt;%
@@ -939,12 +928,12 @@ cv_mse_c
 &lt;blockquote&gt;
 &lt;p&gt;“Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors. Regularization via Ridge or Lasso regression is commonly used to over-come the issue of collinearity among the predictor variables that make up the level-one dataset.”&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using non-negative least squares regression (NNLS).&lt;/p&gt;
-&lt;p&gt;Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE). Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner. For more information, I recommend reading Ledell’s &lt;a href=&#34;https://escholarship.org/uc/item/3kb142r2&#34;&gt;disseration&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using NNLS.&lt;/p&gt;
+&lt;p&gt;Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE), which will change with the goals of the prediction algorithm. For example, if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or &lt;span class=&#34;math inline&#34;&gt;\(1-AUC\)&lt;/span&gt;. Ledell has a different paper about maximizing the Area Under the Curve (AUC) with superlearner algorithms &lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;code-for-nnls&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Code for NNLS&lt;/h3&gt;
-&lt;p&gt;NNLS is simply a form of penalized regression that does not allow the coefficients to be negative. We could see what our weights would be if we had used NNLS as the metalearner in the linear regression example using the &lt;code&gt;nnls&lt;/code&gt; package, which takes the arguments of &lt;code&gt;x&lt;/code&gt;, a matrix of predictors, and &lt;code&gt;y&lt;/code&gt;, an outcome vector.&lt;/p&gt;
+&lt;p&gt;NNLS is essentially just a regularization model that does not allow the coefficients to be negative. We could see what our weights would be if we had used NNLS as the metalearner in the linear regression example using the &lt;code&gt;nnls&lt;/code&gt; package, which takes the arguments of &lt;code&gt;x&lt;/code&gt;, a matrix of predictors, and &lt;code&gt;y&lt;/code&gt;, an outcome vector.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(nnls)
 nnls_fit &amp;lt;- nnls(cbind(pred_a, pred_b, pred_c), obs$y) # Fit NNLS with nnls::nnls()
 nnls_raw_weights &amp;lt;- nnls_fit$x # obtain coefficients&lt;/code&gt;&lt;/pre&gt;
@@ -952,7 +941,7 @@ nnls_raw_weights &amp;lt;- nnls_fit$x # obtain coefficients&lt;/code&gt;&lt;/pre
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;weights &amp;lt;- nnls_raw_weights/sum(nnls_raw_weights)
 round(weights, 3)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## [1] 0.000 0.833 0.167&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of 0.833 to Learner B and 0.167, and no weight to the predictions from Learner A.&lt;/p&gt;
+&lt;p&gt;The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of 0.833 to Learner B and 0.167 to Learner C, and no weight to the predictions from Learner A.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;another-visual-guide&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Another visual guide&lt;/h3&gt;
@@ -966,6 +955,7 @@ round(weights, 3)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL &lt;a href=&#34;https://CRAN.R-project.org/package=SuperLearner&#34; class=&#34;uri&#34;&gt;https://CRAN.R-project.org/package=SuperLearner&lt;/a&gt;. R package version 2.0-22.&lt;/p&gt;
 &lt;p&gt;Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. &lt;em&gt;Eur J Epidemiol.&lt;/em&gt; 2018;33(5):459-464. &lt;a href=&#34;doi:10.1007/s10654-018-0390-z&#34; class=&#34;uri&#34;&gt;doi:10.1007/s10654-018-0390-z&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;LeDell, E. (2015). Scalable Ensemble Learning and Computationally Efficient Variance Estimation. UC Berkeley. ProQuest ID: LeDell_berkeley_0028E_15235. Merritt ID: ark:/13030/m5wt1xp7. Retrieved from &lt;a href=&#34;https://escholarship.org/uc/item/3kb142r2&#34; class=&#34;uri&#34;&gt;https://escholarship.org/uc/item/3kb142r2&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. &amp;lt;www.ucbbiostat.com&amp;gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;session-info&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Session Info&lt;/h1&gt;
