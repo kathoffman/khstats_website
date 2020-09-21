@@ -438,7 +438,7 @@ The advice from Erin Ledell in her dissertation, *Scalable Ensemble Learning and
 
 Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using non-negative least squares regression (NNLS).
 
-Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE).  Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner to combine the output from the base fits. For more information, I recommend reading Ledell's [disseration](https://escholarship.org/uc/item/3kb142r2).
+Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE).  Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner. For more information, I recommend reading Ledell's [disseration](https://escholarship.org/uc/item/3kb142r2).
 
 ### Code for NNLS
 
