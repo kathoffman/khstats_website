@@ -1,10 +1,11 @@
 ---
-title: "WTF is TMLE? A Visual Guide & Introductory R Tutorial on Targeted Minimum Loss-based Estimation"
+title: "An Illustrated Guide to Targeted Minimum Loss-based Estimation"
 author: "Katherine Hoffman"
 draft: true
 date: 2020-10-10T21:13:14-05:00
-categories: ["R"]
-tags: ["R"]
+categories: ["statistics","R"]
+math: true
+tags: ["statistics","causal inference","R","lmtp","TMLE","Targeted Maximum Likelihood Estimation","introduction to TMLE","targeted learning"]
 output: 
   html_document:
     toc: true
@@ -22,15 +23,33 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # TMLE in two sentences
 
-- The most basic form of Targeted Maximum Likelihood Estimation (TMLE) allows you to **estimate treatment effects of interest using**:
+- The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to **estimate treatment effects of interest using**:
 
   1) the expected outcome of an individual, given the treatment they received and their baseline confounders
   
-  2) the probability an individual received the treatment of interest, given their baseline confounders [propensity score]
+  2) the probability an individual received the treatment of interest, given their baseline confounders; also known as their propensity score
   
-- These estimates can come from regressions we commonly classify as machine learning (ML), but the overall estimate of the treatment effect will still have **valid confidence intervals**, unlike the estimates normally obtained from ML
+- These estimates can come from regressions we commonly classify as machine learning (ML), but the **overall estimate of the treatment effect will still have valid confidence intervals**, unlike estimates normally obtained from ML
 
 ***
+
+# FAQ
+
+TMLE is often used in causal inference because...
+
+however, the estimates arising from TMLE do not automatically have a magical causal inference interpretation - that only comes from a process called identification. TMLE deals solely with estimation
+
+**Is TMLE Causal Inference?**
+
+Nope! TMLE is simply an *estimation method* that is often used for causal inference applications. That's because most statisticians who work on causal inference applications spend so. much. time. thinking about the research question of interest.
+
+They're obsessed with drawing out Directed Acyclic Graphs (DAGs) and/or writing out structural equation models (SCMs), thinking about the precise research question and the data available to answer (or not answer) it, and just generally trying to "identify" the causal parameter of interest.
+
+Some of them spend so much time getting the estimate of interest set up correctly that they don't want to "ruin" all that hard work by making strong assumptions about the underlying distribution of their data. They'd prefer to use flexible models for estimation, like the models we typically think of when we hear machine learning.
+
+I won't get into identification in this post, but essentially it is getting to the point that you can say that a parameter of interest (for example, an Odds Ratio or an Average Treatment Effect) can be written in terms of the data you have available
+
+The logic in using an estimation method like TMLE, where you don't have to
 
 # What's the big deal about TMLE?
 
@@ -85,14 +104,19 @@ Before I walk through the `R` code for the TMLE algorithm, I want to reinforce t
 
 # The TMLE Algorithm
 
-```{r,eval=F}
+Step 0
 
-library(tidyverse)
-library(SuperLearner)
+Load libraries, set seed, and simulate data
+
+![](/img/tmle/1_data_structure.png){width=80%}
+
+```{r}
+library(tidyverse, quietly=T)
+library(SuperLearner, quietly=T)
 set.seed(7)
 
 # Superlearner functions from Ivan
-source("sl.r")
+#source("sl.r")
 
 # using data generating code from Miguel Angel Luque Fernandez' tutorial
 generate_data <- function(n){
@@ -115,14 +139,88 @@ n <- 10000
 
 # full data set, including Y0 and Y0
 dat_full <- generate_data(n)
+```
 
+Our estimate of interest here is going to be the mean difference in outcomes if everyone had recevied the treatment compared to if everyone had not received the treatment. If we were to go through the whole causal inference identification process (AKA the very careful thinking half of causal inference), this might be identifiable as the Average Treatment Effect, or ATE.
+
+Since we have simulated data, we can generate what the outcome would actually look like if everyone were to receive treatment and then if everyone were to not receive treatment, and we can take the mean difference.
+
+```{r}
 # calculate the true psi if we saw both outcomes
 true_psi <- mean(dat_full$Y_1 - dat_full$Y_0)
+round(true_psi,3)
+```
 
+Cool, so the true ATE for our is XX. Since our outcome is binary, that translates to a 20% difference in outcomes if everyone were to receive the treatment of interest. That means if A huge effect! 
+
+
+```{r}
 # make a data set with observed data only
 dat_obs <- dat_full %>%
   select(-Y_1,-Y_0)
- 
+```
+
+
+# Step 1:
+
+Estimate the expected value of the outcome using treatment and confounders as predictors.
+
+$$Q(A,W) = \mathrm{E}[Y|A,W]$$
+
+![](/img/tmle/2_outcome_fit.png){width=70%}
+
+```{r}
+
+```
+
+
+Then predict the outcome for every observation under three scenarios:
+
+**1. If every observation received the treatment they *actually* received.**
+
+$$Q(A,W) = \mathrm{E}[Y|A,W]$$
+
+![](/img/tmle/3_QA.png){width=50%}
+Remember we're talking about a binary treatment for this tutorial.
+
+**2. If every observation received the treatment.**
+
+$$Q(1,W) = \mathrm{E}[Y|1,W]$$
+
+![](/img/tmle/4_Q1.png){width=80%}
+
+**3. If every observation received the control.**
+
+$$Q(0,W) = \mathrm{E}[Y|0,W]$$
+
+
+![](/img/tmle/5_Q1.png){width=80%}
+
+> If you have heard of G-Computation, or the simple substitution estimator (same thing), we could compute that estimate now by doing:
+
+...
+
+> If you've never heard of G-computation or simple substitution, don't sweat it! I'll explain later.
+
+#Step 2:
+
+Estimate the probability of treatment, given confounders. Note that this quantity is often called a **propensity score**, related to the *propensity* that an observation will receive a treatment of interest.
+
+![](/img/tmle/6_treatment_fit.png){width=60%}
+![](/img/tmle/7_H1.png){width=60%}
+![](/img/tmle/8_H0.png){width=70%}
+![](/img/tmle/9_HA.png){width=50%}
+![](/img/tmle/10_logistic_regression.png)
+![](/img/tmle/11_epsilon.png){width=50%}
+![](/img/tmle/12_update_Q1.png){width=70%}
+![](/img/tmle/13_update_Q0.png){width=70%}
+![](/img/tmle/14_compute_ATE.png){width=60%}
+![](/img/tmle/15_ses.png){width=100%}
+
+
+
+```{r,eval=F}
+
 
 # set SL libraries
 lib <- c('SL.speedglm', # faster glm
@@ -336,5 +434,7 @@ or, "The Hitchiker's Guide to Targeted Learning" is an excellent, still-in-progr
 Learn about causal inference,
 
 we should be estimating answers for questions of actual interest, rather than debiasing our results.
+
+
 
 # References:

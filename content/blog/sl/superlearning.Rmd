@@ -14,7 +14,7 @@ output:
     print_df: paged
 ---
 
-> Why use *one* machine learning algorithm when you could use all* of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in `R`.<br><br> *within computational limits
+> Why use *one* machine learning algorithm when you could use all of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in `R`.
 
 
 <html>
@@ -24,7 +24,7 @@ output:
    <body>
          <img alt="cheatsheet" src="/img/Superlearning.jpg"  
          width=100%">
-          <figcaption>*The Visual Guide...* Over the winter, I read [Targeted Learning](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. I was simultaneously learning Adobe InDesign, so I practiced by making summary sheets for some of the chapters. This visual guide for Chapter 3: Superlearning by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an [8.5x11" pdf on Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf), should you wish to print it out for reference (or desk decor).</figcaption>
+          <figcaption>***A Visual Guide...*** Over the winter, I read [*Targeted Learning*](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. This "visual guide" I made for *Chapter 3: Superlearning* by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an [8.5x11" pdf on Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf), should you wish to print it out for reference (or desk decor).</figcaption>
       </a>
    </body>
 </html>
@@ -45,7 +45,7 @@ output:
 
 # Superlearning, step by step
 
-I'm going to go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar's [R Lab 3: Superlearning](https://www.ucbbiostat.com/labs) which you can try out if you want more practice.
+First I'll go through the algorithm one step at a time using a simulated data set. It is a modified version of Maya Peterson and Laura Balzar's [R Lab 3: Superlearning](https://www.ucbbiostat.com/labs) which you can try out if you want more practice.
 
 <html>
 <body>
@@ -53,16 +53,16 @@ I'm going to go through the algorithm one step at a time using a simulated data 
 </body>
 </html>
 
-For simplicity I'll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let's first simulate the continuous outcome, `y`, and those four variables for prediction, `x1`, `x2`, `x3`, and `x4`. 
+For simplicity I'll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let's first simulate a continuous outcome, `y`, and four potential predictors, `x1`, `x2`, `x3`, and `x4`. 
 
 ```{r}
-library(dplyr, warn.conflicts = F)
+library(tidyverse, warn.conflicts = F)
 library(kableExtra, warn.conflicts = F)
 set.seed(7)
 ```
 
 ```{r}
-n <- 1000
+n <- 5000
 obs <- tibble::tibble(
   id = 1:n,
   x1 = rnorm(n),
@@ -83,7 +83,7 @@ kable(head(obs), digits=3, caption = "Simulated data set")
 </html>
 
   ![](/img/sl_steps/step1.png){width=50%}
-The superlearner algorithm relies on K-fold cross-validation (CV) to avoid building a prediction algorithm that is overfit to the data. We will start this process by splitting the data into 10 blocks, or folds. The easiest way to do this is by creating indices for each cross-validation fold.
+The superlearner algorithm relies on K-fold cross-validation (CV) to avoid overfitting. We will start this process by splitting the data into 10 folds. The easiest way to do this is by creating indices for each cross-validation fold.
 
 ```{r}
 k <- 10 # 10 fold cv
@@ -100,9 +100,9 @@ cv_index <- sample(rep(1:k, each = n/k)) # indices for each fold, same length as
 
   ![](/img/sl_steps/step2.png){width=50%}
 
-Recall that in  K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,...) *except* for the very last one: `cv_index == 10`.
+Recall that in  K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the cross-validation folds (k = 1,2,...,9) *except* for the very last one: `cv_index == 10`.
 
-The individual algorithms or **base learners** that we'll use here are three plain old linear regressions with differently specified parameters:
+The individual algorithms or **base learners** that we'll use here are three linear regressions with differently specified parameters:
 
 1. **Learner A**: $Y=\beta_0 + \beta_1 X_2 + \beta_2 X_4 + \epsilon$
 
@@ -119,7 +119,7 @@ fit_1c <- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR
 
 I am *only* using the linear regressions so that code for running more complicated regressions does not take away from understanding the general superlearning algorithm.
 
-The same code could be translated to a more complicated set, or **superlearner library**, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, multivariate adaptive splines (MARS), and any other statistical learning algorithm equipped to handle continuous outcomes.
+Superlearning actually works best if you use a diverse set, or **superlearner library**, of base learners. For example, instead of three linear regressions, we could use a least absolute shrinkage estimator (LASSO), random forest, and multivariate adaptive splines (MARS). Any parametric or non-parametric supervised machine learning algorithm can be included as a base learner.
 
 
 
@@ -141,7 +141,7 @@ pred_1b <- predict(fit_1b, newdata = cv_valid_1)
 pred_1c <- predict(fit_1c, newdata = cv_valid_1)
 ```
 
-Since we have 1000 `obs`ervations, that gives us three vectors of length 100: a set of predictions for each of our Learners A, B, and C.
+Since we have 5000 `obs`ervations, that gives us three vectors of length 500: a set of predictions for each of our Learners A, B, and C.
 
 ```{r}
 length(pred_1a) # double check we only have n/k predictions ...we do :-)
@@ -164,22 +164,16 @@ We'll want to get those predictions for *every* fold. So, using your favorite `f
 cv_folds <- as.list(1:k)
 names(cv_folds) <- paste0("fold",1:k)
 cv_preds <-
-  # map_dfr loops through every fold (1:k) and binds the rows of the listed results together
-  purrr::map_dfr(cv_folds, function(x){
-  # make a training data set that contains all data except fold k
-  cv_train <- obs[-which(cv_index == x),]
-  # fit all the base learners to that data
-  fit_a <- glm(y ~ x2 + x4, data=cv_train)
+  purrr::map_dfr(cv_folds, function(x){  # map_dfr loops through every fold (1:k) and binds the rows of the listed results together
+  cv_train <- obs[-which(cv_index == x),]  # make a training data set that contains all data except fold k
+  fit_a <- glm(y ~ x2 + x4, data=cv_train)  # fit all the base learners to that data
   fit_b <- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train)
   fit_c <- glm(y ~ x1*x2*x3, data=cv_train)
-  # make a validation data set that only contains data from fold k
-  cv_valid <- obs[which(cv_index == x),]
-  # obtain predictions from all the base learners for that validation data
-  pred_a <- predict(fit_a, newdata = cv_valid)
+  cv_valid <- obs[which(cv_index == x),]  # make a validation data set that only contains data from fold k
+  pred_a <- predict(fit_a, newdata = cv_valid)  # obtain predictions from all the base learners for that validation data
   pred_b <- predict(fit_b, newdata = cv_valid)
   pred_c <- predict(fit_c, newdata = cv_valid)
-  # save the predictions and the ids of the observations in a data frame
-  return(tibble::tibble("obs_id" = cv_valid$id, "cv_fold" = x, pred_a, pred_b, pred_c))
+  return(tibble::tibble("obs_id" = cv_valid$id, "cv_fold" = x, pred_a, pred_b, pred_c))  # save the predictions and the ids of the observations in a data frame
 })
 
 cv_preds %>%
@@ -210,7 +204,7 @@ obs_preds <-
 
 ...so that we can minimize a final loss function of interest between the true outcome and each CV prediction. This is how we're going to optimize our overall prediction algorithm: we want to make sure we're "losing the least" in the way we combine our base learners' predictions to ultimately make final predictions. We can do this efficiently by choosing a new learner, a metalearner, which reflects the final loss function of interest.
 
-For simplicity, we'll use yet another linear regression as our metalearner. The metalearner *could* be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the `SuperLearner` package is actually non-negative least squares (NNLS). For more information on NNLS, see the [Appendix](#appendix).
+For simplicity, we'll use yet another linear regression as our metalearner. The metalearner *could* be a more complicated statistical learning algorithm (LASSO, random forest, etc.), and in fact the default in the `SuperLearner` package is actually non-negative least squares (NNLS). 
 
 No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, `y`.
 
@@ -221,57 +215,7 @@ kable(broom::tidy(sl_fit), digits=3, caption = "Metalearner regression coefficie
 
 This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of `r round(sl_fit$coefficients[1],3)`, then adding `r round(sl_fit$coefficients[[2]],3)` $\times$ predictions from Learner A, `r round(sl_fit$coefficients[[3]],3)` $\times$ predictions from Learner B, and `r round(sl_fit$coefficients[[4]],3)` $\times$ predictions from Learner C.
 
-To gain more intuition on these coefficients in the metalearner, check out the step below.
-
-### *Optional step for demonstration*: manually computing the MSE
-
-Let's say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error $(y - \hat{y})^2$ for each CV prediction A, B, and C.
-
-```{r}
-cv_sq_error <-
-  obs_preds %>%
-  # compute squared error for each observation
-  mutate(cv_sqrd_error_a = (y-pred_a)^2,
-         cv_sqrd_error_b = (y-pred_b)^2,
-         cv_sqrd_error_c = (y-pred_c)^2)
-cv_sq_error %>% select(id, contains("sqrd_error")) %>% head() %>% kable(digits=2, caption = "Squared error of each base learner") 
-```
-
-And then take the mean of those three cross-validated squared error columns, grouped by `cv_fold`, to get the CV-MSE for each fold.
-
-```{r}
-cv_risks <-
-  cv_sq_error %>%
-  group_by(cv_fold) %>%
-  summarise(cv_mse_a = mean(cv_sqrd_error_a),
-            cv_mse_b = mean(cv_sqrd_error_b),
-            cv_mse_c = mean(cv_sqrd_error_c)
-            )
-kable(cv_risks, digits=2, caption = "CV-MSE for each CV fold for each base learner") 
-```
-
-We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.12, and Learner A varies between 0.2 and 0.5. We can take another mean to get the overall CV-MSE for each learner.
-
-```{r}
-cv_risks %>%
-  select(-cv_fold) %>%
-  summarise_all(mean) %>%
-  kable(digits=2, caption = "CV-MSE for each base learner") %>%
-  kable_styling(position = "center")
-```
-
-The base learner that performs the best using our chosen loss function of interest is clearly Learner B. We can see from our data simulation code why this is true -- Learner B is almost exactly the mimicking the data generating mechanism of `y`.
-
-Our results align with the linear regression fit from our metalearning step; Learner B predictions received a much larger coefficient relative to Learners A and C.
-
-> We *could* stop here and fit Learner B to our full data set, and that would be called using the **discrete superlearner**.
-
-```{r}
-discrete_sl_predictions <- predict(glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs))
-```
-
-However, we can almost always create an even better prediction algorithm if we use information from *all* of the algorithms' CV predictions.
-
+*For manual computation of the loss function (MSE), code for NNLS as a metalearner, and more information on choosing a metalearner, check out the [Appendix](#appendix).*
 
 <html>
 <body>
@@ -298,7 +242,7 @@ fit_c <- glm(y ~ x1*x2*x3, data=obs)
 
 ![](/img/sl_steps/step7.png){width=40%}
 
-We'll use *those* base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using *cross-validated* predictions, rather than fitting the base learners on the whole data set. This was to avoid overfitting.
+We'll use *those* base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using cross-validated predictions, rather than fitting the base learners on the whole data set. This was to avoid overfitting.
 
 ```{r}
 pred_a <- predict(fit_a)
@@ -354,7 +298,7 @@ sl_fit <- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```
 
-You can specify the metalearner with the `method` argument. The default is [non-negative least squares](#appendix).
+You can specify the metalearner with the `method` argument. The default is NNLS.
 
 ## CV-Risk and Coefficient Weights
 
@@ -385,7 +329,7 @@ cv_sl_fit <- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```
 
-For more information on the `SuperLearner` package, check out this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
+For more information on the `SuperLearner` package, take a look at this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
 
 
 ## Alternative ways to superlearn
@@ -415,13 +359,106 @@ I made a similar [visual guide for TMLE](https://github.com/hoffmakl/CI-visual-g
 
 # Appendix
 
-## Non-negative least squares regression
+### Manually computing the MSE
 
-The default in the `SuperLearner` package is non-negative least square regression for continuous variables. The non-negative least squares is exactly the same as "regular" linear least squares regression, but instead of just solving for the coefficients that yield the minimum hypotenuse distance between X and Y for a whole matrix (in other words, the *Euclidean distance*), you constrain your solution to only allow *positive* coefficients to minimize that distance.  
+Let's say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error $(y - \hat{y})^2$ for each CV prediction A, B, and C.
 
-It's actually very intuitive to have a regression that doesn't allow negative coefficients if you're trying to "weight" an ensemble of predictions! For a manual superlearner algorithm that implements an NNLS regression as the metalearner, see this [introductory tutorial code](https://github.com/ainaimi/SuperLearnerIntro).
+```{r}
+cv_sq_error <-
+  obs_preds %>%
+  mutate(cv_sqrd_error_a = (y-pred_a)^2,   # compute squared error for each observation
+         cv_sqrd_error_b = (y-pred_b)^2,
+         cv_sqrd_error_c = (y-pred_c)^2)
+```
 
-## Another visual guide
+```{r, fig.width=5}
+cv_sq_error %>% 
+  pivot_longer(c(cv_sqrd_error_a, cv_sqrd_error_b, cv_sqrd_error_c), # make the CV squared errors long form for plotting
+               names_to = "base_learner",
+               values_to = "squared_error") %>%
+  mutate(base_learner = toupper(str_remove(base_learner, "cv_sqrd_error_"))) %>%
+  ggplot(aes(base_learner, squared_error, col=base_learner)) + # make box plots
+  geom_boxplot() +
+  theme_bw() +
+  guides(col=F) +
+  labs(x = "Base Learner", y="Squared Error", title="Squared Errors of Learner A, B, and C")
+```
+
+And then take the mean of those three cross-validated squared error columns, grouped by `cv_fold`, to get the CV-MSE for each fold.
+
+```{r}
+cv_risks <-
+  cv_sq_error %>%
+  group_by(cv_fold) %>%
+  summarise(cv_mse_a = mean(cv_sqrd_error_a),
+            cv_mse_b = mean(cv_sqrd_error_b),
+            cv_mse_c = mean(cv_sqrd_error_c)
+            )
+cv_risks %>%
+  pivot_longer(cv_mse_a:cv_mse_c,
+               names_to = "base_learner",
+               values_to = "mse") %>%
+  mutate(base_learner = toupper(str_remove(base_learner,"cv_mse_")))  %>%
+  ggplot(aes(cv_fold, mse, col=base_learner)) +
+  geom_point() +
+  theme_bw()  +
+    scale_x_continuous(breaks = 1:10) +
+  labs(x = "Cross-Validation (CV) Fold", y="Mean Squared Error (MSE)", col = "Base Learner", title="CV-MSEs for Base Learners A, B, and C")
+```
+
+We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and .45. We can take another mean to get the overall CV-MSE for each learner.
+
+```{r}
+cv_risks %>%
+  select(-cv_fold) %>%
+  summarise_all(mean) %>%
+  kable(digits=2, caption = "CV-MSE for each base learner") %>%
+  kable_styling(position = "center")
+```
+
+The base learner that performs the best using our chosen loss function of interest is clearly Learner B. We can see from our data simulation code why this is true -- Learner B is almost exactly the mimicking the data generating mechanism of `y`.
+
+Our results align with the linear regression fit from our metalearning step; Learner B predictions received a much larger coefficient relative to Learners A and C.
+
+### Discrete Superlearner
+
+We *could* stop after minimizing our loss function (MSE) and fit Learner B to our full data set, and that would be called using the **discrete superlearner**.
+
+```{r}
+discrete_sl_predictions <- predict(glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs))
+```
+
+However, we can almost always create an even better prediction algorithm if we use information from *all* of the algorithms' CV predictions.
+
+### Choosing a metalearner
+
+The advice from Erin Ledell in her dissertation, *Scalable Ensemble Learning and Computationally Efficient Variance Estimation*, on choosing a metalearner is:
+
+>"Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors.  Regularization via Ridge or Lasso regression is commonly used to over-come the issue of collinearity among the predictor variables that make up the level-one dataset."
+
+Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using non-negative least squares regression (NNLS).
+
+Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE).  Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner to combine the output from the base fits. For more information, I recommend reading Ledell's [disseration](https://escholarship.org/uc/item/3kb142r2).
+
+### Code for NNLS
+
+NNLS is simply a form of penalized regression that does not allow the coefficients to be negative. We could see what our weights would be if we had used NNLS as the metalearner in the linear regression example using the `nnls` package, which takes the arguments of `x`, a matrix of predictors, and `y`, an outcome vector.
+
+```{r}
+library(nnls)
+nnls_fit <- nnls(cbind(pred_a, pred_b, pred_c), obs$y) # Fit NNLS with nnls::nnls()
+nnls_raw_weights <- nnls_fit$x # obtain coefficients
+```
+We can normalize these coefficients so that they sum to 1 (so they're actually "weights") with the following code:
+
+```{r}
+weights <- nnls_raw_weights/sum(nnls_raw_weights)
+round(weights, 3)
+```
+
+The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of `r round(weights, 3)[2]` to Learner B and `r round(weights, 3)[2]`, and no weight to the predictions from Learner A.
+
+### Another visual guide
 
 The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the *Targeted Learning* book:
 
@@ -434,6 +471,8 @@ Polley, Eric. “Chapter 3: Superlearning.” Targeted Learning: Causal Inferenc
 Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL https://CRAN.R-project.org/package=SuperLearner. R package version 2.0-22.
 
 Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. *Eur J Epidemiol.* 2018;33(5):459-464. doi:10.1007/s10654-018-0390-z
+
+LeDell, E. (2015). Scalable Ensemble Learning and Computationally Efficient Variance Estimation. UC Berkeley. ProQuest ID: LeDell_berkeley_0028E_15235. Merritt ID: ark:/13030/m5wt1xp7. Retrieved from https://escholarship.org/uc/item/3kb142r2
 
 # Session Info
 

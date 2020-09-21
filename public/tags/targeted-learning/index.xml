@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>targeted learning | KHstats</title>
+    <link>/tags/targeted-learning/</link>
+      <atom:link href="/tags/targeted-learning/index.xml" rel="self" type="application/rss+xml" />
+    <description>targeted learning</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Oct 2020 21:13:14 -0500</lastBuildDate>
+    <image>
+      <url>/img/icon-192.png</url>
+      <title>targeted learning</title>
+      <link>/tags/targeted-learning/</link>
+    </image>
+    
+    <item>
+      <title>An Illustrated Guide to Targeted Minimum Loss-based Estimation</title>
+      <link>/blog/tmle/tmle-tutorial-3/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/tmle/tmle-tutorial-3/</guid>
+      <description>
+
+
+&lt;blockquote&gt;
+&lt;p&gt;A Visual Guide and Introductory R Tutorial on TMLE aimed at applied scientists with statistics training.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+&lt;div id=&#34;tmle-in-two-sentences&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TMLE in two sentences&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to &lt;strong&gt;estimate treatment effects of interest using&lt;/strong&gt;:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;the expected outcome of an individual, given the treatment they received and their baseline confounders&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the probability an individual received the treatment of interest, given their baseline confounders; also known as their propensity score&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;These estimates can come from regressions we commonly classify as machine learning (ML), but the &lt;strong&gt;overall estimate of the treatment effect will still have valid confidence intervals&lt;/strong&gt;, unlike estimates normally obtained from ML&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;faq&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;FAQ&lt;/h1&gt;
+&lt;p&gt;TMLE is often used in causal inference because…&lt;/p&gt;
+&lt;p&gt;however, the estimates arising from TMLE do not automatically have a magical causal inference interpretation - that only comes from a process called identification. TMLE deals solely with estimation&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Is TMLE Causal Inference?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Nope! TMLE is simply an &lt;em&gt;estimation method&lt;/em&gt; that is often used for causal inference applications. That’s because most statisticians who work on causal inference applications spend so. much. time. thinking about the research question of interest.&lt;/p&gt;
+&lt;p&gt;They’re obsessed with drawing out Directed Acyclic Graphs (DAGs) and/or writing out structural equation models (SCMs), thinking about the precise research question and the data available to answer (or not answer) it, and just generally trying to “identify” the causal parameter of interest.&lt;/p&gt;
+&lt;p&gt;Some of them spend so much time getting the estimate of interest set up correctly that they don’t want to “ruin” all that hard work by making strong assumptions about the underlying distribution of their data. They’d prefer to use flexible models for estimation, like the models we typically think of when we hear machine learning.&lt;/p&gt;
+&lt;p&gt;I won’t get into identification in this post, but essentially it is getting to the point that you can say that a parameter of interest (for example, an Odds Ratio or an Average Treatment Effect) can be written in terms of the data you have available&lt;/p&gt;
+&lt;p&gt;The logic in using an estimation method like TMLE, where you don’t have to&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;whats-the-big-deal-about-tmle&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;What’s the big deal about TMLE?&lt;/h1&gt;
+&lt;p&gt;TMLE is super cool because it allows you to estimate an effect of interest with confidence intervals without having to fit standard parametric regressions (for example, linear, logistic, and poisson regressions). The issue with these types of models is that they make harsh distributions about the underlying distribution of your data.&lt;/p&gt;
+&lt;p&gt;Do you &lt;em&gt;really&lt;/em&gt; ever – like, ever – believe your outcome has a linear, or log-linear, relationship with its explanatory variables? Let’s say your outcome is blood pressure. Maybe for one predictor you can convince yourself that there is a linear relationship with … but what about when you add five more variables. But ALL OF THEM? Absolutely bananas to think that would hold true.&lt;/p&gt;
+&lt;p&gt;Nobody whose job is to predict events accurately believes that to be true, that’s for sure. I’ve got no experience working for Google but I’m pretty sure their statisticians, given a massively wide data set, do not think &#34;I bet a plain old linear regression will predict this person’s … best if I feed it these 50 potential predictors!&lt;/p&gt;
+&lt;p&gt;They are going to use LASSO, or random forest, or neural net, or a wide range of other models!&lt;/p&gt;
+&lt;p&gt;Statisticians who deal with the need for treatment effect estimates have long been hesitant to adopt these&lt;/p&gt;
+&lt;p&gt;These are not the most technical definitions, but hopefully they’re enough to jog your memory of your formal training.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bias&lt;/strong&gt;: The difference between the true value of a parameter and the estimated value.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Consistency&lt;/strong&gt;: The bias of an estimator decreases to 0 as sample size approaches infinity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Efficiency&lt;/strong&gt;: The variance of an estimator is as small as possible as sample size approaches infinity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Double robust&lt;/strong&gt;: If either of&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-very-brief-background-on-semi-parametric&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A very brief background on semi-parametric&lt;/h1&gt;
+&lt;p&gt;Semi-parametric models: models where at least one parameter is not defined. For example,&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tmle-faq&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TMLE FAQ&lt;/h1&gt;
+&lt;p&gt;I’ve been asking &lt;em&gt;a lot&lt;/em&gt; of questions about TMLE over the past two years.&lt;/p&gt;
+&lt;div id=&#34;ive-only-heard-about-tmle-in-the-context-tmle-of-causal-inference-whats-up-with-that&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;I’ve only heard about TMLE in the context TMLE of causal inference, what’s up with that?&lt;/h2&gt;
+&lt;p&gt;TMLE was &lt;em&gt;developed&lt;/em&gt; to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.&lt;/p&gt;
+&lt;p&gt;When approaching a causal inference question (or really any statistical estimation application at all!), the majority of time and effort should often be focused on the underlying scientific model, research question of interest, and data available to answer it.&lt;/p&gt;
+&lt;p&gt;Once this process – usually called &lt;strong&gt;identification&lt;/strong&gt;* in the causal inference literature – is completed and an analyst is ready to estimate an effect of interest, she/he has a choice in estimation methods.&lt;/p&gt;
+&lt;p&gt;You’ve likely heard of some of these estimation methods: propensity score matching, inverse probability weighting, g-computation (AKA substitution estimation), etc. TMLE is an estimation method just like these, however, it has some very appealing properties that I am convinced make it a better option than the aforementioned methods.&lt;/p&gt;
+&lt;p&gt;*I won’t go into identification in this post, but if you are new to causal inference, my favorite book so far to understand the big picture of identification is Part I of Miguel Hernan and James Robins’ &lt;a href=&#34;https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf&#34;&gt;“Causal Inference: What If”&lt;/a&gt; book.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-comparison-with-g-computation-and-iptw&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A comparison with G-Computation and IPTW&lt;/h1&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tmle-real-intuitively&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;TMLE, real intuitively&lt;/h1&gt;
+&lt;p&gt;All causal inference methods try to use information about why patients were treated (non-randomly, unless it was an RCT) to&lt;/p&gt;
+&lt;p&gt;Before I walk through the &lt;code&gt;R&lt;/code&gt; code for the TMLE algorithm, I want to reinforce the big-picture idea of TMLE: we want to use information about why patients get treatment to update their outcomes&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;the-tmle-algorithm&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;The TMLE Algorithm&lt;/h1&gt;
+&lt;p&gt;Step 0&lt;/p&gt;
+&lt;p&gt;Load libraries, set seed, and simulate data&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/1_data_structure.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse, quietly=T)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
+## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
+## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
+## ✓ readr   1.3.1     ✓ forcats 0.5.0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ───────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SuperLearner, quietly=T)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Super Learner&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Version: 2.0-26&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Package created on 2019-10-27&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(7)
+
+# Superlearner functions from Ivan
+#source(&amp;quot;sl.r&amp;quot;)
+
+# using data generating code from Miguel Angel Luque Fernandez&amp;#39; tutorial
+generate_data &amp;lt;- function(n){
+    w1 &amp;lt;- rbinom(n, size=1, prob=0.5)
+    w2 &amp;lt;- rbinom(n, size=1, prob=0.65)
+    w3 &amp;lt;- round(runif(n, min=0, max=4), digits=3)
+    w4 &amp;lt;- round(runif(n, min=0, max=5), digits=3)
+    A  &amp;lt;- rbinom(n, size=1, prob= plogis(-0.4 + 0.2*w2 + 0.15*w3 + 0.2*w4 + 0.15*w2*w4))
+    # counterfactual
+    Y_1 &amp;lt;- rbinom(n, size=1, prob= plogis(-1 + 1 -0.1*w1 + 0.3*w2 + 0.25*w3 + 0.2*w4 + 0.15*w2*w4))
+    Y_0 &amp;lt;- rbinom(n, size=1, prob= plogis(-1 + 0 -0.1*w1 + 0.3*w2 + 0.25*w3 + 0.2*w4 + 0.15*w2*w4))
+    # Observed outcome
+    Y &amp;lt;- Y_1*A + Y_0*(1 - A)
+    # return data.frame
+    tibble(w1, w2, w3, w4, A, Y, Y_1, Y_0)
+}
+
+# observations N
+n &amp;lt;- 10000
+
+# full data set, including Y0 and Y0
+dat_full &amp;lt;- generate_data(n)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Our estimate of interest here is going to be the mean difference in outcomes if everyone had recevied the treatment compared to if everyone had not received the treatment. If we were to go through the whole causal inference identification process (AKA the very careful thinking half of causal inference), this might be identifiable as the Average Treatment Effect, or ATE.&lt;/p&gt;
+&lt;p&gt;Since we have simulated data, we can generate what the outcome would actually look like if everyone were to receive treatment and then if everyone were to not receive treatment, and we can take the mean difference.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# calculate the true psi if we saw both outcomes
+true_psi &amp;lt;- mean(dat_full$Y_1 - dat_full$Y_0)
+round(true_psi,3)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.192&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Cool, so the true ATE for our is XX. Since our outcome is binary, that translates to a 20% difference in outcomes if everyone were to receive the treatment of interest. That means if A huge effect!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# make a data set with observed data only
+dat_obs &amp;lt;- dat_full %&amp;gt;%
+  select(-Y_1,-Y_0)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;step-1&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Step 1:&lt;/h1&gt;
+&lt;p&gt;Estimate the expected value of the outcome using treatment and confounders as predictors.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(A,W) = \mathrm{E}[Y|A,W]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/2_outcome_fit.png&#34; style=&#34;width:70.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Then predict the outcome for every observation under three scenarios:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. If every observation received the treatment they &lt;em&gt;actually&lt;/em&gt; received.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(A,W) = \mathrm{E}[Y|A,W]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/3_QA.png&#34; style=&#34;width:50.0%&#34; /&gt;
+Remember we’re talking about a binary treatment for this tutorial.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;2. If every observation received the treatment.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(1,W) = \mathrm{E}[Y|1,W]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/4_Q1.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. If every observation received the control.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(0,W) = \mathrm{E}[Y|0,W]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/5_Q1.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you have heard of G-Computation, or the simple substitution estimator (same thing), we could compute that estimate now by doing:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;…&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;If you’ve never heard of G-computation or simple substitution, don’t sweat it! I’ll explain later.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;#Step 2:&lt;/p&gt;
+&lt;p&gt;Estimate the probability of treatment, given confounders. Note that this quantity is often called a &lt;strong&gt;propensity score&lt;/strong&gt;, related to the &lt;em&gt;propensity&lt;/em&gt; that an observation will receive a treatment of interest.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/6_treatment_fit.png&#34; style=&#34;width:60.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/7_H1.png&#34; style=&#34;width:60.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/8_H0.png&#34; style=&#34;width:70.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/9_HA.png&#34; style=&#34;width:50.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/10_logistic_regression.png&#34; /&gt;
+&lt;img src=&#34;/img/tmle/11_epsilon.png&#34; style=&#34;width:50.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/12_update_Q1.png&#34; style=&#34;width:70.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/13_update_Q0.png&#34; style=&#34;width:70.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/14_compute_ATE.png&#34; style=&#34;width:60.0%&#34; /&gt;
+&lt;img src=&#34;/img/tmle/15_ses.png&#34; style=&#34;width:100.0%&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# set SL libraries
+lib &amp;lt;- c(&amp;#39;SL.speedglm&amp;#39;, # faster glm
+         &amp;#39;SL.glmnet&amp;#39;, # lasso
+         &amp;#39;SL.ranger&amp;#39;, # random forest
+         &amp;#39;SL.earth&amp;#39;)  #
+
+
+# estimate Q --------------------------------------------------------------
+
+Y &amp;lt;- dat_obs$Y
+X_Y &amp;lt;- dat_obs %&amp;gt;% select(-Y)
+
+Q &amp;lt;- SuperLearner(Y = Y, X = X_Y,
+                    family=binomial(),
+                    SL.library=lib,
+                    # metalearner = NNloglik for binary outcomes, NNLS for continuous
+                    method = method.NNloglik,
+                    # 5-fold cross validation
+                    cvControl = list(V = 5))
+
+# estimate g --------------------------------------------------------------
+
+A &amp;lt;- dat_obs$A
+X_A &amp;lt;- dat_obs %&amp;gt;% select(-Y, -A)
+
+g &amp;lt;- SuperLearner(Y = A, X = X_A,
+                    family=binomial(),
+                    SL.library=lib,
+                    # metalearner = NNloglik for binary outcomes, NNLS for continuous
+                    method = method.NNloglik,
+                    # 5-fold cross validation
+                    cvControl = list(V = 5))
+
+
+# predictions for Q -------------------------------------------------------
+
+Q_A &amp;lt;- predict(Q)$pred
+
+X_Y_A1 &amp;lt;- X_Y %&amp;gt;% mutate(A = 1) 
+Q_1 &amp;lt;- predict(Q, newdata = as.data.frame(X_Y_A1))$pred
+
+X_Y_A0 &amp;lt;- X_Y %&amp;gt;% mutate(A = 0)
+Q_0 &amp;lt;- predict(Q, newdata = X_Y_A0)$pred
+
+
+# create clever covariate -------------------------------------------------
+
+H_1 &amp;lt;- 1/predict(g)$pred
+H_0 &amp;lt;- -1/(1-predict(g)$pred)
+
+# prep data to fit the clever covariate
+dat_cc &amp;lt;-
+  dat_obs %&amp;gt;%
+  mutate(Q_A = as.vector(Q_A),
+         H = case_when(A == 1 ~ H_1,
+                       A == 0 ~ H_0)) %&amp;gt;%
+  select(Y, A, Q_A, H)
+
+# fit parametric working model
+glm_fit &amp;lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H, data=dat_cc, family=binomial)
+# get epsilon
+eps &amp;lt;- coef(glm_fit)
+# also get H as a vector (for Q_A_update)
+H &amp;lt;- dat_cc$H
+
+# update expected outcome estimates (Q star) ------------------------------
+
+# update
+Q_1_update &amp;lt;- plogis(qlogis(Q_1) + eps*H_1)
+Q_0_update &amp;lt;- plogis(qlogis(Q_0) + eps*H_0)
+Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H)
+
+# Estimate ATE ------------------------------------------------------------
+
+# get the ATE TMLE
+tmle_psi &amp;lt;- mean(Q_1_update - Q_0_update)
+
+# compare to true parameter
+tmle_psi
+true_psi 
+
+
+# Calculate SEs -----------------------------------------------------------
+
+ic &amp;lt;- (dat_obs$Y - Q_A_update) * H + Q_1_update + Q_0_update
+tmle_se &amp;lt;- sqrt(var(ic)/nrow(dat_obs))
+
+ci_lo &amp;lt;- tmle_psi - 1.96*tmle_se
+ci_hi &amp;lt;- tmle_psi + 1.96*tmle_se
+
+pval &amp;lt;- 2 * (1 - pnorm(abs(tmle_psi / tmle_se)))
+
+
+# Compare with TMLE package -----------------------------------------------------------
+
+tmle_fit &amp;lt;- tmle::tmle(Y, A, X_A,
+                       gbound = .000000001, # trying 
+                       Q.SL.library = lib, g.SL.library = lib)
+tmle_fit$epsilon # mine are different :(
+tmle_fit$estimates$ATE&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Essentially, you start with the estimate of an individual’s outcome given their treatment and baseline covariates, and you update that estimate using the probability an individual received the treatment given their baseline covariates. Every time you update that estimate, you remove more of the bias that naturally exists in your observational data.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;why-should-i-bother-with-tmle&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Why should I bother with TMLE?&lt;/h1&gt;
+&lt;p&gt;Before I show an applied example of TMLE, I want to explain why I prefer TMLE to other propensity score estimation methods. In short, it is because because you don’t need to fit any certain type of regression to get your final estimates. You can use any estimator you want – a generalized linear model, splines, random forests, gradient boosting, neural nets, honestly anything – to get the initial probability estimates. You can actually use &lt;em&gt;all&lt;/em&gt; of those estimators to get the two probability estimates, if you want! But more on that later.&lt;/p&gt;
+&lt;p&gt;The benefit of expanding your toolbox of potential estimators is that most estimators are built with prediction in mind, and thus yield very good probability estimates to initiate our TMLE algorithm. When our goal as statisticians is to calculate effects on an outcome attributable to a treatment, it’s easy to shy away from these prediction-focused types of estimators, because most of them do not have any statistical theory to allow us to calculate valid confidence intervals.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;A huge selling point of TMLE is that it allows you to utilize prediction-focused (often non-parametric) estimators, but still obtain valid confidence intervals on your final estimate of the treatment’s effect.&lt;/strong&gt; TMLE utilizes concepts from semi-parametric influence function theory to determine valid standard errors, and therefore valid confidence intervals, on estimates of treatment effects. This is not important unless you plan to tackle the math of TMLE, but if you do decide to venture into technical explanations, know that you’ll see references to influence functions &lt;em&gt;a lot&lt;/em&gt;!&lt;/p&gt;
+&lt;p&gt;In other propensity score methods, like IPTW, we can only obtain valid confidence intervals if we obtain our propensity score using pre-specified parametric models. For example, we fit a logistic regression for our treatment predicted by five pre-specified baseline covariates. Using a logistic model like this to calculate the propensity score is not only placing a strong distributional assumption on our data, but it is limited in its ability to take in high-, or even medium-dimensional data. When we use estimators that are well equipped for very “wide” data and perform variable selection, we obtain better overall estimates for our treatment effect of interest.&lt;/p&gt;
+&lt;p&gt;There are a few other major benefits to TMLE. For one, it has very good bias-variance properties, and those properties are “robust,” or “resistant to” model mispecification, i.e. having the wrong type of estimator or the wrong variables in your estimation of either the treatment or outcome. Another benefit is that if you are able to go through a causal identification process of the research question and available data (a concept I won’t discuss further, since it’s a separate realm of the problem), you’ll have a causal interpretation of your average treatment effect estimate.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-real-world-application-of-tmle&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A Real World Application of TMLE&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr, warn.conflicts=F)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here I’ll be using a data set from the ???. EXPLAIN DATA aND goal&lt;/p&gt;
+&lt;p&gt;I chose this data set because it is the same data used in a really good resource if you want to do a deeper dive in Targeted Learning:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;washb_data &amp;lt;- data.table::fread(&amp;quot;https://raw.githubusercontent.com/tlverse/tlverse-data/master/wash-benefits/washb_data.csv&amp;quot;,
+                    stringsAsFactors = TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Before we can run a TMLE analysis, we need to clean the data a bit. The &lt;code&gt;tmle&lt;/code&gt; function requires a binary treatment, so I’ll need to turn the treatment data from character strings to binary 0/1 variables. I’m only interested right now in women who recieved the treatment of Nutrition and Hand washing, and comparing that to the control women, so I’ll filter out the appropriate subjects and make my data binary.&lt;/p&gt;
+&lt;p&gt;To use &lt;code&gt;tmle&lt;/code&gt;, your data structure should be:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Wide (each row is one observation)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;No factors (all categorical variables should be transformed to dummy/indicator columns using a function like &lt;code&gt;model.matrix()&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;No missing data (I usually make a new column indicating whether the value was missing, and then impute at the mean or median for continuous variables)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_clean &amp;lt;- 
+  washb_data %&amp;gt;%
+  filter(tr %in% c(&amp;quot;Control&amp;quot;, &amp;quot;Nutrition + WSH&amp;quot;)) %&amp;gt;%
+  mutate(tr = case_when(tr == &amp;quot;Control&amp;quot; ~ 0,
+                        TRUE ~ 1)) %&amp;gt;%
+  mutate_at(vars(one_of(c(&amp;quot;momage&amp;quot;,&amp;quot;momheight&amp;quot;))), list(miss =~ ifelse(is.na(.), 1, 0))) %&amp;gt;%
+  mutate_at(vars(one_of(&amp;quot;momage&amp;quot;,&amp;quot;momheight&amp;quot;)), list( ~ ifelse(is.na(.), mean(., na.rm=T), .))) %&amp;gt;%
+  model.matrix(~ . + 0, data = .) %&amp;gt;%
+  as.data.frame()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once I’ve cleaned my data, I make vectors specifying my treatment, outcome, and baseline covariates. In the TMLE literature, and in this package, the notations are:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Outcome: &lt;code&gt;Y&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Treatment: &lt;code&gt;A&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Confounders: &lt;code&gt;W&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In this data set, our outcome is the variable &lt;code&gt;whz&lt;/code&gt;, our treatment is the variable &lt;code&gt;tr&lt;/code&gt;, and our baseline confounders are all the other variables in our data set.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Y &amp;lt;- dat_clean$whz
+A &amp;lt;- dat_clean$tr
+W &amp;lt;- dat_clean %&amp;gt;% dplyr::select(-whz, -tr)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once we’ve done that, we can get our TMLE estimate of the average treatment effect! Here, I’m only inputting the&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmlefit_default &amp;lt;- tmle::tmle(Y, A, W)
+tmlefit_default&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here, I’m going to specify the kinds of estimators I want to use to get my two important estimates: the expected outcome and the probability of the exposure.&lt;/p&gt;
+&lt;p&gt;I’ve chosen to call the functions &lt;code&gt;glm&lt;/code&gt; for a generalized linear model, &lt;code&gt;glmnet&lt;/code&gt; for penalized regression, &lt;code&gt;ranger&lt;/code&gt; for random forests, and &lt;code&gt;xgboost&lt;/code&gt; for extreme gradient boosting.&lt;/p&gt;
+&lt;p&gt;I’m going to use &lt;em&gt;all&lt;/em&gt; of these estimators to estimate the&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;SL_library &amp;lt;- c(&amp;quot;SL.glm&amp;quot;,
+                &amp;quot;SL.glmnet&amp;quot;,
+                &amp;quot;SL.ranger&amp;quot;,
+                &amp;quot;SL.xgboost&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We’re going to specify those libraries in the arguments &lt;code&gt;Q.SL.library&lt;/code&gt; and &lt;code&gt;g.SL.library&lt;/code&gt;. These arguments sound a bit scary, but they are just what the notation in TMLE literature is – Q refers to the estimation for the outcome given treatment and covariates, and g refers to the estimation of the probability of the treatment.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmlefit &amp;lt;- tmle::tmle(Y, A, W,
+                Q.SL.library = SL_library, g.SL.library = SL_library)
+tmlefit&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To understand how the various machine learning models are combining, you should look into a type of ensemble learning called stacking, or “superlearning.” I have a slideshow that you could look at &lt;a href=&#34;https://github.com/hoffmakl/sl3-demo/blob/master/superlearning_slides_no_animation.pdf&#34;&gt;here&lt;/a&gt;, but there are plenty of other resources online.&lt;/p&gt;
+&lt;p&gt;This is obviously not a super technical post, and it was not intended to be, but I hope that it may catch your interest to learn more about the complexities of TMLE and try it out in your next analysis. I plan to write a few similar posts on what to do if your outcomes are survival or longitudinal data. In the meantime, you may find the more technical tutorial on TMLE helpful:&lt;/p&gt;
+&lt;p&gt;or, “The Hitchiker’s Guide to Targeted Learning” is an excellent, still-in-progress, resource for learning TMLE and many other targeted learning.&lt;/p&gt;
+&lt;p&gt;Learn about causal inference,&lt;/p&gt;
+&lt;p&gt;we should be estimating answers for questions of actual interest, rather than debiasing our results.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;References:&lt;/h1&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

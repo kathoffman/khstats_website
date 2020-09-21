@@ -18,12 +18,47 @@
   </url>
   
   <url>
+    <loc>/blog/tmle/tmle-tutorial-3/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/career/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
+    <loc>/tags/causal-inference/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/coronavirus/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/covid-19/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/introduction-to-tmle/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/lmtp/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -43,12 +78,37 @@
   </url>
   
   <url>
+    <loc>/tags/statistics/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/statistics/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/tmle/tmle-tutorial-3/</loc>
+    <loc>/tags/targeted-learning/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/targeted-maximum-likelihood-estimation/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/covid-wrangling/covid_ditl/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tmle/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -83,11 +143,6 @@
   </url>
   
   <url>
-    <loc>/categories/statistics/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/superlearner/</loc>
     <lastmod>2020-09-12T21:13:14-05:00</lastmod>
   </url>
@@ -95,11 +150,6 @@
   <url>
     <loc>/tags/superlearning/</loc>
     <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/covid-19/</loc>
-    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
@@ -173,11 +223,6 @@
   </url>
   
   <url>
-    <loc>/tags/statistics/</loc>
-    <lastmod>2020-03-14T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/blog/iterated-expectations/iterated-expectations/</loc>
     <lastmod>2020-03-14T21:13:14-05:00</lastmod>
   </url>
@@ -219,11 +264,6 @@
   
   <url>
     <loc>/tags/career/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/career/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   

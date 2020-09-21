@@ -13,10 +13,82 @@
     </image>
     
     <item>
+      <title>causal inference</title>
+      <link>/tags/causal-inference/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/causal-inference/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>coronavirus</title>
+      <link>/tags/coronavirus/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/coronavirus/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>COVID-19</title>
+      <link>/tags/covid-19/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/covid-19/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>introduction to TMLE</title>
+      <link>/tags/introduction-to-tmle/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/introduction-to-tmle/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lmtp</title>
+      <link>/tags/lmtp/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/lmtp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>R</title>
       <link>/tags/r/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/tags/r/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/statistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>targeted learning</title>
+      <link>/tags/targeted-learning/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/targeted-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Targeted Maximum Likelihood Estimation</title>
+      <link>/tags/targeted-maximum-likelihood-estimation/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/targeted-maximum-likelihood-estimation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TMLE</title>
+      <link>/tags/tmle/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/tmle/</guid>
       <description></description>
     </item>
     
@@ -73,14 +145,6 @@
       <link>/tags/superlearning/</link>
       <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
       <guid>/tags/superlearning/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>COVID-19</title>
-      <link>/tags/covid-19/</link>
-      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/covid-19/</guid>
       <description></description>
     </item>
     
@@ -153,14 +217,6 @@
       <link>/tags/purrr/</link>
       <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
       <guid>/tags/purrr/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>statistics</title>
-      <link>/tags/statistics/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     

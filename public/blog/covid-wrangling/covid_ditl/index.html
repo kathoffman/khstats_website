@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Katherine Hoffman">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="December 2019. My coworker is moving to California. She’s a statistician for a group of pulmonary and critical care physicians at our NYC hospital, and I’m a statistician who’s trying not to do too many things wrong, only three months into my first job out of school. “I think you’d be good with this research team,” she tells me. “There’s some really interesting projects on lung diseases.” I nod, because that’s what you do when you’ve been at your job for three months.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/blog/covid-wrangling/covid_ditl/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.ce53f5d1ff75f9f89bb1c243b514bb45.css">
+
+  
+
+  
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-136820093-1', 'auto');
+      
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="https://www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/blog/covid-wrangling/covid_ditl/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@rkatlady">
+  <meta property="twitter:creator" content="@rkatlady">
+  
+  <meta property="og:site_name" content="KHstats">
+  <meta property="og:url" content="/blog/covid-wrangling/covid_ditl/">
+  <meta property="og:title" content="The NYC COVID-19 outbreak in the eyes of a pulmonary and critical care statistician | KHstats">
+  <meta property="og:description" content="December 2019. My coworker is moving to California. She’s a statistician for a group of pulmonary and critical care physicians at our NYC hospital, and I’m a statistician who’s trying not to do too many things wrong, only three months into my first job out of school. “I think you’d be good with this research team,” she tells me. “There’s some really interesting projects on lung diseases.” I nod, because that’s what you do when you’ve been at your job for three months."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-10-10T21:13:14-05:00">
+    
+    <meta property="article:modified_time" content="2020-10-10T21:13:14-05:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>The NYC COVID-19 outbreak in the eyes of a pulmonary and critical care statistician | KHstats</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">KHstats</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#hero"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#experience"><span>Experience</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#blogs"><span>Blog</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">The NYC COVID-19 outbreak in the eyes of a pulmonary and critical care statistician</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2020-10-10 21:13:14 -0500 -0500" itemprop="datePublished">
+<meta content="2020-10-10 21:13:14 -0500 -0500" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Oct 10, 2020</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/career/">career</a></span>
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/blog/covid-wrangling/covid_ditl/&amp;text=The%20NYC%20COVID-19%20outbreak%20in%20the%20eyes%20of%20a%20pulmonary%20and%20critical%20care%20statistician" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/blog/covid-wrangling/covid_ditl/&amp;t=The%20NYC%20COVID-19%20outbreak%20in%20the%20eyes%20of%20a%20pulmonary%20and%20critical%20care%20statistician" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=The%20NYC%20COVID-19%20outbreak%20in%20the%20eyes%20of%20a%20pulmonary%20and%20critical%20care%20statistician&amp;body=/blog/covid-wrangling/covid_ditl/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/blog/covid-wrangling/covid_ditl/&amp;title=The%20NYC%20COVID-19%20outbreak%20in%20the%20eyes%20of%20a%20pulmonary%20and%20critical%20care%20statistician" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=The%20NYC%20COVID-19%20outbreak%20in%20the%20eyes%20of%20a%20pulmonary%20and%20critical%20care%20statistician%20/blog/covid-wrangling/covid_ditl/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/blog/covid-wrangling/covid_ditl/&amp;title=The%20NYC%20COVID-19%20outbreak%20in%20the%20eyes%20of%20a%20pulmonary%20and%20critical%20care%20statistician" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<p><strong>December 2019.</strong> My coworker is moving to California. She’s a statistician for a group of pulmonary and critical care physicians at our NYC hospital, and I’m a statistician who’s trying not to do too many things wrong, only three months into my first job out of school. “I think you’d be good with this research team,” she tells me. “There’s some really interesting projects on lung diseases.” I nod, because that’s what you do when you’ve been at your job for three months.</p>
+<p>I take over her projects and start learning about chronic obstructive pulmonary disease and acute respiratory distress syndrome and the paradoxes of patients who are more likely to go to the ICU but less likely to actually die. My closest friend in NYC does cutting-edge cancer research, and I feel a bit resentful. Nobody ever wants to hear about the controversial definitions of sepsis at my family parties.</p>
+<p>Life moves on and I slowly build my mental encyclopedia of organ failure scoring systems and types of mechanical ventilation. I examine biomarker after biomarker for potential use by physicians to detect early deterioration in critically ill patients. As the months pass by, I begin to embrace my role as a pulmonary and critical care statistician.</p>
+<p><strong>March 5th, 2020.</strong> It is a year and three months later, and I wake up very sick. It is the kind of sick where you can’t do anything but curl up on your bathroom floor and let being sick consume you. Too sick to read, too sick to sleep. I spike a fever and can hardly move for two days before I hobble to the doctor’s office and nearly faint mid-exam. The doctor insists I stay until I drink an entire bottle of water. “Is there anyone to check on you at home?” he asks, concerned. No, no, I’ll be fine.</p>
+<p>By the end of the week my fever breaks and I’m back to work. It’s early March, so “Coronavirus?!” is everyone’s first question. They’re all joking, except the pulmonologists I work with. Nothing respiratory, I assure them. One isn’t convinced. “Some young people are getting ‘silent hypoxia.’ It <em>is</em> possible to have COVID with no respiratory symptoms at all,” she tells me. Months later, I’ll read that as the headline of various news articles, but the time, no testing is available to me.</p>
+<p><strong>March 17, 2020</strong> Barely two weeks pass before the number of confirmed COVID cases explodes in New York City. Restaurants are instructed to close the day before Saint Patrick’s Day, my birthday. I can’t meet up with my friends anymore, so I cook Annie’s mac and cheese and run to Central Park and sit alone for a long time on a cold, hard rock. My grandparents call me and they make <em>Happy Birthday</em> sound like a hymn from a Catholic mass and I laugh, and it is the only part of my day that feels like every other birthday.</p>
+<p>While I’m at the park, my mom texts me that she hopes I had a good day. Any other year it would be strange for her to nearly miss my birthday, but this year she is working long hours. She’s a nursing director back in Michigan and her hospital is already preparing for an impending COVID outbreak. The preparations will not be in vain.</p>
+<p>As I jog home, I spot a digital sign asking former healthcare workers to volunteer to take care of NYC COVID patients. Before I began my career in biostatistics, I worked at a hospital caring for acutely ill patients, so I sign up without hesitation. My misguided logic is that the exploding numbers of COVID cases will make my critical care collaborators too busy to pursue their research, and this seems like the best way for me to help as the world descends into chaos. While I fill out the online contact form, I wonder what it will feel like to take care of patients again. I look up YouTube videos to refresh myself on drawing blood and inserting IVs.</p>
+<p>How absolutely crazy that I thought my biostatistics training wouldn’t be useful, in retrospect.</p>
+<p><strong>March 22, 2020.</strong> I’m a pulmonary and critical care team’s statistician so <em>naturally</em> I am one of the first analysts at my hospital pulled into COVID work. It starts with a text on a Sunday – the first of many – from one of my favorite pulmonologists. “Do we have a data dictionary for our ICU database, Kat?” Not really. The data dictionary, and every other piece of nuanced information about linking the many SQL tables, lives in my brain. Within days, I am told to drop all of my other research projects for COVID work. Our informatics team is using the structure of “my” ICU database as part of a COVID tracking repository for our entire hospital.</p>
+<p>The first ask to me is straightforward: extract some laboratory results from our first 300 COVID patients. 300 patients at our hospital! How terrifying, I think to myself. It seemed only a week ago the news reports said there were 300 people in the entire city with COVID. I begin working through issues in linking the databases, identifying missing patients, and figuring out the right code to make relevant summaries of the lab tests. Each morning I pull new data and watch the files grow exponentially larger.</p>
+<p>I start getting looped into many, many email threads. There are countless questions flooding in from all over the hospital. Most of them revolve around “who will get intubated, and when?” My hospital, like so many other hospitals in NYC, is on track to run out of ventilators soon. My attendance becomes mandatory at multiple “risk prediction” meetings each week. I find myself in charge of extensive data cleaning and then writing code for models to answer vague and terrifying questions: we need to figure out which patients will “crash,” who can be transferred, and, if we run out of ventilators, who has the best chance to survive.</p>
+<p>I am a junior researcher with a “I” appending my title, previously unconcerned with hospital operations, and suddenly confronted with the task of providing extremely fast answers to potentially be used for active decision making. I accept my new role with the utmost seriousness. My days, normally spent quietly coding with my double monitors at a big desk, suddenly fill up with Zoom meetings from 8:30-5:00 from a laptop at my kitchen table. Each night, after the meetings end, I take advantage of the relative quiet and code into the early hours of the morning.</p>
+<p>For several weeks I use the long, uninterrupted hours of weekends to code, waking up with no alarm at 7am and continuing on until at least 11pm, with few breaks in between. There are a few nights that I send my mom “good morning” texts at 5am. “Are you waking up early or have you not slept yet?” is always her first question. The next is, “No fever? No cough?” She is worried about me, living in the international epicenter, but I’m just as worried about her, working at a hospital every day. She informs me that my dad is sleeping in my old bedroom in case she brings the virus home.</p>
+<p>My best friend and her sister work as nurses at the same hospital as my mom. I text her to check in. She and her sister’s units have become “hot floors;” every room is filled with a COVID patient. They both live with their parents, another sister, uncle, and cousins, so the two of them are living in an AirBnb for the foreseeable future. “It’s so crazy here, Kitty,” she tells me in a defeated voice. At the time, Michigan’s outbreak trajectory is second only to New York’s.</p>
+<p>One of her nursing friends has been hospitalized with COVID and is on 6L of oxygen. I can’t help but think about my prediction models I’ve been working on. I mentally run his characteristics through them. I know what my models would estimate his probability of intubation to be.</p>
+<p>I listen to her talk about the N-95 masks they’ve been given. “Remember how they used to say those were one-time use?” she asks me. I do. “They started telling us they were good for the whole day, and then they said they’d be good for the whole week, and now they’re saying we might have to start sharing.” I wonder what data analyst, perhaps just like me, is crunching those numbers and feeding that information to hospital administration. “The situation is so terrible. I’ve never done so much post-mortem care, zipped so many body bags…” Her voice drifts off.</p>
+<p>I know the situation is terrible, I really do. I see it in the raccooned eyes – the only part of their faces visible between hair caps and procedure masks – of the physicians I spend all day hopping on and off Zoom meetings with. I hear it in their tired and anxious voices. I haven’t touched a single COVID patient but I have all of their data at my keystrokes – millions of lab results, vital signs, and procedure codes. I see their inflammatory cytokines spike, I watch their oxygen levels plummet, I can tell you which organs are failing and when, who’s on which experimental drug, and who’s just been made Do Not Intubate and Do Not Resuscitate. I follow in horror, almost in real-time, the time-stamps of admission, intubation, death. I cannot compare this experience to physically taking care of COVID patients, but I feel haunted by it all the same.</p>
+<p>I hole up in my tiny studio in Manhattan for days at a time, listening to the sirens of ambulances and pings of messages from my computer. I see only one friend with any frequency; we both live alone, 20 blocks from each other. She texts me often, asking me to meet her in Central Park. She suspects I am not doing well, and she is right. I walk with her all over the Upper East Side a few times a week, each of us donned in our black cotton masks. We try not to talk about COVID, but it’s hard to avoid when our walks take us past the pop-up ICU tents and refrigerated trucks that stretch entire blocks – the overflow morgues for NYC’s dead.</p>
+<p>We try to time our walks so that we’re outside at 7pm, when the city unites to cheer for healthcare workers. If I’m not out walking with her, I climb religiously onto my fire escape every night to clap. Sometimes a man in the apartment across the street sings. <em>I want to wake up in the city that never sleeps, New York, New York!</em> I’ve only lived here two years, but I miss “the city that never sleeps” so badly that it hurts.</p>
+<p>Life continues in this way for me, with no real sense of time or distinguishing events, from mid March to early May.</p>
+<p><strong>May 10, 2020.</strong> It is Mother’s Day, and my 50th straight day of working with COVID data. At 11pm, my cell rings. It is an ominous vibration against my kitchen table, where I am perpetually sitting with my laptop whirring. “Hi Honey… I just wanted to let you know that, mmm…” it’s my mom, and her voice is cracking. I finish the sentence for her, “Aunt Peggy died?” I ask, sadly. “Yes.” “Okay. Thanks for letting me know.” I stare into the white brick wall in front of my kitchen table for so long that I start seeing multicolored spots.</p>
+<p>My grandfather’s eldest sister, my Aunt Peggy, had begun showing telltale symptoms of COVID only a few days previously. She’d been without any visitors in her assisted living home for months due to isolation restrictions. She was royalty in our family; the red-lipsticked, always fashionably late, prized guest at every family party. She had an unforgettable, incredibly sweet voice, and I can still hear her words to me last Christmas. “How’s <em>New York</em>, Katherine? I’m so proud of you.” She was the first nurse in my family, and she influenced my mom to become a nurse, who influenced me to go into medical research. The matriarch of our family left us on Mother’s Day.</p>
+<p>I spend the night trying to find a rental car company that will allow me to drive one-way from New York to Michigan. It can’t be done; I am several weeks too late in my exodus of the city. I book a flight instead and leave a few days later on a near-empty plane to spend time with my family. I plan to stay in Michigan for two weeks, but I don’t leave for two months.</p>
+<p><strong>September 2020.</strong> As I sit back to write this blog post, reflecting on some of the darkest months of my life, I realize there is so much more I could say in an attempt to explain what my small corner of life was like during the height of the NYC outbreak. I could detail how I adopted a habit of sleep-walking and still have a scar six months later because of it. I could display some of the thousands of Slack messages between me and other biostatisticians who were pulled in for COVID work. 2pm reminders of, “don’t forget to eat breakfast!” and 2am greetings of, “are you still up? do you know why this code isn’t working?” I could explain crying on a Zoom call when I realized I’d switched Oxygen and Carbon Dioxide in an important ventilator formula, or simply state that I lost so much weight that at the end of May I weighed less than I did when I was 14 years old. Perhaps it is helpful to know I had to find roommates to live with because I couldn’t bear the thought of living alone in NYC if it shut down again.</p>
+<p>To be clear, those months weren’t completely awful. I did develop many new professional relationships and learned so, <em>so</em> much – from programming tricks and careful statistical thinking, to better scientific writing and navigation of politics. The conversations I had during March and April will stick with me for the rest of my life. In particular, I will never forget how grateful and encouraging everyone was to each other, and how united scientists were for a common goal. I hope there comes a day that I can meet all the doctors, fellows, medical students, and informaticians in real life, but at the same time, I hope I never have to work with them on anything COVID-related again. It is a wish I fear may not come true.</p>
+<p>Just this past week I attended a meeting with our Informatics team. “It’s good to ‘see’ everyone again,” someone said. It was only half true – the circumstances that bring us to meetings together are never ‘good’. We discussed data preparations for a possible second wave of COVID in NYC as schools and restaurants reopen. After the call, I felt an immense sadness, despite being in a much better place than I was when I left the city in May.</p>
+<p>I truly don’t know if I can handle another round of it. Can you?</p>
+
+    </div>
+
+    
+
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/covid-19/">COVID-19</a>
+  
+  <a class="badge badge-light" href="/tags/coronavirus/">coronavirus</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_hub64370a9fa8c7276c9d6cc9d2e350075_235979_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
+      <h6 class="card-subtitle">Research Biostatistician</h6>
+      <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="/#contact" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/Rkatlady" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/hoffmakl" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/blog/covid-wrangling/covid-functions/">My favorite lines of data wrangling code during the NYC COVID-19 outbreak</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.16bbb3750feb7244c9bc409a5a4fe678.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
