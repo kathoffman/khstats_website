@@ -1145,7 +1145,7 @@ sl_predictions
 &lt;div id=&#34;alternative-ways-to-superlearn&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Alternative ways to superlearn&lt;/h2&gt;
 &lt;p&gt;Other packages freely available in &lt;code&gt;R&lt;/code&gt; that can be used to implement the superlearner algorithm include &lt;code&gt;sl3&lt;/code&gt; (an update to the older &lt;code&gt;Superlearner&lt;/code&gt; package), &lt;code&gt;h2o&lt;/code&gt;, &lt;code&gt;ml3&lt;/code&gt;, and &lt;code&gt;caretEnsemble&lt;/code&gt;. I previously wrote a &lt;a href=&#34;https://www.khstats.com/blog/sl3_demo/sl/&#34;&gt;brief demo&lt;/a&gt; on using &lt;code&gt;sl3&lt;/code&gt; for an NYC R-Ladies demo.&lt;/p&gt;
-&lt;p&gt;Python aficionados might find this &lt;a href=&#34;https://machinelearningmastery.com/super-learner-ensemble-in-python/&#34;&gt;blog post&lt;/a&gt; useful. I have never performed superlearning in Python, but if I had to, I would probably try &lt;code&gt;h2o&lt;/code&gt; first. H2o is available across many programming languages and their Chief Machine Learning Scientist, &lt;a href=&#34;https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor&#34;&gt;Erin Ledell&lt;/a&gt;, was an author of the original &lt;code&gt;SuperLearner&lt;/code&gt; package.&lt;/p&gt;
+&lt;p&gt;Python aficionados might find this &lt;a href=&#34;https://machinelearningmastery.com/super-learner-ensemble-in-python/&#34;&gt;blog post&lt;/a&gt; useful. I have never performed superlearning in Python, but if I had to, I would probably try &lt;code&gt;h2o&lt;/code&gt; first. H2o is available in many programming languages and their Chief Machine Learning Scientist, &lt;a href=&#34;https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor&#34;&gt;Erin Ledell&lt;/a&gt;, was an author of the original &lt;code&gt;SuperLearner&lt;/code&gt; package.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;coming-soon-when-prediction-is-not-the-end-goal&#34; class=&#34;section level1&#34;&gt;
@@ -1286,7 +1286,7 @@ round(weights, 3)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL &lt;a href=&#34;https://CRAN.R-project.org/package=SuperLearner&#34; class=&#34;uri&#34;&gt;https://CRAN.R-project.org/package=SuperLearner&lt;/a&gt;. R package version 2.0-22.&lt;/p&gt;
 &lt;p&gt;Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. &lt;em&gt;Eur J Epidemiol.&lt;/em&gt; 2018;33(5):459-464. &lt;a href=&#34;doi:10.1007/s10654-018-0390-z&#34; class=&#34;uri&#34;&gt;doi:10.1007/s10654-018-0390-z&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;LeDell, E. (2015). Scalable Ensemble Learning and Computationally Efficient Variance Estimation. UC Berkeley. ProQuest ID: LeDell_berkeley_0028E_15235. Merritt ID: ark:/13030/m5wt1xp7. Retrieved from &lt;a href=&#34;https://escholarship.org/uc/item/3kb142r2&#34; class=&#34;uri&#34;&gt;https://escholarship.org/uc/item/3kb142r2&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. &amp;lt;www.ucbbiostat.com&amp;gt;&lt;/p&gt;
+&lt;p&gt;M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. www.ucbbiostat.com&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;session-info&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Session Info&lt;/h1&gt;

@@ -334,7 +334,7 @@ For more information on the `SuperLearner` package, take a look at this [vignett
 
 Other packages freely available in `R` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `h2o`, `ml3`, and `caretEnsemble`. I previously wrote a [brief demo](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo.
 
-Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available across many programming languages and their Chief Machine Learning Scientist, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
+Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available in many programming languages and their Chief Machine Learning Scientist, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
 
 # Coming soon... when prediction is not the end goal
 
@@ -436,7 +436,7 @@ The advice from Erin Ledell in her dissertation, *Scalable Ensemble Learning and
 
 Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using NNLS.
 
-Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE), which will change with the goals of the prediction algorithm. For example, if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or $1-AUC$. Ledell has a different paper about maximizing the Area Under the Curve (AUC) with superlearner algorithms [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/).
+Whatever metalearner we choose is simply a tool to minimize a loss function of interest. In these examples it is the MSE, but it can change with the goals of the prediction algorithm. For example, if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or $1-AUC$. It is outside the scope of this post, but for more information, I recommend Ledell's [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/) on maximizing the Area Under the Curve (AUC) with superlearner algorithms.
 
 ### Code for NNLS
 
@@ -472,7 +472,7 @@ Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. 
 
 LeDell, E. (2015). Scalable Ensemble Learning and Computationally Efficient Variance Estimation. UC Berkeley. ProQuest ID: LeDell_berkeley_0028E_15235. Merritt ID: ark:/13030/m5wt1xp7. Retrieved from https://escholarship.org/uc/item/3kb142r2
 
-M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. <www.ucbbiostat.com>
+M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. www.ucbbiostat.com
 
 # Session Info
 
