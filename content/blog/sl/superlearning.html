@@ -936,7 +936,7 @@ cv_mse_c
 <p>“Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors. Regularization via Ridge or Lasso regression is commonly used to over-come the issue of collinearity among the predictor variables that make up the level-one dataset.”</p>
 </blockquote>
 <p>Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using non-negative least squares regression (NNLS).</p>
-<p>Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE). Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner to combine the output from the base fits. For more information, I recommend reading Ledell’s <a href="https://escholarship.org/uc/item/3kb142r2">disseration</a>.</p>
+<p>Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE). Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner. For more information, I recommend reading Ledell’s <a href="https://escholarship.org/uc/item/3kb142r2">disseration</a>.</p>
 </div>
 <div id="code-for-nnls" class="section level3">
 <h3>Code for NNLS</h3>
@@ -948,7 +948,7 @@ nnls_raw_weights &lt;- nnls_fit$x # obtain coefficients</code></pre>
 <pre class="r"><code>weights &lt;- nnls_raw_weights/sum(nnls_raw_weights)
 round(weights, 3)</code></pre>
 <pre><code>## [1] 0.000 0.833 0.167</code></pre>
-<p>The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of 0.833 to Learner B and 0.833, and no weight to the predictions from Learner A.</p>
+<p>The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of 0.833 to Learner B and 0.167, and no weight to the predictions from Learner A.</p>
 </div>
 <div id="another-visual-guide" class="section level3">
 <h3>Another visual guide</h3>

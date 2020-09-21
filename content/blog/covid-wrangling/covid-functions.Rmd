@@ -213,9 +213,6 @@ Perfect! I could go on to informatively join this data to another using `tidylog
 
 I hope you enjoyed a quick insight into the data side of COVID-19 research, and/or perhaps picked up some useful function combinations for your own applied work with `R`.
 
-```{r}
-sessionInfo()
-```
 
 
 

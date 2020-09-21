@@ -1271,7 +1271,7 @@ cv_mse_c
 &lt;p&gt;“Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors. Regularization via Ridge or Lasso regression is commonly used to over-come the issue of collinearity among the predictor variables that make up the level-one dataset.”&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using non-negative least squares regression (NNLS).&lt;/p&gt;
-&lt;p&gt;Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE). Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner to combine the output from the base fits. For more information, I recommend reading Ledell’s &lt;a href=&#34;https://escholarship.org/uc/item/3kb142r2&#34;&gt;disseration&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Whatever metalearner we choose is simply a tool to minimize a loss function of interest (in these examples, MSE). Although the metalearning algorithm is often some sort of regularized linear model, a variety of parametric and non-parametric methods can used as a metalearner. For more information, I recommend reading Ledell’s &lt;a href=&#34;https://escholarship.org/uc/item/3kb142r2&#34;&gt;disseration&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;code-for-nnls&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Code for NNLS&lt;/h3&gt;
@@ -1283,7 +1283,7 @@ nnls_raw_weights &amp;lt;- nnls_fit$x # obtain coefficients&lt;/code&gt;&lt;/pre
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;weights &amp;lt;- nnls_raw_weights/sum(nnls_raw_weights)
 round(weights, 3)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## [1] 0.000 0.833 0.167&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of 0.833 to Learner B and 0.833, and no weight to the predictions from Learner A.&lt;/p&gt;
+&lt;p&gt;The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of 0.833 to Learner B and 0.167, and no weight to the predictions from Learner A.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;another-visual-guide&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Another visual guide&lt;/h3&gt;
@@ -1931,37 +1931,6 @@ labs &amp;lt;- map_dfr(100:110, function(x){
 &lt;/div&gt;
 &lt;p&gt;Perfect! I could go on to informatively join this data to another using &lt;code&gt;tidylog&lt;/code&gt;, make tables with clean labels using &lt;code&gt;tbl_summary()&lt;/code&gt;, &lt;code&gt;set_variable_labels()&lt;/code&gt;, and &lt;code&gt;to_title_case()&lt;/code&gt;, find further labs of interest with &lt;code&gt;filter()&lt;/code&gt;, &lt;code&gt;str_detect()&lt;/code&gt;, and &lt;code&gt;tolower()&lt;/code&gt;, and make the lab values numeric with &lt;code&gt;parse_number()&lt;/code&gt;… the possibilities are endless!&lt;/p&gt;
 &lt;p&gt;I hope you enjoyed a quick insight into the data side of COVID-19 research, and/or perhaps picked up some useful function combinations for your own applied work with &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;R version 3.6.3 (2020-02-29)
-Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Catalina 10.15.6&lt;/p&gt;
-&lt;p&gt;Matrix products: default
-BLAS: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib&lt;/p&gt;
-&lt;p&gt;locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8&lt;/p&gt;
-&lt;p&gt;attached base packages:
-[1] stats graphics grDevices utils datasets methods base&lt;/p&gt;
-&lt;p&gt;other attached packages:
-[1] lubridate_1.7.9 gtsummary_1.2.6 tidylog_1.0.0 forcats_0.5.0&lt;br /&gt;
-[5] stringr_1.4.0 dplyr_1.0.2 purrr_0.3.4 readr_1.3.1&lt;br /&gt;
-[9] tidyr_1.1.2 tibble_3.0.3 ggplot2_3.3.2 tidyverse_1.3.0&lt;/p&gt;
-&lt;p&gt;loaded via a namespace (and not attached):
-[1] clisymbols_1.2.0 tidyselect_1.1.0 xfun_0.14 haven_2.2.0&lt;br /&gt;
-[5] snakecase_0.11.0 labelled_2.2.2 colorspace_1.4-1 vctrs_0.3.4&lt;br /&gt;
-[9] generics_0.0.2 htmltools_0.4.0 yaml_2.2.1 rlang_0.4.7&lt;br /&gt;
-[13] pillar_1.4.6 glue_1.4.2 withr_2.2.0 DBI_1.1.0&lt;br /&gt;
-[17] dbplyr_1.4.3 modelr_0.1.6 readxl_1.3.1 lifecycle_0.2.0
-[21] commonmark_1.7 munsell_0.5.0 blogdown_0.19 gtable_0.3.0&lt;br /&gt;
-[25] cellranger_1.1.0 rvest_0.3.5 evaluate_0.14 knitr_1.28&lt;br /&gt;
-[29] fansi_0.4.1 broom_0.7.0 Rcpp_1.0.5 checkmate_2.0.0
-[33] scales_1.1.1 backports_1.1.8 jsonlite_1.6.1 fs_1.4.1&lt;br /&gt;
-[37] hms_0.5.3 digest_0.6.25 stringi_1.4.6 bookdown_0.19&lt;br /&gt;
-[41] grid_3.6.3 cli_2.0.2 tools_3.6.3 sass_0.2.0&lt;br /&gt;
-[45] magrittr_1.5 crayon_1.3.4 pkgconfig_2.0.3 ellipsis_0.3.1&lt;br /&gt;
-[49] xml2_1.3.0 reprex_0.3.0 gt_0.2.0.5 assertthat_0.2.1
-[53] rmarkdown_2.1 httr_1.4.1 rstudioapi_0.11 R6_2.4.1&lt;br /&gt;
-[57] compiler_3.6.3&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>

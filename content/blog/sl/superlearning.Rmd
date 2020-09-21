@@ -456,7 +456,7 @@ weights <- nnls_raw_weights/sum(nnls_raw_weights)
 round(weights, 3)
 ```
 
-The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of `r round(weights, 3)[2]` to Learner B and `r round(weights, 3)[2]`, and no weight to the predictions from Learner A.
+The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of `r round(weights, 3)[2]` to Learner B and `r round(weights, 3)[3]`, and no weight to the predictions from Learner A.
 
 ### Another visual guide
 
