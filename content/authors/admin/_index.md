@@ -23,10 +23,10 @@ role: Research Biostatistician
 social:
 - icon: envelope
   icon_pack: fas
-  link: '#contact'
+  link: 'kathoffman.stats@gmail.com'
 - icon: twitter
   icon_pack: fab
-  link: https://twitter.com/Rkatlady
+  link: https://twitter.com/rkatlady
 - icon: github
   icon_pack: fab
   link: https://github.com/hoffmakl

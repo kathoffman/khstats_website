@@ -430,7 +430,7 @@ However, we can almost always create an even better prediction algorithm if we u
 
 ### Choosing a metalearner
 
-The advice from [Erin Ledell](https://twitter.com/ledell) in her dissertation, *Scalable Ensemble Learning and Computationally Efficient Variance Estimation*, on choosing a metalearner is:
+The advice from Erin Ledell, *Scalable Ensemble Learning and Computationally Efficient Variance Estimation*, on choosing a metalearner is:
 
 >"Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors.  Regularization via Ridge or Lasso regression is commonly used to overcome the issue of collinearity among the predictor variables that make up the level-one dataset."
 
