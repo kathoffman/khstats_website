@@ -961,7 +961,7 @@ pred_c
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;This metalearner provides us with the coefficients, or weights, to apply to each of the base learners. In other words, if we have a set of predictions from Learner A, B, and C, we can obtain our best possible predictions by starting with an intercept of -0.003, then adding -0.017 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner A, 0.854 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner B, and 0.165 &lt;span class=&#34;math inline&#34;&gt;\(\times\)&lt;/span&gt; predictions from Learner C.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;For more information on metalearners, check out the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;For more information on the metalearning step, check out the &lt;a href=&#34;#appendix&#34;&gt;Appendix&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:#c30a0a&#34;&gt;
@@ -1255,7 +1255,7 @@ cv_mse_c
 &lt;/div&gt;
 &lt;div id=&#34;choosing-a-metalearner&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Choosing a metalearner&lt;/h3&gt;
-&lt;p&gt;The advice from Erin Ledell, &lt;em&gt;Scalable Ensemble Learning and Computationally Efficient Variance Estimation&lt;/em&gt;, on choosing a metalearner is:&lt;/p&gt;
+&lt;p&gt;The advice from Erin Ledell in her PhD dissertation, &lt;em&gt;Scalable Ensemble Learning and Computationally Efficient Variance Estimation&lt;/em&gt;, on choosing a metalearner is:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;“Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors. Regularization via Ridge or Lasso regression is commonly used to overcome the issue of collinearity among the predictor variables that make up the level-one dataset.”&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -1274,7 +1274,7 @@ cv_mse_c
 &lt;p&gt;Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL &lt;a href=&#34;https://CRAN.R-project.org/package=SuperLearner&#34; class=&#34;uri&#34;&gt;https://CRAN.R-project.org/package=SuperLearner&lt;/a&gt;. R package version 2.0-22.&lt;/p&gt;
 &lt;p&gt;Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. &lt;em&gt;Eur J Epidemiol.&lt;/em&gt; 2018;33(5):459-464. &lt;a href=&#34;doi:10.1007/s10654-018-0390-z&#34; class=&#34;uri&#34;&gt;doi:10.1007/s10654-018-0390-z&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;LeDell, E. (2015). Scalable Ensemble Learning and Computationally Efficient Variance Estimation. UC Berkeley. ProQuest ID: LeDell_berkeley_0028E_15235. Merritt ID: ark:/13030/m5wt1xp7. Retrieved from &lt;a href=&#34;https://escholarship.org/uc/item/3kb142r2&#34; class=&#34;uri&#34;&gt;https://escholarship.org/uc/item/3kb142r2&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. (www.ucbbiostat.com)&lt;/p&gt;
+&lt;p&gt;M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. &lt;a href=&#34;www.ucbbiostat.com&#34;&gt;www.ucbbiostat.com&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;session-info&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Session Info&lt;/h1&gt;
