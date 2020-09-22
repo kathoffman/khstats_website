@@ -201,7 +201,7 @@ obs_preds <-
 
 ...so that we can minimize a final loss function of interest between the true outcome and each CV prediction. This is how we're going to optimize our overall prediction algorithm: we want to make sure we're "losing the least" in the way we combine our base learners' predictions to ultimately make final predictions. We can do this efficiently by choosing a new learner, a metalearner, which reflects the final loss function of interest.
 
-For simplicity, we'll use another linear regression as our metalearner. Using a linear regression as a metalearner will minimize the Mean Squared Error (MSE) when combining the base learner predictions. Note that we could use a variety of parametric or non-parametric regressions to minimize MSE, or other common loss functions of interest. 
+For simplicity, we'll use another linear regression as our metalearner. Using a linear regression as a metalearner will minimize the Mean Squared Error (MSE) when combining the base learner predictions. Note that we could use a variety of parametric or non-parametric regressions to minimize the MSE.
 
 No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, `y`.
 
@@ -306,7 +306,7 @@ We can examine the cross-validated `Risk` (loss function), and the `Coef`ficient
 sl_fit
 ```
 
-From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is smallest for `SL.Earth`. This translates to the largest coefficient, or weight, given to the predictions from `earth` (which implements the MARS algorithm... but the name "MARS" is copyrighted!).
+From this summary we can see that the CV-risk (the default risk is MSE) in this library of base learners is smallest for `SL.Earth`. This translates to the largest coefficient, or weight, given to the predictions from `earth`.
 
 The LASSO model implemented by `glmnet` has the largest CV-risk, and after the metalearning step, those predictions receive a coefficient, or weight, of 0. This means that the predictions from LASSO will not be incorporated into the final predictions at all. 
 
@@ -330,11 +330,11 @@ cv_sl_fit <- CV.SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 For more information on the `SuperLearner` package, take a look at this [vignette](https://cran.r-project.org/web/packages/SuperLearner/vignettes/Guide-to-SuperLearner.html).
 
 
-## Alternative ways to superlearn
+## Alternative packages to superlearn
 
 Other packages freely available in `R` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `h2o`, `ml3`, and `caretEnsemble`. I previously wrote a [brief demo](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo.
 
-Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available in many programming languages and their Chief Machine Learning Scientist, [Erin Ledell](https://twitter.com/ledell?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor), was an author of the original `SuperLearner` package.
+Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available in many programming languages and their Chief Machine Learning Scientist, Erin Ledell, was an author of the original `SuperLearner` package.
 
 # Coming soon... when prediction is not the end goal
 
@@ -430,31 +430,13 @@ However, we can almost always create an even better prediction algorithm if we u
 
 ### Choosing a metalearner
 
-The advice from Erin Ledell in her dissertation, *Scalable Ensemble Learning and Computationally Efficient Variance Estimation*, on choosing a metalearner is:
+The advice from [Erin Ledell](https://twitter.com/ledell) in her dissertation, *Scalable Ensemble Learning and Computationally Efficient Variance Estimation*, on choosing a metalearner is:
 
->"Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors.  Regularization via Ridge or Lasso regression is commonly used to over-come the issue of collinearity among the predictor variables that make up the level-one dataset."
+>"Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors.  Regularization via Ridge or Lasso regression is commonly used to overcome the issue of collinearity among the predictor variables that make up the level-one dataset."
 
 Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using NNLS.
 
-Whatever metalearner we choose is simply a tool to minimize a loss function of interest. In these examples it is the MSE, but it can change with the goals of the prediction algorithm. For example, if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or $1-AUC$. It is outside the scope of this post, but for more information, I recommend Ledell's [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/) on maximizing the Area Under the Curve (AUC) with superlearner algorithms.
-
-### Code for NNLS
-
-NNLS is essentially just a regularization model that does not allow the coefficients to be negative. We could see what our weights would be if we had used NNLS as the metalearner in the linear regression example using the `nnls` package, which takes the arguments of `x`, a matrix of predictors, and `y`, an outcome vector.
-
-```{r}
-library(nnls)
-nnls_fit <- nnls(cbind(pred_a, pred_b, pred_c), obs$y) # Fit NNLS with nnls::nnls()
-nnls_raw_weights <- nnls_fit$x # obtain coefficients
-```
-We can normalize these coefficients so that they sum to 1 (so they're actually "weights") with the following code:
-
-```{r}
-weights <- nnls_raw_weights/sum(nnls_raw_weights)
-round(weights, 3)
-```
-
-The NNLS metalearner for our step-by-step example with three linear regressions would thus give a weight of `r round(weights, 3)[2]` to Learner B and `r round(weights, 3)[3]` to Learner C, and no weight to the predictions from Learner A.
+Whatever metalearner we choose is simply a tool to minimize a loss function of interest. In these examples it is the MSE, but it can change with the goals of the prediction algorithm. For example, if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or $1-AUC$. It is outside the scope of this post, but for more information, I recommend Ledell's [dissertation](https://escholarship.org/uc/item/3kb142r2) or her [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/) on maximizing the Area Under the Curve (AUC) with superlearner algorithms.
 
 ### Another visual guide
 
@@ -472,7 +454,7 @@ Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. 
 
 LeDell, E. (2015). Scalable Ensemble Learning and Computationally Efficient Variance Estimation. UC Berkeley. ProQuest ID: LeDell_berkeley_0028E_15235. Merritt ID: ark:/13030/m5wt1xp7. Retrieved from https://escholarship.org/uc/item/3kb142r2
 
-M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. www.ucbbiostat.com
+M. Petersen and L. Balzer. Introduction to Causal Inference. UC Berkeley, August 2014. (www.ucbbiostat.com)
 
 # Session Info
 
