@@ -8,15 +8,10 @@
   url = "#hero"
   weight = 10
   
-[[main]]
-  name = "Experience"
-  url = "#experience"
-  weight = 15  
-
-[[main]]
-  name = "Talks"
-  url = "#talks"
-  weight = 30
+#[[main]]
+ # name = "Experience"
+  #url = "#experience"
+  #weight = 15  
 
 #[[main]]
 #  name = "Tutorials"
@@ -27,6 +22,11 @@
   name = "Blog"
   url = "#blogs"
   weight = 20
+  
+  [[main]]
+  name = "Publications"
+  url = "https://scholar.google.com/citations?user=73RvTUoAAAAJ&hl=en"
+  weight = 90
 
 #[[main]]
  # name = "Publications"

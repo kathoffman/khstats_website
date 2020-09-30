@@ -5,14 +5,14 @@ name = "Kurt"
 light = true
 
 # Primary
-primary = "#015249" # controls text
+primary = "#614f79" # controls text
 
 # Menu
-menu_primary = "#57bc90" # controls menu bar
+menu_primary = "#330C2F" # controls menu bar
 menu_text = "#fff"
-menu_text_active = "#77c9d4" # controls highlights
+menu_text_active = "#9D6A89" # controls highlights
 menu_title = "#fff"
 
 # Home sections
-home_section_odd = "#ffffff"
-home_section_even = "#f5feff"
+home_section_odd = "#fafafa"
+home_section_even = "#f1f0f2" #F5F3F7 #EBE7EF

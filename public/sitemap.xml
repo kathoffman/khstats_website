@@ -93,6 +93,36 @@
   </url>
   
   <url>
+    <loc>/tags/biostatistics/</loc>
+    <lastmod>2020-10-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/career/</loc>
+    <lastmod>2020-10-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/coronavirus/</loc>
+    <lastmod>2020-10-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/covid-19/</loc>
+    <lastmod>2020-10-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/covid-19-data-analysis/</loc>
+    <lastmod>2020-10-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/covid/covid/</loc>
+    <lastmod>2020-10-01T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/superlearning/</loc>
     <lastmod>2020-09-12T21:13:14-05:00</lastmod>
   </url>
@@ -133,11 +163,6 @@
   </url>
   
   <url>
-    <loc>/tags/covid-19/</loc>
-    <lastmod>2020-09-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/data-wrangling/</loc>
     <lastmod>2020-09-10T21:13:14-05:00</lastmod>
   </url>
@@ -153,7 +178,7 @@
   </url>
   
   <url>
-    <loc>/blog/covid-wrangling/covid-functions/</loc>
+    <loc>/blog/covid/covid-functions/</loc>
     <lastmod>2020-09-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -243,17 +268,7 @@
   </url>
   
   <url>
-    <loc>/tags/biostatistics/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/career/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/career/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   

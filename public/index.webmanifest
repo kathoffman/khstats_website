@@ -2,8 +2,8 @@
   "name": "KHstats",
   "short_name": "KHstats",
   "lang": "en-us",
-  "theme_color": "#3f51b5",
-  "background_color": "#3f51b5",
+  "theme_color": "#614f79",
+  "background_color": "#614f79",
   "icons": [{
     "src": "img/icon-192.png",
     "sizes": "192x192",

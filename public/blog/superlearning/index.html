@@ -42,7 +42,7 @@
   
   
   
-  <meta name="theme-color" content="#3f51b5">
+  <meta name="theme-color" content="#614f79">
   
 
   
@@ -83,7 +83,7 @@
   
   
   
-  <link rel="stylesheet" href="/css/academic.min.ce53f5d1ff75f9f89bb1c243b514bb45.css">
+  <link rel="stylesheet" href="/css/academic.min.93ba0f8058c7a032bde93225bfbbb6b6.css">
 
   
 
@@ -259,35 +259,6 @@
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#experience"><span>Experience</span></a>
-        </li>
-
-        
-        
-
-        
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
-            
-          
-          
-        
-
-        <li class="nav-item">
           <a class="nav-link " href="/#blogs"><span>Blog</span></a>
         </li>
 
@@ -300,6 +271,8 @@
         
         
           
+            
+          
         
 
         
@@ -307,17 +280,10 @@
         
         
         
-        
-          
-          
-          
-            
-          
-          
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+          <a class="nav-link " href="https://scholar.google.com/citations?user=73RvTUoAAAAJ&amp;hl=en" target="_blank" rel="noopener"><span>Publications</span></a>
         </li>
 
         
@@ -549,24 +515,18 @@ HTML Image as link
 <div id="supercuts-of-superlearning" class="section level1">
 <h1>Supercuts of superlearning</h1>
 <ul>
-<li><p><strong>Superlearning</strong> is a technique for prediction that involves <strong>combining many individual statistical algorithms</strong> (commonly called “data-adaptive” or “machine learning” algorithms) to <strong>create a new, single prediction algorithm that is at least as good as any of the individual algorithms</strong>.</p></li>
+<li><p><strong>Superlearning</strong> is a technique for prediction that involves <strong>combining many individual statistical algorithms</strong> (commonly called “data-adaptive” or “machine learning” algorithms) to <strong>create a new, single prediction algorithm</strong> that is expected to <strong>perform at least as well as any of the individual algorithms</strong>.</p></li>
 <li><p>The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one <strong>minimizes a specified loss function</strong>, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
-<li><p>The motivation for this type of “ensembling” is that <strong>no single algorithm is always the best for all kinds of data</strong>. For example, sometimes a penalized regression may be best, but in other situations a random forest may be superior. Even extreme gradient boosting is not <em>always</em> ideal! Superlearning allows you to use the beneficial information each algorithm provides to ultimately optimize your prediction capabilities.</p></li>
-<li><p>Superlearning is also called stacking, stacked generalizations, or weighted ensembling by different specializations within the realms of statistics and data science.</p></li>
+<li><p>The motivation for this type of “ensembling” is that <strong>a mix of multiple algorithms may fit your data better than any one single algorithm</strong>. For example, a random forest and a penalized regression may each suit your data well, but a mix of both may provide even better predictions.</p></li>
+<li><p>Superlearning is also called stacking, stacked generalizations, and weighted ensembling by different specializations within the realms of statistics and data science.</p></li>
 </ul>
 <p><img src="/img/spiderman_meme.jpg" style="width:42.0%" /></p>
 </div>
 <div id="superlearning-step-by-step" class="section level1">
 <h1>Superlearning, step by step</h1>
 <p>First I’ll go through the algorithm one step at a time using a simulated data set.</p>
-<html>
-<body>
-<h2 style="color:#c30a0a">
-<strong>Step 0: Load libraries, set seed, simulate data
-</h1>
-</strong>
-</body>
-</html>
+<div id="initial-set-up-load-libraries-set-seed-simulate-data" class="section level2">
+<h2>Initial set-up: Load libraries, set seed, simulate data</h2>
 <p>For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate a continuous outcome, <code>y</code>, and four potential predictors, <code>x1</code>, <code>x2</code>, <code>x3</code>, and <code>x4</code>.</p>
 <pre class="r"><code>library(tidyverse)
 library(kableExtra)
@@ -741,7 +701,7 @@ y
 <p><img src="/img/sl_steps/step1.png" style="width:50.0%" />
 The superlearner algorithm relies on K-fold cross-validation (CV) to avoid overfitting. We will start this process by splitting the data into 10 folds. The easiest way to do this is by creating indices for each CV fold.</p>
 <pre class="r"><code>k &lt;- 10 # 10 fold cv
-cv_index &lt;- sample(rep(1:k, each = n/k)) # indices for each fold, same length as our dataset `obs`</code></pre>
+cv_index &lt;- sample(rep(1:k, each = n/k)) # create indices for each CV fold. We need each fold K to contain n (all the rows of our data set) divided by k rows. in our example this is 5000/10 = 500 rows in each fold</code></pre>
 <html>
 <body>
 <h2 style="color:#c30a0a">
@@ -878,20 +838,27 @@ pred_1c
 </html>
 <p><img src="/img/sl_steps/step4.png" style="width:32.0%" /></p>
 <p>We’ll want to get those predictions for <em>every</em> fold. So, using your favorite <code>for</code> loop, <code>apply</code> statement, or <code>map</code>ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in <code>obs</code>ervations.</p>
+<p>The way I chose to code this was to:</p>
+<ol style="list-style-type: decimal">
+<li><p>make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data)</p></li>
+<li><p>Using <code>map_dfr()</code> from the <code>purrr</code> package to repeat over all 10 CV folds and then save the results in a new data frame.</p></li>
+</ol>
 <pre class="r"><code>cv_folds &lt;- as.list(1:k)
 names(cv_folds) &lt;- paste0(&quot;fold&quot;,1:k)
-cv_preds &lt;-
-  purrr::map_dfr(cv_folds, function(x){  # map_dfr loops through every fold (1:k) and binds the rows of the listed results together
-  cv_train &lt;- obs[-which(cv_index == x),]  # make a training data set that contains all data except fold k
+
+get_preds &lt;- function(fold){   # function that does the same procedure as step 2 and 3 for any CV fold
+  cv_train &lt;- obs[-which(cv_index == fold),]  # make a training data set that contains all data except fold k
   fit_a &lt;- glm(y ~ x2 + x4, data=cv_train)  # fit all the base learners to that data
   fit_b &lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=cv_train)
   fit_c &lt;- glm(y ~ x1*x2*x3, data=cv_train)
-  cv_valid &lt;- obs[which(cv_index == x),]  # make a validation data set that only contains data from fold k
+  cv_valid &lt;- obs[which(cv_index == fold),]  # make a validation data set that only contains data from fold k
   pred_a &lt;- predict(fit_a, newdata = cv_valid)  # obtain predictions from all the base learners for that validation data
   pred_b &lt;- predict(fit_b, newdata = cv_valid)
   pred_c &lt;- predict(fit_c, newdata = cv_valid)
-  return(tibble(&quot;obs_id&quot; = cv_valid$id, &quot;cv_fold&quot; = x, pred_a, pred_b, pred_c))  # save the predictions and the ids of the observations in a data frame
-})
+  return(data.frame(&quot;obs_id&quot; = cv_valid$id, &quot;cv_fold&quot; = fold, pred_a, pred_b, pred_c))  # save the predictions and the ids of the observations in a data frame
+}
+
+cv_preds &lt;- purrr::map_dfr(cv_folds, ~get_preds(fold = .x)) # map_dfr loops through every fold (1:k) and binds the rows of the listed results together
 
 cv_preds %&gt;% arrange(obs_id) %&gt;% head() %&gt;% kable(digits=2, caption = &quot;All CV predictions for all three base learners&quot;) </code></pre>
 <table>
@@ -900,6 +867,8 @@ cv_preds %&gt;% arrange(obs_id) %&gt;% head() %&gt;% kable(digits=2, caption = &
 </caption>
 <thead>
 <tr>
+<th style="text-align:left;">
+</th>
 <th style="text-align:right;">
 obs_id
 </th>
@@ -919,6 +888,9 @@ pred_c
 </thead>
 <tbody>
 <tr>
+<td style="text-align:left;">
+1…1
+</td>
 <td style="text-align:right;">
 1
 </td>
@@ -936,6 +908,9 @@ pred_c
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+1…2
+</td>
 <td style="text-align:right;">
 2
 </td>
@@ -953,6 +928,9 @@ pred_c
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+1…3
+</td>
 <td style="text-align:right;">
 3
 </td>
@@ -970,6 +948,9 @@ pred_c
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+1…4
+</td>
 <td style="text-align:right;">
 4
 </td>
@@ -987,6 +968,9 @@ pred_c
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+1…5
+</td>
 <td style="text-align:right;">
 5
 </td>
@@ -1004,6 +988,9 @@ pred_c
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+1…6
+</td>
 <td style="text-align:right;">
 6
 </td>
@@ -1038,7 +1025,7 @@ pred_c
 <pre class="r"><code>obs_preds &lt;- 
   full_join(obs, cv_preds, by=c(&quot;id&quot; = &quot;obs_id&quot;))</code></pre>
 <p>…so that we can minimize a final loss function of interest between the true outcome and each CV prediction. This is how we’re going to optimize our overall prediction algorithm: we want to make sure we’re “losing the least” in the way we combine our base learners’ predictions to ultimately make final predictions. We can do this efficiently by choosing a new learner, a metalearner, which reflects the final loss function of interest.</p>
-<p>For simplicity, we’ll use another linear regression as our metalearner. Using a linear regression as a metalearner will minimize the Mean Squared Error (MSE) when combining the base learner predictions. Note that we could use a variety of parametric or non-parametric regressions to minimize the MSE.</p>
+<p>For simplicity, we’ll use another linear regression as our metalearner. Using a linear regression as a metalearner will minimize the Cross-Validated Mean Squared Error (CV-MSE) when combining the base learner predictions. Note that we could use a variety of parametric or non-parametric regressions to minimize the CV-MSE.</p>
 <p>No matter what metalearner we choose, the predictors will always be the cross-validated predictions from each base learner, and the outcome will always be the true outcome, <code>y</code>.</p>
 <pre class="r"><code>sl_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 kable(broom::tidy(sl_fit), digits=3, caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
@@ -1221,7 +1208,20 @@ sl_predictions
 </tr>
 </tbody>
 </table>
-<p>And… that’s it! Those are our superlearner predictions.</p>
+<p>And… that’s it! Those are our superlearner predictions for the full data set.</p>
+<blockquote>
+<p><strong>We can now follow this same process with any new observation:</strong><br>1. Use the fits from each base learner to obtain base learner predictions for the new observation<br>2. Plug those base learner predictions into the metalearner fit</p>
+</blockquote>
+<p>We can generate a single <code>new_obs</code>ervation to see how this would work in practice.</p>
+<pre class="r"><code>new_obs &lt;- tibble(x1 = .5, x2 = 0, x3 = 0, x4 = -3)
+new_pred_a &lt;- predict(fit_a, new_obs)
+new_pred_b &lt;- predict(fit_b, new_obs)
+new_pred_c &lt;- predict(fit_c, new_obs)
+new_pred_df &lt;- tibble(&quot;pred_a&quot; = new_pred_a, &quot;pred_b&quot; = new_pred_b, &quot;pred_c&quot; = new_pred_c)
+predict(sl_fit, newdata = new_pred_df)</code></pre>
+<pre><code>##         1 
+## 0.1181052</code></pre>
+<p>Our Superlearner model predicts that an observation with predictors <code>x1=.5</code>, <code>x2=0</code>, <code>x3=0</code>, and <code>x4=-3</code> will have an outcome of 0.118. Good to know!</p>
 <html>
 <body>
 <h2 style="color:#c30a0a">
@@ -1236,6 +1236,7 @@ sl_mse</code></pre>
 <pre><code>## [1] 0.01927392</code></pre>
 <p>We could also add more algorithms to our base learner library (we definitely should, since we only used linear regressions!), and we could write functions to tune these algorithms’ hyperparameters over various grids. For example, if we were to include random forest in our library, we may want to tune over a number of trees and maximum bucket sizes.</p>
 <p>We can then cross-validate this entire process to evaluate the predictive performance of our superlearner algorithm. Alternatively, we could leave a hold-out training data set to evaluate the performance.</p>
+</div>
 </div>
 <div id="using-the-superlearner-package" class="section level1">
 <h1>Using the <code>SuperLearner</code> package</h1>
@@ -1268,7 +1269,7 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 <pre class="r"><code>kable(head(sl_fit$SL.predict), digits=2, col.names = &quot;sl_predictions&quot;, caption = &quot;Final SL predictions (package)&quot;) </code></pre>
 <table>
 <caption>
-<span id="tab:unnamed-chunk-16">Table 6: </span>Final SL predictions (package)
+<span id="tab:unnamed-chunk-17">Table 6: </span>Final SL predictions (package)
 </caption>
 <thead>
 <tr>
@@ -1362,7 +1363,7 @@ HTML Image as link
   theme_bw() +
   guides(col=F) +
   labs(x = &quot;Base Learner&quot;, y=&quot;Squared Error&quot;, title=&quot;Squared Errors of Learner A, B, and C&quot;)</code></pre>
-<p><img src="/blog/sl/superlearning_files/figure-html/unnamed-chunk-19-1.png" width="528" /></p>
+<p><img src="/blog/superlearning_files/figure-html/unnamed-chunk-20-1.png" width="528" /></p>
 <p>And then take the mean of those three cross-validated squared error columns, grouped by <code>cv_fold</code>, to get the CV-MSE for each fold.</p>
 <pre class="r"><code>cv_risks &lt;-
   cv_sq_error %&gt;%
@@ -1382,7 +1383,7 @@ HTML Image as link
   theme_bw()  +
     scale_x_continuous(breaks = 1:10) +
   labs(x = &quot;Cross-Validation (CV) Fold&quot;, y=&quot;Mean Squared Error (MSE)&quot;, col = &quot;Base Learner&quot;, title=&quot;CV-MSEs for Base Learners A, B, and C&quot;)</code></pre>
-<p><img src="/blog/sl/superlearning_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="/blog/superlearning_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and .45. We can take another mean to get the overall CV-MSE for each learner.</p>
 <pre class="r"><code>cv_risks %&gt;%
   select(-cv_fold) %&gt;%
@@ -1391,7 +1392,7 @@ HTML Image as link
   kable_styling(position = &quot;center&quot;)</code></pre>
 <table class="table" style="margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:unnamed-chunk-21">Table 7: </span>CV-MSE for each base learner
+<span id="tab:unnamed-chunk-22">Table 7: </span>CV-MSE for each base learner
 </caption>
 <thead>
 <tr>
@@ -1441,11 +1442,14 @@ cv_mse_c
 <div id="another-visual-guide" class="section level3">
 <h3>Another visual guide</h3>
 <p>The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the <em>Targeted Learning</em> book:</p>
-<p><img src="/img/sl_diagram.png" /></p>
+<p><img src="/img/sl_diagram.png" />
+# Acknowledgments</p>
+<p>Thank you to Eric Polley and Ivan Diaz for helpful edits and suggestions.</p>
 </div>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
+<p>MJ Van der Laan, EC Polley, AE Hubbard, Super Learner, Statistical applications in genetics and molecular, 2007</p>
 <p>Polley, Eric. “Chapter 3: Superlearning.” Targeted Learning: Causal Inference for Observational and Experimental Data, by M. J. van der. Laan and Sherri Rose, Springer, 2011.</p>
 <p>Polley E, LeDell E, Kennedy C, van der Laan M. Super Learner: Super Learner Prediction. 2016 URL <a href="https://CRAN.R-project.org/package=SuperLearner" class="uri">https://CRAN.R-project.org/package=SuperLearner</a>. R package version 2.0-22.</p>
 <p>Naimi AI, Balzer LB. Stacked generalization: an introduction to super learning. <em>Eur J Epidemiol.</em> 2018;33(5):459-464. <a href="doi:10.1007/s10654-018-0390-z" class="uri">doi:10.1007/s10654-018-0390-z</a></p>
@@ -1550,7 +1554,7 @@ cv_mse_c
   <div class="media author-card" itemscope itemtype="http://schema.org/Person">
     
       
-      <img class="portrait mr-3" src="/authors/admin/avatar_hu6be5a1ae60c180173c384b1d609c2e4b_3073115_250x250_fill_q90_lanczos_center.jpg" itemprop="image" alt="Avatar">
+      <img class="portrait mr-3" src="/authors/admin/avatar_huc473e5d783e956425af2298567207379_1878707_250x250_fill_q90_lanczos_center.jpeg" itemprop="image" alt="Avatar">
     
 
     <div class="media-body">
@@ -1627,7 +1631,7 @@ cv_mse_c
           
           <li><a href="/blog/dplyr/data-wrangling/">Data Wrangling with dplyr</a></li>
           
-          <li><a href="/blog/covid-wrangling/covid-functions/">My favorite lines of data wrangling code during the NYC COVID-19 outbreak</a></li>
+          <li><a href="/blog/covid/covid-functions/">My favorite lines of data wrangling code during the NYC COVID-19 outbreak</a></li>
           
           <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
           
