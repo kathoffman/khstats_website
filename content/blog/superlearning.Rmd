@@ -461,9 +461,11 @@ Whatever metalearner we choose is simply a tool to minimize a loss function of i
 The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the *Targeted Learning* book:
 
 ![](/img/sl_diagram.png)
+
+
 # Acknowledgments
 
-Thank you to Eric Polley and Ivan Diaz for helpful edits and suggestions.
+Thank you to Eric Polley, Iván Díaz, Nick Williams and Adam Peterson for very helpful edits and suggestions to this post.
 
 # References
 

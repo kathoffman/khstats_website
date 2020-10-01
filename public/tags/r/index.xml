@@ -1300,10 +1300,12 @@ cv_mse_c
 &lt;div id=&#34;another-visual-guide&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Another visual guide&lt;/h3&gt;
 &lt;p&gt;The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the &lt;em&gt;Targeted Learning&lt;/em&gt; book:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_diagram.png&#34; /&gt;
-# Acknowledgments&lt;/p&gt;
-&lt;p&gt;Thank you to Eric Polley and Ivan Diaz for helpful edits and suggestions.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/sl_diagram.png&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;acknowledgments&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Acknowledgments&lt;/h1&gt;
+&lt;p&gt;Thank you to Eric Polley, Iván Díaz, Nick Williams and Adam Peterson for very helpful edits and suggestions to this post.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;
