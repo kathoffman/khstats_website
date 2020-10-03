@@ -375,7 +375,7 @@ HTML Image as link
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Superlearning&lt;/strong&gt; is a technique for prediction that involves &lt;strong&gt;combining many individual statistical algorithms&lt;/strong&gt; (commonly called “data-adaptive” or “machine learning” algorithms) to &lt;strong&gt;create a new, single prediction algorithm&lt;/strong&gt; that is expected to &lt;strong&gt;perform at least as well as any of the individual algorithms&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one &lt;strong&gt;minimizes a specified loss function&lt;/strong&gt;, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;a mix of multiple algorithms may fit your data better than any one single algorithm&lt;/strong&gt;. For example, a random forest and a penalized regression may each suit your data well, but a mix of both may provide even better predictions.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;a mix of multiple algorithms may be more optimal for a given data set than any single algorithm&lt;/strong&gt;. For example, a tree based model averaged with a linear model (e.g. random forests and LASSO) could smooth or regularize some of the edges and improve predictive performance.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Superlearning is also called stacking, stacked generalizations, and weighted ensembling by different specializations within the realms of statistics and data science.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;/img/spiderman_meme.jpg&#34; style=&#34;width:42.0%&#34; /&gt;&lt;/p&gt;
@@ -1305,7 +1305,7 @@ cv_mse_c
 &lt;/div&gt;
 &lt;div id=&#34;acknowledgments&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Acknowledgments&lt;/h1&gt;
-&lt;p&gt;Thank you to Eric Polley, Iván Díaz, Nick Williams and Adam Peterson for very helpful edits and suggestions to this post.&lt;/p&gt;
+&lt;p&gt;Thank you to Eric Polley, Iván Díaz, Nick Williams, and Adam Peterson for very helpful edits and suggestions to this post.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References&lt;/h1&gt;

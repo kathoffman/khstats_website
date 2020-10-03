@@ -36,7 +36,7 @@ output:
   
 - The superlearner algorithm "decides" how to combine, or weight, the individual algorithms based upon how well each one **minimizes a specified loss function**, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.
   
-- The motivation for this type of "ensembling" is that **a mix of multiple algorithms may fit your data better than any one single algorithm**. For example, a random forest and a penalized regression may each suit your data well, but a mix of both may provide even better predictions.
+- The motivation for this type of "ensembling" is that **a mix of multiple algorithms may be more optimal for a given data set than any single algorithm**. For example, a tree based model averaged with a linear model (e.g. random forests and LASSO) could smooth or regularize some of the edges and improve predictive performance.
   
 - Superlearning is also called stacking, stacked generalizations, and weighted ensembling by different specializations within the realms of statistics and data science.
   
@@ -465,7 +465,7 @@ The steps of the superlearner algorithm are summarized nicely in this graphic in
 
 # Acknowledgments
 
-Thank you to Eric Polley, Iván Díaz, Nick Williams and Adam Peterson for very helpful edits and suggestions to this post.
+Thank you to Eric Polley, Iván Díaz, Nick Williams, and Adam Peterson for very helpful edits and suggestions to this post.
 
 # References
 

@@ -40,7 +40,7 @@ HTML Image as link
 <ul>
 <li><p><strong>Superlearning</strong> is a technique for prediction that involves <strong>combining many individual statistical algorithms</strong> (commonly called “data-adaptive” or “machine learning” algorithms) to <strong>create a new, single prediction algorithm</strong> that is expected to <strong>perform at least as well as any of the individual algorithms</strong>.</p></li>
 <li><p>The superlearner algorithm “decides” how to combine, or weight, the individual algorithms based upon how well each one <strong>minimizes a specified loss function</strong>, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.</p></li>
-<li><p>The motivation for this type of “ensembling” is that <strong>a mix of multiple algorithms may fit your data better than any one single algorithm</strong>. For example, a random forest and a penalized regression may each suit your data well, but a mix of both may provide even better predictions.</p></li>
+<li><p>The motivation for this type of “ensembling” is that <strong>a mix of multiple algorithms may be more optimal for a given data set than any single algorithm</strong>. For example, a tree based model averaged with a linear model (e.g. random forests and LASSO) could smooth or regularize some of the edges and improve predictive performance.</p></li>
 <li><p>Superlearning is also called stacking, stacked generalizations, and weighted ensembling by different specializations within the realms of statistics and data science.</p></li>
 </ul>
 <p><img src="/img/spiderman_meme.jpg" style="width:42.0%" /></p>
@@ -970,7 +970,7 @@ cv_mse_c
 </div>
 <div id="acknowledgments" class="section level1">
 <h1>Acknowledgments</h1>
-<p>Thank you to Eric Polley, Iván Díaz, Nick Williams and Adam Peterson for very helpful edits and suggestions to this post.</p>
+<p>Thank you to Eric Polley, Iván Díaz, Nick Williams, and Adam Peterson for very helpful edits and suggestions to this post.</p>
 </div>
 <div id="references" class="section level1">
 <h1>References</h1>
