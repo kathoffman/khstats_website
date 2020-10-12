@@ -268,7 +268,7 @@ And... that's it! Those are our superlearner predictions for the full data set.
 
 <html>
 <body>
-<h2 style="color:#c30a0a"><strong>Step 9: Obtaining predictions on new data</h1></strong>
+<h2 style="color:#c30a0a"><strong>Step 9: Obtain predictions on new data</h1></strong>
 </body>
 </html>
 
