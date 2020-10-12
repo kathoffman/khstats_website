@@ -23,12 +23,22 @@
   </url>
   
   <url>
+    <loc>/blog/sl/superlearning/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/causal-inference/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/ensemble-learning/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -63,12 +73,42 @@
   </url>
   
   <url>
+    <loc>/tags/rstats/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sl3/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/stacked-generalizations/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/stacking/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/statistics/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/statistics/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/superlearner/</loc>
+    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/superlearning/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -123,42 +163,7 @@
   </url>
   
   <url>
-    <loc>/blog/superlearning/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/ensemble-learning/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/rstats/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/sl3/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/stacked-generalizations/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/stacking/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/superlearner/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/superlearning/</loc>
+    <loc>/blog/sl/hardest_part_of_causal/</loc>
     <lastmod>2020-09-12T21:13:14-05:00</lastmod>
   </url>
   
@@ -288,7 +293,7 @@
   </url>
   
   <url>
-    <loc>/blog/sl3_demo/sl/</loc>
+    <loc>/blog/sl/sl/</loc>
     <lastmod>2019-09-12T21:13:14-05:00</lastmod>
   </url>
   

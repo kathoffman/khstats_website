@@ -29,7 +29,7 @@
     
   
   <meta name="description" content="A Visual Guide and Introductory R Tutorial on TMLE aimed at applied scientists with statistics training.
- TMLE in two sentences  The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to estimate treatment effects of interest using:
+ TMLE in two sentences  The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to estimate a causal parameter of interest using:
 the expected outcome of an individual, given the treatment they received and their baseline confounders
  the probability an individual received the treatment of interest, given their baseline confounders; also known as their propensity score">
 
@@ -132,7 +132,7 @@ the expected outcome of an individual, given the treatment they received and the
   <meta property="og:url" content="/blog/tmle/tmle-tutorial-3/">
   <meta property="og:title" content="An Illustrated Guide to Targeted Minimum Loss-based Estimation | KHstats">
   <meta property="og:description" content="A Visual Guide and Introductory R Tutorial on TMLE aimed at applied scientists with statistics training.
- TMLE in two sentences  The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to estimate treatment effects of interest using:
+ TMLE in two sentences  The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to estimate a causal parameter of interest using:
 the expected outcome of an individual, given the treatment they received and their baseline confounders
  the probability an individual received the treatment of interest, given their baseline confounders; also known as their propensity score"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
@@ -504,7 +504,7 @@ the expected outcome of an individual, given the treatment they received and the
 <div id="tmle-in-two-sentences" class="section level1">
 <h1>TMLE in two sentences</h1>
 <ul>
-<li><p>The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to <strong>estimate treatment effects of interest using</strong>:</p>
+<li><p>The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to <strong>estimate a causal parameter of interest using</strong>:</p>
 <ol style="list-style-type: decimal">
 <li><p>the expected outcome of an individual, given the treatment they received and their baseline confounders</p></li>
 <li><p>the probability an individual received the treatment of interest, given their baseline confounders; also known as their propensity score</p></li>
@@ -543,7 +543,6 @@ the expected outcome of an individual, given the treatment they received and the
 </div>
 <div id="tmle-faq" class="section level1">
 <h1>TMLE FAQ</h1>
-<p>I’ve been asking <em>a lot</em> of questions about TMLE over the past two years.</p>
 <div id="ive-only-heard-about-tmle-in-the-context-tmle-of-causal-inference-whats-up-with-that" class="section level2">
 <h2>I’ve only heard about TMLE in the context TMLE of causal inference, what’s up with that?</h2>
 <p>TMLE was <em>developed</em> to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.</p>
@@ -567,12 +566,12 @@ the expected outcome of an individual, given the treatment they received and the
 <p>Load libraries, set seed, and simulate data</p>
 <p><img src="/img/tmle/1_data_structure.png" style="width:80.0%" /></p>
 <pre class="r"><code>library(tidyverse, quietly=T)</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ── Attaching packages ───────────────────────────── tidyverse 1.3.0 ──</code></pre>
 <pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 ## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 ## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
 ## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(SuperLearner, quietly=T)</code></pre>
@@ -947,11 +946,11 @@ tmlefit</code></pre>
           
           <li><a href="/blog/ditl-biostats/">A Day in the Life of a Biostatistician</a></li>
           
-          <li><a href="/blog/superlearning/">Become a Superlearner! A Visual Guide &amp; Introductory R Tutorial on Superlearning</a></li>
+          <li><a href="/blog/sl/superlearning/">Become a Superlearner! An Illustrated Guide to Superlearning</a></li>
+          
+          <li><a href="/blog/sl/hardest_part_of_causal/">The Key to Learning Causal Inference</a></li>
           
           <li><a href="/blog/covid/covid-functions/">My favorite lines of data wrangling code during the NYC COVID-19 outbreak</a></li>
-          
-          <li><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></li>
           
         </ul>
       </div>

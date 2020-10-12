@@ -27,7 +27,7 @@
 &lt;div id=&#34;tmle-in-two-sentences&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE in two sentences&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to &lt;strong&gt;estimate treatment effects of interest using&lt;/strong&gt;:&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to &lt;strong&gt;estimate a causal parameter of interest using&lt;/strong&gt;:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;the expected outcome of an individual, given the treatment they received and their baseline confounders&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;the probability an individual received the treatment of interest, given their baseline confounders; also known as their propensity score&lt;/p&gt;&lt;/li&gt;
@@ -66,7 +66,6 @@
 &lt;/div&gt;
 &lt;div id=&#34;tmle-faq&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE FAQ&lt;/h1&gt;
-&lt;p&gt;I’ve been asking &lt;em&gt;a lot&lt;/em&gt; of questions about TMLE over the past two years.&lt;/p&gt;
 &lt;div id=&#34;ive-only-heard-about-tmle-in-the-context-tmle-of-causal-inference-whats-up-with-that&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;I’ve only heard about TMLE in the context TMLE of causal inference, what’s up with that?&lt;/h2&gt;
 &lt;p&gt;TMLE was &lt;em&gt;developed&lt;/em&gt; to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.&lt;/p&gt;
@@ -90,12 +89,12 @@
 &lt;p&gt;Load libraries, set seed, and simulate data&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/1_data_structure.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse, quietly=T)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Attaching packages ────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ───────────────────────────── tidyverse 1.3.0 ──&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 ## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 ## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
 ## ✓ readr   1.3.1     ✓ forcats 0.5.0&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Conflicts ───────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SuperLearner, quietly=T)&lt;/code&gt;&lt;/pre&gt;
@@ -340,6 +339,41 @@ tmlefit&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References:&lt;/h1&gt;
 &lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>The Key to Learning Causal Inference</title>
+      <link>/blog/sl/hardest_part_of_causal/</link>
+      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/sl/hardest_part_of_causal/</guid>
+      <description>
+
+
+&lt;p&gt;I’ve been trying to learn causal inference for the past year and a half. Not in the way people say, “I’ve been trying to learn guitar” or “I’ve been trying to learn Japanese”, either. Trying as in, spent countless pre-pandemic weekends at coffee shops with causal inference books, and even dragged a binder of notes to a vacation in Costa Rica…&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/causal_at_beach.jpg&#34; /&gt;
+I’m no expert in causal inference, but at this point I at least have an opinion on the best way to &lt;em&gt;learn&lt;/em&gt; causal inference:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The key to learning causal inference is to keep &lt;strong&gt;identification&lt;/strong&gt; separate from &lt;strong&gt;estimation&lt;/strong&gt; when you’re learning a new concept.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Now what does &lt;em&gt;that&lt;/em&gt; mean!? Broadly, &lt;strong&gt;identification means figuring out whether you can write a causal parameter of interest in terms of data&lt;/strong&gt; (i.e., in forms of expectations of random variables).&lt;/p&gt;
+&lt;p&gt;A &lt;strong&gt;causal parameter&lt;/strong&gt; is just some summary quantity that would be interesting to evaluate in the system you’re studying. A few common causal parameters are the Causal Odds Ratio, Causal Risk Ratio, Average Treatment Effect and the Conditional Average Treatment Effect. There are many, many more though, such as the Dose Response Curve or Marginal Structural Model.&lt;/p&gt;
+&lt;p&gt;To determine whether you can identify your causal parameter of interest in your system and with your data, careful thought is required. It’s the stage of a problem when you, as a statistician, sit down and talk with subject matter experts about the precise question they’d like to answer. You may draw &lt;em&gt;Directed Acyclic Graphs&lt;/em&gt; (DAGs) or &lt;em&gt;Single World Intervention Graphs&lt;/em&gt; (SWIGs), or write out the &lt;em&gt;Non Parametric Structural Equations&lt;/em&gt; of the system.&lt;/p&gt;
+&lt;p&gt;These tools will help you evaluate some of the main requirements of causal inference: for the causal parameter of interest to be identified, you must satisfy causal assumptions of &lt;em&gt;positivity&lt;/em&gt;, &lt;em&gt;exchangeability&lt;/em&gt;, and &lt;em&gt;ignorability&lt;/em&gt;, while still avoiding the usual pitfalls in statistics like &lt;em&gt;selection bias&lt;/em&gt; and &lt;em&gt;unmeasured confounding&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;I won’t go into the assumptions or tools of identification here, but I’ve linked my favorite resources for learning below. What is important to know is that through tools like this, you’ll eventually determine whether the causal parameter is possible to write out in terms of your data. For example, if your goal is to identify the Average Treatment Effect (ATE), i.e. the mean difference in outcomes between the treated and untreated in a hypothetical world where everyone &lt;em&gt;could&lt;/em&gt; get each treatment, your identification of the ATE, &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt;, may look like:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\theta = E_W[E[Y|A=1,W]-E[Y|A=0,W]]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Everything I’ve mentioned so far is part of the &lt;strong&gt;identification&lt;/strong&gt; side of causal inference. I think of it as the non-data side, because we are not yet dealing with data when we think about the study design, causal parameter, and whether the causal conditions are reasonable to assume. You should never be thinking about &lt;strong&gt;estimation methods&lt;/strong&gt; until you’ve determined whether your causal parameter can be identified.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/causal_comic.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Once you’ve &lt;em&gt;identified&lt;/em&gt; your WHAT, or your parameter of interest, then you can start thinking about HOW you’re going to &lt;em&gt;estimate&lt;/em&gt; that parameter. There are many statistical estimation methods to estimate the same causal effect of interest.&lt;/p&gt;
+&lt;p&gt;My favorite way to think about this is through a little graph like this. On the left, there are three causal parameters, or estimands of interest. On the top, we can see six different ways you might try to estimate any of these causal parameters of interest. Each of the estimation methods have pros and cons.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(Odds ratio = E[Y]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(Relative risk = E[Y]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\mathrm{ATE} = E[Y]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;A common example is figuring out whether the Average Treatment Effect (ATE), or the difference in outcomes if everyone were to receive the exposure compared to if everyone had not received the exposure&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\theta^* = E[E[Y|A=1,W]-E[Y|A=0,W]]\)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Sure, propensity scores are part of causal inference, but they’re part of the &lt;em&gt;estimation&lt;/em&gt; side of causal inference. A propensity score can’t fix a research question with a causal parameter that does not meet causal assumptions.&lt;/p&gt;
+&lt;p&gt;Causal&lt;/p&gt;
+&lt;p&gt;I think causal inference is the most interesting topic in all of statistics– I think it’s so cool that sometimes I make really dweeby comics about it:&lt;/p&gt;
 </description>
     </item>
     

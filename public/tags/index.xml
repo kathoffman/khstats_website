@@ -21,6 +21,14 @@
     </item>
     
     <item>
+      <title>ensemble learning</title>
+      <link>/tags/ensemble-learning/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/ensemble-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>introduction to TMLE</title>
       <link>/tags/introduction-to-tmle/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
@@ -45,10 +53,58 @@
     </item>
     
     <item>
+      <title>rstats</title>
+      <link>/tags/rstats/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/rstats/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sl3</title>
+      <link>/tags/sl3/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/sl3/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>stacked generalizations</title>
+      <link>/tags/stacked-generalizations/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/stacked-generalizations/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>stacking</title>
+      <link>/tags/stacking/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/stacking/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>statistics</title>
       <link>/tags/statistics/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/tags/statistics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SuperLearner</title>
+      <link>/tags/superlearner/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/superlearner/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>superlearning</title>
+      <link>/tags/superlearning/</link>
+      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/superlearning/</guid>
       <description></description>
     </item>
     
@@ -105,62 +161,6 @@
       <link>/tags/covid-19-data-analysis/</link>
       <pubDate>Wed, 30 Sep 2020 01:13:14 -0500</pubDate>
       <guid>/tags/covid-19-data-analysis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>ensemble learning</title>
-      <link>/tags/ensemble-learning/</link>
-      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/ensemble-learning/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>rstats</title>
-      <link>/tags/rstats/</link>
-      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/rstats/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>sl3</title>
-      <link>/tags/sl3/</link>
-      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/sl3/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>stacked generalizations</title>
-      <link>/tags/stacked-generalizations/</link>
-      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/stacked-generalizations/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>stacking</title>
-      <link>/tags/stacking/</link>
-      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/stacking/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SuperLearner</title>
-      <link>/tags/superlearner/</link>
-      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/superlearner/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>superlearning</title>
-      <link>/tags/superlearning/</link>
-      <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/superlearning/</guid>
       <description></description>
     </item>
     

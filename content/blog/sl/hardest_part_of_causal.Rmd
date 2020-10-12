@@ -1,0 +1,77 @@
+---
+title: "The Key to Learning Causal Inference"
+author: "Katherine Hoffman"
+date: 2020-09-12T21:13:14-05:00
+categories: ["statistics"]
+draft: true
+math: true
+tags: ["causal inference"]
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+    print_df: paged
+---
+
+I've been trying to learn causal inference for the past year and a half. Not in the way people say, "I've been trying to learn guitar" or "I've been trying to learn Japanese", either. Trying as in, spent countless pre-pandemic weekends at coffee shops with causal inference books, and even dragged a binder of notes to a vacation in Costa Rica...
+
+
+![](/img/causal_at_beach.jpg)
+I'm no expert in causal inference, but at this point I at least have an opinion on the best way to *learn* causal inference:
+
+> The key to learning causal inference is to keep **identification** separate from **estimation** when you're learning a new concept.
+
+Now what does *that* mean!? Broadly, **identification means figuring out whether you can write a causal parameter of interest in terms of data** (i.e., in forms of expectations of random variables).
+
+A **causal parameter** is just some summary quantity that would be interesting to evaluate in the system you're studying. A few common causal parameters are the Causal Odds Ratio, Causal Risk Ratio, Average Treatment Effect and the Conditional Average Treatment Effect. There are many, many more though, such as the Dose Response Curve or Marginal Structural Model.
+
+To determine whether you can identify your causal parameter of interest in your system and with your data, careful thought is required. It's the stage of a problem when you, as a statistician, sit down and talk with subject matter experts about the precise question they'd like to answer. You may draw *Directed Acyclic Graphs* (DAGs) or *Single World Intervention Graphs* (SWIGs), or write out the *Non Parametric Structural Equations* of the system.
+
+These tools will help you evaluate some of the main requirements of causal inference: for the causal parameter of interest to be identified, you must satisfy causal assumptions of *positivity*, *exchangeability*, and *ignorability*, while still avoiding the usual pitfalls in statistics like *selection bias* and *unmeasured confounding*.
+
+I won't go into the assumptions or tools of identification here, but I've linked my favorite resources for learning below. What is important to know is that through tools like this, you'll eventually determine whether the causal parameter is possible to write out in terms of your data. For example, if your goal is to identify the Average Treatment Effect (ATE), i.e. the mean difference in outcomes between the treated and untreated in a hypothetical world where everyone *could* get each treatment, your identification of the ATE, $\theta$, may look like:
+
+$\theta = E_W[E[Y|A=1,W]-E[Y|A=0,W]]$
+
+Everything I've mentioned so far is part of the **identification** side of causal inference. I think of it as the non-data side, because we are not yet dealing with data when we think about the study design, causal parameter, and whether the causal conditions are reasonable to assume. You should never be thinking about **estimation methods** until you've determined whether your causal parameter can be identified.
+
+![](/img/causal_comic.jpg)
+
+
+Once you've *identified* your WHAT, or your parameter of interest, then you can start thinking about HOW you're going to *estimate* that parameter. There are many statistical estimation methods to estimate the same causal effect of interest.
+
+My favorite way to think about this is through a little graph like this. On the left, there are three causal parameters, or estimands of interest. On the top, we can see six different ways you might try to estimate any of these causal parameters of interest. Each of the estimation methods have pros and cons. 
+
+$Odds ratio = E[Y]$
+
+$Relative risk = E[Y]$
+
+$\mathrm{ATE} = E[Y]$
+
+
+
+
+
+
+A common example is figuring out whether the Average Treatment Effect (ATE), or the difference in outcomes if everyone were to receive the exposure compared to if everyone had not received the exposure
+
+$\theta^* = E[E[Y|A=1,W]-E[Y|A=0,W]]$
+
+
+Sure, propensity scores are part of causal inference, but they're part of the *estimation* side of causal inference. A propensity score can't fix a research question with a causal parameter that does not meet causal assumptions.
+
+Causal 
+
+
+I think causal inference is the most interesting topic in all of statistics-- I think it's so cool that sometimes I make really dweeby comics about it:
+
+
+
+
+
+
+
+
+
+

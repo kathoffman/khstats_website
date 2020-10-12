@@ -1,7 +1,7 @@
 ---
-title: "Become a Superlearner! A Visual Guide & Introductory R Tutorial on Superlearning"
+title: "Become a Superlearner! An Illustrated Guide to Superlearning"
 author: "Katherine Hoffman"
-date: 2020-09-12T21:13:14-05:00
+date: 2020-10-10T21:13:14-05:00
 categories: ["R","statistics"]
 draft: false
 math: true
@@ -15,7 +15,6 @@ output:
 ---
 
 > Why use *one* machine learning algorithm when you could use all of them?! This post contains a step-by-step walkthrough of how to build a superlearner prediction algorithm in `R`.
-
 
 <html>
    <head>
@@ -36,7 +35,7 @@ output:
   
 - The superlearner algorithm "decides" how to combine, or weight, the individual algorithms based upon how well each one **minimizes a specified loss function**, for example, the mean squared error (MSE). This is done using cross-validation to avoid overfitting.
   
-- The motivation for this type of "ensembling" is that **a mix of multiple algorithms may be more optimal for a given data set than any single algorithm**. For example, a tree based model averaged with a linear model (e.g. random forests and LASSO) could smooth or regularize some of the edges and improve predictive performance.
+- The motivation for this type of "ensembling" is that **a mix of multiple algorithms may be more optimal for a given data set than any single algorithm**. For example, a tree based model averaged with a linear model (e.g. random forests and LASSO) could smooth some of the model's edges to improve predictive performance.
   
 - Superlearning is also called stacking, stacked generalizations, and weighted ensembling by different specializations within the realms of statistics and data science.
   
@@ -271,7 +270,16 @@ kable(head(sl_predictions), col.names = "sl_predictions", digits= 2, caption = "
 
 And... that's it! Those are our superlearner predictions for the full data set.
 
-> **We can now follow this same process with any new observation:**<br>1. Use the fits from each base learner to obtain base learner predictions for the new observation<br>2. Plug those base learner predictions into the metalearner fit
+<html>
+<body>
+<h2 style="color:#c30a0a"><strong>Step 9: Obtaining predictions on new data</h1></strong>
+</body>
+</html>
+
+
+We can now modify Step 7 and Step 8 to accommodate any new observation(s):
+
+>1.Use the fits from each base learner to obtain base learner predictions for the new observation(s).<br>2. Plug those base learner predictions into the metalearner fit.
 
 We can generate a single `new_obs`ervation to see how this would work in practice.
 
@@ -284,11 +292,11 @@ new_pred_df <- tibble("pred_a" = new_pred_a, "pred_b" = new_pred_b, "pred_c" = n
 predict(sl_fit, newdata = new_pred_df)
 ```
 
-Our Superlearner model predicts that an observation with predictors `x1=.5`, `x2=0`, `x3=0`, and `x4=-3` will have an outcome of `r round(predict(sl_fit, newdata = new_pred_df), 3)`. Good to know!
+Our superlearner model predicts that an observation with predictors $x1=.5$, $x2=0$, $x3=0$, and $x4=-3$ will have an outcome of `r round(predict(sl_fit, newdata = new_pred_df), 3)`. Good to know!
 
 <html>
 <body>
-<h2 style="color:#c30a0a"><strong>Step 9 and beyond...</h1></strong>
+<h2 style="color:#c30a0a"><strong>Step 10 and beyond...</h1></strong>
 </body>
 </html>
 
@@ -314,7 +322,7 @@ sl_fit <- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
                      SL.library = c("SL.ranger", "SL.glmnet", "SL.earth"))
 ```
 
-You can specify the metalearner with the `method` argument. The default is Non-Negative Least Squares (NNLS).
+You can specify the metalearner with the `method` argument. The default is [Non-Negative Least Squares](##non-negative-least-squares) (NNLS).
 
 ## CV-Risk and Coefficient Weights
 
@@ -353,25 +361,6 @@ For more information on the `SuperLearner` package, take a look at this [vignett
 Other packages freely available in `R` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `h2o`, `ml3`, and `caretEnsemble`. I previously wrote a [brief demo](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo.
 
 Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available in many programming languages and their Chief Machine Learning Scientist, Erin Ledell, was an author of the original `SuperLearner` package.
-
-# Coming soon... when prediction is not the end goal
-
-When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference (for example, Targeted Maximum Likelihood Estimation (TMLE)). This allows the use of flexible models and minimal assumptions placed on the distribution of the data.
-
-I made a similar [visual guide for TMLE](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf). If you found this superlearning tutorial helpful, check back here later for another one on TMLE. Alternatively, you can find me on Medium: [\@kathoffman317](https://medium.com/@kathoffman317). If you're curious about TMLE in the meantime, I really like [this tutorial](https://migariane.github.io/TMLE.nb.html) by Miguel Angel Luque Fernandez.
-
-<html>
-   <head>
-      <title>HTML Image as link</title>
-   </head>
-   <body>
-      <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
-         <img alt="cheatsheet" src="/img/TMLE.jpg"
-         width=100%">
-      </a>
-   </body>
-</html>
-
 
 # Appendix
 
@@ -448,24 +437,44 @@ However, we can almost always create an even better prediction algorithm if we u
 
 ### Choosing a metalearner
 
-The advice from Erin Ledell in her PhD dissertation, *Scalable Ensemble Learning and Computationally Efficient Variance Estimation*, on choosing a metalearner is:
+In the [Reference](#references) papers on superlearning, the metalearner which yields the best results theoretically and in practice is a **convex combination optimization** of learners. This means fitting the following regression, where $\alpha_1$, $\alpha_2$, and $\alpha_3$ are all non-negative and sum to 1.
 
->"Since the set of predictions from the various base learners may be highly correlated, it is advisable to choose a metalearning method that performs well in the presence of collinear predictors.  Regularization via Ridge or Lasso regression is commonly used to overcome the issue of collinearity among the predictor variables that make up the level-one dataset."
+$\mathrm{E}[Y|\hat{Y}_{LrnrA},\hat{Y}_{LrnrB},\hat{Y}_{LrnrC}] = \alpha_1\hat{Y}_{LrnrA} + \alpha_2\hat{Y}_{LrnrB} + \alpha_3\hat{Y}_{LrnrC}$
 
-Here, the level-one data-set refers to the cross-validated predictions from Step 4. She goes on to discuss how several statisticians (Leo Breiman, Michael LeBlanc, Robert Tibshirani) concluded empirically that the lowest prediction errors were obtained using NNLS.
+The default in the `Superlearner` package is to fit a non-negative least squares (NNLS) regression. NNLS fits the above equation where the $\alpha$'s must be greater than or equal to 1 but do not necessarily sum to 1. The package then reweights the $\alpha$'s to force them to sum to 1. This makes the weights a convex combination, but may not yield the same optimal results as an initial convex combination optimization.
 
-Whatever metalearner we choose is simply a tool to minimize a loss function of interest. In these examples it is the MSE, but it can change with the goals of the prediction algorithm. For example, if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or $1-AUC$. It is outside the scope of this post, but for more information, I recommend Ledell's [dissertation](https://escholarship.org/uc/item/3kb142r2) or her [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/) on maximizing the Area Under the Curve (AUC) with superlearner algorithms.
+The metalearner should change with the goals of the prediction algorithm and the loss function of interest. In these examples it is the MSE, but if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or $1-AUC$. It is outside the scope of this post, but for more information, I recommend this  [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/) by Erin Ledell on maximizing the Area Under the Curve (AUC) with superlearner algorithms.
 
-### Another visual guide
+### Another visual guide for superlearning
 
 The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the *Targeted Learning* book:
 
 ![](/img/sl_diagram.png)
 
 
+# Coming soon... when prediction is not the end goal
+
+When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference (for example, Targeted Maximum Likelihood Estimation (TMLE)). This allows the use of flexible models and minimal assumptions placed on the distribution of the data.
+
+I made a similar [visual guide for TMLE](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf). If you found this superlearning tutorial helpful, check back here later for another one on TMLE. If you're curious about TMLE in the meantime, I really like [this tutorial](https://migariane.github.io/TMLE.nb.html) by Miguel Angel Luque Fernandez.
+
+<html>
+   <head>
+      <title>HTML Image as link</title>
+   </head>
+   <body>
+      <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+         <img alt="cheatsheet" src="/img/TMLE.jpg"
+         width=100%">
+      </a>
+   </body>
+</html>
+
+
+
 # Acknowledgments
 
-Thank you to Eric Polley, Iván Díaz, Nick Williams, and Adam Peterson for very helpful edits and suggestions to this post.
+Thank you to Eric Polley, Iván Díaz, Nick Williams, Anjile An, and Adam Peterson for very helpful content (and design!) suggestions for this post.
 
 # References
 
