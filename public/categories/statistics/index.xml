@@ -695,11 +695,7 @@ pred_1c
 &lt;/html&gt;
 &lt;p&gt;&lt;img src=&#34;/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We’ll want to get those predictions for &lt;em&gt;every&lt;/em&gt; fold. So, using your favorite &lt;code&gt;for&lt;/code&gt; loop, &lt;code&gt;apply&lt;/code&gt; statement, or &lt;code&gt;map&lt;/code&gt;ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in &lt;code&gt;obs&lt;/code&gt;ervations.&lt;/p&gt;
-&lt;p&gt;The way I chose to code this was to:&lt;/p&gt;
-&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;&lt;p&gt;make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data)&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Using &lt;code&gt;map_dfr()&lt;/code&gt; from the &lt;code&gt;purrr&lt;/code&gt; package to repeat over all 10 CV folds and then save the results in a new data frame.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
+&lt;p&gt;The way I chose to code this was to make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data), then use &lt;code&gt;map_dfr()&lt;/code&gt; from the &lt;code&gt;purrr&lt;/code&gt; package to repeat over all 10 CV folds. I saved the results in a new data frame called &lt;code&gt;cv_preds&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_folds &amp;lt;- as.list(1:k)
 names(cv_folds) &amp;lt;- paste0(&amp;quot;fold&amp;quot;,1:k)
 

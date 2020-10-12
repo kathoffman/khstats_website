@@ -275,7 +275,7 @@ And... that's it! Those are our superlearner predictions for the full data set.
 
 We can now modify Step 7 and Step 8 to accommodate any new observation(s):
 
->1.Use the fits from each base learner to obtain base learner predictions for the new observation(s).<br>2. Plug those base learner predictions into the metalearner fit.
+>To predict on new data:<br><br>1.Use the fits from each base learner to obtain base learner predictions for the new observation(s) (similar to Step 7).<br><br>2. Plug those base learner predictions into the metalearner fit (similar to Step 8).
 
 We can generate a single `new_obs`ervation to see how this would work in practice.
 

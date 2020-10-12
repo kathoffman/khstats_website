@@ -838,11 +838,7 @@ pred_1c
 </html>
 <p><img src="/img/sl_steps/step4.png" style="width:32.0%" /></p>
 <p>We’ll want to get those predictions for <em>every</em> fold. So, using your favorite <code>for</code> loop, <code>apply</code> statement, or <code>map</code>ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in <code>obs</code>ervations.</p>
-<p>The way I chose to code this was to:</p>
-<ol style="list-style-type: decimal">
-<li><p>make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data)</p></li>
-<li><p>Using <code>map_dfr()</code> from the <code>purrr</code> package to repeat over all 10 CV folds and then save the results in a new data frame.</p></li>
-</ol>
+<p>The way I chose to code this was to make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data), then use <code>map_dfr()</code> from the <code>purrr</code> package to repeat over all 10 CV folds. I saved the results in a new data frame called <code>cv_preds</code>.</p>
 <pre class="r"><code>cv_folds &lt;- as.list(1:k)
 names(cv_folds) &lt;- paste0(&quot;fold&quot;,1:k)
 
