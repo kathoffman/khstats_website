@@ -738,7 +738,7 @@ sl_predictions
 </html>
 <p>We can now modify Step 7 and Step 8 to accommodate any new observation(s):</p>
 <blockquote>
-<p>1.Use the fits from each base learner to obtain base learner predictions for the new observation(s).<br>2. Plug those base learner predictions into the metalearner fit.</p>
+<p>To predict on new data:<br><br>1.Use the fits from each base learner to obtain base learner predictions for the new observation(s) (similar to Step 7).<br><br>2. Plug those base learner predictions into the metalearner fit (similar to Step 8).</p>
 </blockquote>
 <p>We can generate a single <code>new_obs</code>ervation to see how this would work in practice.</p>
 <pre class="r"><code>new_obs &lt;- tibble(x1 = .5, x2 = 0, x3 = 0, x4 = -3)
