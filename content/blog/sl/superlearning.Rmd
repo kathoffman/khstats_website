@@ -155,11 +155,7 @@ knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = "First
 
 We'll want to get those predictions for *every* fold. So, using your favorite `for` loop, `apply` statement, or `map`ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions -- one for every point in `obs`ervations.
 
-The way I chose to code this was to:
-
-1. make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data)
-
-2. Using `map_dfr()` from the `purrr` package to repeat over all 10 CV folds and then save the results in a new data frame.
+The way I chose to code this was to make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data), then use `map_dfr()` from the `purrr` package to repeat over all 10 CV folds. I saved the results in a new data frame called `cv_preds`.
 
 ```{r}
 cv_folds <- as.list(1:k)
