@@ -275,7 +275,7 @@ And... that's it! Those are our superlearner predictions for the full data set.
 
 We can now modify Step 7 and Step 8 to accommodate any new observation(s):
 
->To predict on new data:<br><br>1.Use the fits from each base learner to obtain base learner predictions for the new observation(s) (similar to Step 7).<br><br>2. Plug those base learner predictions into the metalearner fit (similar to Step 8).
+>**To predict on new data:**<br>&nbsp;1. Use the fits from each base learner to obtain base learner predictions for the new observation(s).<br>&nbsp;2. Plug those base learner predictions into the metalearner fit.
 
 We can generate a single `new_obs`ervation to see how this would work in practice.
 
@@ -354,11 +354,29 @@ For more information on the `SuperLearner` package, take a look at this [vignett
 
 ## Alternative packages to superlearn
 
-Other packages freely available in `R` that can be used to implement the superlearner algorithm include `sl3` (an update to the older `Superlearner` package), `h2o`, `ml3`, and `caretEnsemble`. I previously wrote a [brief demo](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo.
+Other packages freely available in `R` that can be used to implement the superlearner algorithm include [`sl3`](https://tlverse.org/tlverse-handbook/sl3.html) (an update to the original `Superlearner` package), [`h2o`](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/stacked-ensembles.html), and [`caretEnsemble`](https://rdrr.io/cran/caretEnsemble/f/vignettes/caretEnsemble-intro.Rmd. I previously wrote a [brief demo](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo. At this time [`tidymodels`](https://www.tidymodels.org/) does not yet support superlearning directly, but Alex Hayes previously wrote a blog post on [using `tidymodels` infrastructure to implement superlearning](https://www.alexpghayes.com/blog/implementing-the-super-learner-with-tidymodels/).
 
-Python aficionados might find this [blog post](https://machinelearningmastery.com/super-learner-ensemble-in-python/) useful. I have never performed superlearning in Python, but if I had to, I would probably try `h2o` first. H2o is available in many programming languages and their Chief Machine Learning Scientist, Erin Ledell, was an author of the original `SuperLearner` package.
+# Coming soon... when prediction is not the end goal
+
+When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference. This is the reason I was reading *Targeted Learning* in the first place; I am a statistician with collaborators who typically want estimates of treatment effects with confidence intervals, not predictions!
+
+I'm working on a similar visual guide for one such semiparametric estimation method: [Targeted Maximum Likelihood Estimation](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf) (TMLE)). TMLE allows the use of flexible statistical models like the superlearner algorithm when estimating treatment effects. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. If you're curious about TMLE in the meantime, I really like [this tutorial](https://migariane.github.io/TMLE.nb.html) by Miguel Angel Luque Fernandez.
+
+<html>
+   <head>
+      <title>HTML Image as link</title>
+   </head>
+   <body>
+      <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+         <img alt="cheatsheet" src="/img/TMLE.jpg"
+         width=100%">
+      </a>
+   </body>
+</html>
 
 # Appendix
+
+These sections contain a bit of extra information on the superlearning algorithm, such as: intuition on manually computing the loss function of interest, explanation of the discrete superlearner, brief advice on choosing a metalearner, and a different summary visual provided in the *Targeted Learning* book.
 
 ### Manually computing the MSE
 
@@ -446,26 +464,6 @@ The metalearner should change with the goals of the prediction algorithm and the
 The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the *Targeted Learning* book:
 
 ![](/img/sl_diagram.png)
-
-
-# Coming soon... when prediction is not the end goal
-
-When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference (for example, Targeted Maximum Likelihood Estimation (TMLE)). This allows the use of flexible models and minimal assumptions placed on the distribution of the data.
-
-I made a similar [visual guide for TMLE](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf). If you found this superlearning tutorial helpful, check back here later for another one on TMLE. If you're curious about TMLE in the meantime, I really like [this tutorial](https://migariane.github.io/TMLE.nb.html) by Miguel Angel Luque Fernandez.
-
-<html>
-   <head>
-      <title>HTML Image as link</title>
-   </head>
-   <body>
-      <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
-         <img alt="cheatsheet" src="/img/TMLE.jpg"
-         width=100%">
-      </a>
-   </body>
-</html>
-
 
 
 # Acknowledgments

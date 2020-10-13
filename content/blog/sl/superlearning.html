@@ -731,14 +731,14 @@ sl_predictions
 <html>
 <body>
 <h2 style="color:#c30a0a">
-<strong>Step 9: Obtaining predictions on new data
+<strong>Step 9: Obtain predictions on new data
 </h1>
 </strong>
 </body>
 </html>
 <p>We can now modify Step 7 and Step 8 to accommodate any new observation(s):</p>
 <blockquote>
-<p>To predict on new data:<br><br>1.Use the fits from each base learner to obtain base learner predictions for the new observation(s) (similar to Step 7).<br><br>2. Plug those base learner predictions into the metalearner fit (similar to Step 8).</p>
+<p><strong>To predict on new data:</strong><br> 1. Use the fits from each base learner to obtain base learner predictions for the new observation(s).<br> 2. Plug those base learner predictions into the metalearner fit.</p>
 </blockquote>
 <p>We can generate a single <code>new_obs</code>ervation to see how this would work in practice.</p>
 <pre class="r"><code>new_obs &lt;- tibble(x1 = .5, x2 = 0, x3 = 0, x4 = -3)
@@ -849,12 +849,30 @@ sl_predictions
 </div>
 <div id="alternative-packages-to-superlearn" class="section level2">
 <h2>Alternative packages to superlearn</h2>
-<p>Other packages freely available in <code>R</code> that can be used to implement the superlearner algorithm include <code>sl3</code> (an update to the older <code>Superlearner</code> package), <code>h2o</code>, <code>ml3</code>, and <code>caretEnsemble</code>. I previously wrote a <a href="https://www.khstats.com/blog/sl3_demo/sl/">brief demo</a> on using <code>sl3</code> for an NYC R-Ladies demo.</p>
-<p>Python aficionados might find this <a href="https://machinelearningmastery.com/super-learner-ensemble-in-python/">blog post</a> useful. I have never performed superlearning in Python, but if I had to, I would probably try <code>h2o</code> first. H2o is available in many programming languages and their Chief Machine Learning Scientist, Erin Ledell, was an author of the original <code>SuperLearner</code> package.</p>
+<p>Other packages freely available in <code>R</code> that can be used to implement the superlearner algorithm include <a href="https://tlverse.org/tlverse-handbook/sl3.html"><code>sl3</code></a> (an update to the original <code>Superlearner</code> package), <a href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/stacked-ensembles.html"><code>h2o</code></a>, and [<code>caretEnsemble</code>](<a href="https://rdrr.io/cran/caretEnsemble/f/vignettes/caretEnsemble-intro.Rmd" class="uri">https://rdrr.io/cran/caretEnsemble/f/vignettes/caretEnsemble-intro.Rmd</a>. I previously wrote a <a href="https://www.khstats.com/blog/sl3_demo/sl/">brief demo</a> on using <code>sl3</code> for an NYC R-Ladies demo. At this time <a href="https://www.tidymodels.org/"><code>tidymodels</code></a> does not yet support superlearning directly, but Alex Hayes previously wrote a blog post on <a href="https://www.alexpghayes.com/blog/implementing-the-super-learner-with-tidymodels/">using <code>tidymodels</code> infrastructure to implement superlearning</a>.</p>
 </div>
+</div>
+<div id="coming-soon-when-prediction-is-not-the-end-goal" class="section level1">
+<h1>Coming soon… when prediction is not the end goal</h1>
+<p>When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference. This is the reason I was reading <em>Targeted Learning</em> in the first place; I am a statistician with collaborators who typically want estimates of treatment effects with confidence intervals, not predictions!</p>
+<p>I’m working on a similar visual guide for one such semiparametric estimation method: <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">Targeted Maximum Likelihood Estimation</a> (TMLE)). TMLE allows the use of flexible statistical models like the superlearner algorithm when estimating treatment effects. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. If you’re curious about TMLE in the meantime, I really like <a href="https://migariane.github.io/TMLE.nb.html">this tutorial</a> by Miguel Angel Luque Fernandez.</p>
+<html>
+<head>
+<title>
+HTML Image as link
+</title>
+</head>
+<body>
+<a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+<img alt="cheatsheet" src="/img/TMLE.jpg"
+         width=100%">
+</a>
+</body>
+</html>
 </div>
 <div id="appendix" class="section level1">
 <h1>Appendix</h1>
+<p>These sections contain a bit of extra information on the superlearning algorithm, such as: intuition on manually computing the loss function of interest, explanation of the discrete superlearner, brief advice on choosing a metalearner, and a different summary visual provided in the <em>Targeted Learning</em> book.</p>
 <div id="manually-computing-the-mse" class="section level3">
 <h3>Manually computing the MSE</h3>
 <p>Let’s say we have chosen our loss function of interest to be the Mean Squared Error (MSE). We could first compute the squared error <span class="math inline">\((y - \hat{y})^2\)</span> for each CV prediction A, B, and C.</p>
@@ -952,24 +970,6 @@ cv_mse_c
 <p>The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the <em>Targeted Learning</em> book:</p>
 <p><img src="/img/sl_diagram.png" /></p>
 </div>
-</div>
-<div id="coming-soon-when-prediction-is-not-the-end-goal" class="section level1">
-<h1>Coming soon… when prediction is not the end goal</h1>
-<p>When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference (for example, Targeted Maximum Likelihood Estimation (TMLE)). This allows the use of flexible models and minimal assumptions placed on the distribution of the data.</p>
-<p>I made a similar <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">visual guide for TMLE</a>. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. If you’re curious about TMLE in the meantime, I really like <a href="https://migariane.github.io/TMLE.nb.html">this tutorial</a> by Miguel Angel Luque Fernandez.</p>
-<html>
-<head>
-<title>
-HTML Image as link
-</title>
-</head>
-<body>
-<a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
-<img alt="cheatsheet" src="/img/TMLE.jpg"
-         width=100%">
-</a>
-</body>
-</html>
 </div>
 <div id="acknowledgments" class="section level1">
 <h1>Acknowledgments</h1>
