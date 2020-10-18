@@ -3,6 +3,7 @@ title: "Whatcha measuring?? Collider Bias Examples in R"
 author: "Katherine Hoffman"
 date: 2020-10-13T21:13:14-05:00
 categories: ["statistics"]
+draft: true
 tags: ["causal inference", "collider bias", "statistics"]
 ---
 
