@@ -749,7 +749,7 @@ new_pred_df &lt;- tibble(&quot;pred_a&quot; = new_pred_a, &quot;pred_b&quot; = n
 predict(sl_fit, newdata = new_pred_df)</code></pre>
 <pre><code>##         1 
 ## 0.1181052</code></pre>
-<p>Our superlearner model predicts that an observation with predictors <span class="math inline">\(x1=.5\)</span>, <span class="math inline">\(x2=0\)</span>, <span class="math inline">\(x3=0\)</span>, and <span class="math inline">\(x4=-3\)</span> will have an outcome of 0.118. Good to know!</p>
+<p>Our superlearner model predicts that an observation with predictors <span class="math inline">\(X_1=.5\)</span>, <span class="math inline">\(X_2=0\)</span>, <span class="math inline">\(X_3=0\)</span>, and <span class="math inline">\(X_4=-3\)</span> will have an outcome of <span class="math inline">\(Y=0.118\)</span>.</p>
 <html>
 <body>
 <h2 style="color:#c30a0a">
@@ -849,7 +849,8 @@ sl_predictions
 </div>
 <div id="alternative-packages-to-superlearn" class="section level2">
 <h2>Alternative packages to superlearn</h2>
-<p>Other packages freely available in <code>R</code> that can be used to implement the superlearner algorithm include <a href="https://tlverse.org/tlverse-handbook/sl3.html"><code>sl3</code></a> (an update to the original <code>Superlearner</code> package), <a href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/stacked-ensembles.html"><code>h2o</code></a>, and <a href="https://rdrr.io/cran/caretEnsemble/f/vignettes/caretEnsemble-intro.Rmd"><code>caretEnsemble</code></a>. I previously wrote a <a href="https://www.khstats.com/blog/sl3_demo/sl/">brief demo</a> on using <code>sl3</code> for an NYC R-Ladies demo. At this time <a href="https://www.tidymodels.org/"><code>tidymodels</code></a> does not yet support superlearning directly, but Alex Hayes previously wrote a blog post on <a href="https://www.alexpghayes.com/blog/implementing-the-super-learner-with-tidymodels/">using <code>tidymodels</code> infrastructure to implement superlearning</a>.</p>
+<p>Other packages freely available in <code>R</code> that can be used to implement the superlearner algorithm include <a href="https://tlverse.org/tlverse-handbook/sl3.html"><code>sl3</code></a> (an update to the original <code>Superlearner</code> package), <a href="https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/stacked-ensembles.html"><code>h2o</code></a>, and <a href="https://rdrr.io/cran/caretEnsemble/f/vignettes/caretEnsemble-intro.Rmd"><code>caretEnsemble</code></a>. I previously wrote a <a href="https://www.khstats.com/blog/sl3_demo/sl/">brief demo</a> on using <code>sl3</code> for an NYC R-Ladies demo.</p>
+<p>The authors of <code>tidymodels</code> – a suite of packages for machine learning including <code>recipes</code>, <code>parsnip</code>, and <code>rsample</code> – recently came out with a new package to perform superlearning/stacking called <a href="%5Bhttps://stacks.tidymodels.org/articles/basics.html"><code>stacks</code></a>. Prior to this, Alex Hayes wrote a <a href="https://www.alexpghayes.com/blog/implementing-the-super-learner-with-tidymodels/">blog post</a> on using <code>tidymodels</code> infrastructure to implement superlearning.</p>
 </div>
 </div>
 <div id="coming-soon-when-prediction-is-not-the-end-goal" class="section level1">

@@ -288,7 +288,7 @@ new_pred_df <- tibble("pred_a" = new_pred_a, "pred_b" = new_pred_b, "pred_c" = n
 predict(sl_fit, newdata = new_pred_df)
 ```
 
-Our superlearner model predicts that an observation with predictors $x1=.5$, $x2=0$, $x3=0$, and $x4=-3$ will have an outcome of `r round(predict(sl_fit, newdata = new_pred_df), 3)`. Good to know!
+Our superlearner model predicts that an observation with predictors $X_1=.5$, $X_2=0$, $X_3=0$, and $X_4=-3$ will have an outcome of $Y=`r round(predict(sl_fit, newdata = new_pred_df), 3)`$.
 
 <html>
 <body>
@@ -354,7 +354,9 @@ For more information on the `SuperLearner` package, take a look at this [vignett
 
 ## Alternative packages to superlearn
 
-Other packages freely available in `R` that can be used to implement the superlearner algorithm include [`sl3`](https://tlverse.org/tlverse-handbook/sl3.html) (an update to the original `Superlearner` package), [`h2o`](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/stacked-ensembles.html), and [`caretEnsemble`](https://rdrr.io/cran/caretEnsemble/f/vignettes/caretEnsemble-intro.Rmd). I previously wrote a [brief demo](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo. At this time [`tidymodels`](https://www.tidymodels.org/) does not yet support superlearning directly, but Alex Hayes previously wrote a blog post on [using `tidymodels` infrastructure to implement superlearning](https://www.alexpghayes.com/blog/implementing-the-super-learner-with-tidymodels/).
+Other packages freely available in `R` that can be used to implement the superlearner algorithm include [`sl3`](https://tlverse.org/tlverse-handbook/sl3.html) (an update to the original `Superlearner` package), [`h2o`](https://docs.h2o.ai/h2o/latest-stable/h2o-docs/data-science/stacked-ensembles.html), and [`caretEnsemble`](https://rdrr.io/cran/caretEnsemble/f/vignettes/caretEnsemble-intro.Rmd). I previously wrote a [brief demo](https://www.khstats.com/blog/sl3_demo/sl/) on using `sl3` for an NYC R-Ladies demo.
+
+The authors of `tidymodels` -- a suite of packages for machine learning including `recipes`, `parsnip`, and `rsample` -- recently came out with a new package to perform superlearning/stacking called [`stacks`]([https://stacks.tidymodels.org/articles/basics.html). Prior to this, Alex Hayes wrote a [blog post](https://www.alexpghayes.com/blog/implementing-the-super-learner-with-tidymodels/) on using `tidymodels` infrastructure to implement superlearning.
 
 # Coming soon... when prediction is not the end goal
 
