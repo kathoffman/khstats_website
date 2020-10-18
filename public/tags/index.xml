@@ -5,7 +5,7 @@
     <link>/tags/</link>
       <atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     <description>Tags</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Oct 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 13 Oct 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>Tags</title>
@@ -15,8 +15,24 @@
     <item>
       <title>causal inference</title>
       <link>/tags/causal-inference/</link>
-      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <pubDate>Tue, 13 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/tags/causal-inference/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>collider bias</title>
+      <link>/tags/collider-bias/</link>
+      <pubDate>Tue, 13 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/collider-bias/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Tue, 13 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     
@@ -81,14 +97,6 @@
       <link>/tags/stacking/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/tags/stacking/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>statistics</title>
-      <link>/tags/statistics/</link>
-      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/statistics/</guid>
       <description></description>
     </item>
     

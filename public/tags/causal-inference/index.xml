@@ -5,12 +5,1205 @@
     <link>/tags/causal-inference/</link>
       <atom:link href="/tags/causal-inference/index.xml" rel="self" type="application/rss+xml" />
     <description>causal inference</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Oct 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 13 Oct 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>causal inference</title>
       <link>/tags/causal-inference/</link>
     </image>
+    
+    <item>
+      <title>Whatcha measuring?? Collider Bias Examples in R</title>
+      <link>/blog/collider-bias/race/</link>
+      <pubDate>Tue, 13 Oct 2020 21:13:14 -0500</pubDate>
+      <guid>/blog/collider-bias/race/</guid>
+      <description>
+
+
+&lt;p&gt;Anyways, I wholeheartedly agree with this. I find many of the tools in causal inference (specifically Directed Acyclic Graphs) to be incredibly useful in recognizing what I &lt;em&gt;cannot&lt;/em&gt; unbiasedly estimate.&lt;/p&gt;
+&lt;p&gt;I am an expert lurker on the statistics twitter (war) threads is a favorite pasttime of mine, so I was admittedly a bit sad it didn’t gain more steam.&lt;/p&gt;
+&lt;p&gt;So now your investigator wants to know the attributable mortality of race once someone is hospitalized. “We don’t want your causal inference, we just want the &lt;em&gt;independent association&lt;/em&gt;!” they tell you emphatically. “We &lt;em&gt;PROMISE&lt;/em&gt; we won’t talk about anything causally!” You think about Miguel Hernan’s &lt;em&gt;The C-Word&lt;/em&gt; paper. You don’t believe them at all, but you let it go, for a moment.&lt;/p&gt;
+&lt;p&gt;Let’s start with simulating race. Let’s say our population of interest is approximately 50% of one race and 50% of another. We’ll simulate that with a binomial distribution.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;race &amp;lt;- rbinom(n, 1, 0.5) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we’ll simulate COVID-19 disease severity. Although there is some evidence suggesting COVID-19 disease severity is not random (i.e. it could be related to viral load, blood type, etc.), let’s assume for the sake of example that it is completely random.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;disease_severity &amp;lt;- rbinom(n, 1, 0.5)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now let’s think about a common adjustment scientists use to reduce confounding of race: socioeconomic status (SES). SES is unarguably affected by race. Again, for simplicity, let’s pretend SES is a binary outcome. It could represent if a person with COVID-19 lives “above” or “below” the poverty line. We’ll simulate SES as a binomial distribution where the probability someone will be above the poverty line is affected by their race.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ses &amp;lt;- rbinom(n, 1, plogis(-race))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We’ve made our population, so now let’s figure out whether we’re actually going to get to see each person’s data. We only have access to COVID-19 patients who were hospitalized. Whether or not someone is hospitalized is affected by their disease severity, of course.&lt;/p&gt;
+&lt;p&gt;However, let’s say for our example that hospitalization status is also affected by a person’s SES (whether or not they have insurance may affect their decision to go to the hospital, for example). It also may be affected by some part of the social construct that we use to define race/ethnicity. If individuals in one race/ethnicity are more or less likely to go to the hospital than individuals of another race/ethnicity, then that will affect hospitalization. This is very reasonable in COVID-19 (and in other diseases) where Black and Hispanic persons are disproportionately dying. If a person knows a family member or friend who is on a …&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hospitalized &amp;lt;- rbinom(n, 1, plogis(-3 + 2 * disease_severity + 2 * ses + 3 * race))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, we simulate our outcome. Let’s keep it simple and say whether or not someone dies is directly affected by disease severity and whether or not the person is cared for in a hospital:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;death &amp;lt;- rbinom(n, 1, plogis(-(2 * disease_severity + hospitalized)))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s put this simulated data into a data frame. I’m going to relabel the data with interpretable to make it clearer how harmful doing these analyses can be.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;covid_df &amp;lt;-
+  data.frame(
+  race = factor(race, levels=c(1,0), labels=c(&amp;quot;White&amp;quot;,&amp;quot;Black&amp;quot;)),
+  disease_severity = factor(disease_severity, levels=c(1,0), labels=c(&amp;quot;Mild&amp;quot;,&amp;quot;Severe&amp;quot;)),
+  ses = factor(ses, levels=c(0,1), labels=c(&amp;quot;Above poverty line&amp;quot;, &amp;quot;Below poverty line&amp;quot;)),
+  hospitalized = factor(hospitalized, levels=0:1, labels=c(&amp;quot;No&amp;quot;,&amp;quot;Yes&amp;quot;)),
+  death = factor(death, levels=0:1, labels=c(&amp;quot;No&amp;quot;,&amp;quot;Yes&amp;quot;))
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now I’ll make a data frame that contains only the patients who were put in the hospital.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;hospitalized_df &amp;lt;-
+  covid_df %&amp;gt;%
+  filter(hospitalized == &amp;quot;Yes&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The association between race and mortality for people who are hospitalized. Can you get the true association?&lt;/p&gt;
+&lt;p&gt;Let’s pretend more a moment that you think you can. You’re a pro at &lt;code&gt;ggplot2&lt;/code&gt; so you whip out a nice bar chart. Look, race and mortality in hospitalized patients! It’s Figure 1 of a paper if I’ve ever seen one!&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;race_death_count &amp;lt;-
+  hospitalized_df %&amp;gt;%
+  group_by(race) %&amp;gt;%
+  count(death) %&amp;gt;%
+  mutate(sum_n = sum(n)) %&amp;gt;%
+  ungroup() %&amp;gt;%
+  mutate(prop = n/sum_n)
+
+race_death_count %&amp;gt;%
+  filter(death == &amp;quot;Yes&amp;quot;) %&amp;gt;%
+  ggplot(aes(x=race, y=prop)) +
+  geom_bar(stat=&amp;quot;identity&amp;quot;) +
+  theme_classic() +
+  labs(x=&amp;quot;Race&amp;quot;,y=&amp;quot;In-hospital Mortality&amp;quot;,title=&amp;quot;Race and Mortality in COVID-19&amp;quot;,subtitle=&amp;quot;Among Hospitalized Patients&amp;quot;) +
+  scale_y_continuous(labels = scales::percent_format(), expand=c(0,0), limits=c(0,.25)) +
+  geom_text(aes(label=paste(n, &amp;quot;/&amp;quot;, sum_n), y=prop+.01))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/blog/collider-bias/race_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;384&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pretty_logistic_table &amp;lt;- function(model_fit) {
+  model_fit %&amp;gt;%
+    broom::tidy(exponentiate=T, conf.int=T) %&amp;gt;%
+    filter(term != &amp;quot;(Intercept)&amp;quot;) %&amp;gt;%
+     mutate( term = case_when(term == &amp;quot;raceBlack&amp;quot; ~ &amp;quot;Race: Black&amp;quot;,
+                             term == &amp;quot;disease_severitySevere&amp;quot; ~ &amp;quot;Disease severity: Severe&amp;quot;,
+                             term == &amp;quot;sesBelow poverty line&amp;quot; ~ &amp;quot;SES: Below poverty level&amp;quot;,
+                             TRUE ~ term),
+           odds_ratio = paste0(round(estimate,1),&amp;quot; (&amp;quot;,round(conf.low,1),&amp;quot;, &amp;quot;,round(conf.high,1),&amp;quot;)&amp;quot;),
+           p_value = case_when(p.value &amp;lt; .001 ~ &amp;quot;&amp;lt;.001&amp;quot;,
+                               TRUE ~ as.character(round(p.value, 3)))) %&amp;gt;%
+             select(term, odds_ratio, p_value) %&amp;gt;%
+    gt::gt() %&amp;gt;%
+    gt::cols_label(
+       term = &amp;quot;Coefficient&amp;quot;,
+               odds_ratio = &amp;quot;Odds Ratio (95% CI)&amp;quot;,
+               p_value = &amp;quot;P-value&amp;quot;
+    )
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;start by just looking at the unadjusted Odds Ratio of &lt;strong&gt;race&lt;/strong&gt; on &lt;strong&gt;mortality&lt;/strong&gt;. Simple enough&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;glm(death ~ race, data = hospitalized_df, family = binomial()) %&amp;gt;%
+  pretty_logistic_table()&lt;/code&gt;&lt;/pre&gt;
+&lt;style&gt;html {
+  font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
+}
+
+#fefxepmids .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#fefxepmids .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fefxepmids .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#fefxepmids .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#fefxepmids .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fefxepmids .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#fefxepmids .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#fefxepmids .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#fefxepmids .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#fefxepmids .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#fefxepmids .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#fefxepmids .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fefxepmids .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#fefxepmids .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#fefxepmids .gt_from_md &gt; :first-child {
+  margin-top: 0;
+}
+
+#fefxepmids .gt_from_md &gt; :last-child {
+  margin-bottom: 0;
+}
+
+#fefxepmids .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#fefxepmids .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#fefxepmids .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fefxepmids .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#fefxepmids .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#fefxepmids .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#fefxepmids .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#fefxepmids .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fefxepmids .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#fefxepmids .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#fefxepmids .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#fefxepmids .gt_left {
+  text-align: left;
+}
+
+#fefxepmids .gt_center {
+  text-align: center;
+}
+
+#fefxepmids .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#fefxepmids .gt_font_normal {
+  font-weight: normal;
+}
+
+#fefxepmids .gt_font_bold {
+  font-weight: bold;
+}
+
+#fefxepmids .gt_font_italic {
+  font-style: italic;
+}
+
+#fefxepmids .gt_super {
+  font-size: 65%;
+}
+
+#fefxepmids .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+&lt;/style&gt;
+&lt;div id=&#34;fefxepmids&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+  
+  &lt;thead class=&#34;gt_col_headings&#34;&gt;
+    &lt;tr&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;Coefficient&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;Odds Ratio (95% CI)&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;P-value&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody class=&#34;gt_table_body&#34;&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;Race: Black&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;0.7 (0.5, 0.9)&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;0.002&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  
+  
+&lt;/table&gt;&lt;/div&gt;
+&lt;p&gt;“we’re not interested in this,”
+but what are you interested in, then? what meaning does it hold to conclude that
+perhaps you’re going to say that providers don’t have any additional effect on patients; there’s no inherent racism. but is that actually what you can conclude? all your estimates are now biased&lt;/p&gt;
+&lt;p&gt;statistician drawing dag
+I. don’t. want. causation.
+“okay, great!”
+I just want to show that within my hospitalized patients
+&lt;em&gt;whiteboard, draws H&lt;/em&gt;
+there is an effect of race
+&lt;em&gt;draws race&lt;/em&gt;
+on mortality
+&lt;em&gt;draws mortality&lt;/em&gt;
+independent of confounders
+&lt;em&gt;draws confounders&lt;/em&gt;
+WITHIN A HOSPITALIZED POPULATION
+&lt;em&gt;draws box&lt;/em&gt;
+Yep, still can’t answer that. could be correlated, could not be
+THAT’SWHAT I WANT TO WRITE ABOUT
+but what are you going to SAY about that?!?!
+&#34;This estimate of correlation between race and mortality in a hospitalized population – which could be completely incorrect, either in the null or wrong direction – is evidence of… What??? The point of research is to ask a question you can set up an experiment to answer, and then to answer it as best you can, not ask a question you &lt;em&gt;know&lt;/em&gt; you cannot answer and then conjecture about the number you obtain.&lt;/p&gt;
+&lt;p&gt;but everyone knows Black people are set up for failure in the healthcare system, this will only be accumulating evidence
+but what if it’s not right, what if you find being black is protective, or being Black has no effect on mortality. Any of these are possible!&lt;/p&gt;
+&lt;p&gt;There’s no way there won’t be an effect of race on mortality among hospitalized patients. Race …&lt;/p&gt;
+&lt;p&gt;So why are you doing this study?&lt;/p&gt;
+&lt;p&gt;So what do you suggest I do?&lt;/p&gt;
+&lt;p&gt;I suggest you leave this research question to the people who actually have the population level data on race, hospitalization rates, and mortality, to answer the effect of race on mortality. Or, I suggest you go find the people who have that data and try to team up with them. I’m not saying your question is not important, I’m saying you don’t have the data to correctly answer it, and whatever estimate you come up with will be incorrect, and could do more harm than good.&lt;/p&gt;
+&lt;p&gt;Headlines: RACE IS A RISK FACTOR FOR DYING FROM COVID-19 IN HOSPITALIZED PATIENTS&lt;/p&gt;
+&lt;p&gt;Fitting a model among the entire population and hospitalized patients only:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;glm(death ~ race + disease_severity + ses, data=covid_df, family = binomial()) %&amp;gt;%
+  pretty_logistic_table()&lt;/code&gt;&lt;/pre&gt;
+&lt;style&gt;html {
+  font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
+}
+
+#eexirarxtj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#eexirarxtj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#eexirarxtj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#eexirarxtj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#eexirarxtj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#eexirarxtj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#eexirarxtj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#eexirarxtj .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#eexirarxtj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#eexirarxtj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#eexirarxtj .gt_from_md &gt; :first-child {
+  margin-top: 0;
+}
+
+#eexirarxtj .gt_from_md &gt; :last-child {
+  margin-bottom: 0;
+}
+
+#eexirarxtj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#eexirarxtj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#eexirarxtj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eexirarxtj .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#eexirarxtj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#eexirarxtj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#eexirarxtj .gt_left {
+  text-align: left;
+}
+
+#eexirarxtj .gt_center {
+  text-align: center;
+}
+
+#eexirarxtj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#eexirarxtj .gt_font_normal {
+  font-weight: normal;
+}
+
+#eexirarxtj .gt_font_bold {
+  font-weight: bold;
+}
+
+#eexirarxtj .gt_font_italic {
+  font-style: italic;
+}
+
+#eexirarxtj .gt_super {
+  font-size: 65%;
+}
+
+#eexirarxtj .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+&lt;/style&gt;
+&lt;div id=&#34;eexirarxtj&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+  
+  &lt;thead class=&#34;gt_col_headings&#34;&gt;
+    &lt;tr&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;Coefficient&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;Odds Ratio (95% CI)&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;P-value&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody class=&#34;gt_table_body&#34;&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;Race: Black&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;2 (1.7, 2.3)&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;&amp;lt;.001&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;Disease severity: Severe&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;11.7 (9.8, 14)&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;&amp;lt;.001&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;SES: Below poverty level&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;0.7 (0.6, 0.9)&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;&amp;lt;.001&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  
+  
+&lt;/table&gt;&lt;/div&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;glm(death ~ race + disease_severity + ses, data=hospitalized_df, family = binomial())  %&amp;gt;%
+  pretty_logistic_table()&lt;/code&gt;&lt;/pre&gt;
+&lt;style&gt;html {
+  font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
+}
+
+#wfcbehcipe .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#wfcbehcipe .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#wfcbehcipe .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#wfcbehcipe .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#wfcbehcipe .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#wfcbehcipe .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#wfcbehcipe .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#wfcbehcipe .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wfcbehcipe .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wfcbehcipe .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#wfcbehcipe .gt_from_md &gt; :first-child {
+  margin-top: 0;
+}
+
+#wfcbehcipe .gt_from_md &gt; :last-child {
+  margin-bottom: 0;
+}
+
+#wfcbehcipe .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#wfcbehcipe .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#wfcbehcipe .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wfcbehcipe .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wfcbehcipe .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#wfcbehcipe .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#wfcbehcipe .gt_left {
+  text-align: left;
+}
+
+#wfcbehcipe .gt_center {
+  text-align: center;
+}
+
+#wfcbehcipe .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#wfcbehcipe .gt_font_normal {
+  font-weight: normal;
+}
+
+#wfcbehcipe .gt_font_bold {
+  font-weight: bold;
+}
+
+#wfcbehcipe .gt_font_italic {
+  font-style: italic;
+}
+
+#wfcbehcipe .gt_super {
+  font-size: 65%;
+}
+
+#wfcbehcipe .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+&lt;/style&gt;
+&lt;div id=&#34;wfcbehcipe&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+  
+  &lt;thead class=&#34;gt_col_headings&#34;&gt;
+    &lt;tr&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;Coefficient&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;Odds Ratio (95% CI)&lt;/th&gt;
+      &lt;th class=&#34;gt_col_heading gt_columns_bottom_border gt_left&#34; rowspan=&#34;1&#34; colspan=&#34;1&#34;&gt;P-value&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody class=&#34;gt_table_body&#34;&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;Race: Black&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;1 (0.7, 1.3)&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;0.856&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;Disease severity: Severe&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;9.2 (7, 12.2)&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;&amp;lt;.001&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;SES: Below poverty level&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;1.1 (0.8, 1.4)&lt;/td&gt;
+      &lt;td class=&#34;gt_row gt_left&#34;&gt;0.695&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+  
+  
+&lt;/table&gt;&lt;/div&gt;
+&lt;p&gt;We miss the effect of race (through hospitalization) on death.&lt;/p&gt;
+&lt;p&gt;There is no effect of race on mortality in hospitalized patients… but there is definitely an effect of race on mortality in the full population, because it affects whether someone gets hospitalized.&lt;/p&gt;
+&lt;p&gt;So what are you estimating? What are you going to do with that information?&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>An Illustrated Guide to Targeted Minimum Loss-based Estimation</title>
@@ -20,87 +1213,50 @@
       <description>
 
 
-&lt;blockquote&gt;
-&lt;p&gt;A Visual Guide and Introductory R Tutorial on TMLE aimed at applied scientists with statistics training.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(kableExtra)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Hello! I’m excited that you’re excited to learn about Targeted Maximum Likelihood Estimation (TMLE). I’ve tried to lay out TMLE in the simplest terms possible for an applied analyst who wants to understand the motivation and/or algorithm behind TMLE.&lt;/p&gt;
+&lt;p&gt;For better or for worse, I interpret statistical algorithms very visually, and the way I learned TMLE was by tracking every single step with a little colored data frame and pseudo-&lt;code&gt;R&lt;/code&gt; code. I eventually formalized that thought process into a one page “cheat sheet” in case it can help anyone else:&lt;/p&gt;
+&lt;p&gt;It is available as an 8.5x11&#34; pdf on my &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;Github&lt;/a&gt; in case you’d like to print it out for reference.&lt;/p&gt;
+&lt;p&gt;I’ll now discuss the motivation behind TMLE, the algorithm (step by step, with real &lt;code&gt;R&lt;/code&gt; code), and a tiny bit on &lt;em&gt;why&lt;/em&gt; it works and where you can learn more.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;div id=&#34;tmle-in-two-sentences&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE in two sentences&lt;/h1&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to &lt;strong&gt;estimate a causal parameter of interest using&lt;/strong&gt;:&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;The general form of Targeted Maximum Likelihood Estimation (TMLE) allows you to &lt;strong&gt;estimate a statistical estimand of interest using&lt;/strong&gt;:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;the expected outcome of an individual, given the treatment they received and their baseline confounders&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;the probability an individual received the treatment of interest, given their baseline confounders; also known as their propensity score&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;the probability an individual received the treatment of interest, given their baseline confounders (propensity score)&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;These estimates can come from regressions we commonly classify as machine learning (ML), but the &lt;strong&gt;overall estimate of the treatment effect will still have valid confidence intervals&lt;/strong&gt;, unlike estimates normally obtained from ML&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;These estimates can come from flexible statistical models we commonly categorize as machine learning, but the &lt;strong&gt;overall estimate of the treatment effect will still have valid confidence intervals&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;hr /&gt;
+&lt;div id=&#34;wait-what-about-causal-inference&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Wait, what about causal inference??&lt;/h3&gt;
+&lt;p&gt;Now you might be thinking, “Wait a second! I only ever hear about TMLE in the context of causal inference.” It is true that TMLE is often talked about in the context of causal inference; however, by itself, TMLE is not causal inference. TMLE is a statistical estimation method which can be used for estimating parameters that do (or don’t!) have a causal interpretation.&lt;/p&gt;
+&lt;p&gt;TMLE was developed for causal inference because those who apply causal inference ideology to their work spend &lt;em&gt;so much time&lt;/em&gt; trying to get the identification part (1) and (2) of causal inference correct, that they don’t want to “waste” that time by proceeding to use estimation algorithms which are known to place unreasonable assumptions on the distribution of the data.&lt;/p&gt;
+&lt;p&gt;This brings me to my last point of motivation.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&#34;faq&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;FAQ&lt;/h1&gt;
-&lt;p&gt;TMLE is often used in causal inference because…&lt;/p&gt;
-&lt;p&gt;however, the estimates arising from TMLE do not automatically have a magical causal inference interpretation - that only comes from a process called identification. TMLE deals solely with estimation&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Is TMLE Causal Inference?&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Nope! TMLE is simply an &lt;em&gt;estimation method&lt;/em&gt; that is often used for causal inference applications. That’s because most statisticians who work on causal inference applications spend so. much. time. thinking about the research question of interest.&lt;/p&gt;
-&lt;p&gt;They’re obsessed with drawing out Directed Acyclic Graphs (DAGs) and/or writing out structural equation models (SCMs), thinking about the precise research question and the data available to answer (or not answer) it, and just generally trying to “identify” the causal parameter of interest.&lt;/p&gt;
-&lt;p&gt;Some of them spend so much time getting the estimate of interest set up correctly that they don’t want to “ruin” all that hard work by making strong assumptions about the underlying distribution of their data. They’d prefer to use flexible models for estimation, like the models we typically think of when we hear machine learning.&lt;/p&gt;
-&lt;p&gt;I won’t get into identification in this post, but essentially it is getting to the point that you can say that a parameter of interest (for example, an Odds Ratio or an Average Treatment Effect) can be written in terms of the data you have available&lt;/p&gt;
-&lt;p&gt;The logic in using an estimation method like TMLE, where you don’t have to&lt;/p&gt;
+&lt;div id=&#34;why-would-i-pick-tmle-over-other-statistical-estimation-algorithms&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Why would I pick TMLE over other statistical estimation algorithms?&lt;/h3&gt;
+&lt;p&gt;Because TMLE allows you to use machine learning algorithms on the backend of its estimation, that means you’re placing &lt;em&gt;minimal assumptions&lt;/em&gt; on the underlying distribution of your data. However, TMLE still has a formula for obtaining valid confidence intervals. That’s so important!&lt;/p&gt;
+&lt;p&gt;Flexible machine learning models (EX: random forest, LASSO, neural nets) used on their own generally only allow us to predict, not to make statistical inference. They often have the wrong bias variance tradeoff for any particular exposure, or predictor, because their goal is to optimize prediction of an outcome.&lt;/p&gt;
+&lt;p&gt;TMLE uses some clever math, and something called an &lt;strong&gt;efficient influence function&lt;/strong&gt; to solve this. More on that later; let’s talk about the algorithm.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&#34;whats-the-big-deal-about-tmle&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;What’s the big deal about TMLE?&lt;/h1&gt;
-&lt;p&gt;TMLE is super cool because it allows you to estimate an effect of interest with confidence intervals without having to fit standard parametric regressions (for example, linear, logistic, and poisson regressions). The issue with these types of models is that they make harsh distributions about the underlying distribution of your data.&lt;/p&gt;
-&lt;p&gt;Do you &lt;em&gt;really&lt;/em&gt; ever – like, ever – believe your outcome has a linear, or log-linear, relationship with its explanatory variables? Let’s say your outcome is blood pressure. Maybe for one predictor you can convince yourself that there is a linear relationship with … but what about when you add five more variables. But ALL OF THEM? Absolutely bananas to think that would hold true.&lt;/p&gt;
-&lt;p&gt;Nobody whose job is to predict events accurately believes that to be true, that’s for sure. I’ve got no experience working for Google but I’m pretty sure their statisticians, given a massively wide data set, do not think &#34;I bet a plain old linear regression will predict this person’s … best if I feed it these 50 potential predictors!&lt;/p&gt;
-&lt;p&gt;They are going to use LASSO, or random forest, or neural net, or a wide range of other models!&lt;/p&gt;
-&lt;p&gt;Statisticians who deal with the need for treatment effect estimates have long been hesitant to adopt these&lt;/p&gt;
-&lt;p&gt;These are not the most technical definitions, but hopefully they’re enough to jog your memory of your formal training.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Bias&lt;/strong&gt;: The difference between the true value of a parameter and the estimated value.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Consistency&lt;/strong&gt;: The bias of an estimator decreases to 0 as sample size approaches infinity.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Efficiency&lt;/strong&gt;: The variance of an estimator is as small as possible as sample size approaches infinity.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Double robust&lt;/strong&gt;: If either of&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;a-very-brief-background-on-semi-parametric&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;A very brief background on semi-parametric&lt;/h1&gt;
-&lt;p&gt;Semi-parametric models: models where at least one parameter is not defined. For example,&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;tmle-faq&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;TMLE FAQ&lt;/h1&gt;
-&lt;div id=&#34;ive-only-heard-about-tmle-in-the-context-tmle-of-causal-inference-whats-up-with-that&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;I’ve only heard about TMLE in the context TMLE of causal inference, what’s up with that?&lt;/h2&gt;
-&lt;p&gt;TMLE was &lt;em&gt;developed&lt;/em&gt; to answer causal inference questions, but the estimates from TMLE do not have a causal interpretation by themselves. TMLE is merely a tool, or an algorithm, used to estimate treatment effects.&lt;/p&gt;
-&lt;p&gt;When approaching a causal inference question (or really any statistical estimation application at all!), the majority of time and effort should often be focused on the underlying scientific model, research question of interest, and data available to answer it.&lt;/p&gt;
-&lt;p&gt;Once this process – usually called &lt;strong&gt;identification&lt;/strong&gt;* in the causal inference literature – is completed and an analyst is ready to estimate an effect of interest, she/he has a choice in estimation methods.&lt;/p&gt;
-&lt;p&gt;You’ve likely heard of some of these estimation methods: propensity score matching, inverse probability weighting, g-computation (AKA substitution estimation), etc. TMLE is an estimation method just like these, however, it has some very appealing properties that I am convinced make it a better option than the aforementioned methods.&lt;/p&gt;
-&lt;p&gt;*I won’t go into identification in this post, but if you are new to causal inference, my favorite book so far to understand the big picture of identification is Part I of Miguel Hernan and James Robins’ &lt;a href=&#34;https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2019/11/ci_hernanrobins_10nov19.pdf&#34;&gt;“Causal Inference: What If”&lt;/a&gt; book.&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div id=&#34;a-comparison-with-g-computation-and-iptw&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;A comparison with G-Computation and IPTW&lt;/h1&gt;
-&lt;/div&gt;
-&lt;div id=&#34;tmle-real-intuitively&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;TMLE, real intuitively&lt;/h1&gt;
-&lt;p&gt;All causal inference methods try to use information about why patients were treated (non-randomly, unless it was an RCT) to&lt;/p&gt;
-&lt;p&gt;Before I walk through the &lt;code&gt;R&lt;/code&gt; code for the TMLE algorithm, I want to reinforce the big-picture idea of TMLE: we want to use information about why patients get treatment to update their outcomes&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;the-tmle-algorithm&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;The TMLE Algorithm&lt;/h1&gt;
-&lt;p&gt;Step 0&lt;/p&gt;
-&lt;p&gt;Load libraries, set seed, and simulate data&lt;/p&gt;
+&lt;p&gt;Initial set up: Load libraries, set seed, and simulate data&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/1_data_structure.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse, quietly=T)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Attaching packages ───────────────────────────── tidyverse 1.3.0 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ───────────────── tidyverse 1.3.0 ──&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
 ## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
 ## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
 ## ✓ readr   1.3.1     ✓ forcats 0.5.0&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(SuperLearner, quietly=T)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Super Learner&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Version: 2.0-26&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## Package created on 2019-10-27&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ──────────────────── tidyverse_conflicts() ──
+## x dplyr::filter()     masks stats::filter()
+## x dplyr::group_rows() masks kableExtra::group_rows()
+## x dplyr::lag()        masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(7)
 
 # Superlearner functions from Ivan
@@ -133,7 +1289,7 @@ dat_full &amp;lt;- generate_data(n)&lt;/code&gt;&lt;/pre&gt;
 true_psi &amp;lt;- mean(dat_full$Y_1 - dat_full$Y_0)
 round(true_psi,3)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## [1] 0.192&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Cool, so the true ATE for our is XX. Since our outcome is binary, that translates to a 20% difference in outcomes if everyone were to receive the treatment of interest. That means if A huge effect!&lt;/p&gt;
+&lt;p&gt;Cool, so the true ATE for our is 0.192. Since our outcome is binary, that translates to a `19.2% difference in outcomes if everyone were to receive the treatment of interest. That means if A huge effect!&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# make a data set with observed data only
 dat_obs &amp;lt;- dat_full %&amp;gt;%
   select(-Y_1,-Y_0)&lt;/code&gt;&lt;/pre&gt;
@@ -142,27 +1298,171 @@ dat_obs &amp;lt;- dat_full %&amp;gt;%
 &lt;h1&gt;Step 1:&lt;/h1&gt;
 &lt;p&gt;Estimate the expected value of the outcome using treatment and confounders as predictors.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(A,W) = \mathrm{E}[Y|A,W]\]&lt;/span&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Q &amp;lt;- glm(Y ~ w1 + w2 + w3 + w4 + A, data = dat_obs, family=binomial)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Calculate SEs -----------------------------------------------------------
+
+ic &amp;lt;- (dat_obs$Y - Q_A_update) * H + Q_1_update + Q_0_update
+tmle_se &amp;lt;- sqrt(var(ic)/nrow(dat_obs))
+
+ci_lo &amp;lt;- tmle_psi - 1.96*tmle_se
+ci_hi &amp;lt;- tmle_psi + 1.96*tmle_se
+
+pval &amp;lt;- 2 * (1 - pnorm(abs(tmle_psi / tmle_se)))
+
+
+# Compare with TMLE package -----------------------------------------------------------
+
+tmle_fit &amp;lt;- tmle::tmle(Y, A, X_A,
+                       gbound = .000000001, # trying 
+                       Q.SL.library = lib, g.SL.library = lib)
+tmle_fit$epsilon # mine are different :(
+tmle_fit$estimates$ATE&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/2_outcome_fit.png&#34; style=&#34;width:70.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Then predict the outcome for every observation under three scenarios:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1. If every observation received the treatment they &lt;em&gt;actually&lt;/em&gt; received.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(A,W) = \mathrm{E}[Y|A,W]\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/tmle/3_QA.png&#34; style=&#34;width:50.0%&#34; /&gt;
-Remember we’re talking about a binary treatment for this tutorial.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/3_QA.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Q_A &amp;lt;- predict(Q, type=&amp;quot;response&amp;quot;)
+kable(head(Q_A))&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7989757
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7948479
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8348842
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7992942
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7315107
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.5590003
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Remember we’re talking about a binary treatment for this tutorial.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;2. If every observation received the treatment.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(1,W) = \mathrm{E}[Y|1,W]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/4_Q1.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;X_A1 &amp;lt;- dat_obs %&amp;gt;% mutate(A = 1)  # data set where everyone received treatment
+Q_1 &amp;lt;- predict(Q, newdata = X_A1, type=&amp;quot;response&amp;quot;)
+kable(head(Q_1))&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+x
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7989757
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7948479
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8348842
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.7992942
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.8766217
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.5590003
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;p&gt;&lt;strong&gt;3. If every observation received the control.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(0,W) = \mathrm{E}[Y|0,W]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/5_Q1.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If you have heard of G-Computation, or the simple substitution estimator (same thing), we could compute that estimate now by doing:&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;…&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;If you’ve never heard of G-computation or simple substitution, don’t sweat it! I’ll explain later.&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;X_A0 &amp;lt;- dat_obs %&amp;gt;% mutate(A = 0) # data set where no one received treatment
+Q_0 &amp;lt;- predict(Q, newdata = X_A0, type=&amp;quot;response&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# estimate g --------------------------------------------------------------
+
+g &amp;lt;- glm(A ~ w1 + w2 + w3 + w4, data = dat_obs, family=binomial)
+
+# predictions for Q -------------------------------------------------------
+
+H_1 &amp;lt;- 1/predict(g, type=&amp;quot;response&amp;quot;)
+H_0 &amp;lt;- -1/(1-predict(g, type=&amp;quot;response&amp;quot;))
+
+# prep data to fit the clever covariate
+dat_cc &amp;lt;-
+  dat_obs %&amp;gt;%
+  mutate(Q_A = Q_A,
+         H = case_when(A == 1 ~ H_1,
+                       A == 0 ~ H_0)) %&amp;gt;%
+  select(Y, A, Q_A, H)
+
+# fit parametric working model - this will ALWAYS be the working model
+glm_fit &amp;lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H, data=dat_cc, family=binomial)
+
+# get epsilon
+eps &amp;lt;- coef(glm_fit)
+# also get H as a vector (for Q_A_update)
+H &amp;lt;- dat_cc$H
+
+# update expected outcome estimates (Q star) ------------------------------
+
+# update
+Q_1_update &amp;lt;- plogis(qlogis(Q_1) + eps*H_1)
+Q_0_update &amp;lt;- plogis(qlogis(Q_0) + eps*H_0)
+Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H)
+
+# Estimate ATE ------------------------------------------------------------
+
+# get the ATE TMLE
+tmle_psi &amp;lt;- mean(Q_1_update - Q_0_update)
+
+# compare to true parameter
+tmle_psi&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1887145&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;true_psi &lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.1918&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;#Step 2:&lt;/p&gt;
-&lt;p&gt;Estimate the probability of treatment, given confounders. Note that this quantity is often called a &lt;strong&gt;propensity score&lt;/strong&gt;, related to the &lt;em&gt;propensity&lt;/em&gt; that an observation will receive a treatment of interest.&lt;/p&gt;
+&lt;p&gt;Estimate the probability of treatment, given confounders. Note that this quantity is often called a &lt;strong&gt;propensity score&lt;/strong&gt;, as in it gives the &lt;em&gt;propensity&lt;/em&gt; that an observation will receive a treatment of interest.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(g(W) = Pr(A=1|W)\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/6_treatment_fit.png&#34; style=&#34;width:60.0%&#34; /&gt;
 &lt;img src=&#34;/img/tmle/7_H1.png&#34; style=&#34;width:60.0%&#34; /&gt;
 &lt;img src=&#34;/img/tmle/8_H0.png&#34; style=&#34;width:70.0%&#34; /&gt;
@@ -293,9 +1593,11 @@ tmle_fit$estimates$ATE&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Before we can run a TMLE analysis, we need to clean the data a bit. The &lt;code&gt;tmle&lt;/code&gt; function requires a binary treatment, so I’ll need to turn the treatment data from character strings to binary 0/1 variables. I’m only interested right now in women who recieved the treatment of Nutrition and Hand washing, and comparing that to the control women, so I’ll filter out the appropriate subjects and make my data binary.&lt;/p&gt;
 &lt;p&gt;To use &lt;code&gt;tmle&lt;/code&gt;, your data structure should be:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Wide (each row is one observation)&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Wide (each row is one observation)&lt;/p&gt;
+&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;No factors (all categorical variables should be transformed to dummy/indicator columns using a function like &lt;code&gt;model.matrix()&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;No missing data (I usually make a new column indicating whether the value was missing, and then impute at the mean or median for continuous variables)&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_clean &amp;lt;- 
   washb_data %&amp;gt;%
@@ -308,9 +1610,11 @@ tmle_fit$estimates$ATE&lt;/code&gt;&lt;/pre&gt;
   as.data.frame()&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Once I’ve cleaned my data, I make vectors specifying my treatment, outcome, and baseline covariates. In the TMLE literature, and in this package, the notations are:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;Outcome: &lt;code&gt;Y&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Outcome: &lt;code&gt;Y&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
 &lt;li&gt;&lt;p&gt;Treatment: &lt;code&gt;A&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Confounders: &lt;code&gt;W&lt;/code&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;In this data set, our outcome is the variable &lt;code&gt;whz&lt;/code&gt;, our treatment is the variable &lt;code&gt;tr&lt;/code&gt;, and our baseline confounders are all the other variables in our data set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Y &amp;lt;- dat_clean$whz
@@ -335,6 +1639,23 @@ tmlefit&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;or, “The Hitchiker’s Guide to Targeted Learning” is an excellent, still-in-progress, resource for learning TMLE and many other targeted learning.&lt;/p&gt;
 &lt;p&gt;Learn about causal inference,&lt;/p&gt;
 &lt;p&gt;we should be estimating answers for questions of actual interest, rather than debiasing our results.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bias&lt;/strong&gt;: The difference between the true value of a parameter and the estimated value.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Consistency&lt;/strong&gt;: The bias of an estimator decreases to 0 as sample size approaches infinity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Efficiency&lt;/strong&gt;: The variance of an estimator is as small as possible as sample size approaches infinity.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Double robust&lt;/strong&gt;: If either of&lt;/p&gt;
+&lt;p&gt;Causal inference, at a bird’s eye view, involves a process of:&lt;/p&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;Defining a question and the causal parameter, or causal estimand, of interest (for example, we might want to know the difference in COVID-19 infection rates if everyone did wear a mask compared to if everyone did not wear a mask).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Using causality tools (for example, Directed Acyclic Graphs or Non Parametric Structrual Equations) and assumptions (exchangeability, consistency, and positivity) to determine whether we can write our causal estimand of interest in terms of the data (using expectations and random variables). If we can do this, we say our causal estimand is &lt;strong&gt;identifiable&lt;/strong&gt;, and we can make the leap that a &lt;em&gt;statistical estimand&lt;/em&gt; (i.e. expectations and random variables) is a true representation of what we would see in a world that allows us to actually observe all the parallel, or counterfactual, outcomes.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Once we have a statistical estimand, we can consider the statistical estimation algorithms available to estimate it (typically we weigh them in terms of bias and variance properties, and perhaps computational requirements), and then go on to estimate it.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;There’s thousands of books and papers that elaborate on those three points above, but the main takeaway is this:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;TMLE focuses on Step 3 only.&lt;/strong&gt; It is a &lt;strong&gt;statistical estimation algorithm&lt;/strong&gt; that &lt;em&gt;allows&lt;/em&gt;, but &lt;em&gt;does not require&lt;/em&gt; statistical estimands to have a causal interpretation.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div id=&#34;a-comparison-with-g-computation-and-iptw&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;A comparison with G-Computation and IPTW&lt;/h1&gt;
 &lt;/div&gt;
 &lt;div id=&#34;references&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;References:&lt;/h1&gt;
@@ -344,34 +1665,36 @@ tmlefit&lt;/code&gt;&lt;/pre&gt;
     
     <item>
       <title>The Key to Learning Causal Inference</title>
-      <link>/blog/sl/hardest_part_of_causal/</link>
+      <link>/blog/collider-bias/hardest_part_of_causal/</link>
       <pubDate>Sat, 12 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/sl/hardest_part_of_causal/</guid>
+      <guid>/blog/collider-bias/hardest_part_of_causal/</guid>
       <description>
 
 
-&lt;p&gt;I’ve been trying to learn causal inference for the past year and a half. Not in the way people say, “I’ve been trying to learn guitar” or “I’ve been trying to learn Japanese”, either. Trying as in, spent countless pre-pandemic weekends at coffee shops with causal inference books, and even dragged a binder of notes to a vacation in Costa Rica…&lt;/p&gt;
+&lt;p&gt;I’ve been trying to learn causal inference for the past year and a half. Not in the way people say, “I’ve been trying to learn guitar” or “I’ve been trying to learn Japanese”, either. Trying as in, spent too many pre-pandemic Sundays at crowded coffee shops with a backpack causal inference books, and even dragged a binder of notes to a vacation in Costa Rica…&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/causal_at_beach.jpg&#34; /&gt;
-I’m no expert in causal inference, but at this point I at least have an opinion on the best way to &lt;em&gt;learn&lt;/em&gt; causal inference:&lt;/p&gt;
+I’m no expert in causal inference, but at this point I at least have an opinion on the best way to &lt;em&gt;learn&lt;/em&gt; causal inference. It’s actually a pretty simple concept, but I was really spinning my wheels until I learned it. So, in case you’re early into your causal inference journey and haven’t discovered it yet:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The key to learning causal inference is to keep &lt;strong&gt;identification&lt;/strong&gt; separate from &lt;strong&gt;estimation&lt;/strong&gt; when you’re learning a new concept.&lt;/p&gt;
+&lt;p&gt;I believe the key to learning (and applying) causal inference is to always keep &lt;strong&gt;identification&lt;/strong&gt; separate from &lt;strong&gt;estimation&lt;/strong&gt;.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Now what does &lt;em&gt;that&lt;/em&gt; mean!? Broadly, &lt;strong&gt;identification means figuring out whether you can write a causal parameter of interest in terms of data&lt;/strong&gt; (i.e., in forms of expectations of random variables).&lt;/p&gt;
-&lt;p&gt;A &lt;strong&gt;causal parameter&lt;/strong&gt; is just some summary quantity that would be interesting to evaluate in the system you’re studying. A few common causal parameters are the Causal Odds Ratio, Causal Risk Ratio, Average Treatment Effect and the Conditional Average Treatment Effect. There are many, many more though, such as the Dose Response Curve or Marginal Structural Model.&lt;/p&gt;
-&lt;p&gt;To determine whether you can identify your causal parameter of interest in your system and with your data, careful thought is required. It’s the stage of a problem when you, as a statistician, sit down and talk with subject matter experts about the precise question they’d like to answer. You may draw &lt;em&gt;Directed Acyclic Graphs&lt;/em&gt; (DAGs) or &lt;em&gt;Single World Intervention Graphs&lt;/em&gt; (SWIGs), or write out the &lt;em&gt;Non Parametric Structural Equations&lt;/em&gt; of the system.&lt;/p&gt;
-&lt;p&gt;These tools will help you evaluate some of the main requirements of causal inference: for the causal parameter of interest to be identified, you must satisfy causal assumptions of &lt;em&gt;positivity&lt;/em&gt;, &lt;em&gt;exchangeability&lt;/em&gt;, and &lt;em&gt;ignorability&lt;/em&gt;, while still avoiding the usual pitfalls in statistics like &lt;em&gt;selection bias&lt;/em&gt; and &lt;em&gt;unmeasured confounding&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;I won’t go into the assumptions or tools of identification here, but I’ve linked my favorite resources for learning below. What is important to know is that through tools like this, you’ll eventually determine whether the causal parameter is possible to write out in terms of your data. For example, if your goal is to identify the Average Treatment Effect (ATE), i.e. the mean difference in outcomes between the treated and untreated in a hypothetical world where everyone &lt;em&gt;could&lt;/em&gt; get each treatment, your identification of the ATE, &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt;, may look like:&lt;/p&gt;
+&lt;p&gt;Now what does &lt;em&gt;that&lt;/em&gt; mean!? Broadly, &lt;strong&gt;identification means figuring out whether you can write a causal estimand of interest in terms of data&lt;/strong&gt; (i.e., in forms of expectations of random variables).&lt;/p&gt;
+&lt;p&gt;A &lt;strong&gt;causal estimand&lt;/strong&gt; is just some summary quantity that would be interesting to evaluate in the system you’re studying. A few common causal estimands are the Average Treatment Effect and the Conditional Average Treatment Effect. There are many, many more though, such as the Dose Response Curve, Causal Odds Ratio, Causal Risk Ratio, and Marginal Structural Model.&lt;/p&gt;
+&lt;p&gt;To determine whether you can identify your causal estimand of interest in your system of study and with the data you have, careful thought is required. It’s the stage of a problem when you, as a statistician, sit down and talk with subject matter experts about the precise question they’d like to answer. You may draw &lt;em&gt;Directed Acyclic Graphs&lt;/em&gt; (DAGs) or &lt;em&gt;Single World Intervention Graphs&lt;/em&gt; (SWIGs), or write out the &lt;em&gt;Non Parametric Structural Equations&lt;/em&gt; of the system.&lt;/p&gt;
+&lt;p&gt;These tools will help you evaluate some of the main requirements of causal inference: for the causal estimand of interest to be identified, you must satisfy causal assumptions of &lt;em&gt;positivity&lt;/em&gt;, &lt;em&gt;exchangeability&lt;/em&gt;, and &lt;em&gt;ignorability&lt;/em&gt;, while still avoiding the usual pitfalls in statistics like &lt;em&gt;selection bias&lt;/em&gt; and &lt;em&gt;unmeasured confounding&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;You’ll eventually determine whether the causal estimand is possible to write out in terms of your data. For example, if your goal is to identify the Average Treatment Effect (ATE), i.e. the mean difference in outcomes between the treated and untreated in a hypothetical world where everyone &lt;em&gt;could&lt;/em&gt; get each treatment &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt;, your identification of the ATE, &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt;, may look like:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\theta = E_W[E[Y|A=1,W]-E[Y|A=0,W]]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Everything I’ve mentioned so far is part of the &lt;strong&gt;identification&lt;/strong&gt; side of causal inference. I think of it as the non-data side, because we are not yet dealing with data when we think about the study design, causal parameter, and whether the causal conditions are reasonable to assume. You should never be thinking about &lt;strong&gt;estimation methods&lt;/strong&gt; until you’ve determined whether your causal parameter can be identified.&lt;/p&gt;
+&lt;p&gt;where &lt;span class=&#34;math inline&#34;&gt;\(W\)&lt;/span&gt; is a vector of confounding variables that affect both &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Once&lt;/p&gt;
+&lt;p&gt;Everything I’ve mentioned so far is part of the &lt;strong&gt;identification&lt;/strong&gt; side of causal inference. I think of it as the non-data side, because we are not yet dealing with data when we think about the study design, causal estimand, and whether the causal conditions are reasonable to assume. You should never be thinking about &lt;strong&gt;estimation methods&lt;/strong&gt; until you’ve determined whether your causal estimand can be identified.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/causal_comic.jpg&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Once you’ve &lt;em&gt;identified&lt;/em&gt; your WHAT, or your parameter of interest, then you can start thinking about HOW you’re going to &lt;em&gt;estimate&lt;/em&gt; that parameter. There are many statistical estimation methods to estimate the same causal effect of interest.&lt;/p&gt;
-&lt;p&gt;My favorite way to think about this is through a little graph like this. On the left, there are three causal parameters, or estimands of interest. On the top, we can see six different ways you might try to estimate any of these causal parameters of interest. Each of the estimation methods have pros and cons.&lt;/p&gt;
+&lt;p&gt;Once you’ve &lt;em&gt;identified&lt;/em&gt; your WHAT, or your estimand of interest, then you can start thinking about HOW you’re going to &lt;em&gt;estimate&lt;/em&gt; that estimand. There are many statistical estimation methods to estimate the same causal effect of interest.&lt;/p&gt;
+&lt;p&gt;My favorite way to think about this is through a little graph like this. On the left, there are three causal estimands, or estimands of interest. On the top, we can see six different ways you might try to estimate any of these causal estimands of interest. Each of the estimation methods have pros and cons.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(Odds ratio = E[Y]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(Relative risk = E[Y]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\mathrm{ATE} = E[Y]\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;A common example is figuring out whether the Average Treatment Effect (ATE), or the difference in outcomes if everyone were to receive the exposure compared to if everyone had not received the exposure&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\theta^* = E[E[Y|A=1,W]-E[Y|A=0,W]]\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Sure, propensity scores are part of causal inference, but they’re part of the &lt;em&gt;estimation&lt;/em&gt; side of causal inference. A propensity score can’t fix a research question with a causal parameter that does not meet causal assumptions.&lt;/p&gt;
+&lt;p&gt;Sure, propensity scores are part of causal inference, but they’re part of the &lt;em&gt;estimation&lt;/em&gt; side of causal inference. A propensity score can’t fix a research question with a causal estimand that does not meet causal assumptions.&lt;/p&gt;
 &lt;p&gt;Causal&lt;/p&gt;
 &lt;p&gt;I think causal inference is the most interesting topic in all of statistics– I think it’s so cool that sometimes I make really dweeby comics about it:&lt;/p&gt;
 </description>

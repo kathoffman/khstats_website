@@ -18,22 +18,57 @@
   </url>
   
   <url>
+    <loc>/categories/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/causal-inference/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/collider-bias/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/statistics/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/statistics/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/collider-bias/race/</loc>
+    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/tmle/tmle-tutorial-3/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/blog/sl/superlearning/</loc>
-    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/causal-inference/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -48,17 +83,7 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/lmtp/</loc>
-    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -93,27 +118,12 @@
   </url>
   
   <url>
-    <loc>/tags/statistics/</loc>
-    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/statistics/</loc>
-    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/tags/superlearner/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/superlearning/</loc>
-    <lastmod>2020-10-10T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
@@ -163,7 +173,7 @@
   </url>
   
   <url>
-    <loc>/blog/sl/hardest_part_of_causal/</loc>
+    <loc>/blog/collider-bias/hardest_part_of_causal/</loc>
     <lastmod>2020-09-12T21:13:14-05:00</lastmod>
   </url>
   

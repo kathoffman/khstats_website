@@ -1,0 +1,190 @@
+---
+title: "Whatcha measuring?? Collider Bias Examples in R"
+author: "Katherine Hoffman"
+date: 2020-10-13T21:13:14-05:00
+categories: ["statistics"]
+tags: ["causal inference", "collider bias", "statistics"]
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=F, warning=F)
+library(broom)
+library(tidyverse)
+library(kableExtra)
+
+set.seed(7)
+
+n <- 5000
+```
+
+Anyways, I wholeheartedly agree with this. I find many of the tools in causal inference (specifically Directed Acyclic Graphs) to be incredibly useful in recognizing what I *cannot* unbiasedly estimate.
+
+I am an expert lurker on the statistics twitter (war) threads is a favorite pasttime of mine, so I was admittedly a bit sad it didn't gain more steam.
+
+
+
+So now your investigator wants to know the attributable mortality of race once someone is hospitalized. "We don't want your causal inference, we just want the *independent association*!" they tell you emphatically. "We *PROMISE* we won't talk about anything causally!" You think about Miguel Hernan's *The C-Word* paper. You don't believe them at all, but you let it go, for a moment.
+
+
+Let's start with simulating race. Let's say our population of interest is approximately 50% of one race and 50% of another. We'll simulate that with a binomial distribution.
+
+```{r}
+race <- rbinom(n, 1, 0.5) 
+```
+
+Now we'll simulate COVID-19 disease severity. Although there is some evidence suggesting COVID-19 disease severity is not random (i.e. it could be related to viral load, blood type, etc.), let's assume for the sake of example that it is completely random.
+
+```{r}
+disease_severity <- rbinom(n, 1, 0.5)
+```
+
+Now let's think about a common adjustment scientists use to reduce confounding of race: socioeconomic status (SES). SES is unarguably affected by race. Again, for simplicity, let's pretend SES is a binary outcome. It could represent if a person with COVID-19 lives "above" or "below" the poverty line. We'll simulate SES as a binomial distribution where the probability someone will be above the poverty line is affected by their race.
+
+```{r}
+ses <- rbinom(n, 1, plogis(-race))
+```
+
+We've made our population, so now let's figure out whether we're actually going to get to see each person's data. We only have access to COVID-19 patients who were hospitalized. Whether or not someone is hospitalized is affected by their disease severity, of course.
+
+However, let's say for our example that hospitalization status is also affected by a person's SES (whether or not they have insurance may affect their decision to go to the hospital, for example). It also may be affected by some part of the social construct that we use to define race/ethnicity. If individuals in one race/ethnicity are more or less likely to go to the hospital than individuals of another race/ethnicity, then that will affect hospitalization. This is very reasonable in COVID-19 (and in other diseases) where Black and Hispanic persons are disproportionately dying. If a person knows a family member or friend who is on a ...
+
+```{r}
+hospitalized <- rbinom(n, 1, plogis(-3 + 2 * disease_severity + 2 * ses + 3 * race))
+```
+
+Finally, we simulate our outcome. Let's keep it simple and say whether or not someone dies is directly affected by disease severity and whether or not the person is cared for in a hospital:
+
+```{r}
+death <- rbinom(n, 1, plogis(-(2 * disease_severity + hospitalized)))
+```
+
+Let's put this simulated data into a data frame. I'm going to relabel the data with interpretable to make it clearer how harmful doing these analyses can be.
+
+```{r}
+covid_df <-
+  data.frame(
+  race = factor(race, levels=c(1,0), labels=c("White","Black")),
+  disease_severity = factor(disease_severity, levels=c(1,0), labels=c("Mild","Severe")),
+  ses = factor(ses, levels=c(0,1), labels=c("Above poverty line", "Below poverty line")),
+  hospitalized = factor(hospitalized, levels=0:1, labels=c("No","Yes")),
+  death = factor(death, levels=0:1, labels=c("No","Yes"))
+)
+```
+
+Now I'll make a data frame that contains only the patients who were put in the hospital.
+
+```{r}
+hospitalized_df <-
+  covid_df %>%
+  filter(hospitalized == "Yes")
+```
+
+The association between race and mortality for people who are hospitalized. Can you get the true association?
+
+Let's pretend more a moment that you think you can. You're a pro at `ggplot2` so you whip out a nice bar chart. Look, race and mortality in hospitalized patients! It's Figure 1 of a paper if I've ever seen one!
+
+```{r, fig.height=3.5, fig.width=4}
+race_death_count <-
+  hospitalized_df %>%
+  group_by(race) %>%
+  count(death) %>%
+  mutate(sum_n = sum(n)) %>%
+  ungroup() %>%
+  mutate(prop = n/sum_n)
+
+race_death_count %>%
+  filter(death == "Yes") %>%
+  ggplot(aes(x=race, y=prop)) +
+  geom_bar(stat="identity") +
+  theme_classic() +
+  labs(x="Race",y="In-hospital Mortality",title="Race and Mortality in COVID-19",subtitle="Among Hospitalized Patients") +
+  scale_y_continuous(labels = scales::percent_format(), expand=c(0,0), limits=c(0,.25)) +
+  geom_text(aes(label=paste(n, "/", sum_n), y=prop+.01))
+```
+
+```{r}
+pretty_logistic_table <- function(model_fit) {
+  model_fit %>%
+    broom::tidy(exponentiate=T, conf.int=T) %>%
+    filter(term != "(Intercept)") %>%
+     mutate( term = case_when(term == "raceBlack" ~ "Race: Black",
+                             term == "disease_severitySevere" ~ "Disease severity: Severe",
+                             term == "sesBelow poverty line" ~ "SES: Below poverty level",
+                             TRUE ~ term),
+           odds_ratio = paste0(round(estimate,1)," (",round(conf.low,1),", ",round(conf.high,1),")"),
+           p_value = case_when(p.value < .001 ~ "<.001",
+                               TRUE ~ as.character(round(p.value, 3)))) %>%
+             select(term, odds_ratio, p_value) %>%
+    gt::gt() %>%
+    gt::cols_label(
+       term = "Coefficient",
+               odds_ratio = "Odds Ratio (95% CI)",
+               p_value = "P-value"
+    )
+}
+```
+
+
+start by just looking at the unadjusted Odds Ratio of **race** on **mortality**. Simple enough
+
+```{r}
+glm(death ~ race, data = hospitalized_df, family = binomial()) %>%
+  pretty_logistic_table()
+```
+
+"we're not interested in this,"
+but what are you interested in, then? what meaning does it hold to conclude that 
+perhaps you're going to say that providers don't have any additional effect on patients; there's no inherent racism. but is that actually what you can conclude? all your estimates are now biased
+
+statistician drawing dag
+I. don't. want. causation.
+"okay, great!"
+I just want to show that within my hospitalized patients
+*whiteboard, draws H*
+there is an effect of race
+*draws race*
+on mortality
+*draws mortality*
+independent of confounders
+*draws confounders*
+WITHIN A HOSPITALIZED POPULATION
+*draws box*
+Yep, still can't answer that. could be correlated, could not be
+THAT'SWHAT I WANT TO WRITE ABOUT
+but what are you going to SAY about that?!?!
+"This estimate of correlation between race and mortality in a hospitalized population -- which could be completely incorrect, either in the null or wrong direction -- is evidence of... What??? The point of research is to ask a question you can set up an experiment to answer, and then to answer it as best you can, not ask a question you *know* you cannot answer and then conjecture about the number you obtain. 
+
+but everyone knows Black people are set up for failure in the healthcare system, this will only be accumulating evidence
+but what if it's not right, what if you find being black is protective, or being Black has no effect on mortality. Any of these are possible!
+
+There's no way there won't be an effect of race on mortality among hospitalized patients. Race ... 
+
+So why are you doing this study?
+
+So what do you suggest I do?
+
+I suggest you leave this research question to the people who actually have the population level data on race, hospitalization rates, and mortality, to answer the effect of race on mortality. Or, I suggest you go find the people who have that data and try to team up with them. I'm not saying your question is not important, I'm saying you don't have the data to correctly answer it, and whatever estimate you come up with will be incorrect, and could do more harm than good.
+
+Headlines: RACE IS A RISK FACTOR FOR DYING FROM COVID-19 IN HOSPITALIZED PATIENTS
+
+Fitting a model among the entire population and hospitalized patients only:
+```{r}
+glm(death ~ race + disease_severity + ses, data=covid_df, family = binomial()) %>%
+  pretty_logistic_table()
+glm(death ~ race + disease_severity + ses, data=hospitalized_df, family = binomial())  %>%
+  pretty_logistic_table()
+```
+
+We miss the effect of race (through hospitalization) on death.
+```{r}
+
+```
+
+There is no effect of race on mortality in hospitalized patients... but there is definitely an effect of race on mortality in the full population, because it affects whether someone gets hospitalized.
+
+So what are you estimating? What are you going to do with that information?
+
+
+
+
