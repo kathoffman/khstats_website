@@ -14,7 +14,6 @@ output:
     print_df: paged
 ---
 
-<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
 
 
 <blockquote>
@@ -52,7 +51,7 @@ HTML Image as link
 <h2>Initial set-up: Load libraries, set seed, simulate data</h2>
 <p>For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate a continuous outcome, <code>y</code>, and four potential predictors, <code>x1</code>, <code>x2</code>, <code>x3</code>, and <code>x4</code>.</p>
 <pre class="r"><code>library(tidyverse)
-library(kableExtra)
+library(knitr)
 set.seed(7)</code></pre>
 <pre class="r"><code>n &lt;- 5000
 obs &lt;- tibble(
@@ -65,151 +64,65 @@ obs &lt;- tibble(
 )
 kable(head(obs), digits=3, caption = &quot;Simulated data set&quot;)</code></pre>
 <table>
-<caption>
-<span id="tab:unnamed-chunk-2">Table 1: </span>Simulated data set
-</caption>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Simulated data set</caption>
 <thead>
-<tr>
-<th style="text-align:right;">
-id
-</th>
-<th style="text-align:right;">
-x1
-</th>
-<th style="text-align:right;">
-x2
-</th>
-<th style="text-align:right;">
-x3
-</th>
-<th style="text-align:right;">
-x4
-</th>
-<th style="text-align:right;">
-y
-</th>
+<tr class="header">
+<th align="right">id</th>
+<th align="right">x1</th>
+<th align="right">x2</th>
+<th align="right">x3</th>
+<th align="right">x4</th>
+<th align="right">y</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2.287
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1.385
-</td>
-<td style="text-align:right;">
-5.270
-</td>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">2.287</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1.385</td>
+<td align="right">5.270</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
--1.197
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
--1.197
-</td>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">-1.197</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+<td align="right">-1.197</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
--0.694
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
--0.694
-</td>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">-0.694</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+<td align="right">-0.694</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
--0.412
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
--0.541
-</td>
-<td style="text-align:right;">
--0.928
-</td>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">-0.412</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-0.541</td>
+<td align="right">-0.928</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
--0.971
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
--0.971
-</td>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">-0.971</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.000</td>
+<td align="right">-0.971</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
--0.947
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
--0.160
-</td>
-<td style="text-align:right;">
--1.107
-</td>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">-0.947</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">-0.160</td>
+<td align="right">-1.107</td>
 </tr>
 </tbody>
 </table>
@@ -266,88 +179,44 @@ pred_1c &lt;- predict(fit_1c, newdata = cv_valid_1)</code></pre>
 <pre><code>## [1] 500</code></pre>
 <pre class="r"><code>knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = &quot;First CV round of predictions&quot;) </code></pre>
 <table>
-<caption>
-<span id="tab:unnamed-chunk-6">Table 2: </span>First CV round of predictions
-</caption>
+<caption><span id="tab:unnamed-chunk-6">Table 2: </span>First CV round of predictions</caption>
 <thead>
-<tr>
-<th style="text-align:right;">
-pred_1a
-</th>
-<th style="text-align:right;">
-pred_1b
-</th>
-<th style="text-align:right;">
-pred_1c
-</th>
+<tr class="header">
+<th align="right">pred_1a</th>
+<th align="right">pred_1b</th>
+<th align="right">pred_1c</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
--1.39
-</td>
-<td style="text-align:right;">
--0.77
-</td>
-<td style="text-align:right;">
--0.40
-</td>
+<tr class="odd">
+<td align="right">-1.39</td>
+<td align="right">-0.77</td>
+<td align="right">-0.40</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1.27
-</td>
-<td style="text-align:right;">
--0.34
-</td>
-<td style="text-align:right;">
--0.11
-</td>
+<tr class="even">
+<td align="right">-1.27</td>
+<td align="right">-0.34</td>
+<td align="right">-0.11</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-2.16
-</td>
-<td style="text-align:right;">
-1.32
-</td>
-<td style="text-align:right;">
-1.10
-</td>
+<tr class="odd">
+<td align="right">2.16</td>
+<td align="right">1.32</td>
+<td align="right">1.10</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-4.27
-</td>
-<td style="text-align:right;">
-4.26
-</td>
-<td style="text-align:right;">
-3.98
-</td>
+<tr class="even">
+<td align="right">4.27</td>
+<td align="right">4.26</td>
+<td align="right">3.98</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-3.31
-</td>
-<td style="text-align:right;">
-3.98
-</td>
-<td style="text-align:right;">
-3.78
-</td>
+<tr class="odd">
+<td align="right">3.31</td>
+<td align="right">3.98</td>
+<td align="right">3.78</td>
 </tr>
-<tr>
-<td style="text-align:right;">
-2.29
-</td>
-<td style="text-align:right;">
-2.42
-</td>
-<td style="text-align:right;">
-2.83
-</td>
+<tr class="even">
+<td align="right">2.29</td>
+<td align="right">2.42</td>
+<td align="right">2.83</td>
 </tr>
 </tbody>
 </table>
@@ -381,150 +250,65 @@ cv_preds &lt;- purrr::map_dfr(cv_folds, ~get_preds(fold = .x)) # map_dfr loops t
 
 cv_preds %&gt;% arrange(obs_id) %&gt;% head() %&gt;% kable(digits=2, caption = &quot;All CV predictions for all three base learners&quot;) </code></pre>
 <table>
-<caption>
-<span id="tab:unnamed-chunk-7">Table 3: </span>All CV predictions for all three base learners
-</caption>
+<caption><span id="tab:unnamed-chunk-7">Table 3: </span>All CV predictions for all three base learners</caption>
 <thead>
-<tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-obs_id
-</th>
-<th style="text-align:right;">
-cv_fold
-</th>
-<th style="text-align:right;">
-pred_a
-</th>
-<th style="text-align:right;">
-pred_b
-</th>
-<th style="text-align:right;">
-pred_c
-</th>
+<tr class="header">
+<th></th>
+<th align="right">obs_id</th>
+<th align="right">cv_fold</th>
+<th align="right">pred_a</th>
+<th align="right">pred_b</th>
+<th align="right">pred_c</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-1…1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-3.73
-</td>
-<td style="text-align:right;">
-5.42
-</td>
-<td style="text-align:right;">
-5.28
-</td>
+<tr class="odd">
+<td>1…1</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">3.73</td>
+<td align="right">5.42</td>
+<td align="right">5.28</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-1…2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-8
-</td>
-<td style="text-align:right;">
--0.77
-</td>
-<td style="text-align:right;">
--1.19
-</td>
-<td style="text-align:right;">
--1.20
-</td>
+<tr class="even">
+<td>1…2</td>
+<td align="right">2</td>
+<td align="right">8</td>
+<td align="right">-0.77</td>
+<td align="right">-1.19</td>
+<td align="right">-1.20</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-1…3
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
--0.78
-</td>
-<td style="text-align:right;">
--0.81
-</td>
-<td style="text-align:right;">
--0.69
-</td>
+<tr class="odd">
+<td>1…3</td>
+<td align="right">3</td>
+<td align="right">2</td>
+<td align="right">-0.78</td>
+<td align="right">-0.81</td>
+<td align="right">-0.69</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-1…4
-</td>
-<td style="text-align:right;">
-4
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
--1.39
-</td>
-<td style="text-align:right;">
--0.77
-</td>
-<td style="text-align:right;">
--0.40
-</td>
+<tr class="even">
+<td>1…4</td>
+<td align="right">4</td>
+<td align="right">10</td>
+<td align="right">-1.39</td>
+<td align="right">-0.77</td>
+<td align="right">-0.40</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-1…5
-</td>
-<td style="text-align:right;">
-5
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
--0.78
-</td>
-<td style="text-align:right;">
--1.01
-</td>
-<td style="text-align:right;">
--0.97
-</td>
+<tr class="odd">
+<td>1…5</td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">-0.78</td>
+<td align="right">-1.01</td>
+<td align="right">-0.97</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-1…6
-</td>
-<td style="text-align:right;">
-6
-</td>
-<td style="text-align:right;">
-7
-</td>
-<td style="text-align:right;">
--0.96
-</td>
-<td style="text-align:right;">
--1.04
-</td>
-<td style="text-align:right;">
--0.94
-</td>
+<tr class="even">
+<td>1…6</td>
+<td align="right">6</td>
+<td align="right">7</td>
+<td align="right">-0.96</td>
+<td align="right">-1.04</td>
+<td align="right">-0.94</td>
 </tr>
 </tbody>
 </table>
@@ -549,96 +333,44 @@ pred_c
 <pre class="r"><code>sl_fit &lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 kable(broom::tidy(sl_fit), digits=3, caption = &quot;Metalearner regression coefficients&quot;) </code></pre>
 <table>
-<caption>
-<span id="tab:unnamed-chunk-9">Table 4: </span>Metalearner regression coefficients
-</caption>
+<caption><span id="tab:unnamed-chunk-9">Table 4: </span>Metalearner regression coefficients</caption>
 <thead>
-<tr>
-<th style="text-align:left;">
-term
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-std.error
-</th>
-<th style="text-align:right;">
-statistic
-</th>
-<th style="text-align:right;">
-p.value
-</th>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:left;">
-(Intercept)
-</td>
-<td style="text-align:right;">
--0.003
-</td>
-<td style="text-align:right;">
-0.002
-</td>
-<td style="text-align:right;">
--1.447
-</td>
-<td style="text-align:right;">
-0.148
-</td>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.003</td>
+<td align="right">0.002</td>
+<td align="right">-1.447</td>
+<td align="right">0.148</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-pred_a
-</td>
-<td style="text-align:right;">
--0.017
-</td>
-<td style="text-align:right;">
-0.004
-</td>
-<td style="text-align:right;">
--4.739
-</td>
-<td style="text-align:right;">
-0.000
-</td>
+<tr class="even">
+<td align="left">pred_a</td>
+<td align="right">-0.017</td>
+<td align="right">0.004</td>
+<td align="right">-4.739</td>
+<td align="right">0.000</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-pred_b
-</td>
-<td style="text-align:right;">
-0.854
-</td>
-<td style="text-align:right;">
-0.007
-</td>
-<td style="text-align:right;">
-128.241
-</td>
-<td style="text-align:right;">
-0.000
-</td>
+<tr class="odd">
+<td align="left">pred_b</td>
+<td align="right">0.854</td>
+<td align="right">0.007</td>
+<td align="right">128.241</td>
+<td align="right">0.000</td>
 </tr>
-<tr>
-<td style="text-align:left;">
-pred_c
-</td>
-<td style="text-align:right;">
-0.165
-</td>
-<td style="text-align:right;">
-0.005
-</td>
-<td style="text-align:right;">
-30.103
-</td>
-<td style="text-align:right;">
-0.000
-</td>
+<tr class="even">
+<td align="left">pred_c</td>
+<td align="right">0.165</td>
+<td align="right">0.005</td>
+<td align="right">30.103</td>
+<td align="right">0.000</td>
 </tr>
 </tbody>
 </table>
@@ -684,46 +416,30 @@ full_data_preds &lt;- tibble(pred_a, pred_b, pred_c)</code></pre>
 <pre class="r"><code>sl_predictions &lt;- predict(sl_fit, newdata = full_data_preds)
 kable(head(sl_predictions), col.names = &quot;sl_predictions&quot;, digits= 2, caption = &quot;Final SL predictions (manual)&quot;) </code></pre>
 <table>
-<caption>
-<span id="tab:unnamed-chunk-12">Table 5: </span>Final SL predictions (manual)
-</caption>
+<caption><span id="tab:unnamed-chunk-12">Table 5: </span>Final SL predictions (manual)</caption>
 <thead>
-<tr>
-<th style="text-align:right;">
-sl_predictions
-</th>
+<tr class="header">
+<th align="right">sl_predictions</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-5.44
-</td>
+<tr class="odd">
+<td align="right">5.44</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1.20
-</td>
+<tr class="even">
+<td align="right">-1.20</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--0.79
-</td>
+<tr class="odd">
+<td align="right">-0.79</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--0.71
-</td>
+<tr class="even">
+<td align="right">-0.71</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1.02
-</td>
+<tr class="odd">
+<td align="right">-1.02</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1.03
-</td>
+<tr class="even">
+<td align="right">-1.03</td>
 </tr>
 </tbody>
 </table>
@@ -796,46 +512,30 @@ sl_fit &lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 <p>We can extract the predictions easily via the <code>SL.predict</code> element of the <code>SuperLearner</code> fit object.</p>
 <pre class="r"><code>kable(head(sl_fit$SL.predict), digits=2, col.names = &quot;sl_predictions&quot;, caption = &quot;Final SL predictions (package)&quot;) </code></pre>
 <table>
-<caption>
-<span id="tab:unnamed-chunk-17">Table 6: </span>Final SL predictions (package)
-</caption>
+<caption><span id="tab:unnamed-chunk-17">Table 6: </span>Final SL predictions (package)</caption>
 <thead>
-<tr>
-<th style="text-align:right;">
-sl_predictions
-</th>
+<tr class="header">
+<th align="right">sl_predictions</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-5.29
-</td>
+<tr class="odd">
+<td align="right">5.29</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1.19
-</td>
+<tr class="even">
+<td align="right">-1.19</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--0.68
-</td>
+<tr class="odd">
+<td align="right">-0.68</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--0.87
-</td>
+<tr class="even">
+<td align="right">-0.87</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--0.97
-</td>
+<tr class="odd">
+<td align="right">-0.97</td>
 </tr>
-<tr>
-<td style="text-align:right;">
--1.08
-</td>
+<tr class="even">
+<td align="right">-1.08</td>
 </tr>
 </tbody>
 </table>
@@ -913,40 +613,25 @@ HTML Image as link
     scale_x_continuous(breaks = 1:10) +
   labs(x = &quot;Cross-Validation (CV) Fold&quot;, y=&quot;Mean Squared Error (MSE)&quot;, col = &quot;Base Learner&quot;, title=&quot;CV-MSEs for Base Learners A, B, and C&quot;)</code></pre>
 <p><img src="/blog/sl/superlearning_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
-<p>We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and .45. We can take another mean to get the overall CV-MSE for each learner.</p>
+<p>We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and 0.45. We can take another mean to get the overall CV-MSE for each learner.</p>
 <pre class="r"><code>cv_risks %&gt;%
   select(-cv_fold) %&gt;%
   summarise_all(mean) %&gt;%
-  kable(digits=2, caption = &quot;CV-MSE for each base learner&quot;) %&gt;%
-  kable_styling(position = &quot;center&quot;)</code></pre>
-<table class="table" style="margin-left: auto; margin-right: auto;">
-<caption>
-<span id="tab:unnamed-chunk-22">Table 7: </span>CV-MSE for each base learner
-</caption>
+  kable(digits=2, caption = &quot;CV-MSE for each base learner&quot;)</code></pre>
+<table>
+<caption><span id="tab:unnamed-chunk-22">Table 7: </span>CV-MSE for each base learner</caption>
 <thead>
-<tr>
-<th style="text-align:right;">
-cv_mse_a
-</th>
-<th style="text-align:right;">
-cv_mse_b
-</th>
-<th style="text-align:right;">
-cv_mse_c
-</th>
+<tr class="header">
+<th align="right">cv_mse_a</th>
+<th align="right">cv_mse_b</th>
+<th align="right">cv_mse_c</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td style="text-align:right;">
-0.38
-</td>
-<td style="text-align:right;">
-0.02
-</td>
-<td style="text-align:right;">
-0.11
-</td>
+<tr class="odd">
+<td align="right">0.38</td>
+<td align="right">0.02</td>
+<td align="right">0.11</td>
 </tr>
 </tbody>
 </table>
@@ -963,7 +648,7 @@ cv_mse_c
 <h3>Choosing a metalearner</h3>
 <p>In the <a href="#references">Reference</a> papers on superlearning, the metalearner which yields the best results theoretically and in practice is a <strong>convex combination optimization</strong> of learners. This means fitting the following regression, where <span class="math inline">\(\alpha_1\)</span>, <span class="math inline">\(\alpha_2\)</span>, and <span class="math inline">\(\alpha_3\)</span> are all non-negative and sum to 1.</p>
 <p><span class="math inline">\(\mathrm{E}[Y|\hat{Y}_{LrnrA},\hat{Y}_{LrnrB},\hat{Y}_{LrnrC}] = \alpha_1\hat{Y}_{LrnrA} + \alpha_2\hat{Y}_{LrnrB} + \alpha_3\hat{Y}_{LrnrC}\)</span></p>
-<p>The default in the <code>Superlearner</code> package is to fit a non-negative least squares (NNLS) regression. NNLS fits the above equation where the <span class="math inline">\(\alpha\)</span>’s must be greater than or equal to 1 but do not necessarily sum to 1. The package then reweights the <span class="math inline">\(\alpha\)</span>’s to force them to sum to 1. This makes the weights a convex combination, but may not yield the same optimal results as an initial convex combination optimization.</p>
+<p>The default in the <code>Superlearner</code> package is to fit a non-negative least squares (NNLS) regression. NNLS fits the above equation where the <span class="math inline">\(\alpha\)</span>’s must be greater than or equal to 0 but do not necessarily sum to 1. The package then reweights the <span class="math inline">\(\alpha\)</span>’s to force them to sum to 1. This makes the weights a convex combination, but may not yield the same optimal results as an initial convex combination optimization.</p>
 <p>The metalearner should change with the goals of the prediction algorithm and the loss function of interest. In these examples it is the MSE, but if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or <span class="math inline">\(1-AUC\)</span>. It is outside the scope of this post, but for more information, I recommend this <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/">paper</a> by Erin Ledell on maximizing the Area Under the Curve (AUC) with superlearner algorithms.</p>
 </div>
 <div id="another-visual-guide-for-superlearning" class="section level3">
@@ -1003,28 +688,27 @@ cv_mse_c
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] SuperLearner_2.0-26 nnls_1.4            kableExtra_1.1.0   
+##  [1] SuperLearner_2.0-26 nnls_1.4            knitr_1.28         
 ##  [4] forcats_0.5.0       stringr_1.4.0       dplyr_1.0.2        
 ##  [7] purrr_0.3.4         readr_1.3.1         tidyr_1.1.2        
 ## [10] tibble_3.0.3        ggplot2_3.3.2       tidyverse_1.3.0    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] httr_1.4.1         jsonlite_1.6.1     viridisLite_0.3.0  foreach_1.5.0     
-##  [5] modelr_0.1.6       Formula_1.2-3      assertthat_0.2.1   highr_0.8         
-##  [9] cellranger_1.1.0   yaml_2.2.1         pillar_1.4.6       backports_1.1.8   
-## [13] lattice_0.20-38    glue_1.4.2         digest_0.6.25      rvest_0.3.5       
-## [17] colorspace_1.4-1   htmltools_0.4.0    Matrix_1.2-18      pkgconfig_2.0.3   
-## [21] broom_0.7.0        earth_5.1.2        haven_2.2.0        bookdown_0.19     
-## [25] scales_1.1.1       webshot_0.5.2      ranger_0.12.1      TeachingDemos_2.12
-## [29] generics_0.0.2     farver_2.0.3       ellipsis_0.3.1     withr_2.2.0       
-## [33] cli_2.0.2          magrittr_1.5       crayon_1.3.4       readxl_1.3.1      
-## [37] evaluate_0.14      fs_1.4.1           fansi_0.4.1        xml2_1.3.0        
-## [41] cabinets_0.5.0     blogdown_0.19      tools_3.6.3        hms_0.5.3         
-## [45] lifecycle_0.2.0    munsell_0.5.0      reprex_0.3.0       glmnet_3.0-2      
-## [49] plotrix_3.7-7      compiler_3.6.3     rlang_0.4.7        plotmo_3.5.7      
-## [53] grid_3.6.3         iterators_1.0.12   rstudioapi_0.11    labeling_0.3      
-## [57] rmarkdown_2.1      gtable_0.3.0       codetools_0.2-16   DBI_1.1.0         
-## [61] R6_2.4.1           lubridate_1.7.9    knitr_1.28         shape_1.4.4       
-## [65] stringi_1.4.6      Rcpp_1.0.5         vctrs_0.3.4        dbplyr_1.4.3      
-## [69] tidyselect_1.1.0   xfun_0.14</code></pre>
+##  [1] Rcpp_1.0.5         lubridate_1.7.9    lattice_0.20-38    plotmo_3.5.7      
+##  [5] earth_5.1.2        assertthat_0.2.1   glmnet_3.0-2       digest_0.6.25     
+##  [9] foreach_1.5.0      ranger_0.12.1      R6_2.4.1           cellranger_1.1.0  
+## [13] backports_1.1.8    reprex_0.3.0       evaluate_0.14      httr_1.4.1        
+## [17] highr_0.8          blogdown_0.19      pillar_1.4.6       TeachingDemos_2.12
+## [21] rlang_0.4.7        readxl_1.3.1       rstudioapi_0.11    Matrix_1.2-18     
+## [25] rmarkdown_2.1      labeling_0.3       munsell_0.5.0      broom_0.7.0       
+## [29] compiler_3.6.3     modelr_0.1.6       xfun_0.14          pkgconfig_2.0.3   
+## [33] shape_1.4.4        htmltools_0.4.0    tidyselect_1.1.0   bookdown_0.19     
+## [37] codetools_0.2-16   fansi_0.4.1        crayon_1.3.4       dbplyr_1.4.3      
+## [41] withr_2.2.0        cabinets_0.6.0     grid_3.6.3         jsonlite_1.6.1    
+## [45] gtable_0.3.0       lifecycle_0.2.0    DBI_1.1.0          magrittr_1.5      
+## [49] scales_1.1.1       cli_2.0.2          stringi_1.4.6      farver_2.0.3      
+## [53] fs_1.4.1           xml2_1.3.0         ellipsis_0.3.1     generics_0.0.2    
+## [57] vctrs_0.3.4        Formula_1.2-3      iterators_1.0.12   tools_3.6.3       
+## [61] glue_1.4.2         hms_0.5.3          plotrix_3.7-7      yaml_2.2.1        
+## [65] colorspace_1.4-1   rvest_0.3.5        haven_2.2.0</code></pre>
 </div>

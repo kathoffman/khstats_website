@@ -52,7 +52,7 @@ For simplicity I'll show the concept of superlearning using only four variables 
 
 ```{r, results="hide", message=F, warning=F}
 library(tidyverse)
-library(kableExtra)
+library(knitr)
 set.seed(7)
 ```
 
@@ -427,14 +427,13 @@ cv_risks %>%
   labs(x = "Cross-Validation (CV) Fold", y="Mean Squared Error (MSE)", col = "Base Learner", title="CV-MSEs for Base Learners A, B, and C")
 ```
 
-We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and .45. We can take another mean to get the overall CV-MSE for each learner.
+We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and 0.45. We can take another mean to get the overall CV-MSE for each learner.
 
 ```{r}
 cv_risks %>%
   select(-cv_fold) %>%
   summarise_all(mean) %>%
-  kable(digits=2, caption = "CV-MSE for each base learner") %>%
-  kable_styling(position = "center")
+  kable(digits=2, caption = "CV-MSE for each base learner")
 ```
 
 The base learner that performs the best using our chosen loss function of interest is clearly Learner B. We can see from our data simulation code why this is true -- Learner B is almost exactly the mimicking the data generating mechanism of `y`.
@@ -457,7 +456,7 @@ In the [Reference](#references) papers on superlearning, the metalearner which y
 
 $\mathrm{E}[Y|\hat{Y}_{LrnrA},\hat{Y}_{LrnrB},\hat{Y}_{LrnrC}] = \alpha_1\hat{Y}_{LrnrA} + \alpha_2\hat{Y}_{LrnrB} + \alpha_3\hat{Y}_{LrnrC}$
 
-The default in the `Superlearner` package is to fit a non-negative least squares (NNLS) regression. NNLS fits the above equation where the $\alpha$'s must be greater than or equal to 1 but do not necessarily sum to 1. The package then reweights the $\alpha$'s to force them to sum to 1. This makes the weights a convex combination, but may not yield the same optimal results as an initial convex combination optimization.
+The default in the `Superlearner` package is to fit a non-negative least squares (NNLS) regression. NNLS fits the above equation where the $\alpha$'s must be greater than or equal to 0 but do not necessarily sum to 1. The package then reweights the $\alpha$'s to force them to sum to 1. This makes the weights a convex combination, but may not yield the same optimal results as an initial convex combination optimization.
 
 The metalearner should change with the goals of the prediction algorithm and the loss function of interest. In these examples it is the MSE, but if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or $1-AUC$. It is outside the scope of this post, but for more information, I recommend this  [paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/) by Erin Ledell on maximizing the Area Under the Curve (AUC) with superlearner algorithms.
 

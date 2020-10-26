@@ -18,7 +18,6 @@
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/blog/sl/superlearning/</guid>
       <description>
-&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;blockquote&gt;
@@ -56,7 +55,7 @@ HTML Image as link
 &lt;h2&gt;Initial set-up: Load libraries, set seed, simulate data&lt;/h2&gt;
 &lt;p&gt;For simplicity I’ll show the concept of superlearning using only four variables (AKA features or predictors) to predict a continuous outcome. Let’s first simulate a continuous outcome, &lt;code&gt;y&lt;/code&gt;, and four potential predictors, &lt;code&gt;x1&lt;/code&gt;, &lt;code&gt;x2&lt;/code&gt;, &lt;code&gt;x3&lt;/code&gt;, and &lt;code&gt;x4&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)
-library(kableExtra)
+library(knitr)
 set.seed(7)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;n &amp;lt;- 5000
 obs &amp;lt;- tibble(
@@ -69,151 +68,65 @@ obs &amp;lt;- tibble(
 )
 kable(head(obs), digits=3, caption = &amp;quot;Simulated data set&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
-&lt;caption&gt;
-&lt;span id=&#34;tab:unnamed-chunk-2&#34;&gt;Table 1: &lt;/span&gt;Simulated data set
-&lt;/caption&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-2&#34;&gt;Table 1: &lt;/span&gt;Simulated data set&lt;/caption&gt;
 &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-id
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-x1
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-x2
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-x3
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-x4
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-y
-&lt;/th&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;right&#34;&gt;id&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;x1&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;x2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;x3&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;x4&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;y&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2.287
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.385
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-5.270
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.287&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.385&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.270&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.197
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.197
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.197&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.197&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.694
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.694
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.694&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.694&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-4
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.412
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.541
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.928
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.412&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.541&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.928&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-5
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.971
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.971
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.971&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.000&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.971&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-6
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.947
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.160
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.107
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.947&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.160&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.107&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -270,88 +183,44 @@ pred_1c &amp;lt;- predict(fit_1c, newdata = cv_valid_1)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## [1] 500&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;knitr::kable(head(cbind(pred_1a, pred_1b, pred_1c)), digits= 2, caption = &amp;quot;First CV round of predictions&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
-&lt;caption&gt;
-&lt;span id=&#34;tab:unnamed-chunk-6&#34;&gt;Table 2: &lt;/span&gt;First CV round of predictions
-&lt;/caption&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-6&#34;&gt;Table 2: &lt;/span&gt;First CV round of predictions&lt;/caption&gt;
 &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-pred_1a
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-pred_1b
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-pred_1c
-&lt;/th&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;right&#34;&gt;pred_1a&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;pred_1b&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;pred_1c&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.39
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.77
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.40
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-1.39&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.77&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.40&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.27
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.34
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.11
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-1.27&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.34&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.11&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2.16
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.32
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.10
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2.16&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.10&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-4.27
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-4.26
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3.98
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;4.27&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4.26&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.98&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3.31
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3.98
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3.78
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;3.31&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.98&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.78&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2.29
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2.42
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2.83
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2.29&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.42&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.83&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -385,150 +254,65 @@ cv_preds &amp;lt;- purrr::map_dfr(cv_folds, ~get_preds(fold = .x)) # map_dfr loo
 
 cv_preds %&amp;gt;% arrange(obs_id) %&amp;gt;% head() %&amp;gt;% kable(digits=2, caption = &amp;quot;All CV predictions for all three base learners&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
-&lt;caption&gt;
-&lt;span id=&#34;tab:unnamed-chunk-7&#34;&gt;Table 3: &lt;/span&gt;All CV predictions for all three base learners
-&lt;/caption&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-7&#34;&gt;Table 3: &lt;/span&gt;All CV predictions for all three base learners&lt;/caption&gt;
 &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left;&#34;&gt;
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-obs_id
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-cv_fold
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-pred_a
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-pred_b
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-pred_c
-&lt;/th&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;obs_id&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cv_fold&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;pred_a&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;pred_b&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;pred_c&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-1…1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-4
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3.73
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-5.42
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-5.28
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;1…1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.73&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.42&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.28&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-1…2
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-8
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.77
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.19
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.20
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;1…2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.77&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.19&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.20&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-1…3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-3
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.78
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.81
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.69
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;1…3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.78&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.81&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.69&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-1…4
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-4
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-10
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.39
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.77
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.40
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;1…4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.39&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.77&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.40&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-1…5
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-5
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-6
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.78
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.01
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.97
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;1…5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.78&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.01&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.97&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-1…6
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-6
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-7
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.96
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.04
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.94
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;1…6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;7&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.96&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.04&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.94&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -553,96 +337,44 @@ pred_c
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_fit &amp;lt;- glm(y ~ pred_a + pred_b + pred_c, data = obs_preds)
 kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression coefficients&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
-&lt;caption&gt;
-&lt;span id=&#34;tab:unnamed-chunk-9&#34;&gt;Table 4: &lt;/span&gt;Metalearner regression coefficients
-&lt;/caption&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-9&#34;&gt;Table 4: &lt;/span&gt;Metalearner regression coefficients&lt;/caption&gt;
 &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:left;&#34;&gt;
-term
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-estimate
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-std.error
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-statistic
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-p.value
-&lt;/th&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;term&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;estimate&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;std.error&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;statistic&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p.value&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-(Intercept)
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.003
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.002
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.447
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.148
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;(Intercept)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.003&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.002&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1.447&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.148&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-pred_a
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.017
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.004
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--4.739
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;pred_a&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-0.017&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.004&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-4.739&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.000&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-pred_b
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.854
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.007
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-128.241
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;pred_b&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.854&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.007&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;128.241&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.000&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:left;&#34;&gt;
-pred_c
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.165
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.005
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-30.103
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.000
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;pred_c&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.165&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.005&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;30.103&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.000&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -688,46 +420,30 @@ full_data_preds &amp;lt;- tibble(pred_a, pred_b, pred_c)&lt;/code&gt;&lt;/pre&gt
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_predictions &amp;lt;- predict(sl_fit, newdata = full_data_preds)
 kable(head(sl_predictions), col.names = &amp;quot;sl_predictions&amp;quot;, digits= 2, caption = &amp;quot;Final SL predictions (manual)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
-&lt;caption&gt;
-&lt;span id=&#34;tab:unnamed-chunk-12&#34;&gt;Table 5: &lt;/span&gt;Final SL predictions (manual)
-&lt;/caption&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-12&#34;&gt;Table 5: &lt;/span&gt;Final SL predictions (manual)&lt;/caption&gt;
 &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-sl_predictions
-&lt;/th&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;right&#34;&gt;sl_predictions&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-5.44
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;5.44&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.20
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-1.20&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.79
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-0.79&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.71
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-0.71&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.02
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-1.02&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.03
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-1.03&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -800,46 +516,30 @@ sl_fit &amp;lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 &lt;p&gt;We can extract the predictions easily via the &lt;code&gt;SL.predict&lt;/code&gt; element of the &lt;code&gt;SuperLearner&lt;/code&gt; fit object.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;kable(head(sl_fit$SL.predict), digits=2, col.names = &amp;quot;sl_predictions&amp;quot;, caption = &amp;quot;Final SL predictions (package)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
-&lt;caption&gt;
-&lt;span id=&#34;tab:unnamed-chunk-17&#34;&gt;Table 6: &lt;/span&gt;Final SL predictions (package)
-&lt;/caption&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-17&#34;&gt;Table 6: &lt;/span&gt;Final SL predictions (package)&lt;/caption&gt;
 &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-sl_predictions
-&lt;/th&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;right&#34;&gt;sl_predictions&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-5.29
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;5.29&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.19
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-1.19&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.68
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-0.68&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.87
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-0.87&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--0.97
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-0.97&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--1.08
-&lt;/td&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;-1.08&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -917,40 +617,25 @@ HTML Image as link
     scale_x_continuous(breaks = 1:10) +
   labs(x = &amp;quot;Cross-Validation (CV) Fold&amp;quot;, y=&amp;quot;Mean Squared Error (MSE)&amp;quot;, col = &amp;quot;Base Learner&amp;quot;, title=&amp;quot;CV-MSEs for Base Learners A, B, and C&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/sl/superlearning_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and .45. We can take another mean to get the overall CV-MSE for each learner.&lt;/p&gt;
+&lt;p&gt;We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and 0.45. We can take another mean to get the overall CV-MSE for each learner.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks %&amp;gt;%
   select(-cv_fold) %&amp;gt;%
   summarise_all(mean) %&amp;gt;%
-  kable(digits=2, caption = &amp;quot;CV-MSE for each base learner&amp;quot;) %&amp;gt;%
-  kable_styling(position = &amp;quot;center&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;table class=&#34;table&#34; style=&#34;margin-left: auto; margin-right: auto;&#34;&gt;
-&lt;caption&gt;
-&lt;span id=&#34;tab:unnamed-chunk-22&#34;&gt;Table 7: &lt;/span&gt;CV-MSE for each base learner
-&lt;/caption&gt;
+  kable(digits=2, caption = &amp;quot;CV-MSE for each base learner&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:unnamed-chunk-22&#34;&gt;Table 7: &lt;/span&gt;CV-MSE for each base learner&lt;/caption&gt;
 &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-cv_mse_a
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-cv_mse_b
-&lt;/th&gt;
-&lt;th style=&#34;text-align:right;&#34;&gt;
-cv_mse_c
-&lt;/th&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;right&#34;&gt;cv_mse_a&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cv_mse_b&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;cv_mse_c&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.38
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.02
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.11
-&lt;/td&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;0.38&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.02&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.11&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -967,7 +652,7 @@ cv_mse_c
 &lt;h3&gt;Choosing a metalearner&lt;/h3&gt;
 &lt;p&gt;In the &lt;a href=&#34;#references&#34;&gt;Reference&lt;/a&gt; papers on superlearning, the metalearner which yields the best results theoretically and in practice is a &lt;strong&gt;convex combination optimization&lt;/strong&gt; of learners. This means fitting the following regression, where &lt;span class=&#34;math inline&#34;&gt;\(\alpha_1\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(\alpha_2\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(\alpha_3\)&lt;/span&gt; are all non-negative and sum to 1.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(\mathrm{E}[Y|\hat{Y}_{LrnrA},\hat{Y}_{LrnrB},\hat{Y}_{LrnrC}] = \alpha_1\hat{Y}_{LrnrA} + \alpha_2\hat{Y}_{LrnrB} + \alpha_3\hat{Y}_{LrnrC}\)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;The default in the &lt;code&gt;Superlearner&lt;/code&gt; package is to fit a non-negative least squares (NNLS) regression. NNLS fits the above equation where the &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt;’s must be greater than or equal to 1 but do not necessarily sum to 1. The package then reweights the &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt;’s to force them to sum to 1. This makes the weights a convex combination, but may not yield the same optimal results as an initial convex combination optimization.&lt;/p&gt;
+&lt;p&gt;The default in the &lt;code&gt;Superlearner&lt;/code&gt; package is to fit a non-negative least squares (NNLS) regression. NNLS fits the above equation where the &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt;’s must be greater than or equal to 0 but do not necessarily sum to 1. The package then reweights the &lt;span class=&#34;math inline&#34;&gt;\(\alpha\)&lt;/span&gt;’s to force them to sum to 1. This makes the weights a convex combination, but may not yield the same optimal results as an initial convex combination optimization.&lt;/p&gt;
 &lt;p&gt;The metalearner should change with the goals of the prediction algorithm and the loss function of interest. In these examples it is the MSE, but if the goal is to build a prediction algorithm that is best for binary classification, the loss function of interest may be the rank loss, or &lt;span class=&#34;math inline&#34;&gt;\(1-AUC\)&lt;/span&gt;. It is outside the scope of this post, but for more information, I recommend this &lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4912128/&#34;&gt;paper&lt;/a&gt; by Erin Ledell on maximizing the Area Under the Curve (AUC) with superlearner algorithms.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;another-visual-guide-for-superlearning&#34; class=&#34;section level3&#34;&gt;
@@ -1007,30 +692,29 @@ cv_mse_c
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] SuperLearner_2.0-26 nnls_1.4            kableExtra_1.1.0   
+##  [1] SuperLearner_2.0-26 nnls_1.4            knitr_1.28         
 ##  [4] forcats_0.5.0       stringr_1.4.0       dplyr_1.0.2        
 ##  [7] purrr_0.3.4         readr_1.3.1         tidyr_1.1.2        
 ## [10] tibble_3.0.3        ggplot2_3.3.2       tidyverse_1.3.0    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] httr_1.4.1         jsonlite_1.6.1     viridisLite_0.3.0  foreach_1.5.0     
-##  [5] modelr_0.1.6       Formula_1.2-3      assertthat_0.2.1   highr_0.8         
-##  [9] cellranger_1.1.0   yaml_2.2.1         pillar_1.4.6       backports_1.1.8   
-## [13] lattice_0.20-38    glue_1.4.2         digest_0.6.25      rvest_0.3.5       
-## [17] colorspace_1.4-1   htmltools_0.4.0    Matrix_1.2-18      pkgconfig_2.0.3   
-## [21] broom_0.7.0        earth_5.1.2        haven_2.2.0        bookdown_0.19     
-## [25] scales_1.1.1       webshot_0.5.2      ranger_0.12.1      TeachingDemos_2.12
-## [29] generics_0.0.2     farver_2.0.3       ellipsis_0.3.1     withr_2.2.0       
-## [33] cli_2.0.2          magrittr_1.5       crayon_1.3.4       readxl_1.3.1      
-## [37] evaluate_0.14      fs_1.4.1           fansi_0.4.1        xml2_1.3.0        
-## [41] cabinets_0.5.0     blogdown_0.19      tools_3.6.3        hms_0.5.3         
-## [45] lifecycle_0.2.0    munsell_0.5.0      reprex_0.3.0       glmnet_3.0-2      
-## [49] plotrix_3.7-7      compiler_3.6.3     rlang_0.4.7        plotmo_3.5.7      
-## [53] grid_3.6.3         iterators_1.0.12   rstudioapi_0.11    labeling_0.3      
-## [57] rmarkdown_2.1      gtable_0.3.0       codetools_0.2-16   DBI_1.1.0         
-## [61] R6_2.4.1           lubridate_1.7.9    knitr_1.28         shape_1.4.4       
-## [65] stringi_1.4.6      Rcpp_1.0.5         vctrs_0.3.4        dbplyr_1.4.3      
-## [69] tidyselect_1.1.0   xfun_0.14&lt;/code&gt;&lt;/pre&gt;
+##  [1] Rcpp_1.0.5         lubridate_1.7.9    lattice_0.20-38    plotmo_3.5.7      
+##  [5] earth_5.1.2        assertthat_0.2.1   glmnet_3.0-2       digest_0.6.25     
+##  [9] foreach_1.5.0      ranger_0.12.1      R6_2.4.1           cellranger_1.1.0  
+## [13] backports_1.1.8    reprex_0.3.0       evaluate_0.14      httr_1.4.1        
+## [17] highr_0.8          blogdown_0.19      pillar_1.4.6       TeachingDemos_2.12
+## [21] rlang_0.4.7        readxl_1.3.1       rstudioapi_0.11    Matrix_1.2-18     
+## [25] rmarkdown_2.1      labeling_0.3       munsell_0.5.0      broom_0.7.0       
+## [29] compiler_3.6.3     modelr_0.1.6       xfun_0.14          pkgconfig_2.0.3   
+## [33] shape_1.4.4        htmltools_0.4.0    tidyselect_1.1.0   bookdown_0.19     
+## [37] codetools_0.2-16   fansi_0.4.1        crayon_1.3.4       dbplyr_1.4.3      
+## [41] withr_2.2.0        cabinets_0.6.0     grid_3.6.3         jsonlite_1.6.1    
+## [45] gtable_0.3.0       lifecycle_0.2.0    DBI_1.1.0          magrittr_1.5      
+## [49] scales_1.1.1       cli_2.0.2          stringi_1.4.6      farver_2.0.3      
+## [53] fs_1.4.1           xml2_1.3.0         ellipsis_0.3.1     generics_0.0.2    
+## [57] vctrs_0.3.4        Formula_1.2-3      iterators_1.0.12   tools_3.6.3       
+## [61] glue_1.4.2         hms_0.5.3          plotrix_3.7-7      yaml_2.2.1        
+## [65] colorspace_1.4-1   rvest_0.3.5        haven_2.2.0&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
     </item>

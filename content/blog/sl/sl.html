@@ -781,9 +781,9 @@ covars &lt;- washb_data %&gt;%
 ## [1] &quot;Lrnr_glm_TRUE&quot;
 ## $coefficients
 ##                               intercept Lrnr_randomForest_100_TRUE_5_NULL_FALSE 
-##                             -0.02935653                              0.20828590 
+##                             -0.02963258                              0.14284515 
 ##                  Lrnr_gbm_10000_2_0.001                           Lrnr_glm_TRUE 
-##                              0.68702726                              0.05494122 
+##                              0.76258172                              0.04483759 
 ## 
 ## $R
 ##                                         intercept
@@ -792,15 +792,15 @@ covars &lt;- washb_data %&gt;%
 ## Lrnr_gbm_10000_2_0.001                    0.00000
 ## Lrnr_glm_TRUE                             0.00000
 ##                                         Lrnr_randomForest_100_TRUE_5_NULL_FALSE
-## intercept                                                              40.03889
-## Lrnr_randomForest_100_TRUE_5_NULL_FALSE                               -22.33058
+## intercept                                                              39.92453
+## Lrnr_randomForest_100_TRUE_5_NULL_FALSE                               -22.47096
 ## Lrnr_gbm_10000_2_0.001                                                  0.00000
 ## Lrnr_glm_TRUE                                                           0.00000
 ##                                         Lrnr_gbm_10000_2_0.001 Lrnr_glm_TRUE
-## intercept                                             40.17235     40.178684
-## Lrnr_randomForest_100_TRUE_5_NULL_FALSE              -14.13014    -13.334809
-## Lrnr_gbm_10000_2_0.001                                10.62515     10.533005
-## Lrnr_glm_TRUE                                          0.00000     -8.616894
+## intercept                                             40.15707     40.178684
+## Lrnr_randomForest_100_TRUE_5_NULL_FALSE              -14.07995    -13.324068
+## Lrnr_gbm_10000_2_0.001                                10.73357     10.531102
+## Lrnr_glm_TRUE                                          0.00000     -8.635815
 ## 
 ## $rank
 ## [1] 4
@@ -812,10 +812,10 @@ covars &lt;- washb_data %&gt;%
 ## 
 ## 
 ## $deviance
-## [1] 4710.298
+## [1] 4713.707
 ## 
 ## $aic
-## [1] 13349.11
+## [1] 13352.5
 ## 
 ## $null.deviance
 ## [1] 5000.347
@@ -850,15 +850,15 @@ covars &lt;- washb_data %&gt;%
 ## 
 ## [1] &quot;Cross-validated risk (MSE, squared error loss):&quot;
 ##                                    learner coefficients     risk         se
-## 1: Lrnr_randomForest_100_TRUE_5_NULL_FALSE   0.20828590 1.027691 0.02382883
-## 2:                  Lrnr_gbm_10000_2_0.001   0.68702726 1.005110 0.02340409
-## 3:                           Lrnr_glm_TRUE   0.05494122 1.019541 0.02381864
-## 4:                            SuperLearner           NA 1.003258 0.02337713
+## 1: Lrnr_randomForest_100_TRUE_5_NULL_FALSE   0.14284515 1.033374 0.02410610
+## 2:                  Lrnr_gbm_10000_2_0.001   0.76258172 1.004980 0.02339719
+## 3:                           Lrnr_glm_TRUE   0.04483759 1.019541 0.02381864
+## 4:                            SuperLearner           NA 1.003984 0.02342457
 ##       fold_sd fold_min_risk fold_max_risk
-## 1: 0.07185274     0.8720716      1.138160
-## 2: 0.05893980     0.9058668      1.093545
+## 1: 0.06111117     0.9192775      1.142474
+## 2: 0.05877559     0.9064479      1.094319
 ## 3: 0.06093410     0.9113599      1.109910
-## 4: 0.06151989     0.8917951      1.098658</code></pre>
+## 4: 0.05928355     0.9027668      1.098435</code></pre>
 <table class="table table-striped table-condensed table-hover" style="margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -891,22 +891,22 @@ fold_max_risk
 Lrnr_randomForest_100_TRUE_5_NULL_FALSE
 </td>
 <td style="text-align:right;">
-0.2082859
+0.1428451
 </td>
 <td style="text-align:right;">
-1.027691
+1.033374
 </td>
 <td style="text-align:right;">
-0.0238288
+0.0241061
 </td>
 <td style="text-align:right;">
-0.0718527
+0.0611112
 </td>
 <td style="text-align:right;">
-0.8720716
+0.9192775
 </td>
 <td style="text-align:right;">
-1.138160
+1.142474
 </td>
 </tr>
 <tr>
@@ -914,22 +914,22 @@ Lrnr_randomForest_100_TRUE_5_NULL_FALSE
 Lrnr_gbm_10000_2_0.001
 </td>
 <td style="text-align:right;">
-0.6870273
+0.7625817
 </td>
 <td style="text-align:right;">
-1.005110
+1.004980
 </td>
 <td style="text-align:right;">
-0.0234041
+0.0233972
 </td>
 <td style="text-align:right;">
-0.0589398
+0.0587756
 </td>
 <td style="text-align:right;">
-0.9058668
+0.9064479
 </td>
 <td style="text-align:right;">
-1.093545
+1.094319
 </td>
 </tr>
 <tr>
@@ -937,7 +937,7 @@ Lrnr_gbm_10000_2_0.001
 Lrnr_glm_TRUE
 </td>
 <td style="text-align:right;">
-0.0549412
+0.0448376
 </td>
 <td style="text-align:right;">
 1.019541
@@ -963,19 +963,19 @@ SuperLearner
 NA
 </td>
 <td style="text-align:right;">
-1.003258
+1.003985
 </td>
 <td style="text-align:right;">
-0.0233771
+0.0234246
 </td>
 <td style="text-align:right;">
-0.0615199
+0.0592835
 </td>
 <td style="text-align:right;">
-0.8917951
+0.9027668
 </td>
 <td style="text-align:right;">
-1.098658
+1.098435
 </td>
 </tr>
 </tbody>
@@ -985,7 +985,7 @@ NA
 <h2>Look at the predictions</h2>
 <p><code>predict()</code> allows you to see what the model predicts on any given task. Here we look at predictions from the same data we trained the superlearner on, so the predicted weight to height z-scores of the first six children in our data set.</p>
 <pre class="r"><code>sl_fit$predict(washb_task) %&gt;% head()</code></pre>
-<pre><code>## [1] -0.5846676 -0.7844686 -0.7167187 -0.7663325 -0.6388701 -0.6632535</code></pre>
+<pre><code>## [1] -0.6314652 -0.8016432 -0.7227981 -0.7663563 -0.6393717 -0.6628241</code></pre>
 </div>
 </div>
 <div id="extras" class="section level1">
