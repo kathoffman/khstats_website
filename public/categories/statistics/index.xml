@@ -1245,26 +1245,22 @@ HTML Image as link
 &lt;li&gt;&lt;p&gt;If the goal is &lt;span style=&#34;color: #cc0000;&#34;&gt;prediction&lt;/span&gt;, use a &lt;span style=&#34;color: #cc0000;&#34;&gt;flexible machine learning model&lt;/span&gt; and then look at performance metrics and variable importance.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.&lt;/p&gt;
-&lt;!-- &lt;html&gt; --&gt;
-&lt;!--    &lt;head&gt; --&gt;
-&lt;!--       &lt;title&gt;HTML Image as link&lt;/title&gt; --&gt;
-&lt;!--    &lt;/head&gt; --&gt;
-&lt;!--    &lt;body&gt; --&gt;
-&lt;!--       &lt;a href=&#34;&#34;&gt; --&gt;
-&lt;!--          &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/tmle/estimator.png&#34; --&gt;
-&lt;!--                style=&#34;float:right; padding-left:20px;&#34; width=50%&#34;&gt; --&gt;
-&lt;!--       &lt;/a&gt; --&gt;
-&lt;!--    &lt;/body&gt; --&gt;
-&lt;!-- &lt;/html&gt; --&gt;
-&lt;p&gt;First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to &lt;em&gt;first&lt;/em&gt; determine the statistical quantity, or &lt;strong&gt;estimand&lt;/strong&gt;, that best answers a scientific question, and &lt;em&gt;then&lt;/em&gt; use the method, or &lt;strong&gt;estimator&lt;/strong&gt;, best for suited for estimating it. This is the paradigm TMLE is based upon: we want to build an algorithm &lt;strong&gt;targeted to an estimand of interest&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;[/img/tmle/estimator.png]{width=50%}&lt;/p&gt;
+&lt;p&gt;First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to &lt;em&gt;first&lt;/em&gt; determine the statistical quantity, or &lt;strong&gt;estimand&lt;/strong&gt;, that best answers a scientific question, and &lt;em&gt;then&lt;/em&gt; use the method, or &lt;strong&gt;estimator&lt;/strong&gt;, best suited for estimating it. This is the paradigm TMLE is based upon: we want to build an algorithm &lt;strong&gt;targeted to an estimand of interest&lt;/strong&gt;.&lt;/p&gt;
+&lt;figure&gt;
+&lt;img src=&#34;/img/tmle/estimator.png&#34;
+    width= 70%
+         alt=&#34;Estimator and Estimand&#34;&gt;
+&lt;figcaption&gt;
+An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield &lt;a href=&#34;https://diff.healthpolicydatascience.org/&#34; class=&#34;uri&#34;&gt;https://diff.healthpolicydatascience.org/&lt;/a&gt;
+&lt;/figcaption&gt;
+&lt;/figure&gt;
 &lt;p&gt;Second, I thought flexible, data-adaptive machine learning models could only be used for prediction, since they don’t have asymptotic properties for inference (i.e. standard errors). However, certain semiparametric estimation methods like TMLE can actually use these models to obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models. This is because, unlike parametric models, most machine learning algorithms do not assume an underlying distribution of the data. The way we use the machine learning estimates in TMLE, surprisingly enough, yields &lt;strong&gt;known asymptotic properties of bias and variance&lt;/strong&gt; just like we see in parametric maximum likelihood estimation (e.g. linear and logistic regression).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;why-the-visual-guide&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;3. Why the Visual Guide? 🎨&lt;/h1&gt;
 &lt;p&gt;TMLE was developed in 2007 by Mark van der Laan at UC Berkeley, and it is slowly but surely starting to see more widespread use. Since learning about TMLE, I’ve believed many more analysts with a skill set similar to mine &lt;em&gt;could&lt;/em&gt; be using TMLE, but perhaps find even the most introductory resources to be a bit daunting.&lt;/p&gt;
 &lt;p&gt;I am a very applied thinker, and I’ve tried to write this tutorial in the way I would have found most useful and accessible when I began learning about TMLE. Each step is accompanied by a non-rigorous explanation, an equation using the simplest notation possible, in-line &lt;code&gt;R&lt;/code&gt; code, and a small graphic representing the computation on a data frame or vector. This last piece is super important for me, because I remember best when I associate an image with what I’ve learned.&lt;/p&gt;
-&lt;p&gt;This tutorial is not meant to replace any of the excellent resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the &lt;a href=&#34;#references&#34;&gt;references&lt;/a&gt; I’ve listed at the end. TMLE and other inference methods which allow machine learning are extremely powerful and will undoubtedly only grow in popularity in statistics and data science.&lt;/p&gt;
+&lt;p&gt;This tutorial is not meant to replace the resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the &lt;a href=&#34;#references&#34;&gt;references&lt;/a&gt; I’ve listed at the end. TMLE is a very powerful method and will undoubtedly only grow in popularity in statistics and data science.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;is-tmle-causal-inference&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;4. Is TMLE Causal Inference? 🤔&lt;/h1&gt;
@@ -1281,7 +1277,7 @@ HTML Image as link
 &lt;div id=&#34;superlearning&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Superlearning&lt;/h3&gt;
 &lt;p&gt;I use the ensemble learning method &lt;strong&gt;superlearning&lt;/strong&gt; (also known as “stacking”) to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.&lt;/p&gt;
-&lt;p&gt;For a tutorial on superlearning, you can check out my &lt;a href=&#34;www.khstats.com/sl/superlearning&#34;&gt;previous blog post&lt;/a&gt;. If you’re new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many statistical learning algorithms for prediction. When I use &lt;code&gt;SuperLearner()&lt;/code&gt; in the following example code, I could have used &lt;code&gt;glm()&lt;/code&gt;, &lt;code&gt;randomForest()&lt;/code&gt;, or any other parametric or non-parametric supervised learning algorithm.&lt;/p&gt;
+&lt;p&gt;For a tutorial on superlearning, you can check out my &lt;a href=&#34;www.khstats.com/sl/superlearning&#34;&gt;previous blog post&lt;/a&gt;. If you’re new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use &lt;code&gt;SuperLearner()&lt;/code&gt; in the following example code, I could have used &lt;code&gt;glm()&lt;/code&gt;, &lt;code&gt;randomForest()&lt;/code&gt;, or any other parametric or non-parametric supervised learning algorithm.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;initial-set-up&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Initial set up&lt;/h3&gt;
@@ -1303,7 +1299,7 @@ set.seed(7) # for reproducible results&lt;/code&gt;&lt;/pre&gt;
     return(tibble(W1, W2, W3, W4, A, Y))
 }
 
-n &amp;lt;- 50
+n &amp;lt;- 2000
 dat_obs &amp;lt;- generate_data(n) # generate a data set with n observations
 
 kable(head(dat_obs), digits=2, caption = &amp;quot;Simulated data set.&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
@@ -1342,76 +1338,16 @@ Y
 1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-2
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2
+5
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 4
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-2
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
 1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
@@ -1425,7 +1361,7 @@ Y
 3
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-1
+4
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 1
@@ -1442,23 +1378,83 @@ Y
 0
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-2
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 3
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0
+1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0
+1
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;As mentioned earlier, TMLE can estimate many different statistical estimands of interest. In this example, the statistical estimand is the mean difference in outcomes between those who received the treatment and those who did not, adjusting for confounders.&lt;/p&gt;
-&lt;p&gt;Under causal inference assumptions, this could be identifiable as the Average Treatment Effect (ATE). Let’s pretend for this example that we previously met causal assumptions and call our statistical estimand, &lt;span class=&#34;math inline&#34;&gt;\(\Psi\)&lt;/span&gt;, the ATE.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\Psi = ATE = E_W[E[Y|A=1,W] - E[Y|A=0,W]]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Under causal assumptions, this could be identifiable as the Average Treatment Effect (ATE). Let’s pretend for this example that we previously met causal assumptions and call our statistical estimand, &lt;span class=&#34;math inline&#34;&gt;\(\Psi\)&lt;/span&gt;, the ATE.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;At this point in set-up, we should also pick our statistical learning algorithms to combine when we use the superlearner to estimate the expected outcome and probability of treatment. Let’s use LASSO (&lt;code&gt;glmnet&lt;/code&gt;), random forests (&lt;code&gt;ranger&lt;/code&gt;), and Multivariate Adaptive Regression Splines (MARS) (&lt;code&gt;earth&lt;/code&gt;).&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_libs &amp;lt;- c(&amp;#39;SL.glmnet&amp;#39;, &amp;#39;SL.ranger&amp;#39;, &amp;#39;SL.earth&amp;#39;) # a library of machine learning algorithms (penalized regression, random forests, and multivariate adaptive regression splines)&lt;/code&gt;&lt;/pre&gt;
 &lt;html&gt;
@@ -1469,12 +1465,13 @@ Y
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors. We can use any regression model to estimate this, but it is best to use flexible machine learning models so that we don’t have assumptions on the underlying distribution of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;.&lt;/p&gt;
-&lt;p&gt;This is what that looks like in mathematical notation:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(A,W) = \mathrm{E}[Y|A,W]\]&lt;/span&gt;
-We can think about this equation as a generic regression function in &lt;code&gt;R&lt;/code&gt; called &lt;code&gt;fit()&lt;/code&gt; with inputs in formula form: &lt;code&gt;Y ~ x1 + x2 + ...&lt;/code&gt;:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/tmle/2_outcome_fit.png&#34; style=&#34;width:70.0%&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;In real &lt;code&gt;R&lt;/code&gt; code, we’ll use the &lt;code&gt;SuperLearner()&lt;/code&gt; function to fit a weighted combination of multiple machine learning models (defined earlier in &lt;code&gt;sl_libs&lt;/code&gt;). This function takes the outcome &lt;code&gt;Y&lt;/code&gt; as a vector and a data frame &lt;code&gt;W_A&lt;/code&gt; as predictors.&lt;/p&gt;
+&lt;p&gt;The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors.&lt;/p&gt;
+&lt;p&gt;This is what that looks like in mathematical notation. There is some function &lt;span class=&#34;math inline&#34;&gt;\(Q\)&lt;/span&gt; which takes &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{W}\)&lt;/span&gt; as inputs and yields the conditional expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(A,\mathbf{W}) = \mathrm{E}[Y|A,\mathbf{W}]\]&lt;/span&gt;
+We can use any regression to estimate this conditional expectation, but it is best to use flexible machine learning models so that we don’t have unnecessary assumptions on the underlying distribution of the data.&lt;/p&gt;
+&lt;p&gt;We can think about the above equation as some generic regression function in &lt;code&gt;R&lt;/code&gt; called &lt;code&gt;fit()&lt;/code&gt; with inputs in formula form: &lt;code&gt;outcome ~ predictors&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/2_outcome_fit.png&#34; style=&#34;width:70.0%&#34; /&gt;
+In real &lt;code&gt;R&lt;/code&gt; code, we’ll use the &lt;code&gt;SuperLearner()&lt;/code&gt; function to fit a weighted combination of multiple machine learning models (defined earlier in &lt;code&gt;sl_libs&lt;/code&gt;). This function takes the outcome &lt;code&gt;Y&lt;/code&gt; as a vector and a data frame &lt;code&gt;X&lt;/code&gt; as predictors.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Y &amp;lt;- dat_obs$Y
 W_A &amp;lt;- dat_obs %&amp;gt;% select(-Y) # remove the outcome to make a matrix of predictors (A, W1, W2, W3, W4) for SuperLearner
 Q &amp;lt;- SuperLearner(Y = Y, # Y is the outcome vector
@@ -1484,27 +1481,26 @@ Q &amp;lt;- SuperLearner(Y = Y, # Y is the outcome vector
 &lt;pre&gt;&lt;code&gt;## Loading required namespace: glmnet&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Loading required namespace: earth&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Loading required namespace: ranger&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Then, we should predict the outcome for every observation under three different scenarios:&lt;/p&gt;
+&lt;p&gt;Then, we should estimate the outcome for every observation under three different scenarios:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1. If every observation received the treatment they &lt;em&gt;actually&lt;/em&gt; received.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;We can get this expected outcome estimate by simply calling &lt;code&gt;predict()&lt;/code&gt; on the model fit without specifying any new data.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{Q}(A,W) = \mathrm{\hat{E}}[Y|A,W]\]&lt;/span&gt;
-We will assign that vector of predictions to a new object, &lt;code&gt;Q_A&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{Q}(A,\mathbf{W}) = \mathrm{\hat{E}}[Y|A,\mathbf{W}]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;We will save that vector of estimates as a new object in &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/3_QA.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Q_A &amp;lt;- as.vector(predict(Q)$pred) # obtain predictions for everyone using the treatment they actually received&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;2. If every observation received the treatment.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;To do this, we’ll first need to create a data set where every observation received the treatment of interest, whether they actually did or not. Then we can call the &lt;code&gt;predict()&lt;/code&gt; function on that data set.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{Q}(1,W) = \mathrm{\hat{E}}[Y|A=1,W]\]&lt;/span&gt;
-Notice our treatment vector is now entirely red, because everyone was treated:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{Q}(1,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/4_Q1.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;W_A1 &amp;lt;- W_A %&amp;gt;% mutate(A = 1)  # data set where everyone received treatment
 Q_1 &amp;lt;- as.vector(predict(Q, newdata = W_A1)$pred) # predict on that everyone-exposed data set&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;3. If every observation received the control.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Similarly, we create a data set where every observation did &lt;em&gt;not&lt;/em&gt; receive the treatment of interest, whether they actually did or not, and call the &lt;code&gt;predict()&lt;/code&gt; function again.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{Q}(0,W) = \mathrm{\hat{E}}[Y|A=0,W]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{Q}(0,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/5_Q1.png&#34; style=&#34;width:80.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;W_A0 &amp;lt;- W_A %&amp;gt;% mutate(A = 0) # data set where no one received treatment
 Q_0 &amp;lt;- as.vector(predict(Q, newdata = W_A0)$pred)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Let’s create a new data frame, &lt;code&gt;dat_tmle&lt;/code&gt;, to hold the three vectors we’ve created so far, along with the treatment status &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; and observed outcome &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;. Notice that when &lt;span class=&#34;math inline&#34;&gt;\(A=1\)&lt;/span&gt;, the expected outcome &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A,W]\)&lt;/span&gt; equals the expected outcome under treatment &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A=1,W]\)&lt;/span&gt; and when &lt;span class=&#34;math inline&#34;&gt;\(A=0\)&lt;/span&gt;, the expected outcome &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A,W]\)&lt;/span&gt; equals the expected outcome under no treatment &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A=0,W]\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Let’s create a new data frame, &lt;code&gt;dat_tmle&lt;/code&gt;, to hold the three vectors we’ve created so far, along with the treatment status &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; and observed outcome &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;. Notice that when &lt;span class=&#34;math inline&#34;&gt;\(A=1\)&lt;/span&gt;, the expected outcome &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)&lt;/span&gt; equals the expected outcome under treatment &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)&lt;/span&gt;. When &lt;span class=&#34;math inline&#34;&gt;\(A=0\)&lt;/span&gt;, the expected outcome &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)&lt;/span&gt; equals the expected outcome under no treatment &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)&lt;/span&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_tmle &amp;lt;- tibble(Y = dat_obs$Y, A = dat_obs$A, Q_A, Q_0, Q_1)
 kable(head(dat_tmle), digits=2, caption = &amp;quot;TMLE Algorithm after Step 1&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
@@ -1536,13 +1532,81 @@ Q_1
 1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.67
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.85
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.73
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.49
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.73
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 0
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.66
+0
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.66
+0.24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.46
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.79
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.58
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.79
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.62
@@ -1550,94 +1614,28 @@ Q_1
 &lt;/tr&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.51
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.51
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.55
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.61
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.61
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.54
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.54
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.61
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.54
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
 1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.73
+0.79
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.59
+0.57
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.73
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.53
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.53
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.56
+0.79
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;&lt;em&gt;Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; probability).&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;We could stop here and get our estimate of the ATE by computing &lt;code&gt;Q_1 - Q_0&lt;/code&gt;, which &lt;em&gt;would&lt;/em&gt; be the mean difference in the expected outcomes, conditional on confounders. However, those expected outcome estimates have the optimal bias-variance tradeoff for estimating the outcomes, not the ATE!&lt;/p&gt;
-&lt;p&gt;That estimate of the ATE might be biased, and furthermore, we don’t have a formula to compute standard errors after using machine learning. We need to incorporate information about the treatment mechanism to fix this.&lt;/p&gt;
+&lt;!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* --&gt;
+&lt;p&gt;We could stop here and get our estimate of the ATE by computing the average difference between [Y|A=1,] and [Y|A=0,], which &lt;em&gt;would&lt;/em&gt; be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called &lt;strong&gt;standardization&lt;/strong&gt;, &lt;strong&gt;simple substitution estimation&lt;/strong&gt;, or &lt;strong&gt;G-computation&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \sum_{i=1}^{n}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])\]&lt;/span&gt;
+&lt;img src=&#34;/img/tmle/ate_gcomp.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;However, because we used machine learning, those expected outcome estimates have the optimal bias-variance tradeoff for estimating the outcome, not the ATE. The ATE estimate may be biased, and we cannot compute the standard error. We need to incorporate information about the treatment mechanism to fix this.&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:navy&#34; &gt;
@@ -1647,9 +1645,9 @@ Q_1
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;The next step is to estimate the probability of treatment, given confounders. This quantity is often called the &lt;strong&gt;propensity score&lt;/strong&gt;, as in it gives the &lt;em&gt;propensity&lt;/em&gt; that an observation will receive a treatment of interest.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[g(W) = \mathrm{Pr}(A=1|W)\]&lt;/span&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[g(\mathbf{W}) = \mathrm{Pr}(A=1|\mathbf{W})\]&lt;/span&gt;
 &lt;img src=&#34;/img/tmle/6_treatment_fit.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;We will estimate &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{Pr}(A=1|W)\)&lt;/span&gt; in the same way as we estimated &lt;span class=&#34;math inline&#34;&gt;\(E[Y|A,W]\)&lt;/span&gt;: using the superlearner algorithm.&lt;/p&gt;
+&lt;p&gt;We will estimate &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{Pr}(A=1|\mathbf{W})\)&lt;/span&gt; in the same way as we estimated &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{E}[Y|A,\mathbf{W}]\)&lt;/span&gt;: using the superlearner algorithm.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;A &amp;lt;- dat_obs$A
 W &amp;lt;- dat_obs %&amp;gt;% select(-Y, -A) # matrix of predictors that only contains the confounders W1, W2, W3, and W4
 
@@ -1659,18 +1657,20 @@ g &amp;lt;- SuperLearner(Y = A,
                   SL.library=sl_libs)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Then we need to compute three different quantities from this model fit:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1. The inverse probability of receiving treatment.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H(1,W) = \frac{1}{g(W)} = \frac{1}{\mathrm{Pr}(A=1|W)}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H(1,\mathbf{W}) = \frac{1}{g(\mathbf{W})} = \frac{1}{\mathrm{Pr}(A=1|\mathbf{W})}\]&lt;/span&gt;
+We can estimate the probability of receiving treatment for every observation by using the &lt;code&gt;predict()&lt;/code&gt; funcion without specifying any new data, and then take the inverse of that.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/7_H1.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;g_w &amp;lt;- as.vector(predict(g)$pred)
 H_1 &amp;lt;- 1/g_w&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;2. The negative inverse probability of not receiving treatment.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H(0,W) = -\frac{1}{1-g(W)}= -\frac{1}{\mathrm{Pr}(A=0|W)}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H(0,\mathbf{W}) = -\frac{1}{1-g(\mathbf{W})}= -\frac{1}{\mathrm{Pr}(A=0|\mathbf{W})}\]&lt;/span&gt;
+The probability of not receiving treatment for a binary treatment is simply 1 minus the probability of treatment.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/8_H0.png&#34; style=&#34;width:70.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;H_0 &amp;lt;- -1/(1-g_w)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;3. If the observation was treated, the inverse probability of receiving treatment, and if they were not treated, the negative inverse probability of not receiving treatment.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H(A,W) = \frac{\mathrm{I}(A=1)}{\mathrm{Pr}(A=1|W)}-\frac{\mathrm{I}(A=0)}{\mathrm{Pr}(A=0|W)}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[H(A,\mathbf{W}) = \frac{\mathrm{I}(A=1)}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{\mathrm{I}(A=0)}{\mathrm{Pr}(A=0|\mathbf{W})}\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/9_HA.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;To calculate this, we’ll first add the &lt;span class=&#34;math inline&#34;&gt;\(H(1,W)\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(H(0,W)\)&lt;/span&gt; vectors to our &lt;code&gt;dat_tmle&lt;/code&gt; data frame, and then we can use &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; to assign &lt;span class=&#34;math inline&#34;&gt;\(H(A,W)\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;To calculate this, we’ll first add the &lt;span class=&#34;math inline&#34;&gt;\(H(1,\mathbf{W})\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(H(0,\mathbf{W})\)&lt;/span&gt; vectors to our &lt;code&gt;dat_tmle&lt;/code&gt; data frame, and then we can use &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; to assign &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W})\)&lt;/span&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_tmle &amp;lt;- # add clever covariate data to dat_tmle
   dat_tmle %&amp;gt;%
   bind_cols(
@@ -1718,103 +1718,129 @@ H_A
 1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.67
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.85
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.12
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-9.15
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.12
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.73
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.49
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.73
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.19
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-6.28
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.19
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
 0
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.66
+0
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.66
+0.24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.24
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.46
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.82
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.23
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.23
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.79
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.58
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.79
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.55
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+-2.83
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.55
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.37
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
 0.62
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
+1.63
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
+-2.58
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.51
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.51
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.55
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.61
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.61
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.54
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.54
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.61
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.54
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
+-2.58
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr&gt;
@@ -1825,53 +1851,31 @@ H_A
 1
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.73
+0.79
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.59
+0.57
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.73
+0.79
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
+1.28
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
+-4.52
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
-&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.53
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.53
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-0.56
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
-1.47
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
-&lt;/td&gt;
-&lt;td style=&#34;text-align:right;&#34;&gt;
--3.12
+1.28
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;We’ll now use those vectors containing information about the treatment mechanism – &lt;span class=&#34;math inline&#34;&gt;\(H(1,W)\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(H(0,W)\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(H(A,W)\)&lt;/span&gt; – to fix the wrong bias-variance trade-off for the expected outcome fits from Step 1.&lt;/p&gt;
+&lt;p&gt;Next we will use those vectors containing information about the treatment mechanism – &lt;span class=&#34;math inline&#34;&gt;\(H(1,\mathbf{W})\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(H(0,\mathbf{W})\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W})\)&lt;/span&gt; – to fix the wrong bias-variance trade-off for the expected outcome fits from Step 1.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; Another way to estimate the ATE would be to down-weight outcomes from observations more likely to receive the treatment and up-weight outcomes from observations less likely to receive treatment. This is called &lt;strong&gt;inverse probability weighting&lt;/strong&gt; (IPW).&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{\hat{Pr}}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{\hat{Pr}}(A=0|\mathbf{W})})\]&lt;/span&gt;
+&lt;img src=&#34;/img/tmle/ate_ipw.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;However, once we use machine learning to estimate the probability of treatment, we cannot get standard errors for our estimates. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:navy&#34; &gt;
@@ -1881,9 +1885,6 @@ H_A
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;To reiterate, in Step 1 we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.&lt;/p&gt;
-&lt;p&gt;Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. I’ll give a very brief high-level explanation, and then you can look at references if you’re curious to learn more. Importantly, &lt;strong&gt;the simple explanation I’m going to offer here is still &lt;em&gt;so much more&lt;/em&gt; than you need to know to appropriately implement TMLE as an applied statistician or data scientist.&lt;/strong&gt;&lt;/p&gt;
-&lt;!-- Importantly, **fully understanding the math behind this step is not necessary to appropriately use TMLE.** --&gt;
-&lt;p&gt;let’s quickly review/define some terms. Our &lt;strong&gt;estimand&lt;/strong&gt; of interest is the mean difference in outcomes, which we’re calling the ATE in this example (under the assumption that causal assumptions were met). There are many &lt;strong&gt;estimators&lt;/strong&gt; we could have used to obtain an &lt;strong&gt;estimate&lt;/strong&gt; of our estimand, but we’ve chosen to use TMLE.&lt;/p&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;
@@ -1893,50 +1894,34 @@ HTML Image as link
 &lt;body&gt;
 &lt;a href=&#34;&#34;&gt;
 &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/bear_with_me.jpg&#34;
-               style=&#34;float:right; padding-left:40px;&#34; width=50%&#34;&gt;
+               style=&#34;float:right; padding-left:40px;&#34; width=45%&#34;&gt;
 &lt;/a&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;Estimators can have&lt;/p&gt;
-&lt;p&gt;Many estimators have &lt;strong&gt;estimating equations&lt;/strong&gt; to help them solve for their parameters. Maximum likelihood estimators like linear and logistic regression have an estimating equation (you may remember taking the derivative of the log-likelihood and setting it equal to zero to solve for &lt;span class=&#34;math inline&#34;&gt;\(\theta\)&lt;/span&gt; in a statistics course), as does a Cox proportional hazards model. We don’t really think about them when we’re fitting a model, but they exist. We will set up an estimating equation for our TMLE estimator in this step. This estimating equation is constructed based on something called an &lt;strong&gt;efficient inluence function&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;Estimands&lt;/p&gt;
-&lt;p&gt;What we need do in this step is solve a certain &lt;strong&gt;estimating equation&lt;/strong&gt;. An estimating equation is just an umbrella term for an equation we set up to solve for something else. When you fit a linear or logistic regression, you set up an estimating equation behind the scenes (when you set the score function equal to zero) to get the coefficients.&lt;/p&gt;
-&lt;p&gt;In this step, we construct an estimating equation that happens to solve for something called the &lt;strong&gt;Efficient Influence Function&lt;/strong&gt; (EIF) of the ATE. The EIF is a property some estimands have; it means they can be estimated &lt;strong&gt;efficiently&lt;/strong&gt; (achieving the smallest possible variance in the fewest number of observations).&lt;/p&gt;
-&lt;p&gt;Because the ATE has an EIF, and because we’ve set up an estimating equation to solve for the EIF, we will soon have the information to do two things:&lt;/p&gt;
+&lt;p&gt;Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Since this post is focused on learning the TMLE algorithm, I’ll give only a very brief high-level explanation, and then you can look at references if you’re curious to learn more about the theory. Importantly, &lt;strong&gt;the explanation I offer for this step is sufficient to appropriately implement TMLE as an analyst.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;In this step, we will construct an estimating equation that happens to solve for something called the &lt;strong&gt;Efficient Influence Function&lt;/strong&gt; (EIF) of the ATE. An Influence Function (IF) is a function that tells us how much an estimate will change if the input changes. If an Efficient IF exists for an estimand, it means the estimand can be estimated &lt;strong&gt;efficiently&lt;/strong&gt; (achieving the smallest possible variance in the fewest number of observations).&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: In parametric maximum likelihood estimation (MLE), the influence function is the score function (derivative of the log likelihood). We don’t call it an EIF in MLE because the score function &lt;strong&gt;always&lt;/strong&gt; achieves the Cramer Rao Lower Bound of efficiency. It’s not quite as simple in a semi-parametric space.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Solving for the EIF will allow us to do two things:&lt;/strong&gt;&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;Update our initial outcome estimates so that our ATE is asymptotically unbiased (under certain conditions, see the &lt;a href=&#34;#7-properties-of-tmle&#34;&gt;statistical properties section&lt;/a&gt;).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Construct a covariance matrix to get standard errors, confidence intervals, p-values, etc. for our estimate.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Construct standard errors, confidence intervals, p-values, etc. for our estimate.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;The EIF is the reason we’re able to use machine learning models “under the hood” while still obtaining asymptotic properties for inference.&lt;/p&gt;
-&lt;p&gt;There is a &lt;em&gt;ton&lt;/em&gt; of math and theory behind that big picture explanation, but I’ve described my favorite resources for learning more at the end of this post. Let’s take a look at the estimating equation:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[logit(\mathrm{E}[Y|A,W]) = logit(\mathrm{\hat{E}}[Y|A,W]) + \epsilon H(A,W)\]&lt;/span&gt;
-How can we solve it? If we look at the left side, we can see it contains the true outcome &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;, just &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; transformed.&lt;/p&gt;
-&lt;p&gt;Luckily for us, there’s a well-known model that &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; transforms the left side of an equation: logistic regression. The estimating equation looks &lt;em&gt;a lot&lt;/em&gt; like a simple logistic regression, actually:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[logit(E[Y|X]) = \beta_0 + \beta_1 X\]&lt;/span&gt;
-Do you see how our estimating equation &lt;em&gt;also&lt;/em&gt; has a vector on the right-hand side (&lt;span class=&#34;math inline&#34;&gt;\(H(A,W)\)&lt;/span&gt; instead of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt;) with a corresponding coefficient (called &lt;span class=&#34;math inline&#34;&gt;\(epsilon\)&lt;/span&gt; instead of &lt;span class=&#34;math inline&#34;&gt;\(\beta_0\)&lt;/span&gt;)? The only difference now is that the “intercept” in our estimating equation, &lt;span class=&#34;math inline&#34;&gt;\(logit(\mathrm{\hat{E}}[Y|A,W])\)&lt;/span&gt; is not a constant value like&lt;span class=&#34;math inline&#34;&gt;\(\beta_0\)&lt;/span&gt;, it is a vector of values. We can see it as an &lt;strong&gt;offset&lt;/strong&gt; in a logistic regression, or a &lt;strong&gt;fixed intercept&lt;/strong&gt;, rather than a standard intercept.&lt;/p&gt;
-&lt;p&gt;So to solve our estimating equation, we can leverage standard statistical software and fit a logistic regression with one covariate, &lt;span class=&#34;math inline&#34;&gt;\(H(A,W)\)&lt;/span&gt;, and the initial outcome estimate, &lt;span class=&#34;math inline&#34;&gt;\(logit(\mathrm{\hat{E}}[Y|A,W])\)&lt;/span&gt;, as a fixed intercept. The outcome of the logistic regression is the observed outcome, &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;.&lt;/p&gt;
-&lt;!-- If you think that’s crazy for me to say, I’d ask you to consider whether you know what estimating equation the Cox model is solving. If your answer is no, do you still feel comfortable running the `coxph()` in `R`? Yes, because understanding the estimating equation in a Cox model is not necessary to properly implement it! After this high-level why behind TMLE, you’re going to know more about TMLE than you do about the Cox model.  --&gt;
-&lt;!-- We can figure out how much to change each outcome estimates by solving for something called the **Efficient Influence Function** (EIF) of the ATE. An Influence Function (IF) is a function that we can apply to our data that will tell us how much influence, or weight, each observation has on an estimate. The *Efficient* Influence Function is, similarly, the function that we can apply to our data to yield the smallest variance in the fewest possible observations. --&gt;
-&lt;!-- If we worked through a mathematical proof, we could show that our ATE estimand has an EIF. If we worked through another proof, we could show that the following equation (using some of our already computed estimates) solves for a constant, $\epsilon$, which yields the EIF of the ATE: --&gt;
-&lt;!-- We&#39;ll then use the information from this step to learn two separate but related things: --&gt;
-&lt;!--   **A. How much the initial outcome estimates should change to yield an estimate that is closer to the true value of the ATE.** --&gt;
-&lt;!--   **B. How much influence each observation has on the final estimate of the ATE.** This is how we&#39;ll compute the standard errors even after using machine learning fits in Step 1 and 2. --&gt;
-&lt;!-- We can solve for the EIF of the ATE by estimating $\epsilon$ in this equation: --&gt;
-&lt;p&gt;Two technical points for application: we use &lt;code&gt;qlogis&lt;/code&gt; to transform the probabilities &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A,W]\)&lt;/span&gt; to the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale. Also, the &lt;code&gt;R&lt;/code&gt; code for a fixed intercept is &lt;code&gt;-1 + offset(fixed_intercept)&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;This is the reason we’re able to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we’ve built an algorithm, or estimator, to utilize its beneficial properties.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Let’s take a look at that estimating equation that will help us get to the EIF:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[logit(\mathrm{E}[Y|A,\mathbf{W}]) = logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \epsilon H(A,\mathbf{W})\]&lt;/span&gt;
+Again, I am not showing &lt;em&gt;why&lt;/em&gt; this is the estimating equation that works; it relies on much more semiparametric theory than can be covered in this post. Let’s instead think about how we might solve the estimating equation, given we know it to be correct.&lt;/p&gt;
+&lt;p&gt;If we look at the left side, we can see it contains the true outcome &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;, just &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; transformed. Luckily for us, there’s a well-known model that &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; transforms the left side of an equation: logistic regression. Our estimating equation looks &lt;em&gt;a lot&lt;/em&gt; like a simple logistic regression, actually: &lt;span class=&#34;math inline&#34;&gt;\(logit(\mathrm{E}[Y|X]) = \beta_0 + \beta_1 X\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Do you see how our estimating equation &lt;em&gt;also&lt;/em&gt; has a vector on the right-hand side, &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W})\)&lt;/span&gt;, with a corresponding coefficient, &lt;span class=&#34;math inline&#34;&gt;\(\epsilon\)&lt;/span&gt;? The only difference is that the “intercept” in our estimating equation, &lt;span class=&#34;math inline&#34;&gt;\(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])\)&lt;/span&gt; is not a constant value like &lt;span class=&#34;math inline&#34;&gt;\(\beta_0\)&lt;/span&gt;; it is a vector of values. We can see it as an &lt;strong&gt;offset&lt;/strong&gt; in a logistic regression, or a &lt;strong&gt;fixed intercept&lt;/strong&gt;, rather than a constant intercept.&lt;/p&gt;
+&lt;p&gt;Therefore, to solve our estimating equation we can leverage standard statistical software and fit a logistic regression with one covariate, &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W})\)&lt;/span&gt;, and the initial outcome estimate, &lt;span class=&#34;math inline&#34;&gt;\(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])\)&lt;/span&gt;, as a fixed intercept. The outcome of the logistic regression is the observed outcome, &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;Two technical points for application: we use &lt;code&gt;qlogis&lt;/code&gt; to transform the probabilities &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)&lt;/span&gt; to the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale. Also, the &lt;code&gt;R&lt;/code&gt; code for a fixed intercept is &lt;code&gt;-1 + offset(fixed_intercept)&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/10_logistic_regression.png&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;glm_fit &amp;lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;em&gt;Note that this step has nothing to do with logistic regression, a logistic regression just happens to have the correct form for solving the estimating equation of the influence curve for the ATE estimand.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note that we are only using a logistic regression because it happens to have the correct form for solving the estimating equation for the EIF for the ATE estimand. It has nothing to do with having a binary outcome, and it isn’t putting any parametric restraints on our data.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Next we need to save the coefficient from that logistic regression, which we will call &lt;span class=&#34;math inline&#34;&gt;\(\hat{\epsilon}\)&lt;/span&gt;:&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/11_epsilon.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;eps &amp;lt;- coef(glm_fit)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;In the TMLE literature, &lt;span class=&#34;math inline&#34;&gt;\(\epsilon\)&lt;/span&gt; is called the &lt;strong&gt;fluctuation parameter&lt;/strong&gt;, because it provides information about how much to change, or fluctuate, our initial outcome estimates. Similarly, &lt;span class=&#34;math inline&#34;&gt;\(H(A,W)\)&lt;/span&gt; is called the &lt;strong&gt;clever covariate&lt;/strong&gt; because it “cleverly” helps us solve for the EIF and then update our estimates.&lt;/p&gt;
+&lt;p&gt;In the TMLE literature, &lt;span class=&#34;math inline&#34;&gt;\(\epsilon\)&lt;/span&gt; is called the &lt;strong&gt;fluctuation parameter&lt;/strong&gt;, because it provides information about how much to change, or fluctuate, our initial outcome estimates. Similarly, &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W})\)&lt;/span&gt; is called the &lt;strong&gt;clever covariate&lt;/strong&gt; because it “cleverly” helps us solve for the EIF and then update our estimates.&lt;/p&gt;
 &lt;p&gt;We will use both the fluctuation parameter and clever covariate in the next step to update our initial estimates of the expected outcome, conditional on confounders and treatment.&lt;/p&gt;
-&lt;!-- The logistic regression in this case is unrelated to the outcome type; it is used because we want to solve for the log likelihood (remember in parametric MLE, you take the derivative of the log-likelihood to get the score...?) It&#39;s related to that. --&gt;
-&lt;!-- **1. How much to change, or fluctuate, the initial estimates of the expected outcome.** We knew those initial outcome regressions were wrong, because their bias and variance were optimized for the outcome, not the effect of treatment. The fluctuation parameter, $\hat{\epsilon}$, combined with information about the treatment mechanism, $H(A,W)$, will help us update the outcomes to get closer to the true value of the final parameter, the ATE. --&gt;
-&lt;!-- **2. How much influence each observation has on the final estimate.** The reason we&#39;re able to get standard errors for inference even after using data-adaptive machine learning algorithms like the superlearner is because the TMLE estimator has an EIF (not all estimators do). We&#39;ll be able to use it, just like we use the score function in parametric MLE, to estimate our standard errors. --&gt;
-&lt;!-- There&#39;s a lot of semi-parametric theory behind this over-simplified explanation. If you&#39;re interested in learning more, I&#39;ve linked my favorite resources at the end of the post. --&gt;
-&lt;!-- Intuitively, we do this step because we know the initial outcome estimates we used machine learning models to fit have the wrong bias-variance tradeoff for estimating the effect of treatment. We&#39;re trying to figure out how much we need to change those initial estimates of the outcome, using information about treatment, to achieve the correct bias-variance trade-off for our final statistical parameter of interest, the ATE.  --&gt;
-&lt;!-- *Note that $H(A,W)$ is often referred to as the **clever covariate** in TMLE literature because it &#34;cleverly&#34; solves an important equation.* --&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:navy&#34; &gt;
@@ -1945,19 +1930,19 @@ Do you see how our estimating equation &lt;em&gt;also&lt;/em&gt; has a vector on
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale using &lt;code&gt;qlogis()&lt;/code&gt; because that’s the scale we used to solve the fluctuation parameter in Step 3. Then we can add our update using the fluctuation parameter and clever covariate: &lt;span class=&#34;math inline&#34;&gt;\(\hat{\epsilon} \times H(A,W)\)&lt;/span&gt;. Finally, we can put the updated estimates back on the true outcome scale using &lt;code&gt;plogis()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale using &lt;code&gt;qlogis()&lt;/code&gt; because that’s the scale we used to solve the fluctuation parameter in Step 3. Then we can add our update using the fluctuation parameter and clever covariate: &lt;span class=&#34;math inline&#34;&gt;\(\hat{\epsilon} \times H(A,\mathbf{W})\)&lt;/span&gt;. Finally, we can put the updated estimates back on the true outcome scale using &lt;code&gt;plogis()&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Note we can use &lt;span class=&#34;math inline&#34;&gt;\(expit\)&lt;/span&gt; to show the inverse of the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; function, and we will denote updates to the outcome regressions as &lt;span class=&#34;math inline&#34;&gt;\(\hat{\mathrm{E}}^*\)&lt;/span&gt; instead of &lt;span class=&#34;math inline&#34;&gt;\(\hat{\mathrm{E}}\)&lt;/span&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A,W] = expit(logit(\mathrm{\hat{E}}[Y|A,W]) + \hat{\epsilon}H(A,W))\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/update_qAW.png&#34; style=&#34;width:70.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;H_A &amp;lt;- dat_tmle$H_A # for cleaner code in Q_A_update
 Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H_A)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;2. Update the expected outcomes, conditional on baseline confounders and everyone receiving the treatment.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A=1,W] = expit(logit(\mathrm{\hat{E}}[Y|A=1,W]) + \hat{\epsilon}H(A,1))\]&lt;/span&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A=1,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]) + \hat{\epsilon}H(A,1))\]&lt;/span&gt;
 &lt;img src=&#34;/img/tmle/12_update_Q1.png&#34; style=&#34;width:70.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Q_1_update &amp;lt;- plogis(qlogis(Q_1) + eps*H_1)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;strong&gt;3. Update the expected outcomes, conditional on baseline confounders and no one receiving the treatment.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A=0,W] = expit(logit(\mathrm{\hat{E}}[Y|A=0,W]) + \hat{\epsilon}H(A,0))\]&lt;/span&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A=0,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]) + \hat{\epsilon}H(A,0))\]&lt;/span&gt;
 &lt;img src=&#34;/img/tmle/13_update_Q0.png&#34; style=&#34;width:70.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Q_0_update &amp;lt;- plogis(qlogis(Q_0) + eps*H_0)&lt;/code&gt;&lt;/pre&gt;
 &lt;html&gt;
@@ -1969,13 +1954,13 @@ Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H_A)&lt;/code&gt;&lt;/pre&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\Psi} = \hat{ATE} = \hat{E}_W[\hat{E^*}[Y|A=1,W] - \hat{E^*}[Y|A=0,W]]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \sum_{i=1}^{n}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/14_compute_ATE.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmle_ate &amp;lt;- mean(Q_1_update - Q_0_update)
 tmle_ate&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## [1] 0.2130771&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We can then say, &lt;em&gt;the average treatment effect was estimated to be 21.3%.&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;If causal assumptions were not met, we would say, &lt;em&gt;the proportion of observations who experienced the outcome, after adjusting for baseline confounders, was estimated to be 21.3% higher for those who received treatment compared to those who did not.&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.2403501&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can then say, &lt;em&gt;the average treatment effect was estimated to be 24%.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;If causal assumptions were not met, we would say, &lt;em&gt;the proportion of observations who experienced the outcome, after adjusting for baseline confounders, was estimated to be 24% higher for those who received treatment compared to those who did not.&lt;/em&gt;&lt;/p&gt;
 &lt;html&gt;
 &lt;body&gt;
 &lt;h2 style=&#34;color:navy&#34; &gt;
@@ -1984,15 +1969,16 @@ tmle_ate&lt;/code&gt;&lt;/pre&gt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;To find the standard error (SE) of a TMLE estimate, we first compute the &lt;strong&gt;Influence Curve&lt;/strong&gt; (IC). This is what we solved for when we fit the logistic regression in Step 3; we wanted to find the &lt;span class=&#34;math inline&#34;&gt;\(\epsilon\)&lt;/span&gt; that solved for the Efficient Influence Function (EIF). The terms EIF and IC are, for most intents and purposes, used interchangably; the latter tends to refer to an estimate with actual data.&lt;/p&gt;
-&lt;p&gt;Anyways, we can compute the IC for our estimate, which tells us how much influence each observation has on the estimate. This is the semi-parametric equivalent to the score function in parametric MLE.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{IC} = (Y-\hat{E^*}[Y|A,W])H(A,W) + \hat{E^*}[Y|A=1,W] - \hat{E^*}[Y|A=0,W] - \hat{ATE}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;A point estimate is great, but when you’re doing any sort of hypothesis testing or uncertainty quantification, standard errors are needed. To obtain inference, we need to compute the &lt;strong&gt;Influence Curve&lt;/strong&gt; (IC), which is the empirical version of what we used our estimating equation to figure out in step 3. The IC tells us how much each observation influences, or perturbs, the final estimate.&lt;/p&gt;
+&lt;p&gt;The equation for the IC looks like this:&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{IC} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]&lt;/span&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ic &amp;lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/tmle/15_ses.png&#34; style=&#34;width:100.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: This is another step which relies heavily on semiparametric theory so I won’t get into the details; however, I’ve linked resources in &lt;a href=&#34;#references&#34;&gt;References&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{SE} = \sqrt{\frac{var(\hat{IC})}{N}} \]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/img/tmle/15_ses.png&#34; style=&#34;width:100.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmle_se &amp;lt;- sqrt(var(ic)/nrow(dat_obs))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Once we have the standard error, we can easily get the 95% confidence interval and p-value of our estimate.&lt;/p&gt;
+&lt;p&gt;Once we have that standard error, we can easily get the 95% confidence interval and p-value of our estimate.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;conf_low &amp;lt;- tmle_ate - 1.96*tmle_se
 conf_high &amp;lt;- tmle_ate + 1.96*tmle_se
 
@@ -2019,18 +2005,18 @@ conf_high
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.213
+0.24
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
--0.054
+0.194
 &lt;/td&gt;
 &lt;td style=&#34;text-align:right;&#34;&gt;
-0.48
+0.287
 &lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;Then we can successfully report our ATE as 0.213 (95% CI: -0.054, 0.48).&lt;/p&gt;
+&lt;p&gt;Then we can successfully report our ATE as 0.24 (95% CI: 0.194, 0.287).&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;using-the-tmle-package&#34; class=&#34;section level1&#34;&gt;
@@ -2046,23 +2032,23 @@ conf_high
 
 tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;##  Additive Effect
-##    Parameter Estimate:  0.22071
-##    Estimated Variance:  0.021564
-##               p-value:  0.13284
-##     95% Conf Interval: (-0.067108, 0.50852) 
+##    Parameter Estimate:  0.23733
+##    Estimated Variance:  0.00053649
+##               p-value:  &amp;lt;2e-16
+##     95% Conf Interval: (0.19194, 0.28273) 
 ## 
 ##  Additive Effect among the Treated
-##    Parameter Estimate:  0.26122
-##    Estimated Variance:  0.020829
-##               p-value:  0.070304
-##     95% Conf Interval: (-0.021656, 0.54409) 
+##    Parameter Estimate:  0.23705
+##    Estimated Variance:  0.0005385
+##               p-value:  &amp;lt;2e-16
+##     95% Conf Interval: (0.19157, 0.28253) 
 ## 
 ##  Additive Effect among the Controls
-##    Parameter Estimate:  0.19485
-##    Estimated Variance:  0.02307
-##               p-value:  0.19955
-##     95% Conf Interval: (-0.10285, 0.49255)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We can get the same result (variation due to randomness in the machine learning models) in just a few lines of code: the estimate using the original &lt;code&gt;tmle&lt;/code&gt; package is 0.221 (95% CI: -0.067, 0.509).&lt;/p&gt;
+##    Parameter Estimate:  0.23867
+##    Estimated Variance:  0.00053584
+##               p-value:  &amp;lt;2e-16
+##     95% Conf Interval: (0.1933, 0.28404)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can get the same result (variation due to randomness in the machine learning models) in just a few lines of code: the estimate using the original &lt;code&gt;tmle&lt;/code&gt; package is 0.237 (95% CI: 0.192, 0.283).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;properties-of-tmle&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;7 Properties of TMLE 📈&lt;/h1&gt;
@@ -2077,9 +2063,9 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;tmle&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;TMLE&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;The paper I referred to most often while learning TMLE was &lt;a href=&#34;https://academic.oup.com/aje/article/185/1/65/2662306&#34;&gt;&lt;em&gt;Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies&lt;/em&gt;&lt;/a&gt; by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and Figure 1 is a good summary of how TMLE compares to other common estimation methods in causal inference.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The paper I referred to most often while learning TMLE was &lt;a href=&#34;https://academic.oup.com/aje/article/185/1/65/2662306&#34;&gt;&lt;em&gt;Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies&lt;/em&gt;&lt;/a&gt; by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;I also really like the written explanations in the &lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4419-9782-1&#34;&gt;&lt;em&gt;Targeted Learning&lt;/em&gt;&lt;/a&gt; book by Mark van der Laan and Sherri Rose. The notation was too difficult for me to follow, but the words themselves make a lot of sense.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Miguel Luque wrote an &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;excellent bookdown tutorial on TMLE&lt;/a&gt;, also with step-by-step &lt;code&gt;R&lt;/code&gt; code. It is more technical and thorough than my post, but still aimed at an applied audience.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Miguel Luque wrote an &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;excellent bookdown tutorial on TMLE&lt;/a&gt;, also with step-by-step &lt;code&gt;R&lt;/code&gt; code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the &lt;a href=&#34;https://migariane.github.io/DeltaMethodEpiTutorial.nb.html&#34;&gt;functional delta method&lt;/a&gt; which is part of the theory behind Step 6.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;div id=&#34;semiparametric-theory&#34; class=&#34;section level3&#34;&gt;
@@ -2107,8 +2093,11 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;/ul&gt;
 &lt;p&gt;I’ll continue to update this page with resources as I discover them.&lt;/p&gt;
 &lt;p&gt;Feedback on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through &lt;a href=&#34;mailto:kathoffman.stats@gmail.com&#34;&gt;email&lt;/a&gt;. This is just a side hobby of mine, so please be patient with my response time. :-)&lt;/p&gt;
-&lt;p&gt;Thank you to my colleague Iván Díaz for answering my many, many questions on TMLE, and to Miguel Luque for very helpful feedback on the visual guide.&lt;/p&gt;
 &lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;acknowledgements&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Acknowledgements&lt;/h1&gt;
+&lt;p&gt;Thank you to Iván Díaz for patiently answering my many, many questions on TMLE, and to Miguel Luque for helpful feedback on the visual guide.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;tutorial-code-and-session-info&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Tutorial code and session info&lt;/h1&gt;
@@ -2130,7 +2119,7 @@ generate_data &amp;lt;- function(n){
     return(tibble(W1, W2, W3, W4, A, Y))
 }
 
-n &amp;lt;- 50
+n &amp;lt;- 2000
 dat_obs &amp;lt;- generate_data(n) # generate a data set with n observations
 
 Y &amp;lt;- dat_obs$Y

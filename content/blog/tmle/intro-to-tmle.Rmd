@@ -1,7 +1,7 @@
 ---
 title: "An Illustrated Guide to the Targeted Maximum Likelihood Estimation (TMLE) Algorithm"
 author: "Katherine Hoffman"
-draft: true
+draft: false
 date: 2020-10-10T21:13:14-05:00
 categories: ["statistics","R"]
 math: true
@@ -51,22 +51,14 @@ When I graduated with my MS in Biostatistics two years ago, I had a mental frame
 
 This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.
 
+First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to *first* determine the statistical quantity, or **estimand**, that best answers a scientific question, and *then* use the method, or **estimator**, best suited for estimating it. This is the paradigm TMLE is based upon: we want to build an algorithm **targeted to an estimand of interest**.
 
-<!-- <html> -->
-<!--    <head> -->
-<!--       <title>HTML Image as link</title> -->
-<!--    </head> -->
-<!--    <body> -->
-<!--       <a href=""> -->
-<!--          <img alt="cheatsheet" src="/img/tmle/estimator.png" -->
-<!--                style="float:right; padding-left:20px;" width=50%"> -->
-<!--       </a> -->
-<!--    </body> -->
-<!-- </html> -->
-
-First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to *first* determine the statistical quantity, or **estimand**, that best answers a scientific question, and *then* use the method, or **estimator**, best for suited for estimating it. This is the paradigm TMLE is based upon: we want to build an algorithm **targeted to an estimand of interest**.
-
-![/img/tmle/estimator.png]{width=50%}
+<figure>
+    <img src="/img/tmle/estimator.png"
+    width= 70%
+         alt="Estimator and Estimand"> 
+    <figcaption>An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield https://diff.healthpolicydatascience.org/</figcaption>
+</figure>
 
 Second, I thought flexible, data-adaptive machine learning models could only be used for prediction, since they don't have asymptotic properties for inference (i.e. standard errors). However, certain semiparametric estimation methods like TMLE can actually use these models to obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models. This is because, unlike parametric models, most machine learning algorithms do not assume an underlying distribution of the data. The way we use the machine learning estimates in TMLE, surprisingly enough, yields **known asymptotic properties of bias and variance** just like we see in parametric maximum likelihood estimation (e.g. linear and logistic regression).
 
@@ -76,7 +68,7 @@ TMLE was developed in 2007 by Mark van der Laan at UC Berkeley, and it is slowly
 
 I am a very applied thinker, and I've tried to write this tutorial in the way I would have found most useful and accessible when I began learning about TMLE. Each step is accompanied by a non-rigorous explanation, an equation using the simplest notation possible, in-line `R` code, and a small graphic representing the computation on a data frame or vector. This last piece is super important for me, because I remember best when I associate an image with what I've learned.
 
-This tutorial is not meant to replace any of the excellent resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the [references](#references) I've listed at the end. TMLE and other inference methods which allow machine learning are extremely powerful and will undoubtedly only grow in popularity in statistics and data science.
+This tutorial is not meant to replace the resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the [references](#references) I've listed at the end. TMLE is a very powerful method and will undoubtedly only grow in popularity in statistics and data science.
 
 # 4. Is TMLE Causal Inference? 🤔
 
@@ -96,7 +88,7 @@ One quick note before we dive into the algorithm:
 
 I use the ensemble learning method **superlearning** (also known as "stacking") to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.
 
-For a tutorial on superlearning, you can check out my [previous blog post](www.khstats.com/sl/superlearning). If you're new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many statistical learning algorithms for prediction. When I use `SuperLearner()` in the following example code, I could have used `glm()`, `randomForest()`, or any other parametric or non-parametric supervised learning algorithm.
+For a tutorial on superlearning, you can check out my [previous blog post](www.khstats.com/sl/superlearning). If you're new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use `SuperLearner()` in the following example code, I could have used `glm()`, `randomForest()`, or any other parametric or non-parametric supervised learning algorithm.
 
 ### Initial set up
 
@@ -126,7 +118,7 @@ generate_data <- function(n){
     return(tibble(W1, W2, W3, W4, A, Y))
 }
 
-n <- 50
+n <- 2000
 dat_obs <- generate_data(n) # generate a data set with n observations
 
 kable(head(dat_obs), digits=2, caption = "Simulated data set.")
@@ -134,9 +126,9 @@ kable(head(dat_obs), digits=2, caption = "Simulated data set.")
 
 As mentioned earlier, TMLE can estimate many different statistical estimands of interest. In this example, the statistical estimand is the mean difference in outcomes between those who received the treatment and those who did not, adjusting for confounders.
 
-Under causal inference assumptions, this could be identifiable as the Average Treatment Effect (ATE). Let's pretend for this example that we previously met causal assumptions and call our statistical estimand, $\Psi$, the ATE.
+Under causal assumptions, this could be identifiable as the Average Treatment Effect (ATE). Let's pretend for this example that we previously met causal assumptions and call our statistical estimand, $\Psi$, the ATE.
 
-$$\Psi = ATE = E_W[E[Y|A=1,W] - E[Y|A=0,W]]$$
+$$ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]$$
 
 At this point in set-up, we should also pick our statistical learning algorithms to combine when we use the superlearner to estimate the expected outcome and probability of treatment. Let's use LASSO (`glmnet`), random forests (`ranger`), and Multivariate Adaptive Regression Splines (MARS) (`earth`).
 
@@ -151,16 +143,17 @@ sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.earth') # a library of machine learni
 </body>
 </html>
 
-The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors. We can use any regression model to estimate this, but it is best to use flexible machine learning models so that we don't have assumptions on the underlying distribution of $Y$.
+The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors.
 
-This is what that looks like in mathematical notation:
+This is what that looks like in mathematical notation. There is some function $Q$ which takes $A$ and $\mathbf{W}$ as inputs and yields the conditional expectation of $Y$:
 
-$$Q(A,W) = \mathrm{E}[Y|A,W]$$
-We can think about this equation as a generic regression function in `R` called `fit()` with inputs in formula form: `Y ~ x1 + x2 + ...`:
+$$Q(A,\mathbf{W}) = \mathrm{E}[Y|A,\mathbf{W}]$$
+We can use any regression to estimate this conditional expectation, but it is best to use flexible machine learning models so that we don't have unnecessary assumptions on the underlying distribution of the data.
+
+We can think about the above equation as some generic regression function in `R` called `fit()` with inputs in formula form: `outcome ~ predictors`:
 
 ![](/img/tmle/2_outcome_fit.png){width=70%}
-
-In real `R` code, we'll use the `SuperLearner()` function to fit a weighted combination of multiple machine learning models (defined earlier in `sl_libs`). This function takes the outcome `Y` as a vector and a data frame `W_A` as predictors.
+In real `R` code, we'll use the `SuperLearner()` function to fit a weighted combination of multiple machine learning models (defined earlier in `sl_libs`). This function takes the outcome `Y` as a vector and a data frame `X` as predictors.
 
 ```{r}
 Y <- dat_obs$Y
@@ -171,15 +164,15 @@ Q <- SuperLearner(Y = Y, # Y is the outcome vector
                   SL.library = sl_libs) # specify our superlearner library of LASSO, RF, and MARS
 ```
 
-Then, we should predict the outcome for every observation under three different scenarios:
+Then, we should estimate the outcome for every observation under three different scenarios:
 
 **1. If every observation received the treatment they *actually* received.**
 
 We can get this expected outcome estimate by simply calling `predict()` on the model fit without specifying any new data.
 
+$$\hat{Q}(A,\mathbf{W}) = \mathrm{\hat{E}}[Y|A,\mathbf{W}]$$
 
-$$\hat{Q}(A,W) = \mathrm{\hat{E}}[Y|A,W]$$
-We will assign that vector of predictions to a new object, `Q_A`:
+We will save that vector of estimates as a new object in `R`.
 
 ![](/img/tmle/3_QA.png){width=50%}
 
@@ -192,9 +185,7 @@ Q_A <- as.vector(predict(Q)$pred) # obtain predictions for everyone using the tr
 
 To do this, we'll first need to create a data set where every observation received the treatment of interest, whether they actually did or not. Then we can call the `predict()` function on that data set.
 
-
-$$\hat{Q}(1,W) = \mathrm{\hat{E}}[Y|A=1,W]$$
-Notice our treatment vector is now entirely red, because everyone was treated:
+$$\hat{Q}(1,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$$
 
 ![](/img/tmle/4_Q1.png){width=80%}
 
@@ -209,7 +200,7 @@ Q_1 <- as.vector(predict(Q, newdata = W_A1)$pred) # predict on that everyone-exp
 Similarly, we create a data set where every observation did *not* receive the treatment of interest, whether they actually did or not, and call the `predict()` function again.
 
 
-$$\hat{Q}(0,W) = \mathrm{\hat{E}}[Y|A=0,W]$$
+$$\hat{Q}(0,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$$
 
 ![](/img/tmle/5_Q1.png){width=80%}
 
@@ -219,18 +210,21 @@ W_A0 <- W_A %>% mutate(A = 0) # data set where no one received treatment
 Q_0 <- as.vector(predict(Q, newdata = W_A0)$pred)
 ```
 
-Let's create a new data frame, `dat_tmle`, to hold the three vectors we've created so far, along with the treatment status $A$ and observed outcome $Y$. Notice that when $A=1$, the expected outcome $\mathrm{\hat{E}}[Y|A,W]$ equals the expected outcome under treatment $\mathrm{\hat{E}}[Y|A=1,W]$ and when $A=0$, the expected outcome $\mathrm{\hat{E}}[Y|A,W]$ equals the expected outcome under no treatment $\mathrm{\hat{E}}[Y|A=0,W]$.
+Let's create a new data frame, `dat_tmle`, to hold the three vectors we've created so far, along with the treatment status $A$ and observed outcome $Y$. Notice that when $A=1$, the expected outcome $\mathrm{\hat{E}}[Y|A,\mathbf{W}]$ equals the expected outcome under treatment $\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$. When $A=0$, the expected outcome $\mathrm{\hat{E}}[Y|A,\mathbf{W}]$ equals the expected outcome under no treatment $\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$.
 
 ```{r}
 dat_tmle <- tibble(Y = dat_obs$Y, A = dat_obs$A, Q_A, Q_0, Q_1)
 kable(head(dat_tmle), digits=2, caption = "TMLE Algorithm after Step 1")
 ```
 
-*Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).*
+<!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* -->
 
-We could stop here and get our estimate of the ATE by computing `Q_1 - Q_0`, which *would* be the mean difference in the expected outcomes, conditional on confounders. However, those expected outcome estimates have the optimal bias-variance tradeoff for estimating the outcomes, not the ATE!
+We could stop here and get our estimate of the ATE by computing the average difference between \mathrm{\hat{E}}[Y|A=1,\mathbf{W}] and \mathrm{\hat{E}}[Y|A=0,\mathbf{W}], which *would* be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called **standardization**, **simple substitution estimation**, or **G-computation**.
 
-That estimate of the ATE might be biased, and furthermore, we don't have a formula to compute standard errors after using machine learning. We need to incorporate information about the treatment mechanism to fix this.
+$$\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \sum_{i=1}^{n}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])$$
+![](/img/tmle/ate_gcomp.png){width=50%}
+
+However, because we used machine learning, those expected outcome estimates have the optimal bias-variance tradeoff for estimating the outcome, not the ATE. The ATE estimate may be biased, and we cannot compute the standard error. We need to incorporate information about the treatment mechanism to fix this.
 
 <html>
 <body>
@@ -241,12 +235,12 @@ That estimate of the ATE might be biased, and furthermore, we don't have a formu
 The next step is to estimate the probability of treatment, given confounders. This quantity is often called the **propensity score**, as in it gives the *propensity* that an observation will receive a treatment of interest.
 
 
-$$g(W) = \mathrm{Pr}(A=1|W)$$
+$$g(\mathbf{W}) = \mathrm{Pr}(A=1|\mathbf{W})$$
 ![](/img/tmle/6_treatment_fit.png){width=60%}
 
 
 
-We will estimate $\mathrm{Pr}(A=1|W)$ in the same way as we estimated $E[Y|A,W]$: using the superlearner algorithm.
+We will estimate $\mathrm{Pr}(A=1|\mathbf{W})$ in the same way as we estimated $\mathrm{E}[Y|A,\mathbf{W}]$: using the superlearner algorithm.
 
 ```{r}
 A <- dat_obs$A
@@ -263,7 +257,8 @@ Then we need to compute three different quantities from this model fit:
 **1. The inverse probability of receiving treatment.**
 
 
-$$H(1,W) = \frac{1}{g(W)} = \frac{1}{\mathrm{Pr}(A=1|W)}$$
+$$H(1,\mathbf{W}) = \frac{1}{g(\mathbf{W})} = \frac{1}{\mathrm{Pr}(A=1|\mathbf{W})}$$
+We can estimate the probability of receiving treatment for every observation by using the `predict()` funcion without specifying any new data, and then take the inverse of that.
 
 ![](/img/tmle/7_H1.png){width=60%}
 
@@ -276,7 +271,8 @@ H_1 <- 1/g_w
 **2. The negative inverse probability of not receiving treatment.**
 
 
-$$H(0,W) = -\frac{1}{1-g(W)}= -\frac{1}{\mathrm{Pr}(A=0|W)}$$
+$$H(0,\mathbf{W}) = -\frac{1}{1-g(\mathbf{W})}= -\frac{1}{\mathrm{Pr}(A=0|\mathbf{W})}$$
+The probability of not receiving treatment for a binary treatment is simply 1 minus the probability of treatment.
 
 ![](/img/tmle/8_H0.png){width=70%}
 
@@ -289,12 +285,12 @@ H_0 <- -1/(1-g_w)
 **3. If the observation was treated, the inverse probability of receiving treatment, and if they were not treated, the negative inverse probability of not receiving treatment.**
 
 
-$$H(A,W) = \frac{\mathrm{I}(A=1)}{\mathrm{Pr}(A=1|W)}-\frac{\mathrm{I}(A=0)}{\mathrm{Pr}(A=0|W)}$$
+$$H(A,\mathbf{W}) = \frac{\mathrm{I}(A=1)}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{\mathrm{I}(A=0)}{\mathrm{Pr}(A=0|\mathbf{W})}$$
 
 ![](/img/tmle/9_HA.png){width=50%}
 
 
-To calculate this, we'll first add the $H(1,W)$ and $H(0,W)$ vectors to our `dat_tmle` data frame, and then we can use $A$ to assign $H(A,W)$.
+To calculate this, we'll first add the $H(1,\mathbf{W})$ and $H(0,\mathbf{W})$ vectors to our `dat_tmle` data frame, and then we can use $A$ to assign $H(A,\mathbf{W})$.
 
 ```{r}
 dat_tmle <- # add clever covariate data to dat_tmle
@@ -312,25 +308,22 @@ We now have our initial estimates of the outcome, and the estimates of the proba
 kable(head(dat_tmle), digits=2, caption="TMLE Algorithm after Step 2")
 ```
 
-We'll now use those vectors containing information about the treatment mechanism -- $H(1,W)$, $H(0,W)$, and $H(A,W)$ -- to fix the wrong bias-variance trade-off for the expected outcome fits from Step 1. 
+Next we will use those vectors containing information about the treatment mechanism -- $H(1,\mathbf{W})$, $H(0,\mathbf{W})$, and $H(A,\mathbf{W})$ -- to fix the wrong bias-variance trade-off for the expected outcome fits from Step 1. 
 
+*Note:* Another way to estimate the ATE would be to down-weight outcomes from observations more likely to receive the treatment and up-weight outcomes from observations less likely to receive treatment. This is called **inverse probability weighting** (IPW).
+
+$$\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{\hat{Pr}}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{\hat{Pr}}(A=0|\mathbf{W})})$$
+![](/img/tmle/ate_ipw.png){width=50%}
+
+ However, once we use machine learning to estimate the probability of treatment, we cannot get standard errors for our estimates. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).
+ 
 <html>
 <body>
 <h2 style="color:navy" > <strong>Step 3: Estimate the Fluctuation Parameter</h1></strong>
 </body>
 </html>
 
-
-
 To reiterate, in Step 1 we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.
-
-Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. I'll give a very brief high-level explanation, and then you can look at references if you're curious to learn more. Importantly, **the simple explanation I’m going to offer here is still *so much more* than you need to know to appropriately implement TMLE as an applied statistician or data scientist.**
-
-<!-- Importantly, **fully understanding the math behind this step is not necessary to appropriately use TMLE.** -->
-
-
-let's quickly review/define some terms. Our **estimand** of interest is the mean difference in outcomes, which we're calling the ATE in this example (under the assumption that causal assumptions were met). There are many **estimators** we could have used to obtain an **estimate** of our estimand, but we've chosen to use TMLE.
-
 
 <html>
    <head>
@@ -339,59 +332,37 @@ let's quickly review/define some terms. Our **estimand** of interest is the mean
    <body>
       <a href="">
          <img alt="cheatsheet" src="/img/bear_with_me.jpg"
-               style="float:right; padding-left:40px;" width=50%">
+               style="float:right; padding-left:40px;" width=45%">
       </a>
    </body>
 </html>
 
-Estimators can have 
+Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Since this post is focused on learning the TMLE algorithm, I'll give only a very brief high-level explanation, and then you can look at references if you're curious to learn more about the theory. Importantly, **the explanation I offer for this step is sufficient to appropriately implement TMLE as an analyst.**
 
-Many estimators have **estimating equations** to help them solve for their parameters. Maximum likelihood estimators like linear and logistic regression have an estimating equation (you may remember taking the derivative of the log-likelihood and setting it equal to zero to solve for $\theta$ in a statistics course), as does a Cox proportional hazards model. We don't really think about them when we're fitting a model, but they exist. We will set up an estimating equation for our TMLE estimator in this step. This estimating equation is constructed based on something called an **efficient inluence function**.
+In this step, we will construct an estimating equation that happens to solve for something called the **Efficient Influence Function** (EIF) of the ATE. An Influence Function (IF) is a function that tells us how much an estimate will change if the input changes. If an Efficient IF exists for an estimand, it means the estimand can be estimated **efficiently** (achieving the smallest possible variance in the fewest number of observations).
 
-Estimands
+*Note: In parametric maximum likelihood estimation (MLE), the influence function is the score function (derivative of the log likelihood). We don't call it an EIF in MLE because the score function **always** achieves the Cramer Rao Lower Bound of efficiency. It's not quite as simple in a semi-parametric space.*
 
-What we need do in this step is solve a certain **estimating equation**. An estimating equation is just an umbrella term for an equation we set up to solve for something else. When you fit a linear or logistic regression, you set up an estimating equation behind the scenes (when you set the score function equal to zero) to get the coefficients.
-
-In this step, we construct an estimating equation that happens to solve for something called the **Efficient Influence Function** (EIF) of the ATE. The EIF is a property some estimands have; it means they can be estimated **efficiently** (achieving the smallest possible variance in the fewest number of observations).
-
-Because the ATE has an EIF, and because we've set up an estimating equation to solve for the EIF, we will soon have the information to do two things:
+**Solving for the EIF will allow us to do two things:**
 
 1. Update our initial outcome estimates so that our ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#7-properties-of-tmle)).
 
-2. Construct a covariance matrix to get standard errors, confidence intervals, p-values, etc. for our estimate.
+2. Construct standard errors, confidence intervals, p-values, etc. for our estimate.
 
-The EIF is the reason we're able to use machine learning models "under the hood" while still obtaining asymptotic properties for inference.
+**This is the reason we're able to use machine learning models "under the hood" while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we've built an algorithm, or estimator, to utilize its beneficial properties.**
 
-There is a *ton* of math and theory behind that big picture explanation, but I've described my favorite resources for learning more at the end of this post. Let's take a look at the estimating equation:
+Let's take a look at that estimating equation that will help us get to the EIF:
 
-$$logit(\mathrm{E}[Y|A,W]) = logit(\mathrm{\hat{E}}[Y|A,W]) + \epsilon H(A,W)$$
-How can we solve it? If we look at the left side, we can see it contains the true outcome $Y$, just $logit$ transformed.
+$$logit(\mathrm{E}[Y|A,\mathbf{W}]) = logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \epsilon H(A,\mathbf{W})$$
+Again, I am not showing *why* this is the estimating equation that works; it relies on much more semiparametric theory than can be covered in this post. Let's instead think about how we might solve the estimating equation, given we know it to be correct.
 
-Luckily for us, there's a well-known model that $logit$ transforms the left side of an equation: logistic regression. The estimating equation looks *a lot* like a simple logistic regression, actually:
+If we look at the left side, we can see it contains the true outcome $Y$, just $logit$ transformed. Luckily for us, there's a well-known model that $logit$ transforms the left side of an equation: logistic regression. Our estimating equation looks *a lot* like a simple logistic regression, actually: $logit(\mathrm{E}[Y|X]) = \beta_0 + \beta_1 X$.
 
-$$logit(E[Y|X]) = \beta_0 + \beta_1 X$$
-Do you see how our estimating equation *also* has a vector on the right-hand side ($H(A,W)$ instead of $X$) with a corresponding coefficient (called $epsilon$ instead of $\beta_0$)? The only difference now is that the "intercept" in our estimating equation, $logit(\mathrm{\hat{E}}[Y|A,W])$ is not a constant value like$\beta_0$, it is a vector of values. We can see it as an **offset** in a logistic regression, or a **fixed intercept**, rather than a standard intercept.
+Do you see how our estimating equation *also* has a vector on the right-hand side, $H(A,\mathbf{W})$, with a corresponding coefficient, $\epsilon$? The only difference is that the "intercept" in our estimating equation, $logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])$ is not a constant value like $\beta_0$; it is a vector of values. We can see it as an **offset** in a logistic regression, or a **fixed intercept**, rather than a constant intercept.
 
-So to solve our estimating equation, we can leverage standard statistical software and fit a logistic regression with one covariate, $H(A,W)$, and the initial outcome estimate, $logit(\mathrm{\hat{E}}[Y|A,W])$, as a fixed intercept. The outcome of the logistic regression is the observed outcome, $Y$.
+Therefore, to solve our estimating equation we can leverage standard statistical software and fit a logistic regression with one covariate, $H(A,\mathbf{W})$, and the initial outcome estimate, $logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])$, as a fixed intercept. The outcome of the logistic regression is the observed outcome, $Y$.
 
-<!-- If you think that’s crazy for me to say, I’d ask you to consider whether you know what estimating equation the Cox model is solving. If your answer is no, do you still feel comfortable running the `coxph()` in `R`? Yes, because understanding the estimating equation in a Cox model is not necessary to properly implement it! After this high-level why behind TMLE, you’re going to know more about TMLE than you do about the Cox model.  -->
-
-
-<!-- We can figure out how much to change each outcome estimates by solving for something called the **Efficient Influence Function** (EIF) of the ATE. An Influence Function (IF) is a function that we can apply to our data that will tell us how much influence, or weight, each observation has on an estimate. The *Efficient* Influence Function is, similarly, the function that we can apply to our data to yield the smallest variance in the fewest possible observations. -->
-
-<!-- If we worked through a mathematical proof, we could show that our ATE estimand has an EIF. If we worked through another proof, we could show that the following equation (using some of our already computed estimates) solves for a constant, $\epsilon$, which yields the EIF of the ATE: -->
-
-
-<!-- We'll then use the information from this step to learn two separate but related things: -->
-
-<!--   **A. How much the initial outcome estimates should change to yield an estimate that is closer to the true value of the ATE.** -->
-
-<!--   **B. How much influence each observation has on the final estimate of the ATE.** This is how we'll compute the standard errors even after using machine learning fits in Step 1 and 2. -->
-
-<!-- We can solve for the EIF of the ATE by estimating $\epsilon$ in this equation: -->
-
-
-Two technical points for application: we use `qlogis` to transform the probabilities $\mathrm{\hat{E}}[Y|A,W]$ to the $logit$ scale. Also, the `R` code for a fixed intercept is `-1 + offset(fixed_intercept)`.
+Two technical points for application: we use `qlogis` to transform the probabilities $\mathrm{\hat{E}}[Y|A,\mathbf{W}]$ to the $logit$ scale. Also, the `R` code for a fixed intercept is `-1 + offset(fixed_intercept)`.
 
 ![](/img/tmle/10_logistic_regression.png)
 
@@ -399,7 +370,7 @@ Two technical points for application: we use `qlogis` to transform the probabili
 glm_fit <- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial)
 ```
 
-*Note that this step has nothing to do with logistic regression, a logistic regression just happens to have the correct form for solving the estimating equation of the influence curve for the ATE estimand.*
+*Note that we are only using a logistic regression because it happens to have the correct form for solving the estimating equation for the EIF for the ATE estimand. It has nothing to do with having a binary outcome, and it isn't putting any parametric restraints on our data.*
 
 Next we need to save the coefficient from that logistic regression, which we will call $\hat{\epsilon}$:
 
@@ -409,21 +380,9 @@ Next we need to save the coefficient from that logistic regression, which we wil
 eps <- coef(glm_fit)
 ```
 
-In the TMLE literature, $\epsilon$ is called the **fluctuation parameter**, because it provides information about how much to change, or fluctuate, our initial outcome estimates. Similarly, $H(A,W)$ is called the **clever covariate** because it "cleverly" helps us solve for the EIF and then update our estimates.
+In the TMLE literature, $\epsilon$ is called the **fluctuation parameter**, because it provides information about how much to change, or fluctuate, our initial outcome estimates. Similarly, $H(A,\mathbf{W})$ is called the **clever covariate** because it "cleverly" helps us solve for the EIF and then update our estimates.
 
 We will use both the fluctuation parameter and clever covariate in the next step to update our initial estimates of the expected outcome, conditional on confounders and treatment.
-
-<!-- The logistic regression in this case is unrelated to the outcome type; it is used because we want to solve for the log likelihood (remember in parametric MLE, you take the derivative of the log-likelihood to get the score...?) It's related to that. -->
-
-<!-- **1. How much to change, or fluctuate, the initial estimates of the expected outcome.** We knew those initial outcome regressions were wrong, because their bias and variance were optimized for the outcome, not the effect of treatment. The fluctuation parameter, $\hat{\epsilon}$, combined with information about the treatment mechanism, $H(A,W)$, will help us update the outcomes to get closer to the true value of the final parameter, the ATE. -->
-
-<!-- **2. How much influence each observation has on the final estimate.** The reason we're able to get standard errors for inference even after using data-adaptive machine learning algorithms like the superlearner is because the TMLE estimator has an EIF (not all estimators do). We'll be able to use it, just like we use the score function in parametric MLE, to estimate our standard errors. -->
-
-<!-- There's a lot of semi-parametric theory behind this over-simplified explanation. If you're interested in learning more, I've linked my favorite resources at the end of the post. -->
-
-<!-- Intuitively, we do this step because we know the initial outcome estimates we used machine learning models to fit have the wrong bias-variance tradeoff for estimating the effect of treatment. We're trying to figure out how much we need to change those initial estimates of the outcome, using information about treatment, to achieve the correct bias-variance trade-off for our final statistical parameter of interest, the ATE.  -->
-
-<!-- *Note that $H(A,W)$ is often referred to as the **clever covariate** in TMLE literature because it "cleverly" solves an important equation.* -->
 
 <html>
 <body>
@@ -431,13 +390,13 @@ We will use both the fluctuation parameter and clever covariate in the next step
 </body>
 </html>
 
-To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the $logit$ scale using `qlogis()` because that's the scale we used to solve the fluctuation parameter in Step 3. Then we can add our update using the fluctuation parameter and clever covariate: $\hat{\epsilon} \times H(A,W)$. Finally, we can put the updated estimates back on the true outcome scale using `plogis()`.
+To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the $logit$ scale using `qlogis()` because that's the scale we used to solve the fluctuation parameter in Step 3. Then we can add our update using the fluctuation parameter and clever covariate: $\hat{\epsilon} \times H(A,\mathbf{W})$. Finally, we can put the updated estimates back on the true outcome scale using `plogis()`.
 
 *Note we can use $expit$ to show the inverse of the $logit$ function, and we will denote updates to the outcome regressions as $\hat{\mathrm{E}}^*$ instead of $\hat{\mathrm{E}}$.*
 
 **1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.**
 
-$$\hat{\mathrm{E}}^*[Y|A,W] = expit(logit(\mathrm{\hat{E}}[Y|A,W]) + \hat{\epsilon}H(A,W))$$
+$$\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))$$
 
 ![](/img/tmle/update_qAW.png){width=70%}
 
@@ -449,7 +408,7 @@ Q_A_update <- plogis(qlogis(Q_A) + eps*H_A)
 
 **2. Update the expected outcomes, conditional on baseline confounders and everyone receiving the treatment.**
 
-$$\hat{\mathrm{E}}^*[Y|A=1,W] = expit(logit(\mathrm{\hat{E}}[Y|A=1,W]) + \hat{\epsilon}H(A,1))$$
+$$\hat{\mathrm{E}}^*[Y|A=1,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]) + \hat{\epsilon}H(A,1))$$
 ![](/img/tmle/12_update_Q1.png){width=70%}
 
 ```{r}
@@ -458,7 +417,7 @@ Q_1_update <- plogis(qlogis(Q_1) + eps*H_1)
 
 **3. Update the expected outcomes, conditional on baseline confounders and no one receiving the treatment.**
 
-$$\hat{\mathrm{E}}^*[Y|A=0,W] = expit(logit(\mathrm{\hat{E}}[Y|A=0,W]) + \hat{\epsilon}H(A,0))$$
+$$\hat{\mathrm{E}}^*[Y|A=0,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]) + \hat{\epsilon}H(A,0))$$
 ![](/img/tmle/13_update_Q0.png){width=70%}
 
 ```{r}
@@ -473,7 +432,7 @@ Q_0_update <- plogis(qlogis(Q_0) + eps*H_0)
 
 We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:
 
-$$\hat{\Psi} = \hat{ATE} = \hat{E}_W[\hat{E^*}[Y|A=1,W] - \hat{E^*}[Y|A=0,W]]$$
+$$\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \sum_{i=1}^{n}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]$$
 
 ![](/img/tmle/14_compute_ATE.png){width=60%}
 
@@ -492,13 +451,11 @@ If causal assumptions were not met, we would say, *the proportion of observation
 </body>
 </html>
 
+A point estimate is great, but when you're doing any sort of hypothesis testing or uncertainty quantification, standard errors are needed. To obtain inference, we need to compute the **Influence Curve** (IC), which is the empirical version of what we used our estimating equation to figure out in step 3. The IC tells us how much each observation influences, or perturbs, the final estimate. 
 
-To find the standard error (SE) of a TMLE estimate, we first compute the **Influence Curve** (IC). This is what we solved for when we fit the logistic regression in Step 3; we wanted to find the $\epsilon$ that solved for the Efficient Influence Function (EIF). The terms EIF and IC are, for most intents and purposes, used interchangably; the latter tends to refer to an estimate with actual data.
+The equation for the IC looks like this:
 
-Anyways, we can compute the IC for our estimate, which tells us how much influence each observation has on the estimate. This is the semi-parametric equivalent to the score function in parametric MLE.
-
-$$\hat{IC} = (Y-\hat{E^*}[Y|A,W])H(A,W) + \hat{E^*}[Y|A=1,W] - \hat{E^*}[Y|A=0,W] - \hat{ATE}$$
-
+$$\hat{IC} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}$$
 
 ```{r}
 ic <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
@@ -506,15 +463,19 @@ ic <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
 
 Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.
 
-![](/img/tmle/15_ses.png){width=100%}
+*Note: This is another step which relies heavily on semiparametric theory so I won't get into the details; however, I've linked resources in [References](#references).*
 
 $$\hat{SE} = \sqrt{\frac{var(\hat{IC})}{N}} $$
+
+
+![](/img/tmle/15_ses.png){width=100%}
+
 
 ```{r}
 tmle_se <- sqrt(var(ic)/nrow(dat_obs))
 ```
 
-Once we have the standard error, we can easily get the 95% confidence interval and p-value of our estimate.
+Once we have that standard error, we can easily get the 95% confidence interval and p-value of our estimate.
 
 ```{r}
 conf_low <- tmle_ate - 1.96*tmle_se
@@ -562,11 +523,11 @@ If you'd like to learn more, I recommend the following resources:
 
 ### TMLE
 
-- The paper I referred to most often while learning TMLE was [*Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies*](https://academic.oup.com/aje/article/185/1/65/2662306) by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and Figure 1 is a good summary of how TMLE compares to other common estimation methods in causal inference.
+- The paper I referred to most often while learning TMLE was [*Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies*](https://academic.oup.com/aje/article/185/1/65/2662306) by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.
 
 - I also really like the written explanations in the [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1) book by Mark van der Laan and Sherri Rose. The notation was too difficult for me to follow, but the words themselves make a lot of sense.
 
-- Miguel Luque wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience.
+- Miguel Luque wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the [functional delta method](https://migariane.github.io/DeltaMethodEpiTutorial.nb.html) which is part of the theory behind Step 6.
 
 ### Semiparametric Theory
 
@@ -592,7 +553,9 @@ I'll continue to update this page with resources as I discover them.
 
 Feedback on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through [email](mailto:kathoffman.stats@gmail.com). This is just a side hobby of mine, so please be patient with my response time. :-)
 
-Thank you to my colleague Iván Díaz for answering my many, many questions on TMLE, and to Miguel Luque for very helpful feedback on the visual guide.
+# Acknowledgements
+
+Thank you to Iván Díaz for patiently answering my many, many questions on TMLE, and to Miguel Luque for helpful feedback on the visual guide.
 
 # Tutorial code and session info
 
@@ -615,7 +578,7 @@ generate_data <- function(n){
     return(tibble(W1, W2, W3, W4, A, Y))
 }
 
-n <- 50
+n <- 2000
 dat_obs <- generate_data(n) # generate a data set with n observations
 
 Y <- dat_obs$Y
