@@ -552,7 +552,7 @@ If you'd like to learn more, I recommend the following resources:
 
 I'll continue to update this page with resources as I discover them.
 
-Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through [email](mailto:kathoffman.stats@gmail.com). This is just a side hobby of mine, so please be patient with my response time. :-)
+Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through [email](mailto:kathoffman.stats@gmail.com).
 
 # Acknowledgements
 
