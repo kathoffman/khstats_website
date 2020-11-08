@@ -674,7 +674,7 @@ H_A
 </table>
 <p>Next we will use those vectors containing information about the treatment mechanism – <span class="math inline">\(H(1,\mathbf{W})\)</span>, <span class="math inline">\(H(0,\mathbf{W})\)</span>, and <span class="math inline">\(H(A,\mathbf{W})\)</span> – to fix the wrong bias-variance trade-off for the expected outcome fits from Step 1.</p>
 <p><em>Note:</em> Another way to estimate the ATE would be to down-weight outcomes from observations more likely to receive the treatment and up-weight outcomes from observations less likely to receive treatment. This is called <strong>inverse probability weighting</strong> (IPW).</p>
-<p><span class="math display">\[\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{\hat{Pr}}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{\hat{Pr}}(A=0|\mathbf{W})})\]</span>
+<p><span class="math display">\[\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{Pr}(A=0|\mathbf{W})})\]</span>
 <img src="/img/tmle/ate_ipw.png" style="width:50.0%" /></p>
 <p>However, once we use machine learning to estimate the probability of treatment, we cannot get standard errors for our estimates. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).</p>
 <html>

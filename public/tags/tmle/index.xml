@@ -680,7 +680,7 @@ H_A
 &lt;/table&gt;
 &lt;p&gt;Next we will use those vectors containing information about the treatment mechanism – &lt;span class=&#34;math inline&#34;&gt;\(H(1,\mathbf{W})\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(H(0,\mathbf{W})\)&lt;/span&gt;, and &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W})\)&lt;/span&gt; – to fix the wrong bias-variance trade-off for the expected outcome fits from Step 1.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Note:&lt;/em&gt; Another way to estimate the ATE would be to down-weight outcomes from observations more likely to receive the treatment and up-weight outcomes from observations less likely to receive treatment. This is called &lt;strong&gt;inverse probability weighting&lt;/strong&gt; (IPW).&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{\hat{Pr}}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{\hat{Pr}}(A=0|\mathbf{W})})\]&lt;/span&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{Pr}(A=0|\mathbf{W})})\]&lt;/span&gt;
 &lt;img src=&#34;/img/tmle/ate_ipw.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;However, once we use machine learning to estimate the probability of treatment, we cannot get standard errors for our estimates. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).&lt;/p&gt;
 &lt;html&gt;

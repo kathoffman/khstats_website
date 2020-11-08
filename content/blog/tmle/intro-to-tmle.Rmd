@@ -311,7 +311,7 @@ Next we will use those vectors containing information about the treatment mechan
 
 *Note:* Another way to estimate the ATE would be to down-weight outcomes from observations more likely to receive the treatment and up-weight outcomes from observations less likely to receive treatment. This is called **inverse probability weighting** (IPW).
 
-$$\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{\hat{Pr}}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{\hat{Pr}}(A=0|\mathbf{W})})$$
+$$\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{Pr}(A=0|\mathbf{W})})$$
 ![](/img/tmle/ate_ipw.png){width=50%}
 
  However, once we use machine learning to estimate the probability of treatment, we cannot get standard errors for our estimates. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).
