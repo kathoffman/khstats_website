@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.4.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Katherine Hoffman">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="A beginner’s guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE).
+    HTML Image as link     There is a condensed version of this tutorial as an 8.5x11&#34; pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations.     1.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/blog/tmle/tutorial/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#614f79">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.min.93ba0f8058c7a032bde93225bfbbb6b6.css">
+
+  
+
+  
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-136820093-1', 'auto');
+      
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="https://www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon-32.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/blog/tmle/tutorial/">
+
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@rkatlady">
+  <meta property="twitter:creator" content="@rkatlady">
+  
+  <meta property="og:site_name" content="KHstats">
+  <meta property="og:url" content="/blog/tmle/tutorial/">
+  <meta property="og:title" content="An Illustrated Guide to the Targeted Maximum Likelihood Estimation (TMLE) Algorithm | KHstats">
+  <meta property="og:description" content="A beginner’s guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE).
+    HTML Image as link     There is a condensed version of this tutorial as an 8.5x11&#34; pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations.     1."><meta property="og:image" content="/img/icon-192.png">
+  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-11-07T21:13:14-05:00">
+    
+    <meta property="article:modified_time" content="2020-11-07T21:13:14-05:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>An Illustrated Guide to the Targeted Maximum Likelihood Estimation (TMLE) Algorithm | KHstats</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0 compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">KHstats</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav mr-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#hero"><span>About</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#blogs"><span>Blog</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://scholar.google.com/citations?user=73RvTUoAAAAJ&amp;hl=en" target="_blank" rel="noopener"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+      
+      </ul>
+      <ul class="navbar-nav ml-auto">
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">An Illustrated Guide to the Targeted Maximum Likelihood Estimation (TMLE) Algorithm</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2020-11-07 21:13:14 -0500 EST" itemprop="datePublished">
+<meta content="2020-11-07 21:13:14 -0500 EST" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Nov 7, 2020</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/statistics/">statistics</a>, <a href="/categories/r/">R</a></span>
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/blog/tmle/tutorial/&amp;text=An%20Illustrated%20Guide%20to%20the%20Targeted%20Maximum%20Likelihood%20Estimation%20%28TMLE%29%20Algorithm" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/blog/tmle/tutorial/&amp;t=An%20Illustrated%20Guide%20to%20the%20Targeted%20Maximum%20Likelihood%20Estimation%20%28TMLE%29%20Algorithm" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=An%20Illustrated%20Guide%20to%20the%20Targeted%20Maximum%20Likelihood%20Estimation%20%28TMLE%29%20Algorithm&amp;body=/blog/tmle/tutorial/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/blog/tmle/tutorial/&amp;title=An%20Illustrated%20Guide%20to%20the%20Targeted%20Maximum%20Likelihood%20Estimation%20%28TMLE%29%20Algorithm" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=An%20Illustrated%20Guide%20to%20the%20Targeted%20Maximum%20Likelihood%20Estimation%20%28TMLE%29%20Algorithm%20/blog/tmle/tutorial/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/blog/tmle/tutorial/&amp;title=An%20Illustrated%20Guide%20to%20the%20Targeted%20Maximum%20Likelihood%20Estimation%20%28TMLE%29%20Algorithm" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+
+<blockquote>
+<p>A beginner’s guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE).</p>
+</blockquote>
+<html>
+<head>
+<title>
+HTML Image as link
+</title>
+</head>
+<body>
+<a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+<img alt="cheatsheet" src="/img/TMLE.jpg"
+         width=100%">
+<figcaption>
+<em><a href="">T</a>here is a condensed version of this tutorial as an 8.5x11" pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations.</em>
+</figcaption>
+</a>
+</body>
+</html>
+<hr />
+<div id="tmle-in-three-sentences" class="section level1">
+<h1>1. TMLE in three sentences 🎯</h1>
+<p>Targeted Maximum Likelihood Estimation (TMLE) is a general semiparametric estimation framework to <strong>estimate a statistical quantity of interest</strong>. TMLE allows the use of <strong>machine learning</strong> (ML) models which place <strong>minimal assumptions on the distribution of the data</strong>. Unlike estimates normally obtained from ML, the <strong>final TMLE estimate will still have valid standard errors for statistical inference</strong>.</p>
+</div>
+<div id="an-analysts-motivation-for-learning-tmle" class="section level1">
+<h1>2. An Analyst’s Motivation for Learning TMLE 👩🏼‍💻</h1>
+<p>When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:</p>
+<ol style="list-style-type: decimal">
+<li><p>If the goal is <span style="color: #3366ff;">inference</span>, use an <span style="color: #3366ff;">interpretable (usually parametric) model</span> and explain the meaning behind the coefficients and their standard errors.</p></li>
+<li><p>If the goal is <span style="color: #cc0000;">prediction</span>, use a <span style="color: #cc0000;">flexible machine learning model</span> and then look at performance metrics and variable importance.</p></li>
+</ol>
+<p>This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.</p>
+<p>First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to <em>first</em> determine the statistical quantity, or <strong>estimand</strong>, that best answers a scientific question, and <em>then</em> use the method, or <strong>estimator</strong>, best suited for estimating it. This is the paradigm TMLE is based upon: we want to build an algorithm <strong>targeted to an estimand of interest</strong>.</p>
+<figure>
+<img src="/img/tmle/estimator.png"
+    width= 70%
+         alt="Estimator and Estimand">
+<figcaption>
+An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield <a href="https://diff.healthpolicydatascience.org/" class="uri">https://diff.healthpolicydatascience.org/</a>
+</figcaption>
+</figure>
+<p>Second, I thought flexible, data-adaptive machine learning models could only be used for prediction, since they don’t have asymptotic properties for inference (i.e. standard errors). However, certain semiparametric estimation methods like TMLE can actually use these models to obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models. This is because, unlike parametric models, most machine learning algorithms do not assume an underlying distribution of the data. The way we use the machine learning estimates in TMLE, surprisingly enough, yields <strong>known asymptotic properties of bias and variance</strong> just like we see in parametric maximum likelihood estimation (e.g. linear and logistic regression).</p>
+</div>
+<div id="why-the-visual-guide" class="section level1">
+<h1>3. Why the Visual Guide? 🎨</h1>
+<p>TMLE was developed in 2007 by Mark van der Laan at UC Berkeley, and it is slowly but surely starting to see more widespread use. Since learning about TMLE, I’ve believed many more analysts with a skill set similar to mine <em>could</em> be using TMLE, but perhaps find even the most introductory resources to be a bit daunting.</p>
+<p>I am a very applied thinker, and I’ve tried to write this tutorial in the way I would have found most useful and accessible when I began learning about TMLE. Each step is accompanied by a non-rigorous explanation, an equation using the simplest notation possible, in-line <code>R</code> code, and a small graphic representing the computation on a data frame or vector. This last piece is super important for me, because I remember best when I associate an image with what I’ve learned.</p>
+<p>This tutorial is not meant to replace the resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the <a href="#references">references</a> I’ve listed at the end. TMLE is a very powerful method and will undoubtedly only grow in popularity in statistics and data science.</p>
+</div>
+<div id="is-tmle-causal-inference" class="section level1">
+<h1>4. Is TMLE Causal Inference? 🤔</h1>
+<p>Although TMLE was developed for causal inference due to its many attractive statistical properties (<a href="#properties-of-tmle-📈">discussed later</a>), it cannot be considered causal inference by itself. Causal inference is a process that first requires <strong>causal assumptions</strong> (not discussed here) before a statistical estimand can be interpreted causally.</p>
+<p>TMLE can be used to estimate various statistical estimands (odds ratio, risk ratio, mean outcome difference, etc.) even when causal assumptions are not met. TMLE is, as its name implies, simply a tool for estimation.</p>
+<blockquote>
+<p>In this tutorial I’ll show a basic version of TMLE: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. Under causal assumptions, this is the Average Treatment Effect (ATE).</p>
+</blockquote>
+</div>
+<div id="tmle-step-by-step-️" class="section level1">
+<h1>5. TMLE, Step-by-Step 🚶🏽‍♂️</h1>
+<p>Let’s look at the algorithm step-by-step. As you’re reading, keep in mind that there are <code>R</code> packages that will do this for you as easily as running a <code>glm()</code> or <code>coxph()</code> function. This tutorial is to help understand what’s going on behind-the-scenes.</p>
+<p>One quick note before we dive into the algorithm:</p>
+<div id="superlearning" class="section level3">
+<h3>Superlearning</h3>
+<p>I use the ensemble learning method <strong>superlearning</strong> (also known as “stacking”) to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.</p>
+<p>For a tutorial on superlearning, you can check out my <a href="www.khstats.com/sl/superlearning">previous blog post</a>. If you’re new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use <code>SuperLearner()</code> in the following example code, I could have used <code>glm()</code>, <code>randomForest()</code>, or any other parametric or non-parametric supervised learning algorithm.</p>
+</div>
+<div id="initial-set-up" class="section level3">
+<h3>Initial set up</h3>
+<p>Let’s first load the necessary libraries and set a seed.</p>
+<pre class="r"><code>library(tidyverse) # for data manipulation
+library(kableExtra) # for table printing
+library(SuperLearner) # for ensemble learning
+
+set.seed(7) # for reproducible results</code></pre>
+<p>Next, let’s simulate a data set for demonstration of the algorithm. This data will have a very simple structure: a binary treatment, <span class="math inline">\(A\)</span>, binary outcome, <span class="math inline">\(Y\)</span>, and four confounders: <span class="math inline">\(W_1\)</span>, <span class="math inline">\(W_2\)</span>, <span class="math inline">\(W_3\)</span>, and <span class="math inline">\(W_4\)</span>.</p>
+<p><img src="/img/tmle/1_data_structure.png" style="width:80.0%" /></p>
+<pre class="r"><code>generate_data &lt;- function(n){ 
+    W1 &lt;- rbinom(n, size=1, prob=0.2) # binary confounder
+    W2 &lt;- rbinom(n, size=1, prob=0.5) # binary confounder
+    W3 &lt;- round(runif(n, min=0, max=5)) # continuous confounder
+    W4 &lt;- round(runif(n, min=0, max=4)) # continuous confounder
+    A  &lt;- rbinom(n, size=1, prob= plogis(-0.2 + 0.2*W2 + 0.1*W3 + 0.3*W4 + 0.2*W1*W4)) # binary treatment depends on confounders
+    Y &lt;- rbinom(n, size=1, prob= plogis(-1 + A - 0.1*W1 + 0.2*W2 + 0.3*W3 - 0.1*W4 + 0.1*W2*W4)) # binary outcome depends on confounders
+    return(tibble(W1, W2, W3, W4, A, Y))
+}
+
+n &lt;- 2000
+dat_obs &lt;- generate_data(n) # generate a data set with n observations
+
+kable(head(dat_obs), digits=2, caption = &quot;Simulated data set.&quot;)</code></pre>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-2">Table 1: </span>Simulated data set.
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+W1
+</th>
+<th style="text-align:right;">
+W2
+</th>
+<th style="text-align:right;">
+W3
+</th>
+<th style="text-align:right;">
+W4
+</th>
+<th style="text-align:right;">
+A
+</th>
+<th style="text-align:right;">
+Y
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<p>As mentioned earlier, TMLE can estimate many different statistical estimands of interest. In this example, the statistical estimand is the mean difference in outcomes between those who received the treatment and those who did not, adjusting for confounders.</p>
+<p>Under causal assumptions, this could be identifiable as the Average Treatment Effect (ATE). Let’s pretend for this example that we previously met causal assumptions and call our statistical estimand, <span class="math inline">\(\Psi\)</span>, the ATE.</p>
+<p><span class="math display">\[ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]\]</span></p>
+<p>At this point in set-up, we should also pick our statistical learning algorithms to combine when we use the superlearner to estimate the expected outcome and probability of treatment. Let’s use LASSO (<code>glmnet</code>), random forests (<code>ranger</code>), and Multivariate Adaptive Regression Splines (MARS) (<code>earth</code>).</p>
+<pre class="r"><code>sl_libs &lt;- c(&#39;SL.glmnet&#39;, &#39;SL.ranger&#39;, &#39;SL.earth&#39;) # a library of machine learning algorithms (penalized regression, random forests, and multivariate adaptive regression splines)</code></pre>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 1: Estimate the Outcome
+</h1>
+</strong>
+</body>
+</html>
+<p>The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors.</p>
+<p>This is what that looks like in mathematical notation. There is some function <span class="math inline">\(Q\)</span> which takes <span class="math inline">\(A\)</span> and <span class="math inline">\(\mathbf{W}\)</span> as inputs and yields the conditional expectation of <span class="math inline">\(Y\)</span>:</p>
+<p><span class="math display">\[Q(A,\mathbf{W}) = \mathrm{E}[Y|A,\mathbf{W}]\]</span>
+We can use any regression to estimate this conditional expectation, but it is best to use flexible machine learning models so that we don’t have unnecessary assumptions on the underlying distribution of the data.</p>
+<p>We can think about the above equation as some generic regression function in <code>R</code> called <code>fit()</code> with inputs in formula form: <code>outcome ~ predictors</code>:</p>
+<p><img src="/img/tmle/2_outcome_fit.png" style="width:70.0%" />
+In real <code>R</code> code, we’ll use the <code>SuperLearner()</code> function to fit a weighted combination of multiple machine learning models (defined earlier in <code>sl_libs</code>). This function takes the outcome <code>Y</code> as a vector and a data frame <code>X</code> as predictors.</p>
+<pre class="r"><code>Y &lt;- dat_obs$Y
+W_A &lt;- dat_obs %&gt;% select(-Y) # remove the outcome to make a matrix of predictors (A, W1, W2, W3, W4) for SuperLearner
+Q &lt;- SuperLearner(Y = Y, # Y is the outcome vector
+                  X = W_A, # W_A is the matrix of W1, W2, W3, W4, and A
+                  family=binomial(), # specify we have a binary outcome
+                  SL.library = sl_libs) # specify our superlearner library of LASSO, RF, and MARS</code></pre>
+<pre><code>## Loading required namespace: glmnet</code></pre>
+<pre><code>## Loading required namespace: earth</code></pre>
+<pre><code>## Loading required namespace: ranger</code></pre>
+<p>Then, we should estimate the outcome for every observation under three different scenarios:</p>
+<p><strong>1. If every observation received the treatment they <em>actually</em> received.</strong></p>
+<p>We can get this expected outcome estimate by simply calling <code>predict()</code> on the model fit without specifying any new data.</p>
+<p><span class="math display">\[\hat{Q}(A,\mathbf{W}) = \mathrm{\hat{E}}[Y|A,\mathbf{W}]\]</span></p>
+<p>We will save that vector of estimates as a new object in <code>R</code>.</p>
+<p><img src="/img/tmle/3_QA.png" style="width:50.0%" /></p>
+<pre class="r"><code>Q_A &lt;- as.vector(predict(Q)$pred) # obtain predictions for everyone using the treatment they actually received</code></pre>
+<p><strong>2. If every observation received the treatment.</strong></p>
+<p>To do this, we’ll first need to create a data set where every observation received the treatment of interest, whether they actually did or not. Then we can call the <code>predict()</code> function on that data set.</p>
+<p><span class="math display">\[\hat{Q}(1,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\]</span></p>
+<p><img src="/img/tmle/4_Q1.png" style="width:80.0%" /></p>
+<pre class="r"><code>W_A1 &lt;- W_A %&gt;% mutate(A = 1)  # data set where everyone received treatment
+Q_1 &lt;- as.vector(predict(Q, newdata = W_A1)$pred) # predict on that everyone-exposed data set</code></pre>
+<p><strong>3. If every observation received the control.</strong></p>
+<p>Similarly, we create a data set where every observation did <em>not</em> receive the treatment of interest, whether they actually did or not, and call the <code>predict()</code> function again.</p>
+<p><span class="math display">\[\hat{Q}(0,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\]</span></p>
+<p><img src="/img/tmle/5_Q1.png" style="width:80.0%" /></p>
+<pre class="r"><code>W_A0 &lt;- W_A %&gt;% mutate(A = 0) # data set where no one received treatment
+Q_0 &lt;- as.vector(predict(Q, newdata = W_A0)$pred)</code></pre>
+<p>Let’s create a new data frame, <code>dat_tmle</code>, to hold the three vectors we’ve created so far, along with the treatment status <span class="math inline">\(A\)</span> and observed outcome <span class="math inline">\(Y\)</span>. Notice that when <span class="math inline">\(A=1\)</span>, the expected outcome <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> equals the expected outcome under treatment <span class="math inline">\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)</span>. When <span class="math inline">\(A=0\)</span>, the expected outcome <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> equals the expected outcome under no treatment <span class="math inline">\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)</span>.</p>
+<pre class="r"><code>dat_tmle &lt;- tibble(Y = dat_obs$Y, A = dat_obs$A, Q_A, Q_0, Q_1)
+kable(head(dat_tmle), digits=2, caption = &quot;TMLE Algorithm after Step 1&quot;)</code></pre>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-8">Table 2: </span>TMLE Algorithm after Step 1
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Y
+</th>
+<th style="text-align:right;">
+A
+</th>
+<th style="text-align:right;">
+Q_A
+</th>
+<th style="text-align:right;">
+Q_0
+</th>
+<th style="text-align:right;">
+Q_1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.85
+</td>
+<td style="text-align:right;">
+0.67
+</td>
+<td style="text-align:right;">
+0.85
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.73
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0.73
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.24
+</td>
+<td style="text-align:right;">
+0.24
+</td>
+<td style="text-align:right;">
+0.46
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.62
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+<td style="text-align:right;">
+0.57
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+</tr>
+</tbody>
+</table>
+<!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* -->
+<p>We could stop here and get our estimate of the ATE by computing the average difference between [Y|A=1,] and [Y|A=0,], which <em>would</em> be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called <strong>standardization</strong>, <strong>simple substitution estimation</strong>, or <strong>G-computation</strong>.</p>
+<p><span class="math display">\[\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \sum_{i=1}^{n}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])\]</span>
+<img src="/img/tmle/ate_gcomp.png" style="width:50.0%" /></p>
+<p>However, because we used machine learning, those expected outcome estimates have the optimal bias-variance tradeoff for estimating the outcome, not the ATE. The ATE estimate may be biased, and we cannot compute the standard error. We need to incorporate information about the treatment mechanism to fix this.</p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 2: Estimate the Probability of Treatment
+</h1>
+</strong>
+</body>
+</html>
+<p>The next step is to estimate the probability of treatment, given confounders. This quantity is often called the <strong>propensity score</strong>, as in it gives the <em>propensity</em> that an observation will receive a treatment of interest.</p>
+<p><span class="math display">\[g(\mathbf{W}) = \mathrm{Pr}(A=1|\mathbf{W})\]</span>
+<img src="/img/tmle/6_treatment_fit.png" style="width:60.0%" /></p>
+<p>We will estimate <span class="math inline">\(\mathrm{Pr}(A=1|\mathbf{W})\)</span> in the same way as we estimated <span class="math inline">\(\mathrm{E}[Y|A,\mathbf{W}]\)</span>: using the superlearner algorithm.</p>
+<pre class="r"><code>A &lt;- dat_obs$A
+W &lt;- dat_obs %&gt;% select(-Y, -A) # matrix of predictors that only contains the confounders W1, W2, W3, and W4
+
+g &lt;- SuperLearner(Y = A,
+                  X = W,
+                  family=binomial(),
+                  SL.library=sl_libs)</code></pre>
+<p>Then we need to compute three different quantities from this model fit:</p>
+<p><strong>1. The inverse probability of receiving treatment.</strong></p>
+<p><span class="math display">\[H(1,\mathbf{W}) = \frac{1}{g(\mathbf{W})} = \frac{1}{\mathrm{Pr}(A=1|\mathbf{W})}\]</span>
+We can estimate the probability of receiving treatment for every observation by using the <code>predict()</code> funcion without specifying any new data, and then take the inverse of that.</p>
+<p><img src="/img/tmle/7_H1.png" style="width:60.0%" /></p>
+<pre class="r"><code>g_w &lt;- as.vector(predict(g)$pred)
+H_1 &lt;- 1/g_w</code></pre>
+<p><strong>2. The negative inverse probability of not receiving treatment.</strong></p>
+<p><span class="math display">\[H(0,\mathbf{W}) = -\frac{1}{1-g(\mathbf{W})}= -\frac{1}{\mathrm{Pr}(A=0|\mathbf{W})}\]</span>
+The probability of not receiving treatment for a binary treatment is simply 1 minus the probability of treatment.</p>
+<p><img src="/img/tmle/8_H0.png" style="width:70.0%" /></p>
+<pre class="r"><code>H_0 &lt;- -1/(1-g_w)</code></pre>
+<p><strong>3. If the observation was treated, the inverse probability of receiving treatment, and if they were not treated, the negative inverse probability of not receiving treatment.</strong></p>
+<p><span class="math display">\[H(A,\mathbf{W}) = \frac{\mathrm{I}(A=1)}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{\mathrm{I}(A=0)}{\mathrm{Pr}(A=0|\mathbf{W})}\]</span></p>
+<p><img src="/img/tmle/9_HA.png" style="width:50.0%" /></p>
+<p>To calculate this, we’ll first add the <span class="math inline">\(H(1,\mathbf{W})\)</span> and <span class="math inline">\(H(0,\mathbf{W})\)</span> vectors to our <code>dat_tmle</code> data frame, and then we can use <span class="math inline">\(A\)</span> to assign <span class="math inline">\(H(A,\mathbf{W})\)</span>.</p>
+<pre class="r"><code>dat_tmle &lt;- # add clever covariate data to dat_tmle
+  dat_tmle %&gt;%
+  bind_cols(
+         H_1 = H_1,
+         H_0 = H_0) %&gt;%
+  mutate(H_A = case_when(A == 1 ~ H_1, # if A is 1 (treated), assign H_1
+                       A == 0 ~ H_0))  # if A is 0 (not treated), assign H_0</code></pre>
+<p>We now have our initial estimates of the outcome, and the estimates of the probability of treatment:</p>
+<pre class="r"><code>kable(head(dat_tmle), digits=2, caption=&quot;TMLE Algorithm after Step 2&quot;)</code></pre>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-13">Table 3: </span>TMLE Algorithm after Step 2
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+Y
+</th>
+<th style="text-align:right;">
+A
+</th>
+<th style="text-align:right;">
+Q_A
+</th>
+<th style="text-align:right;">
+Q_0
+</th>
+<th style="text-align:right;">
+Q_1
+</th>
+<th style="text-align:right;">
+H_1
+</th>
+<th style="text-align:right;">
+H_0
+</th>
+<th style="text-align:right;">
+H_A
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.85
+</td>
+<td style="text-align:right;">
+0.67
+</td>
+<td style="text-align:right;">
+0.85
+</td>
+<td style="text-align:right;">
+1.12
+</td>
+<td style="text-align:right;">
+-9.15
+</td>
+<td style="text-align:right;">
+1.12
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.73
+</td>
+<td style="text-align:right;">
+0.49
+</td>
+<td style="text-align:right;">
+0.73
+</td>
+<td style="text-align:right;">
+1.19
+</td>
+<td style="text-align:right;">
+-6.28
+</td>
+<td style="text-align:right;">
+1.19
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.24
+</td>
+<td style="text-align:right;">
+0.24
+</td>
+<td style="text-align:right;">
+0.46
+</td>
+<td style="text-align:right;">
+1.82
+</td>
+<td style="text-align:right;">
+-2.23
+</td>
+<td style="text-align:right;">
+-2.23
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+<td style="text-align:right;">
+0.58
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+<td style="text-align:right;">
+1.55
+</td>
+<td style="text-align:right;">
+-2.83
+</td>
+<td style="text-align:right;">
+1.55
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.37
+</td>
+<td style="text-align:right;">
+0.62
+</td>
+<td style="text-align:right;">
+1.63
+</td>
+<td style="text-align:right;">
+-2.58
+</td>
+<td style="text-align:right;">
+-2.58
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+<td style="text-align:right;">
+0.57
+</td>
+<td style="text-align:right;">
+0.79
+</td>
+<td style="text-align:right;">
+1.28
+</td>
+<td style="text-align:right;">
+-4.52
+</td>
+<td style="text-align:right;">
+1.28
+</td>
+</tr>
+</tbody>
+</table>
+<p>Next we will use those vectors containing information about the treatment mechanism – <span class="math inline">\(H(1,\mathbf{W})\)</span>, <span class="math inline">\(H(0,\mathbf{W})\)</span>, and <span class="math inline">\(H(A,\mathbf{W})\)</span> – to fix the wrong bias-variance trade-off for the expected outcome fits from Step 1.</p>
+<p><em>Note:</em> Another way to estimate the ATE would be to down-weight outcomes from observations more likely to receive the treatment and up-weight outcomes from observations less likely to receive treatment. This is called <strong>inverse probability weighting</strong> (IPW).</p>
+<p><span class="math display">\[\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{(1-A)Y}{\mathrm{Pr}(A=0|\mathbf{W})})\]</span>
+<img src="/img/tmle/ate_ipw.png" style="width:50.0%" /></p>
+<p>However, once we use machine learning to estimate the probability of treatment, we cannot get standard errors for our estimates. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).</p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 3: Estimate the Fluctuation Parameter
+</h1>
+</strong>
+</body>
+</html>
+<p>To reiterate, in Step 1 we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.</p>
+<html>
+<head>
+<title>
+HTML Image as link
+</title>
+</head>
+<body>
+<a href="">
+<img alt="cheatsheet" src="/img/bear_with_me.jpg"
+               style="float:right; padding-left:40px;" width=45%">
+</a>
+</body>
+</html>
+<p>Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Since this post is focused on learning the TMLE algorithm, I’ll give only a very brief high-level explanation, and then you can look at references if you’re curious to learn more about the theory. Importantly, <strong>the explanation I offer for this step is more than sufficient to appropriately implement TMLE as an analyst.</strong></p>
+<p>In this step, we will construct an estimating equation to help us find something called the <strong>Efficient Influence Function</strong> (EIF) of the ATE. An Influence Function is a function that tells us how much an estimate will change if the input changes. If an Efficient Influence Function exists for an estimand, it means the estimand can be estimated <strong>efficiently</strong> (achieving the smallest possible variance in the fewest number of observations).</p>
+<!-- *Note: In parametric maximum likelihood estimation (MLE), the influence function is the score function (derivative of the log likelihood). We don't call it an EIF in MLE because the score function **always** achieves the Cramer Rao Lower Bound of efficiency. It's not quite as simple in a semi-parametric space.* -->
+<p><strong>Solving for the EIF will allow us to do two things:</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>Update our initial outcome estimates so that our ATE is asymptotically unbiased (under certain conditions, see the <a href="#7-properties-of-tmle">statistical properties section</a>).</p></li>
+<li><p>Construct standard errors, confidence intervals, p-values, etc. for our estimate.</p></li>
+</ol>
+<p><strong>This is the reason we’re able to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we’ve built an algorithm, or estimator, to utilize its beneficial properties.</strong></p>
+<p>Let’s take a look at that estimating equation that will help us get to the EIF:</p>
+<p><span class="math display">\[logit(\mathrm{E}[Y|A,\mathbf{W}]) = logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \epsilon H(A,\mathbf{W})\]</span>
+Again, I am not showing <em>why</em> this is the estimating equation that works; it relies on much more semiparametric theory than can be covered in this post. Let’s instead think about how we might solve the estimating equation, given we know it to be correct.</p>
+<p>If we look at the left side, we can see it contains the true outcome <span class="math inline">\(Y\)</span>, just <span class="math inline">\(logit\)</span> transformed. Luckily for us, there’s a well-known model that <span class="math inline">\(logit\)</span> transforms the left side of an equation: logistic regression. Our estimating equation looks <em>a lot</em> like a simple logistic regression, actually: <span class="math inline">\(logit(\mathrm{E}[Y|X]) = \beta_0 + \beta_1 X\)</span>.</p>
+<p>Do you see how our estimating equation <em>also</em> has a vector on the right-hand side, <span class="math inline">\(H(A,\mathbf{W})\)</span>, with a corresponding coefficient, <span class="math inline">\(\epsilon\)</span>? The only difference is that the “intercept” in our estimating equation, <span class="math inline">\(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])\)</span> is not a constant value like <span class="math inline">\(\beta_0\)</span>; it is a vector of values. We can see it as an <strong>offset</strong> in a logistic regression, or a <strong>fixed intercept</strong>, rather than a constant intercept.</p>
+<p>Therefore, to solve our estimating equation we can leverage standard statistical software and fit a logistic regression with one covariate, <span class="math inline">\(H(A,\mathbf{W})\)</span>, and the initial outcome estimate, <span class="math inline">\(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])\)</span>, as a fixed intercept. The outcome of the logistic regression is the observed outcome, <span class="math inline">\(Y\)</span>.</p>
+<p>Two technical points for application: we use <code>qlogis</code> to transform the probabilities <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> to the <span class="math inline">\(logit\)</span> scale. Also, the <code>R</code> code for a fixed intercept is <code>-1 + offset(fixed_intercept)</code>.</p>
+<p><img src="/img/tmle/10_logistic_regression.png" /></p>
+<pre class="r"><code>glm_fit &lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial)</code></pre>
+<p><em>Note that we are only using a logistic regression because it happens to have the correct form for solving the estimating equation for the EIF for the ATE estimand. It has nothing to do with having a binary outcome, and it isn’t putting any parametric restraints on our data.</em></p>
+<p>Next we need to save the coefficient from that logistic regression, which we will call <span class="math inline">\(\hat{\epsilon}\)</span>:</p>
+<p><img src="/img/tmle/11_epsilon.png" style="width:40.0%" /></p>
+<pre class="r"><code>eps &lt;- coef(glm_fit)</code></pre>
+<p>In the TMLE literature, <span class="math inline">\(\epsilon\)</span> is called the <strong>fluctuation parameter</strong>, because it provides information about how much to change, or fluctuate, our initial outcome estimates. Similarly, <span class="math inline">\(H(A,\mathbf{W})\)</span> is called the <strong>clever covariate</strong> because it “cleverly” helps us solve for the EIF and then update our estimates.</p>
+<p>We will use both the fluctuation parameter and clever covariate in the next step to update our initial estimates of the expected outcome, conditional on confounders and treatment.</p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 4: Update the Initial Estimates of the Expected Outcome
+</h1>
+</strong>
+</body>
+</html>
+<p>To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the <span class="math inline">\(logit\)</span> scale using <code>qlogis()</code> because that’s the scale we used to solve the fluctuation parameter in Step 3. Then we can add our update using the fluctuation parameter and clever covariate: <span class="math inline">\(\hat{\epsilon} \times H(A,\mathbf{W})\)</span>. Finally, we can put the updated estimates back on the true outcome scale using <code>plogis()</code>.</p>
+<p><em>Note we can use <span class="math inline">\(expit\)</span> to show the inverse of the <span class="math inline">\(logit\)</span> function, and we will denote updates to the outcome regressions as <span class="math inline">\(\hat{\mathrm{E}}^*\)</span> instead of <span class="math inline">\(\hat{\mathrm{E}}\)</span>.</em></p>
+<p><strong>1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.</strong></p>
+<p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))\]</span></p>
+<p><img src="/img/tmle/update_qAW.png" style="width:70.0%" /></p>
+<pre class="r"><code>H_A &lt;- dat_tmle$H_A # for cleaner code in Q_A_update
+Q_A_update &lt;- plogis(qlogis(Q_A) + eps*H_A)</code></pre>
+<p><strong>2. Update the expected outcomes, conditional on baseline confounders and everyone receiving the treatment.</strong></p>
+<p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A=1,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]) + \hat{\epsilon}H(A,1))\]</span>
+<img src="/img/tmle/12_update_Q1.png" style="width:70.0%" /></p>
+<pre class="r"><code>Q_1_update &lt;- plogis(qlogis(Q_1) + eps*H_1)</code></pre>
+<p><strong>3. Update the expected outcomes, conditional on baseline confounders and no one receiving the treatment.</strong></p>
+<p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A=0,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]) + \hat{\epsilon}H(A,0))\]</span>
+<img src="/img/tmle/13_update_Q0.png" style="width:70.0%" /></p>
+<pre class="r"><code>Q_0_update &lt;- plogis(qlogis(Q_0) + eps*H_0)</code></pre>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 5: Compute the Statistical Estimand of Interest
+</h1>
+</strong>
+</body>
+</html>
+<p>We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:</p>
+<p><span class="math display">\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \sum_{i=1}^{n}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]</span></p>
+<p><img src="/img/tmle/14_compute_ATE.png" style="width:60.0%" /></p>
+<pre class="r"><code>tmle_ate &lt;- mean(Q_1_update - Q_0_update)
+tmle_ate</code></pre>
+<pre><code>## [1] 0.2403501</code></pre>
+<p>We can then say, <em>the average treatment effect was estimated to be 24%.</em></p>
+<p>If causal assumptions were not met, we would say, <em>the proportion of observations who experienced the outcome, after adjusting for baseline confounders, was estimated to be 24% higher for those who received treatment compared to those who did not.</em></p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 6: Calculate the Standard Errors, Confidence Intervals, and P-values
+</h1>
+</strong>
+</body>
+</html>
+<p>A point estimate is great, but when you’re doing any sort of hypothesis testing or uncertainty quantification, standard errors are needed. To obtain inference, we need to compute the <strong>Influence Curve</strong> (IC), which is the empirical version of what we used our estimating equation to figure out in step 3. The IC tells us how much each observation influences, or perturbs, the final estimate.</p>
+<p>The equation for the IC looks like this:</p>
+<p><span class="math display">\[\hat{IC} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]</span></p>
+<pre class="r"><code>ic &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate</code></pre>
+<p>Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.</p>
+<p><em>Note: This is another step which relies heavily on semiparametric theory so I won’t get into the details; however, I’ve linked resources in <a href="#references">References</a>.</em></p>
+<p><span class="math display">\[\hat{SE} = \sqrt{\frac{var(\hat{IC})}{N}} \]</span></p>
+<p><img src="/img/tmle/15_ses.png" style="width:100.0%" /></p>
+<pre class="r"><code>tmle_se &lt;- sqrt(var(ic)/nrow(dat_obs))</code></pre>
+<p>Once we have that standard error, we can easily get the 95% confidence interval and p-value of our estimate.</p>
+<pre class="r"><code>conf_low &lt;- tmle_ate - 1.96*tmle_se
+conf_high &lt;- tmle_ate + 1.96*tmle_se
+
+pval &lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
+
+kable(tibble(tmle_ate, conf_low, conf_high), digits=3, caption = &quot;TMLE Estimate of the ATE&quot;)</code></pre>
+<table>
+<caption>
+<span id="tab:unnamed-chunk-22">Table 4: </span>TMLE Estimate of the ATE
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+tmle_ate
+</th>
+<th style="text-align:right;">
+conf_low
+</th>
+<th style="text-align:right;">
+conf_high
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.24
+</td>
+<td style="text-align:right;">
+0.194
+</td>
+<td style="text-align:right;">
+0.287
+</td>
+</tr>
+</tbody>
+</table>
+<p>Then we can successfully report our ATE as 0.24 (95% CI: 0.194, 0.287).</p>
+<p><em>Note:</em> A TMLE estimate is asymptotically normal, so we could alternatively bootstrap the entire algorithm to get our standard errors.</p>
+</div>
+</div>
+<div id="using-the-tmle-package" class="section level1">
+<h1>6 Using the <code>tmle</code> package</h1>
+<p>Luckily there are <code>R</code> packages so that you don’t have to hand code TMLE yourself. <code>R</code> packages to implement the TMLE algorithm include <a href="https://www.jstatsoft.org/article/view/v051i13"><code>tmle</code></a>, <a href="https://tlverse.org/tlverse-handbook/tmle3.html"><code>tmle3</code></a>, <a href="https://www.jstatsoft.org/article/view/v081i01"><code>ltmle</code></a>, and <a href="https://htmlpreview.github.io/?https://gist.githubusercontent.com/nt-williams/ddd44c48390b8d976fad71750e48d8bf/raw/45db700a02bf92e2a55790e60ed48266a97ca4e7/intro-lmtp.html"><code>lmtp</code></a>.</p>
+<p>The code using the original <code>tmle</code> package’s <code>tmle()</code> function is:</p>
+<pre class="r"><code>tmle_fit &lt;-
+  tmle::tmle(Y = Y, # outcome vector
+           A = A, # treatment vector
+           W = W, # matrix of confounders W1, W2, W3, W4
+           Q.SL.library = sl_libs, # superlearning libraries from earlier for outcome regression Q(A,W)
+           g.SL.library = sl_libs) # superlearning libraries from earlier for treatment regression g(W)
+
+tmle_fit</code></pre>
+<pre><code>##  Additive Effect
+##    Parameter Estimate:  0.23733
+##    Estimated Variance:  0.00053649
+##               p-value:  &lt;2e-16
+##     95% Conf Interval: (0.19194, 0.28273) 
+## 
+##  Additive Effect among the Treated
+##    Parameter Estimate:  0.23705
+##    Estimated Variance:  0.0005385
+##               p-value:  &lt;2e-16
+##     95% Conf Interval: (0.19157, 0.28253) 
+## 
+##  Additive Effect among the Controls
+##    Parameter Estimate:  0.23867
+##    Estimated Variance:  0.00053584
+##               p-value:  &lt;2e-16
+##     95% Conf Interval: (0.1933, 0.28404)</code></pre>
+<p>We can get the same result (variation due to randomness in the machine learning models) in just a few lines of code: the estimate using the original <code>tmle</code> package is 0.237 (95% CI: 0.192, 0.283).</p>
+</div>
+<div id="properties-of-tmle" class="section level1">
+<h1>7 Properties of TMLE 📈</h1>
+<p>TMLE is a <strong>doubly robust</strong> estimator, which means that if either the regression to estimate the expected outcome, or the regression to estimate the probability of treatment, are correctly specified (formally, their bias goes to zero as sample size grows large, meaning they are <strong>consistent</strong>), the final TMLE estimate will be consistent.</p>
+<p>If both regressions are consistent, the final estimate will reach the smallest possible sample variance in the fewest number of observations (formally: it will be <strong>efficient</strong>). The reason we use superlearning for estimating the outcome and treatment models fits is to give us the best possible chance of having correctly specified models.</p>
+<p><img src="/img/tmle_props.png" /></p>
+<p>Besides allowing for the use of machine learning models which place minimal assumptions on the underlying distribution of data, TMLE is appealing because its estimates will always stay in the bounds of the original outcome. This is because it is part of a class of <strong>substitution estimators</strong>. There is another class of semiparametric estimation methods in causal inference that are referred to as <strong>one-step estimators</strong>, but they can sometimes yield final estimates that are outside the original outcome scale.</p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p>If you’d like to learn more, I recommend the following resources:</p>
+<div id="tmle" class="section level3">
+<h3>TMLE</h3>
+<ul>
+<li><p>The paper I referred to most often while learning TMLE was <a href="https://academic.oup.com/aje/article/185/1/65/2662306"><em>Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies</em></a> by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.</p></li>
+<li><p>I also really like the written explanations in the <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book by Mark van der Laan and Sherri Rose. The notation was too difficult for me to follow, but the words themselves make a lot of sense.</p></li>
+<li><p>Miguel Luque wrote an <a href="https://migariane.github.io/TMLE.nb.html">excellent bookdown tutorial on TMLE</a>, also with step-by-step <code>R</code> code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the <a href="https://migariane.github.io/DeltaMethodEpiTutorial.nb.html">functional delta method</a> which is part of the theory behind Step 6.</p></li>
+</ul>
+</div>
+<div id="semiparametric-theory" class="section level3">
+<h3>Semiparametric Theory</h3>
+<ul>
+<li><p>Edward Kennedy has several well-written pieces on semiparametric estimation in causal inference. I recommend starting with:</p>
+<ul>
+<li><p>His introductory paper on <a href="https://arxiv.org/pdf/1709.06418.pdf">Semiparametric Theory</a></p></li>
+<li><p>His <a href="http://www.ehkennedy.com/uploads/5/8/4/5/58450265/unc_2019_cirg.pdf">slideshow tutorial</a> <em>Nonparametric efficiency theory and machine learning in causal inference</em></p></li>
+</ul></li>
+</ul>
+</div>
+<div id="influence-functions" class="section level3">
+<h3>Influence Functions</h3>
+<ul>
+<li><p>My favorite resource so far for learning specifically about influence functions has been <a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2020.1717620">Visually Communicating Influence Functions</a> by Aaron Fisher and Edward Kennedy. However, this paper didn’t make sense to me until I worked through this <a href="https://observablehq.com/@herbps10/one-step-estimators-and-pathwise-derivatives">interactive tutorial</a> by Herb Susmann. I suggest playing around with the interactive examples first, and then trying to work through the paper.</p></li>
+<li><p>The derivation of the Efficient Influence Function (EIF) in TMLE is in the Appendix of <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a>.</p></li>
+</ul>
+</div>
+<div id="causal-inference" class="section level3">
+<h3>Causal Inference</h3>
+<ul>
+<li><p>If you want to learn more about the foundations of causal inference, I suggest <a href="http://bayes.cs.ucla.edu/PRIMER/"><em>Causal Inference in Statistics: A Primer</em></a> by Judea Pearl and <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>What If</em></a> (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the <em>identification</em> side of causal inference.</p></li>
+<li><p>I also think the introductory chapters of the previously mentioned <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book do an excellent job of setting up the “roadmap” of causal inference.</p></li>
+</ul>
+<p>I’ll continue to update this page with resources as I discover them.</p>
+<p>Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through <a href="mailto:kathoffman.stats@gmail.com">email</a>. This is just a side hobby of mine, so please be patient with my response time. :-)</p>
+</div>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1>Acknowledgements</h1>
+<p>Thank you to Iván Díaz for answering many, many questions on TMLE, and to Miguel Luque for helpful feedback on the visual guide.</p>
+</div>
+<div id="tutorial-code-and-session-info" class="section level1">
+<h1>Tutorial code and session info</h1>
+<pre class="r"><code>library(tidyverse) # for data manipulation
+library(kableExtra) # for table printing
+library(SuperLearner) # for ensemble learning
+
+set.seed(7) # for reproducible results
+
+sl_libs &lt;- c(&#39;SL.glmnet&#39;, &#39;SL.ranger&#39;, &#39;SL.earth&#39;) # a library of machine learning algorithms (penalized regression, random forests, and multivariate adaptive regression splines)
+
+generate_data &lt;- function(n){ 
+    W1 &lt;- rbinom(n, size=1, prob=0.3)
+    W2 &lt;- rbinom(n, size=1, prob=0.7)
+    W3 &lt;- runif(n, min=0, max=3)
+    W4 &lt;- runif(n, min=0, max=8)
+    A  &lt;- rbinom(n, size=1, prob= plogis(-2 + 0.3*W2 + 0.1*W3 + 0.3*W4 + 0.4*W2*W4))
+    Y &lt;- rbinom(n, size=1, prob= plogis(-0.5 + A -0.2*W1 + 0.4*W2 + 0.2*W4 + 0.3*W3 + 0.2*W2*W4))
+    return(tibble(W1, W2, W3, W4, A, Y))
+}
+
+n &lt;- 2000
+dat_obs &lt;- generate_data(n) # generate a data set with n observations
+
+Y &lt;- dat_obs$Y
+W_A &lt;- dat_obs %&gt;% select(-Y) # remove the outcome to make a matrix of predictors (A, W1, W2, W3, W4) for SuperLearner
+
+### Step 1: Estimate Q
+Q &lt;- SuperLearner(Y = Y, # Y is the outcome vector
+                  X = W_A, # W1, W2, W3, W4, and A is the matrix of predictors
+                  family=binomial(), # specify we have a binary outcome
+                  SL.library = sl_libs) # specify our superlearner library of LASSO, RF, and MARS
+Q_A &lt;- as.vector(predict(Q)$pred) # obtain predictions for everyone using the treatment they actually received
+W_A1 &lt;- W_A %&gt;% mutate(A = 1)  # data set where everyone received treatment
+Q_1 &lt;- as.vector(predict(Q, newdata = W_A1)$pred) # predict on that everyone-exposed data set
+W_A0 &lt;- W_A %&gt;% mutate(A = 0) # data set where no one received treatment
+Q_0 &lt;- as.vector(predict(Q, newdata = W_A0)$pred)
+dat_tmle &lt;- tibble(Y = dat_obs$Y, A = dat_obs$A, Q_A, Q_0, Q_1)
+
+### Step 2: Estimate g and compute H(A,W)
+A &lt;- dat_obs$A
+W &lt;- dat_obs %&gt;% select(-Y, -A) # matrix of predictors that only contains the confounders W1, W2, W3, and W4
+g &lt;- SuperLearner(Y = A,
+                  X = W,
+                  family=binomial(),
+                  SL.library=sl_libs)
+g_w &lt;- as.vector(predict(g)$pred)
+H_1 &lt;- 1/g_w
+H_0 &lt;- -1/(1-g_w)
+dat_tmle &lt;- # add clever covariate data to dat_tmle
+  dat_tmle %&gt;%
+  bind_cols(
+         H_1 = H_1,
+         H_0 = H_0) %&gt;%
+  mutate(H_A = case_when(A == 1 ~ H_1, # if A is 1 (treated), assign H_1
+                       A == 0 ~ H_0))  # if A is 0 (not treated), assign H_0
+
+### Step 3: Estimate fluctuation parameter
+glm_fit &lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial)
+eps &lt;- coef(glm_fit)
+
+### Step 4: Update Q&#39;s
+H_A &lt;- dat_tmle$H_A # for cleaner code in Q_A_update
+Q_A_update &lt;- plogis(qlogis(Q_A) + eps*H_A)
+Q_1_update &lt;- plogis(qlogis(Q_1) + eps*H_1)
+Q_0_update &lt;- plogis(qlogis(Q_0) + eps*H_0)
+
+### Step 5: Compute ATE
+tmle_ate &lt;- mean(Q_1_update - Q_0_update)
+
+### Step 6: compute standard error, CIs and pvals
+ic &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
+tmle_se &lt;- sqrt(var(ic)/nrow(dat_obs))
+conf_low &lt;- tmle_ate - 1.96*tmle_se
+conf_high &lt;- tmle_ate + 1.96*tmle_se
+pval &lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))</code></pre>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.6.3 (2020-02-29)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Catalina 10.15.6
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] SuperLearner_2.0-26 nnls_1.4            kableExtra_1.1.0   
+##  [4] forcats_0.5.0       stringr_1.4.0       dplyr_1.0.2        
+##  [7] purrr_0.3.4         readr_1.3.1         tidyr_1.1.2        
+## [10] tibble_3.0.4        ggplot2_3.3.2       tidyverse_1.3.0    
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.5         lubridate_1.7.9    lattice_0.20-38    plotmo_3.5.7      
+##  [5] earth_5.1.2        assertthat_0.2.1   glmnet_3.0-2       digest_0.6.27     
+##  [9] foreach_1.5.0      ranger_0.12.1      R6_2.5.0           cellranger_1.1.0  
+## [13] backports_1.1.8    reprex_0.3.0       evaluate_0.14      httr_1.4.2        
+## [17] highr_0.8          blogdown_0.19      pillar_1.4.6       TeachingDemos_2.12
+## [21] rlang_0.4.8        readxl_1.3.1       rstudioapi_0.11    Matrix_1.2-18     
+## [25] rmarkdown_2.1      webshot_0.5.2      munsell_0.5.0      broom_0.7.0       
+## [29] compiler_3.6.3     modelr_0.1.6       xfun_0.19          pkgconfig_2.0.3   
+## [33] shape_1.4.4        htmltools_0.4.0    tidyselect_1.1.0   bookdown_0.19     
+## [37] codetools_0.2-16   tmle_1.4.0.1       fansi_0.4.1        viridisLite_0.3.0 
+## [41] crayon_1.3.4       dbplyr_1.4.3       withr_2.2.0        cabinets_0.6.0    
+## [45] grid_3.6.3         jsonlite_1.7.1     gtable_0.3.0       lifecycle_0.2.0   
+## [49] DBI_1.1.0          magrittr_1.5       scales_1.1.1       cli_2.1.0         
+## [53] stringi_1.5.3      fs_1.4.1           xml2_1.3.0         ellipsis_0.3.1    
+## [57] generics_0.1.0     vctrs_0.3.4        Formula_1.2-3      iterators_1.0.12  
+## [61] tools_3.6.3        glue_1.4.2         hms_0.5.3          plotrix_3.7-7     
+## [65] yaml_2.2.1         colorspace_1.4-1   rvest_0.3.5        knitr_1.30        
+## [69] haven_2.2.0</code></pre>
+</div>
+
+    </div>
+
+    
+
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/statistics/">statistics</a>
+  
+  <a class="badge badge-light" href="/tags/causal-inference/">causal inference</a>
+  
+  <a class="badge badge-light" href="/tags/r/">R</a>
+  
+  <a class="badge badge-light" href="/tags/lmtp/">lmtp</a>
+  
+  <a class="badge badge-light" href="/tags/tmle/">TMLE</a>
+  
+  <a class="badge badge-light" href="/tags/targeted-maximum-likelihood-estimation/">Targeted Maximum Likelihood Estimation</a>
+  
+  <a class="badge badge-light" href="/tags/introduction-to-tmle/">introduction to TMLE</a>
+  
+  <a class="badge badge-light" href="/tags/targeted-learning/">targeted learning</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+      
+      <img class="portrait mr-3" src="/authors/admin/avatar_huc473e5d783e956425af2298567207379_1878707_250x250_fill_q90_lanczos_center.jpeg" itemprop="image" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
+      <h6 class="card-subtitle">Research Biostatistician</h6>
+      <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+          <li>
+            <a itemprop="sameAs" href="mailto:kathoffman.stats@gmail.com" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/rkatlady" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/hoffmakl" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/blog/collider-bias/race/">Whatcha measuring?? Collider Bias Examples in R</a></li>
+          
+          <li><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></li>
+          
+          <li><a href="/blog/ditl-biostats/">A Day in the Life of a Biostatistician</a></li>
+          
+          <li><a href="/blog/sl/superlearning/">Become a Superlearner! An Illustrated Guide to Superlearning</a></li>
+          
+          <li><a href="/blog/collider-bias/hardest_part_of_causal/">The Key to Learning Causal Inference</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/languages/r.min.js"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.16bbb3750feb7244c9bc409a5a4fe678.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+        
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
