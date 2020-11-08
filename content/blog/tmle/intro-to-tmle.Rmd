@@ -340,7 +340,7 @@ Fair warning: this step is easy to code, but difficult to understand unless you 
 
 In this step, we will construct an estimating equation that happens to solve for something called the **Efficient Influence Function** (EIF) of the ATE. An Influence Function (IF) is a function that tells us how much an estimate will change if the input changes. If an Efficient IF exists for an estimand, it means the estimand can be estimated **efficiently** (achieving the smallest possible variance in the fewest number of observations).
 
-*Note: In parametric maximum likelihood estimation (MLE), the influence function is the score function (derivative of the log likelihood). We don't call it an EIF in MLE because the score function **always** achieves the Cramer Rao Lower Bound of efficiency. It's not quite as simple in a semi-parametric space.*
+<!-- *Note: In parametric maximum likelihood estimation (MLE), the influence function is the score function (derivative of the log likelihood). We don't call it an EIF in MLE because the score function **always** achieves the Cramer Rao Lower Bound of efficiency. It's not quite as simple in a semi-parametric space.* -->
 
 **Solving for the EIF will allow us to do two things:**
 

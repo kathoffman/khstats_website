@@ -5,7 +5,7 @@
     <link>/tags/targeted-learning/</link>
       <atom:link href="/tags/targeted-learning/index.xml" rel="self" type="application/rss+xml" />
     <description>targeted learning</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Oct 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 07 Nov 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>targeted learning</title>
@@ -15,7 +15,7 @@
     <item>
       <title>An Illustrated Guide to the Targeted Maximum Likelihood Estimation (TMLE) Algorithm</title>
       <link>/blog/tmle/intro-to-tmle/</link>
-      <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
+      <pubDate>Sat, 07 Nov 2020 21:13:14 -0500</pubDate>
       <guid>/blog/tmle/intro-to-tmle/</guid>
       <description>
 
