@@ -699,8 +699,8 @@ HTML Image as link
 </a>
 </body>
 </html>
-<p>Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Since this post is focused on learning the TMLE algorithm, I’ll give only a very brief high-level explanation, and then you can look at references if you’re curious to learn more about the theory. Importantly, <strong>the explanation I offer for this step is sufficient to appropriately implement TMLE as an analyst.</strong></p>
-<p>In this step, we will construct an estimating equation that happens to solve for something called the <strong>Efficient Influence Function</strong> (EIF) of the ATE. An Influence Function (IF) is a function that tells us how much an estimate will change if the input changes. If an Efficient IF exists for an estimand, it means the estimand can be estimated <strong>efficiently</strong> (achieving the smallest possible variance in the fewest number of observations).</p>
+<p>Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Since this post is focused on learning the TMLE algorithm, I’ll give only a very brief high-level explanation, and then you can look at references if you’re curious to learn more about the theory. Importantly, <strong>the explanation I offer for this step is more than sufficient to appropriately implement TMLE as an analyst.</strong></p>
+<p>In this step, we will construct an estimating equation to help us find something called the <strong>Efficient Influence Function</strong> (EIF) of the ATE. An Influence Function is a function that tells us how much an estimate will change if the input changes. If an Efficient Influence Function exists for an estimand, it means the estimand can be estimated <strong>efficiently</strong> (achieving the smallest possible variance in the fewest number of observations).</p>
 <!-- *Note: In parametric maximum likelihood estimation (MLE), the influence function is the score function (derivative of the log likelihood). We don't call it an EIF in MLE because the score function **always** achieves the Cramer Rao Lower Bound of efficiency. It's not quite as simple in a semi-parametric space.* -->
 <p><strong>Solving for the EIF will allow us to do two things:</strong></p>
 <ol style="list-style-type: decimal">
@@ -818,6 +818,7 @@ conf_high
 </tbody>
 </table>
 <p>Then we can successfully report our ATE as 0.24 (95% CI: 0.194, 0.287).</p>
+<p><em>Note:</em> A TMLE estimate is asymptotically normal, so we could alternatively bootstrap the entire algorithm to get our standard errors.</p>
 </div>
 </div>
 <div id="using-the-tmle-package" class="section level1">
@@ -893,12 +894,12 @@ tmle_fit</code></pre>
 <li><p>I also think the introductory chapters of the previously mentioned <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book do an excellent job of setting up the “roadmap” of causal inference.</p></li>
 </ul>
 <p>I’ll continue to update this page with resources as I discover them.</p>
-<p>Feedback on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through <a href="mailto:kathoffman.stats@gmail.com">email</a>. This is just a side hobby of mine, so please be patient with my response time. :-)</p>
+<p>Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through <a href="mailto:kathoffman.stats@gmail.com">email</a>. This is just a side hobby of mine, so please be patient with my response time. :-)</p>
 </div>
 </div>
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
-<p>Thank you to Iván Díaz for patiently answering my many, many questions on TMLE, and to Miguel Luque for helpful feedback on the visual guide.</p>
+<p>Thank you to Iván Díaz for answering many, many questions on TMLE, and to Miguel Luque for helpful feedback on the visual guide.</p>
 </div>
 <div id="tutorial-code-and-session-info" class="section level1">
 <h1>Tutorial code and session info</h1>
