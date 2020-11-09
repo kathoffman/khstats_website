@@ -218,7 +218,7 @@ kable(head(dat_tmle), digits=2, caption = "TMLE Algorithm after Step 1")
 
 <!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* -->
 
-We could stop here and get our estimate of the ATE by computing the average difference between \mathrm{\hat{E}}[Y|A=1,\mathbf{W}] and \mathrm{\hat{E}}[Y|A=0,\mathbf{W}], which *would* be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called **standardization**, **simple substitution estimation**, or **G-computation**.
+We could stop here and get our estimate of the ATE by computing the average difference between $\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$ and $\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$, which *would* be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called **standardization**, **simple substitution estimation**, or **G-computation**.
 
 $$\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \sum_{i=1}^{n}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])$$
 ![](/img/tmle/ate_gcomp.png){width=50%}
@@ -338,26 +338,26 @@ To reiterate, in Step 1 we estimated the expected outcome, conditional on treatm
 
 Fair warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Since this post is focused on learning the TMLE algorithm, I'll give only a very brief high-level explanation, and then you can look at references if you're curious to learn more about the theory. Importantly, **the explanation I offer for this step is more than sufficient to appropriately implement TMLE as an analyst.**
 
-In this step, we will construct an estimating equation to help us find something called the **Efficient Influence Function** (EIF) of the ATE. An Influence Function is a function that tells us how much an estimate will change if the input changes. If an Efficient Influence Function exists for an estimand, it means the estimand can be estimated **efficiently** (achieving the smallest possible variance in the fewest number of observations).
+In this step, we will construct an estimating equation to help us find something called the Efficient Influence Function (EIF) of the ATE. An **influence function** is a function that quantifies how much an estimate will change if the input data changes. Some estimands have an **efficient influence function**, which means there exists an influence function that achieves the Cramer Rao Lower Bound and can be used to create **efficient** estimates. (Informally, an efficient estimate means it achieves the smallest possible variance in the fewest number of observations.)
 
-<!-- *Note: In parametric maximum likelihood estimation (MLE), the influence function is the score function (derivative of the log likelihood). We don't call it an EIF in MLE because the score function **always** achieves the Cramer Rao Lower Bound of efficiency. It's not quite as simple in a semi-parametric space.* -->
+<!-- *Note: We don't call it an EIF in MLE because the score function **always** achieves the Cramer Rao Lower Bound of efficiency. It's not quite as simple in a semi-parametric space.* -->
 
-**Solving for the EIF will allow us to do two things:**
+If we were to work for a mathematical proof, we could show the ATE has an EIF, and that there is an equation we can set up to *target* it. **Setting up this estimating equation for the EIF will allow us to do two things:**
 
-1. Update our initial outcome estimates so that our ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#7-properties-of-tmle)).
+  1. Update our initial outcome estimates so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#7-properties-of-tmle)).
 
-2. Construct standard errors, confidence intervals, p-values, etc. for our estimate.
+  2. Construct standard errors, confidence intervals, p-values, etc. for our estimate of the ATE.
 
-**This is the reason we're able to use machine learning models "under the hood" while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we've built an algorithm, or estimator, to utilize its beneficial properties.**
+**This is the reason TMLE allows us to use machine learning models "under the hood" while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we've built an algorithm, or estimator, to utilize its beneficial properties.**
 
 Let's take a look at that estimating equation that will help us get to the EIF:
 
 $$logit(\mathrm{E}[Y|A,\mathbf{W}]) = logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \epsilon H(A,\mathbf{W})$$
-Again, I am not showing *why* this is the estimating equation that works; it relies on much more semiparametric theory than can be covered in this post. Let's instead think about how we might solve the estimating equation, given we know it to be correct.
+<!-- Again, I am not showing *why* this is the estimating equation that works; it relies on much more semiparametric theory than can be covered in this post. Let's instead think about how we might solve the estimating equation, given we know it to be correct. -->
 
 If we look at the left side, we can see it contains the true outcome $Y$, just $logit$ transformed. Luckily for us, there's a well-known model that $logit$ transforms the left side of an equation: logistic regression. Our estimating equation looks *a lot* like a simple logistic regression, actually: $logit(\mathrm{E}[Y|X]) = \beta_0 + \beta_1 X$.
 
-Do you see how our estimating equation *also* has a vector on the right-hand side, $H(A,\mathbf{W})$, with a corresponding coefficient, $\epsilon$? The only difference is that the "intercept" in our estimating equation, $logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])$ is not a constant value like $\beta_0$; it is a vector of values. We can see it as an **offset** in a logistic regression, or a **fixed intercept**, rather than a constant intercept.
+Do you see how our estimating equation *also* has a vector on the right-hand side, $H(A,\mathbf{W})$, with a corresponding coefficient, $\epsilon$? The only difference is that the "intercept" in our estimating equation, $logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])$ is not a constant value like $\beta_0$; it is a vector of values. We can see it as an **offset** or a **fixed intercept** in a logistic regression, rather than a constant-value intercept.
 
 Therefore, to solve our estimating equation we can leverage standard statistical software and fit a logistic regression with one covariate, $H(A,\mathbf{W})$, and the initial outcome estimate, $logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}])$, as a fixed intercept. The outcome of the logistic regression is the observed outcome, $Y$.
 
