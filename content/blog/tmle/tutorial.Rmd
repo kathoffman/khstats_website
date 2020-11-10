@@ -250,11 +250,10 @@ We will estimate $\mathrm{Pr}(A=1|\mathbf{W})$ in the same way as we estimated $
 ```{r}
 A <- dat_obs$A
 W <- dat_obs %>% select(-Y, -A) # matrix of predictors that only contains the confounders W1, W2, W3, and W4
-
-g <- SuperLearner(Y = A,
-                  X = W,
-                  family=binomial(),
-                  SL.library=sl_libs)
+g <- SuperLearner(Y = A, # outcome is the A (treatment) vector
+                  X = W, # W is a matrix of predictors
+                  family=binomial(), # treatment is a binomial outcome
+                  SL.library=sl_libs) # using same candidate learners; could use different learners
 ```
 
 Then we need to compute three different quantities from this model fit:
@@ -269,7 +268,7 @@ We can estimate the probability of receiving treatment for every observation by 
 
 
 ```{r}
-g_w <- as.vector(predict(g)$pred)
+g_w <- as.vector(predict(g)$pred) # Pr(A=1|W)
 H_1 <- 1/g_w
 ```
 
@@ -284,7 +283,7 @@ The probability of not receiving treatment for a binary treatment is simply 1 mi
 
 
 ```{r}
-H_0 <- -1/(1-g_w)
+H_0 <- -1/(1-g_w) # Pr(A=0|W) is 1-Pr(A=1|W)
 ```
 
 **3. If the observation was treated, the inverse probability of receiving treatment, and if they were not treated, the negative inverse probability of not receiving treatment.**
@@ -324,7 +323,6 @@ $$\hat{ATE}_{IPW} = \hat{\Psi}_{IPW} =\sum_{i=1}^{n}(\frac{AY}{\mathrm{Pr}(A=1|\
 ate_ipw <- mean(dat_tmle$Y * dat_tmle$H_A)
 ate_ipw
 ```
-
 
 However, once we use machine learning to estimate the probability of treatment, we generally cannot get standard errors for our IPW estimate. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).
  
@@ -610,13 +608,14 @@ dat_tmle <- tibble(Y = dat_obs$Y, A = dat_obs$A, Q_A, Q_0, Q_1)
 ### Step 2: Estimate g and compute H(A,W)
 A <- dat_obs$A
 W <- dat_obs %>% select(-Y, -A) # matrix of predictors that only contains the confounders W1, W2, W3, and W4
-g <- SuperLearner(Y = A,
-                  X = W,
-                  family=binomial(),
-                  SL.library=sl_libs)
-g_w <- as.vector(predict(g)$pred)
+g <- SuperLearner(Y = A, # outcome is the A (treatment) vector
+                  X = W, # W is a matrix of predictors
+                  family=binomial(), # treatment is a binomial outcome
+                  SL.library=sl_libs) # using same candidate learners; could use different learners
+
+g_w <- as.vector(predict(g)$pred) # Pr(A=1|W)
 H_1 <- 1/g_w
-H_0 <- -1/(1-g_w)
+H_0 <- -1/(1-g_w) # Pr(A=0|W) is 1-Pr(A=1|W)
 dat_tmle <- # add clever covariate data to dat_tmle
   dat_tmle %>%
   bind_cols(
