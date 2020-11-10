@@ -1,7 +1,7 @@
 ---
 title: "An Illustrated Introduction to Targeted Maximum Likelihood Estimation (TMLE)"
 author: "Katherine Hoffman"
-date: 2020-11-10T21:13:14-05:00
+date: 2020-11-09T21:13:14-05:00
 categories: ["statistics","R"]
 math: true
 tags: ["statistics","causal inference","R","lmtp","TMLE","Targeted Maximum Likelihood Estimation","introduction to TMLE","targeted learning"]
@@ -785,8 +785,8 @@ tmle_ate</code></pre>
 <p>The equation for the IC looks like this:</p>
 <p><span class="math display">\[\hat{IC} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]</span></p>
 <pre class="r"><code>ic &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate</code></pre>
-<p>Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.</p>
-<p><em>Note: This is another step which relies heavily on semiparametric theory so I won’t get into the details; however, I’ve linked resources in <a href="#references">References</a>.</em></p>
+<p>Once we have the IC, we can rely on the delta method by taking the square-root of its variance divided by the number of observations to get the standard error of our estimate.</p>
+<p><em>Note: This is another step which relies on semiparametric theory so I won’t get into the details; however, I’ve linked resources in <a href="#references">References</a>.</em></p>
 <p><span class="math display">\[\hat{SE} = \sqrt{\frac{var(\hat{IC})}{N}} \]</span></p>
 <p><img src="/img/tmle/15_ses.png" style="width:100.0%" /></p>
 <pre class="r"><code>tmle_se &lt;- sqrt(var(ic)/nrow(dat_obs))</code></pre>

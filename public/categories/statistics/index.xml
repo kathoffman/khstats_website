@@ -5,7 +5,7 @@
     <link>/categories/statistics/</link>
       <atom:link href="/categories/statistics/index.xml" rel="self" type="application/rss+xml" />
     <description>statistics</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 10 Nov 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 09 Nov 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>statistics</title>
@@ -15,7 +15,7 @@
     <item>
       <title>An Illustrated Introduction to Targeted Maximum Likelihood Estimation (TMLE)</title>
       <link>/blog/tmle/tutorial/</link>
-      <pubDate>Tue, 10 Nov 2020 21:13:14 -0500</pubDate>
+      <pubDate>Mon, 09 Nov 2020 21:13:14 -0500</pubDate>
       <guid>/blog/tmle/tutorial/</guid>
       <description>
 
@@ -791,8 +791,8 @@ tmle_ate&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The equation for the IC looks like this:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{IC} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]&lt;/span&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ic &amp;lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Note: This is another step which relies heavily on semiparametric theory so I won’t get into the details; however, I’ve linked resources in &lt;a href=&#34;#references&#34;&gt;References&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Once we have the IC, we can rely on the delta method by taking the square-root of its variance divided by the number of observations to get the standard error of our estimate.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: This is another step which relies on semiparametric theory so I won’t get into the details; however, I’ve linked resources in &lt;a href=&#34;#references&#34;&gt;References&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{SE} = \sqrt{\frac{var(\hat{IC})}{N}} \]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/15_ses.png&#34; style=&#34;width:100.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmle_se &amp;lt;- sqrt(var(ic)/nrow(dat_obs))&lt;/code&gt;&lt;/pre&gt;
