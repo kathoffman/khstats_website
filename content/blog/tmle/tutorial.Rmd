@@ -473,9 +473,9 @@ $$\hat{IC} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mat
 ic <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
 ```
 
-Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.
+Once we have the IC, we can rely on the delta method by taking the square-root of its variance divided by the number of observations to get the standard error of our estimate.
 
-*Note: This is another step which relies heavily on semiparametric theory so I won't get into the details; however, I've linked resources in [References](#references).*
+*Note: This is another step which relies on semiparametric theory so I won't get into the details; however, I've linked resources in [References](#references).*
 
 $$\hat{SE} = \sqrt{\frac{var(\hat{IC})}{N}} $$
 
@@ -568,7 +568,7 @@ Feedback or clarifications on this post is welcome, either from the new learners
 
 # Acknowledgements
 
-A huge thank you to Iván Díaz for patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Luque, Nick Williams, Axel Martin, and Anjile An for their very helpful feedback on this tutorial.
+A huge thank you to Iván Díaz for patiently answering many, many questions on TMLE. I am  also very appreciative of Miguel Luque, Nick Williams, Axel Martin, and Anjile An for their very helpful feedback on this tutorial.
 
 # Tutorial code and session info
 
