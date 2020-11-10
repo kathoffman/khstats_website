@@ -59,7 +59,7 @@ First, I was thinking about inference backwards: I was choosing a model based on
     <figcaption>An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield https://diff.healthpolicydatascience.org/</figcaption>
 </figure>
 
-Second, I thought flexible, data-adaptive models we commonly classify as *machine learning* could only be used for prediction, since they don't have asymptotic properties for inference (i.e. standard errors). However, certain semiparametric estimation methods like TMLE can actually use these models to obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models (e.g. linear and logistic regression). This is because machine learning models can often accommodate large numbers of confounders with complex relationships much better than parametric models.
+Second, I thought flexible, data-adaptive models we commonly classify as *machine learning* could only be used for prediction, since they don't have asymptotic properties for inference (i.e. standard errors). However, certain semiparametric estimation methods like TMLE can actually use these models to obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models (e.g. linear and logistic regression). This is because machine learning models can often accommodate large numbers of confounders with complex relationships better than parametric models.
 
 > The way we use the machine learning estimates in TMLE, surprisingly enough, yields **known asymptotic properties of bias and variance** -- just like we see in parametric maximum likelihood estimation -- for our target estimand.
 
@@ -359,14 +359,13 @@ If we were to work through a mathematical proof, we could show the ATE has an EI
 
   1. Update our initial outcome estimates so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#7-properties-of-tmle)).
 
-  2. Construct standard errors, confidence intervals, p-values, etc. for our estimate of the ATE.
+  2. Calculate the variance, and thus the standard error, confidence interval, and p-value for our estimate of the ATE.
 
 **This is the reason TMLE allows us to use machine learning models "under the hood" while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we've built an algorithm, or estimator, to utilize its beneficial properties.**
 
 Let's take a look at that estimating equation that will help us get to the EIF:
 
 $$logit(\mathrm{E}[Y|A,\mathbf{W}]) = logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \epsilon H(A,\mathbf{W})$$
-<!-- Again, I am not showing *why* this is the estimating equation that works; it relies on much more semiparametric theory than can be covered in this post. Let's instead think about how we might solve the estimating equation, given we know it to be correct. -->
 
 If we look at the left side, we can see it contains the true outcome $Y$, just $logit$ transformed. Luckily for us, there's a well-known model that $logit$ transforms the left side of an equation: logistic regression. Our estimating equation looks *a lot* like a simple logistic regression, actually: $logit(\mathrm{E}[Y|X]) = \beta_0 + \beta_1 X$.
 
