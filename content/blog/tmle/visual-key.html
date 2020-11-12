@@ -1,0 +1,125 @@
+---
+title: "A Condensed Key for A Visual Guide to Targeted Maximum Likelihood Estimation (TMLE)"
+author: "Katherine Hoffman"
+date: 2019-01-09T21:13:14-05:00
+categories: ["statistics","R"]
+math: true
+tags: ["statistics","causal inference","R","lmtp","TMLE","Targeted Maximum Likelihood Estimation","introduction to TMLE","targeted learning"]
+output:
+  blogdown::html_page:
+    toc: false
+---
+
+
+
+<blockquote>
+<p>A condensed key for my corresponding <a href="www.khstats.com/blog/tmle/tutorial">TMLE tutorial</a> blog post.</p>
+</blockquote>
+<div id="initial-set-up" class="section level3">
+<h3>Initial set up</h3>
+<p><img src="/img/tmle/1_data_structure.png" style="width:80.0%" />
+<strong>Estimand of interest:</strong></p>
+<p><span class="math display">\[ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]\]</span></p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 1: Estimate the Outcome
+</h1>
+</strong>
+</body>
+</html>
+<p>First, estimate the expected value of the outcome using treatment and confounders as predictors.</p>
+<p><span class="math display">\[Q(A,\mathbf{W}) = \mathrm{E}[Y|A,\mathbf{W}]\]</span>
+<img src="/img/tmle/2_outcome_fit.png" style="width:70.0%" /></p>
+<p>Then use that fit to obtain estimates of the expected outcome under varying three different treatment conditions:</p>
+<p><strong>1. If every observation received the treatment they <em>actually</em> received.</strong></p>
+<p><span class="math display">\[\hat{Q}(A,\mathbf{W}) = \mathrm{\hat{E}}[Y|A,\mathbf{W}]\]</span></p>
+<p><img src="/img/tmle/3_QA.png" style="width:50.0%" /></p>
+<p><strong>2. If every observation received the treatment.</strong></p>
+<p><span class="math display">\[\hat{Q}(1,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\]</span></p>
+<p><img src="/img/tmle/4_Q1.png" style="width:80.0%" /></p>
+<p><strong>3. If every observation received the control.</strong></p>
+<p><span class="math display">\[\hat{Q}(0,\mathbf{W}) = \mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\]</span></p>
+<p><img src="/img/tmle/5_Q1.png" style="width:80.0%" /></p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 2: Estimate the Probability of Treatment
+</h1>
+</strong>
+</body>
+</html>
+<p>The next step is to estimate the probability of treatment, given confounders.</p>
+<p><span class="math display">\[g(\mathbf{W}) = \mathrm{Pr}(A=1|\mathbf{W})\]</span>
+<img src="/img/tmle/6_treatment_fit.png" style="width:60.0%" /></p>
+<p>Then we need to compute three different quantities from this model fit:</p>
+<p><strong>1. The inverse probability of receiving treatment.</strong></p>
+<p><span class="math display">\[H(1,\mathbf{W}) = \frac{1}{g(\mathbf{W})} = \frac{1}{\mathrm{Pr}(A=1|\mathbf{W})}\]</span></p>
+<p><img src="/img/tmle/7_H1.png" style="width:60.0%" /></p>
+<p><strong>2. The negative inverse probability of not receiving treatment.</strong></p>
+<p><span class="math display">\[H(0,\mathbf{W}) = -\frac{1}{1-g(\mathbf{W})}= -\frac{1}{\mathrm{Pr}(A=0|\mathbf{W})}\]</span></p>
+<p><img src="/img/tmle/8_H0.png" style="width:70.0%" /></p>
+<p><strong>3. If the observation was treated, the inverse probability of receiving treatment, and if they were not treated, the negative inverse probability of not receiving treatment.</strong></p>
+<p><span class="math display">\[H(A,\mathbf{W}) = \frac{\mathrm{I}(A=1)}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{\mathrm{I}(A=0)}{\mathrm{Pr}(A=0|\mathbf{W})}\]</span></p>
+<p><img src="/img/tmle/9_HA.png" style="width:50.0%" /></p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 3: Estimate the Fluctuation Parameter
+</h1>
+</strong>
+</body>
+</html>
+<p>Estimating equation we need to solve:</p>
+<p><span class="math display">\[logit(\mathrm{E}[Y|A,\mathbf{W}]) = logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \epsilon H(A,\mathbf{W})\]</span>
+Two technical points for application: we use <code>qlogis</code> to transform the probabilities <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> to the <span class="math inline">\(logit\)</span> scale. Also, the <code>R</code> code for a fixed intercept is <code>-1 + offset(fixed_intercept)</code>.</p>
+<p><img src="/img/tmle/10_logistic_regression.png" /></p>
+<p>Next we need to save the coefficient from that logistic regression, which we will call <span class="math inline">\(\hat{\epsilon}\)</span>:</p>
+<p><img src="/img/tmle/11_epsilon.png" style="width:40.0%" /></p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 4: Update the Initial Estimates of the Expected Outcome
+</h1>
+</strong>
+</body>
+</html>
+<p><em>Note we can use <span class="math inline">\(expit\)</span> to show the inverse of the <span class="math inline">\(logit\)</span> function, and we will denote updates to the outcome regressions as <span class="math inline">\(\hat{\mathrm{E}}^*\)</span>.</em></p>
+<p><strong>1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.</strong></p>
+<p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))\]</span></p>
+<p><img src="/img/tmle/update_qAW.png" style="width:70.0%" /></p>
+<p><strong>2. Update the expected outcomes, conditional on baseline confounders and everyone receiving the treatment.</strong></p>
+<p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A=1,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]) + \hat{\epsilon}H(A,1))\]</span>
+<img src="/img/tmle/12_update_Q1.png" style="width:70.0%" /></p>
+<p><strong>3. Update the expected outcomes, conditional on baseline confounders and no one receiving the treatment.</strong></p>
+<p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A=0,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]) + \hat{\epsilon}H(A,0))\]</span>
+<img src="/img/tmle/13_update_Q0.png" style="width:70.0%" /></p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 5: Compute the Statistical Estimand of Interest
+</h1>
+</strong>
+</body>
+</html>
+<p>We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:</p>
+<p><span class="math display">\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \sum_{i=1}^{n}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]</span></p>
+<p><img src="/img/tmle/14_compute_ATE.png" style="width:60.0%" /></p>
+<html>
+<body>
+<h2 style="color:navy" >
+<strong>Step 6: Calculate the Standard Errors, Confidence Intervals, and P-values
+</h1>
+</strong>
+</body>
+</html>
+<p>To obtain the standard errors, we first need to compute the <strong>Influence Curve</strong> (IC). The equation for the IC looks like this:</p>
+<p><span class="math display">\[\hat{IC} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]</span></p>
+<p>Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.</p>
+<p><span class="math display">\[\hat{SE} = \sqrt{\frac{var(\hat{IC})}{N}} \]</span></p>
+<p><img src="/img/tmle/15_ses.png" style="width:100.0%" />
+Once we have that standard error, we can easily get the 95% confidence interval and p-value of our estimate.</p>
+<hr />
+<p><em>A visual guide designed as a printable reference is available on my <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">Github</a>:</em></p>
+<p><img src="/img/TMLE.jpg" /></p>
+</div>

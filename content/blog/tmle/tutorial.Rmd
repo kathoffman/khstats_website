@@ -1,15 +1,15 @@
 ---
 title: "An Illustrated Introduction to Targeted Maximum Likelihood Estimation (TMLE)"
+excerpt: "A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE)."
 author: "Katherine Hoffman"
 date: 2020-11-09T21:13:14-05:00
 categories: ["statistics","R"]
 math: true
 tags: ["statistics","causal inference","R","lmtp","TMLE","Targeted Maximum Likelihood Estimation","introduction to TMLE","targeted learning"]
-output: 
-  html_document:
-    toc: true
-    toc_float: true
-    smart: false
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
 ---
 
 ```{r setup, include=FALSE}
@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 > A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE).
-
 
 <html>
    <head>
@@ -28,7 +27,8 @@ knitr::opts_chunk$set(echo = TRUE)
          <img alt="cheatsheet" src="/img/TMLE.jpg"
          width=100%">
          <figcaption>
-*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations.*
+         
+*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my [Github](https://github.com/hoffmakl/CI-visual-guides) in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available [here](www.khstats.com/blog/tmle/visual-key).*
          </figcaption>
       </a>
    </body>
@@ -36,11 +36,25 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ***
 
-# 1. TMLE in three sentences 🎯
+***Jump to...***
+
+1. [TMLE in three sentences 🎯](#tmle-in-three-sentences)
+2. [An Analyst's Motivation for Learning TMLE 👩🏼‍💻](#an-analysts-motivation-for-learning-tmle)
+3. [Why the Visual Guide? 🎨
+](#why-the-visual-guide)
+4. [Is TMLE Causal Inference? 🤔](#is-tmle-causal-inference)
+5. [TMLE, Step-by-Step 🚶🏽‍♂️](#tmle-step-by-step)
+6. [Using the `tmle` package ✨](#using-the-tmle-package)
+7. [Properties of TMLE 📈](#properties-of-tmle)
+8. [Resources to learn more 🤓](#references)
+
+***
+
+# TMLE in three sentences 🎯
 
 Targeted Maximum Likelihood Estimation (TMLE) is a general semiparametric estimation framework to **estimate a statistical quantity of interest**. TMLE allows the use of **machine learning** (ML) models which place **minimal assumptions on the distribution of the data**. Unlike estimates normally obtained from ML, the **final TMLE estimate will still have valid standard errors for statistical inference**.
 
-# 2. An Analyst's Motivation for Learning TMLE 👩🏼‍💻
+# An Analyst's Motivation for Learning TMLE 👩🏼‍💻
 
 When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:
 
@@ -63,7 +77,7 @@ Second, I thought flexible, data-adaptive models we commonly classify as *machin
 
 > The way we use the machine learning estimates in TMLE, surprisingly enough, yields **known asymptotic properties of bias and variance** -- just like we see in parametric maximum likelihood estimation -- for our target estimand.
 
-# 3. Why the Visual Guide? 🎨
+# Why the Visual Guide? 🎨
 
 TMLE was developed in 2007 by Mark van der Laan at UC Berkeley, and it is slowly but surely starting to see more widespread use. Since learning about TMLE, I've believed many more analysts with a skill set similar to mine *could* be using TMLE, but perhaps find even the most introductory resources to be a bit daunting.
 
@@ -71,19 +85,21 @@ I am a very applied thinker, and I've tried to write this tutorial in the way I 
 
 This tutorial is not meant to replace the resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the [references](#references) I've listed at the end. TMLE is a very powerful method and will undoubtedly only grow in popularity in statistics and data science.
 
-# 4. Is TMLE Causal Inference? 🤔
+# Is TMLE Causal Inference? 🤔
 
-Although TMLE was developed for causal inference due to its many attractive statistical properties ([discussed later](#properties-of-tmle-📈)), it cannot be considered causal inference by itself. Causal inference is a process that first requires **causal assumptions** (not discussed here) before a statistical estimand can be interpreted causally.
+Although TMLE was developed for causal inference due to its many attractive statistical properties ([discussed later](#properties-of-tmle)), it cannot be considered causal inference by itself. Causal inference is a process that first requires **causal assumptions** (not discussed here) before a statistical estimand can be interpreted causally.
 
 TMLE can be used to estimate various statistical estimands (odds ratio, risk ratio, mean outcome difference, etc.) even when causal assumptions are not met. TMLE is, as its name implies, simply a tool for estimation.
 
 > In this tutorial I'll show a basic version of TMLE: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. Under causal assumptions, this is the Average Treatment Effect (ATE).
 
-# 5. TMLE, Step-by-Step 🚶🏽‍♂️
+# TMLE, Step-by-Step 🚶🏽‍♂️
 
-Let's look at the algorithm step-by-step. As you're reading, keep in mind that there are `R` packages that will do this for you as easily as running a `glm()` or `coxph()` function. This tutorial is to help understand what's going on behind-the-scenes.
+Let's look at the algorithm step-by-step. I describe each step in words, mathematical notation, a graphic, and `R` code. It may be helpful for you to look at this [corresponding key](www.khstats.com/blog/tmle/visual-key) while you go through the algorithm.
 
-One quick note before we dive into the algorithm:
+As you're reading, keep in mind that there are `R` packages that will do this for you as easily as running a `glm()` or `coxph()` function. This tutorial is to help understand what's going on behind-the-scenes.
+
+One final note before we dive into the algorithm:
 
 ### Superlearning
 
@@ -103,7 +119,7 @@ library(SuperLearner) # for ensemble learning
 set.seed(7) # for reproducible results
 ```
 
-Next, let's simulate a data set for demonstration of the algorithm. This data will have a very simple structure: a binary treatment, $A$, binary outcome, $Y$, and four confounders: $W_1$, $W_2$, $W_3$, and $W_4$.
+Next, let's simulate a data set for demonstration of the algorithm. This data will have a very simple structure: a binary treatment, $A$; binary outcome, $Y$; and four confounders: $W_1$, $W_2$, $W_3$, and $W_4$.
 
 ![](/img/tmle/1_data_structure.png){width=80%}
 
@@ -229,7 +245,7 @@ ate_gcomp <- mean(dat_tmle$Q_1 - dat_tmle$Q_0)
 ate_gcomp
 ```
 
-However, because we used machine learning, those expected outcome estimates have the optimal bias-variance trade-off for estimating the outcome, not the ATE. The ATE estimate may be biased, and we cannot compute the standard error. We need to incorporate information about the treatment mechanism to fix this.
+However, because we used machine learning, those expected outcome estimates have the optimal bias-variance trade-off for estimating the outcome, not the ATE. This G-computation ATE estimate may be biased, and we cannot compute the standard error. We need to incorporate information about the treatment mechanism to fix this.
 
 <html>
 <body>
@@ -260,7 +276,6 @@ Then we need to compute three different quantities from this model fit:
 
 **1. The inverse probability of receiving treatment.**
 
-
 $$H(1,\mathbf{W}) = \frac{1}{g(\mathbf{W})} = \frac{1}{\mathrm{Pr}(A=1|\mathbf{W})}$$
 We can estimate the probability of receiving treatment for every observation by using the `predict()` funcion without specifying any new data, and then take the inverse of that.
 
@@ -286,15 +301,14 @@ The probability of not receiving treatment for a binary treatment is simply 1 mi
 H_0 <- -1/(1-g_w) # Pr(A=0|W) is 1-Pr(A=1|W)
 ```
 
-**3. If the observation was treated, the inverse probability of receiving treatment, and if they were not treated, the negative inverse probability of not receiving treatment.**
-
+**3. If the observation was treated, the inverse probability of receiving treatment, and if they were not treated, the negative inverse probability of not receiving treatment.** I'll discuss why later, but in the TMLE literature this is called the **clever covariate**.
 
 $$H(A,\mathbf{W}) = \frac{\mathrm{I}(A=1)}{\mathrm{Pr}(A=1|\mathbf{W})}-\frac{\mathrm{I}(A=0)}{\mathrm{Pr}(A=0|\mathbf{W})}$$
 
 ![](/img/tmle/9_HA.png){width=50%}
 
 
-To calculate this, we'll first add the $H(1,\mathbf{W})$ and $H(0,\mathbf{W})$ vectors to our `dat_tmle` data frame, and then we can use $A$ to assign $H(A,\mathbf{W})$.
+To calculate the clever covariate, we'll first add the $H(1,\mathbf{W})$ and $H(0,\mathbf{W})$ vectors to our `dat_tmle` data frame, and then we can use $A$ to assign $H(A,\mathbf{W})$.
 
 ```{r}
 dat_tmle <- # add clever covariate data to dat_tmle
@@ -324,7 +338,7 @@ ate_ipw <- mean(dat_tmle$Y * dat_tmle$H_A)
 ate_ipw
 ```
 
-However, once we use machine learning to estimate the probability of treatment, we generally cannot get standard errors for our IPW estimate. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).
+However, once we use machine learning to estimate the probability of treatment, we generally cannot get valid standard errors for our IPW estimate. We could bootstrap, but the standard errors will only be correct if our estimand is asymptotically normally distributed and they are unlikely to be efficient (more on that later).
  
 <html>
 <body>
@@ -355,7 +369,7 @@ An **influence function** is a function that quantifies how much influence each 
 
 If we were to work through a mathematical proof, we could show the ATE has an EIF, and that there is an equation we can set up to *target* it. **Setting up this estimating equation for the EIF will allow us to do two things:**
 
-  1. Update our initial outcome estimates so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#7-properties-of-tmle)).
+  1. Update our initial outcome estimates so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#properties-of-tmle)).
 
   2. Calculate the variance, and thus the standard error, confidence interval, and p-value for our estimate of the ATE.
 
@@ -497,7 +511,7 @@ Then we can successfully report our ATE as `r round(tmle_ate, 3)` (95% CI: `r ro
 
 *Note: A TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.*
 
-# 6 Using the `tmle` package
+# Using the `tmle` package ✨
 
 Luckily there are `R` packages so that you don't have to hand code TMLE yourself. `R` packages to implement the TMLE algorithm include [`tmle`](https://www.jstatsoft.org/article/view/v051i13), [`tmle3`](https://tlverse.org/tlverse-handbook/tmle3.html), [`ltmle`](https://www.jstatsoft.org/article/view/v081i01), and [`lmtp`](https://htmlpreview.github.io/?https://gist.githubusercontent.com/nt-williams/ddd44c48390b8d976fad71750e48d8bf/raw/45db700a02bf92e2a55790e60ed48266a97ca4e7/intro-lmtp.html).
 
@@ -516,7 +530,7 @@ tmle_fit
 
 We can get the same result (variation due to randomness in the machine learning models) in just a few lines of code: the estimate using the original `tmle` package is `r round(tmle_fit$estimates$ATE$psi, 3)` (95% CI: `r round(tmle_fit$estimates$ATE$CI[[1]], 3)`, `r round(tmle_fit$estimates$ATE$CI[[2]], 3)`).
 
-# 7 Properties of TMLE 📈
+# Properties of TMLE 📈
 
 TMLE is a **doubly robust** estimator, which means that if either the regression to estimate the expected outcome, or the regression to estimate the probability of treatment, are correctly specified (formally, their bias goes to zero as sample size grows large, meaning they are **consistent**), the final TMLE estimate will be consistent.
 
@@ -530,13 +544,15 @@ Besides allowing for the use of machine learning models which do not assume an u
 
 If you'd like to learn more, I recommend the following resources:
 
-### TMLE
+### TMLEs
 
 - The paper I referred to most often while learning TMLE was [*Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies*](https://academic.oup.com/aje/article/185/1/65/2662306) by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.
 
 - I also really like the written explanations in the [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1) book by Mark van der Laan and Sherri Rose. The notation was too difficult for me to follow, but the words themselves make a lot of sense.
 
 - Miguel Luque wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the [functional delta method](https://migariane.github.io/DeltaMethodEpiTutorial.nb.html) which is part of the theory behind Step 6.
+
+- Other code-based web-based tutorials on TMLE include David Benkeser and Antoine Chambaz' [A Ride in Targeted Learning Territory](https://achambaz.github.io/tlride/) and the authors of the `R` package suite [`tlverse`](https://tlverse.org/)'s [Hitchhiker's Guide to Targeted Learning: The TMLE Framework](https://tlverse.org/tlverse-handbook/tmle3.html).
 
 ### Semiparametric Theory
 
@@ -564,9 +580,9 @@ Feedback or clarifications on this post is welcome, either from the new learners
 
 # Acknowledgements
 
-A huge thank you to Iván Díaz for patiently answering many, many questions on TMLE. I am  also very appreciative of Miguel Luque, Nick Williams, Axel Martin, and Anjile An for their very helpful feedback on this tutorial.
+This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Luque, Nick Williams, Axel Martin, Anjile An, and Will Simmons for providing very helpful feedback.
 
-# Tutorial code and session info
+# Full tutorial code
 
 ```{r, eval=F}
 library(tidyverse) # for data manipulation

@@ -350,7 +350,7 @@
     <div class="article-style">
       
       A beginner’s guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE).
-    HTML Image as link     There is a condensed version of this tutorial as an 8.5x11" pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations.     1.
+    HTML Image as link     There is a condensed version of this tutorial as an 8.5x11" pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available here.
       
     </div>
   </div>
@@ -393,6 +393,19 @@ I’m no expert in causal inference, but at this point I at least have an opinio
       TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
  We can see this in a simple example using the palmerpenguins data:
   #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/tmle/visual-key/">A Condensed Key for A Visual Guide to Targeted Maximum Likelihood Estimation (TMLE)</a></h2>
+    <div class="article-style">
+      
+      A condensed key for my corresponding TMLE tutorial blog post.
+ Initial set up Estimand of interest:
+\[ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]\]
+  Step 1: Estimate the Outcome     First, estimate the expected value of the outcome using treatment and confounders as predictors.
+\[Q(A,\mathbf{W}) = \mathrm{E}[Y|A,\mathbf{W}]\] Then use that fit to obtain estimates of the expected outcome under varying three different treatment conditions:
       
     </div>
   </div>
