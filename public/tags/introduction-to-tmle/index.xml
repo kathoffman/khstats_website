@@ -34,7 +34,7 @@ HTML Image as link
 &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/TMLE.jpg&#34;
          width=100%&#34;&gt;
 &lt;figcaption&gt;
-&lt;em&gt;&lt;a href=&#34;&#34;&gt;T&lt;/a&gt;here is a condensed version of this tutorial as an 8.5x11&#34; pdf on my &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides&#34;&gt;Github&lt;/a&gt; in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available &lt;a href=&#34;www.khstats.com/blog/tmle/visual-key&#34;&gt;here&lt;/a&gt;.&lt;/em&gt;
+&lt;em&gt;&lt;a href=&#34;&#34;&gt;T&lt;/a&gt;here is a condensed version of this tutorial as an 8.5x11&#34; pdf on my &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides&#34;&gt;Github&lt;/a&gt; in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available &lt;a href=&#34;https://khstats.com/blog/tmle/visual-key&#34;&gt;here&lt;/a&gt;.&lt;/em&gt;
 &lt;/figcaption&gt;
 &lt;/a&gt;
 &lt;/body&gt;
@@ -94,13 +94,13 @@ An estimand is a quantity that answers a scientific question of interest. Once w
 &lt;/div&gt;
 &lt;div id=&#34;tmle-step-by-step-️&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE, Step-by-Step 🚶🏽‍♂️&lt;/h1&gt;
-&lt;p&gt;Let’s look at the algorithm step-by-step. I describe each step in words, mathematical notation, a graphic, and &lt;code&gt;R&lt;/code&gt; code. It may be helpful for you to look at this &lt;a href=&#34;www.khstats.com/blog/tmle/visual-key&#34;&gt;corresponding key&lt;/a&gt; while you go through the algorithm.&lt;/p&gt;
+&lt;p&gt;Let’s look at the algorithm step-by-step. I describe each step in words, mathematical notation, a graphic, and &lt;code&gt;R&lt;/code&gt; code. It may be helpful for you to look at this &lt;a href=&#34;https://khstats.com/blog/tmle/visual-key&#34;&gt;corresponding key&lt;/a&gt; while you go through the algorithm.&lt;/p&gt;
 &lt;p&gt;As you’re reading, keep in mind that there are &lt;code&gt;R&lt;/code&gt; packages that will do this for you as easily as running a &lt;code&gt;glm()&lt;/code&gt; or &lt;code&gt;coxph()&lt;/code&gt; function. This tutorial is to help understand what’s going on behind-the-scenes.&lt;/p&gt;
 &lt;p&gt;One final note before we dive into the algorithm:&lt;/p&gt;
 &lt;div id=&#34;superlearning&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Superlearning&lt;/h3&gt;
 &lt;p&gt;I use the ensemble learning method &lt;strong&gt;superlearning&lt;/strong&gt; (also known as “stacking”) to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.&lt;/p&gt;
-&lt;p&gt;For a tutorial on superlearning, you can check out my &lt;a href=&#34;www.khstats.com/sl/superlearning&#34;&gt;previous blog post&lt;/a&gt;. If you’re new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use &lt;code&gt;SuperLearner()&lt;/code&gt; in the following example code, I could have used &lt;code&gt;glm()&lt;/code&gt;, &lt;code&gt;randomForest()&lt;/code&gt;, or any other parametric or non-parametric supervised learning algorithm.&lt;/p&gt;
+&lt;p&gt;For a tutorial on superlearning, you can check out my [previous blog post]&lt;a href=&#34;https://khstats.com/blog/sl/superlearning&#34; class=&#34;uri&#34;&gt;https://khstats.com/blog/sl/superlearning&lt;/a&gt;). If you’re new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use &lt;code&gt;SuperLearner()&lt;/code&gt; in the following example code, I could have used &lt;code&gt;glm()&lt;/code&gt;, &lt;code&gt;randomForest()&lt;/code&gt;, or any other parametric or non-parametric supervised learning algorithm.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;initial-set-up&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Initial set up&lt;/h3&gt;

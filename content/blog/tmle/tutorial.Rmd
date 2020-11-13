@@ -28,7 +28,7 @@ knitr::opts_chunk$set(echo = TRUE)
          width=100%">
          <figcaption>
          
-*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my [Github](https://github.com/hoffmakl/CI-visual-guides) in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available [here](www.khstats.com/blog/tmle/visual-key).*
+*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my [Github](https://github.com/hoffmakl/CI-visual-guides) in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).*
          </figcaption>
       </a>
    </body>
@@ -95,7 +95,7 @@ TMLE can be used to estimate various statistical estimands (odds ratio, risk rat
 
 # TMLE, Step-by-Step 🚶🏽‍♂️
 
-Let's look at the algorithm step-by-step. I describe each step in words, mathematical notation, a graphic, and `R` code. It may be helpful for you to look at this [corresponding key](www.khstats.com/blog/tmle/visual-key) while you go through the algorithm.
+Let's look at the algorithm step-by-step. I describe each step in words, mathematical notation, a graphic, and `R` code. It may be helpful for you to look at this [corresponding key](https://khstats.com/blog/tmle/visual-key) while you go through the algorithm.
 
 As you're reading, keep in mind that there are `R` packages that will do this for you as easily as running a `glm()` or `coxph()` function. This tutorial is to help understand what's going on behind-the-scenes.
 
@@ -105,7 +105,7 @@ One final note before we dive into the algorithm:
 
 I use the ensemble learning method **superlearning** (also known as "stacking") to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.
 
-For a tutorial on superlearning, you can check out my [previous blog post](www.khstats.com/sl/superlearning). If you're new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use `SuperLearner()` in the following example code, I could have used `glm()`, `randomForest()`, or any other parametric or non-parametric supervised learning algorithm.
+For a tutorial on superlearning, you can check out my [previous blog post]https://khstats.com/blog/sl/superlearning). If you're new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use `SuperLearner()` in the following example code, I could have used `glm()`, `randomForest()`, or any other parametric or non-parametric supervised learning algorithm.
 
 ### Initial set up
 
