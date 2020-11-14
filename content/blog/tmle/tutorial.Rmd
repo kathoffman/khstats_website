@@ -3,6 +3,7 @@ title: "An Illustrated Introduction to Targeted Maximum Likelihood Estimation (T
 excerpt: "A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE)."
 author: "Katherine Hoffman"
 date: 2020-11-09T21:13:14-05:00
+draft: true
 categories: ["statistics","R"]
 math: true
 tags: ["statistics","causal inference","R","lmtp","TMLE","Targeted Maximum Likelihood Estimation","introduction to TMLE","targeted learning"]
