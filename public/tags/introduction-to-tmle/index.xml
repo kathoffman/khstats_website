@@ -1008,7 +1008,7 @@ pval &amp;lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## R version 3.6.3 (2020-02-29)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Catalina 10.15.6
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
