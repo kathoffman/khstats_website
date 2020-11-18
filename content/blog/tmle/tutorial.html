@@ -45,7 +45,7 @@ HTML Image as link
 <li><a href="#using-the-tmle-package">Using the <code>tmle</code> package 📦</a></li>
 <li><a href="#properties-of-tmle">Properties of TMLE 📈</a></li>
 <li><a href="#why-does-tmle-work">Why does TMLE work? ✨</a></li>
-<li><a href="#references">Resources to learn more 🤓</a></li>
+<li><a href="#resources-to-learn-more">Resources to learn more 🤓</a></li>
 </ol>
 <hr />
 <div id="tmle-in-three-sentences" class="section level1">
@@ -798,12 +798,12 @@ tmle_ate</code></pre>
 <p>This point estimate is great, but usually standard errors are needed to compute confidence intervals and test statistics. To obtain the standard errors, we first need to compute the <strong>Influence Function</strong> (IF), which is the empirical version of what we used our estimating equation to figure out in step 3. The IF tells us how much each observation influences the final estimate.</p>
 <p>The equation for the IF looks like this:</p>
 <p><span class="math display">\[\hat{IF} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]</span></p>
-<pre class="r"><code>ic &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate</code></pre>
-<p>Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.</p>
+<pre class="r"><code>infl_fn &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate</code></pre>
+<p>Once we have the IF, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.</p>
 <p><em>Note: This is another step that is theory-heavy so I won’t get into the details; however, I’ve linked resources in <a href="#references">References</a>.</em></p>
 <p><span class="math display">\[\hat{SE} = \sqrt{\frac{var(\hat{IF})}{N}} \]</span></p>
 <p><img src="/img/tmle/15_ses.png" style="width:100.0%" /></p>
-<pre class="r"><code>tmle_se &lt;- sqrt(var(ic)/nrow(dat_obs))</code></pre>
+<pre class="r"><code>tmle_se &lt;- sqrt(var(infl_fn)/nrow(dat_obs))</code></pre>
 <p>Once we have that standard error, we can easily get the 95% confidence interval and p-value of our estimate.</p>
 <pre class="r"><code>conf_low &lt;- tmle_ate - 1.96*tmle_se
 conf_high &lt;- tmle_ate + 1.96*tmle_se
@@ -842,7 +842,7 @@ conf_high
 </tbody>
 </table>
 <p>Then we can successfully report our ATE as 0.196 (95% CI: 0.13, 0.262).</p>
-<p><em>Note: A TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.</em></p>
+<p><em>Note that a TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.</em></p>
 </div>
 </div>
 <div id="using-the-tmle-package" class="section level1">
@@ -885,20 +885,20 @@ tmle_fit</code></pre>
 </div>
 <div id="why-does-tmle-work" class="section level1">
 <h1>Why does TMLE work? ✨</h1>
-<p>As mentioned previously, understanding why TMLE works requires semi-parametric theory that falls far outside the scope of this tutorial. However, the theory is interesting, so I’ll give a brief, high-level explanation, and then you can look at references if you’re curious to learn more. Importantly, the explanation I offer here is more than sufficient and certainly not necessary to appropriately implement TMLE as an analyst.</p>
+<p>As mentioned previously, understanding why TMLE works requires semi-parametric theory that falls far outside the scope of this tutorial. However, the theory is interesting, so I’ll give a brief, high-level explanation, and then you can look at the <a href="#resources-to-learn-more">references</a> if you’re curious to learn more. Importantly, the explanation I outline here is more than sufficient and certainly not necessary to appropriately implement TMLE as an analyst.</p>
 <p><strong>TMLE relies on the following ideas:</strong></p>
 <ol style="list-style-type: decimal">
 <li><p>An <strong>influence function</strong> is a function that quantifies how much influence each observation has on the estimator. For this reason, it is very useful to characterize the variance of the estimator. In parametric maximum likelihood estimation, the influence function is the score function.</p></li>
-<li><p>Some statistical estimands have an <strong>efficient influence function</strong> (EIF), which means there exists an influence function that achieves the efficiency bound (think Cramer Rao Lower Bound) and can be used to create efficient estimators. In parametric maximum likelihood estimation, the Fisher Information Criterion always achieves the efficiency bound, so no one really talks about the EIF.</p></li>
+<li><p>Some statistical estimands have an <strong>efficient influence function</strong> (EIF), which means there exists an influence function that achieves the efficiency bound (think Cramer Rao Lower Bound from parametric maximum likelihood estimation) and can be used to create efficient estimators.</p></li>
 <li><p>If we want to estimate an estimand which has an EIF, we can try to construct an estimator that solves for it and thus takes advantage of its useful asymptotic properties.</p></li>
 </ol>
 <p><strong>This is the reason TMLE allows us to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we’ve built an algorithm, or estimator, to utilize its beneficial properties.</strong></p>
 </div>
-<div id="references" class="section level1">
-<h1>References</h1>
-<p>If you’d like to learn more, I recommend the following resources:</p>
-<div id="tmles" class="section level3">
-<h3>TMLEs</h3>
+<div id="resources-to-learn-more" class="section level1">
+<h1>Resources to learn more 🤓</h1>
+<p>I could only cover so much in this post, so I’m sure you’ll have plenty of questions! I’ve used the most while learning about TMLE and other semiparametric estimation methods:</p>
+<div id="tmle" class="section level3">
+<h3>TMLE</h3>
 <ul>
 <li><p>The paper I referred to most often while learning TMLE was <a href="https://academic.oup.com/aje/article/185/1/65/2662306"><em>Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies</em></a> by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.</p></li>
 <li><p>I also really like the written explanations in the <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book by Mark van der Laan and Sherri Rose. The notation was too difficult for me to follow, but the words themselves make a lot of sense.</p></li>
@@ -911,7 +911,8 @@ tmle_fit</code></pre>
 <ul>
 <li><p>Edward Kennedy has several well-written pieces on semiparametric estimation in causal inference. I recommend starting with:</p>
 <ul>
-<li>His <a href="http://www.ehkennedy.com/uploads/5/8/4/5/58450265/unc_2019_cirg.pdf">slideshow tutorial</a> <em>Nonparametric efficiency theory and machine learning in causal inference</em></li>
+<li><p>His introductory paper on <a href="https://arxiv.org/pdf/1709.06418.pdf">Semiparametric Theory</a></p></li>
+<li><p>His <a href="http://www.ehkennedy.com/uploads/5/8/4/5/58450265/unc_2019_cirg.pdf">slideshow tutorial</a> <em>Nonparametric efficiency theory and machine learning in causal inference</em></p></li>
 </ul></li>
 </ul>
 </div>
@@ -1007,8 +1008,8 @@ Q_0_update &lt;- plogis(qlogis(Q_0) + eps*H_0)
 tmle_ate &lt;- mean(Q_1_update - Q_0_update)
 
 ### Step 6: compute standard error, CIs and pvals
-ic &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
-tmle_se &lt;- sqrt(var(ic)/nrow(dat_obs))
+infl_fn &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
+tmle_se &lt;- sqrt(var(infl_fn)/nrow(dat_obs))
 conf_low &lt;- tmle_ate - 1.96*tmle_se
 conf_high &lt;- tmle_ate + 1.96*tmle_se
 pval &lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))</code></pre>

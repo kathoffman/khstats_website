@@ -47,7 +47,7 @@ knitr::opts_chunk$set(echo = TRUE)
 6. [Using the `tmle` package 📦](#using-the-tmle-package)
 7. [Properties of TMLE 📈](#properties-of-tmle)
 8. [Why does TMLE work? ✨](#why-does-tmle-work)
-9. [Resources to learn more 🤓](#references)
+9. [Resources to learn more 🤓](#resources-to-learn-more)
 
 ***
 
@@ -481,10 +481,10 @@ The equation for the IF looks like this:
 $$\hat{IF} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}$$
 
 ```{r}
-ic <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
+infl_fn <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
 ```
 
-Once we have the IC, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.
+Once we have the IF, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.
 
 *Note: This is another step that is theory-heavy so I won't get into the details; however, I've linked resources in [References](#references).*
 
@@ -494,7 +494,7 @@ $$\hat{SE} = \sqrt{\frac{var(\hat{IF})}{N}} $$
 ![](/img/tmle/15_ses.png){width=100%}
 
 ```{r}
-tmle_se <- sqrt(var(ic)/nrow(dat_obs))
+tmle_se <- sqrt(var(infl_fn)/nrow(dat_obs))
 ```
 
 Once we have that standard error, we can easily get the 95% confidence interval and p-value of our estimate.
@@ -509,7 +509,7 @@ kable(tibble(tmle_ate, conf_low, conf_high), digits=3, caption = "TMLE Estimate 
 
 Then we can successfully report our ATE as `r round(tmle_ate, 3)` (95% CI: `r round(conf_low, 3)`, `r round(conf_high, 3)`).
 
-*Note: A TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.*
+*Note that a TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.*
 
 # Using the `tmle` package 📦
 
@@ -542,23 +542,23 @@ Besides allowing for the use of machine learning models which do not assume an u
 
 # Why does TMLE work? ✨
 
-As mentioned previously, understanding why TMLE works requires semi-parametric theory that falls far outside the scope of this tutorial. However, the theory is interesting, so I'll give a brief, high-level explanation, and then you can look at references if you're curious to learn more. Importantly, the explanation I offer here is more than sufficient and certainly not necessary to appropriately implement TMLE as an analyst.
+As mentioned previously, understanding why TMLE works requires semi-parametric theory that falls far outside the scope of this tutorial. However, the theory is interesting, so I'll give a brief, high-level explanation, and then you can look at the [references](#resources-to-learn-more) if you're curious to learn more. Importantly, the explanation I outline here is more than sufficient and certainly not necessary to appropriately implement TMLE as an analyst.
 
 **TMLE relies on the following ideas:**
 
 1. An **influence function** is a function that quantifies how much influence each observation has on the estimator. For this reason, it is very useful to characterize the variance of the estimator. In parametric maximum likelihood estimation, the influence function is the score function.
 
-2. Some statistical estimands have an **efficient influence function** (EIF), which means there exists an influence function that achieves the efficiency bound (think Cramer Rao Lower Bound) and can be used to create efficient estimators. In parametric maximum likelihood estimation, the Fisher Information Criterion always achieves the efficiency bound, so no one really talks about the EIF.
+2. Some statistical estimands have an **efficient influence function** (EIF), which means there exists an influence function that achieves the efficiency bound (think Cramer Rao Lower Bound from parametric maximum likelihood estimation) and can be used to create efficient estimators.
 
 3. If we want to estimate an estimand which has an EIF, we can try to construct an estimator that solves for it and thus takes advantage of its useful asymptotic properties.
 
 **This is the reason TMLE allows us to use machine learning models "under the hood" while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we've built an algorithm, or estimator, to utilize its beneficial properties.**
 
-# References
+# Resources to learn more 🤓
 
-If you'd like to learn more, I recommend the following resources:
+I could only cover so much in this post, so I'm sure you'll have plenty of questions! I've used the most while learning about TMLE and other semiparametric estimation methods:
 
-### TMLEs
+### TMLE
 
 - The paper I referred to most often while learning TMLE was [*Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies*](https://academic.oup.com/aje/article/185/1/65/2662306) by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.
 
@@ -571,6 +571,8 @@ If you'd like to learn more, I recommend the following resources:
 ### Semiparametric Theory
 
 - Edward Kennedy has several well-written pieces on semiparametric estimation in causal inference. I recommend starting with:
+
+  - His introductory paper on [Semiparametric Theory](https://arxiv.org/pdf/1709.06418.pdf)
 
   - His [slideshow tutorial](http://www.ehkennedy.com/uploads/5/8/4/5/58450265/unc_2019_cirg.pdf) *Nonparametric efficiency theory and machine learning in causal inference*
 
@@ -666,8 +668,8 @@ Q_0_update <- plogis(qlogis(Q_0) + eps*H_0)
 tmle_ate <- mean(Q_1_update - Q_0_update)
 
 ### Step 6: compute standard error, CIs and pvals
-ic <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
-tmle_se <- sqrt(var(ic)/nrow(dat_obs))
+infl_fn <- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
+tmle_se <- sqrt(var(infl_fn)/nrow(dat_obs))
 conf_low <- tmle_ate - 1.96*tmle_se
 conf_high <- tmle_ate + 1.96*tmle_se
 pval <- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
