@@ -1,9 +1,9 @@
 ---
-title: "An Illustrated Introduction to Targeted Maximum Likelihood Estimation (TMLE)"
+title: "An Illustrated Guide to Targeted Maximum Likelihood Estimation (TMLE)"
 excerpt: "A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE)."
 author: "Katherine Hoffman"
-date: 2020-11-09T21:13:14-05:00
-draft: true
+date: 2020-11-27T21:13:14-05:00
+draft: false
 categories: ["statistics","R"]
 math: true
 tags: ["statistics","causal inference","R","lmtp","TMLE","Targeted Maximum Likelihood Estimation","introduction to TMLE","targeted learning"]
@@ -17,7 +17,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-> A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE).
+> A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the mean difference in an outcome, adjusting for confounders. In causal inference, this is called the Average Treatment Effect (ATE) when causal assumptions are met.
 
 <html>
    <head>
@@ -29,7 +29,7 @@ knitr::opts_chunk$set(echo = TRUE)
          width=100%">
          <figcaption>
          
-*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my [Github](https://github.com/hoffmakl/CI-visual-guides) in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).*
+*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my [Github](https://github.com/hoffmakl/causal-inference-visual-guides) in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).*
          </figcaption>
       </a>
    </body>
@@ -59,30 +59,40 @@ Targeted Maximum Likelihood Estimation (TMLE) is a general semiparametric estima
 
 When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:
 
-1. If the goal is <span style="color: #3366ff;">inference</span>, use an <span style="color: #3366ff;">interpretable (usually parametric) model</span> and explain the meaning behind the coefficients and their standard errors. 
+1. If the goal is <span style="color: #3366ff;">inference</span> (for example, an effect size with a confidence interval), use an <span style="color: #3366ff;">interpretable, usually parametric, model</span> and explain the meaning behind the coefficients and their standard errors. 
 
-2. If the goal is  <span style="color: #cc0000;">prediction</span>, use a <span style="color: #cc0000;">flexible machine learning model</span> and then look at performance metrics and variable importance.
+2. If the goal is  <span style="color: #cc0000;">prediction</span>, use <span style="color: #cc0000;">flexible non- and semi-parametric machine learning algorithms</span> and then look at performance metrics and variable importance.
 
 This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.
 
-First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to *first* determine the statistical quantity, or **estimand**, that best answers a scientific question, and *then* use the method, or **estimator**, best suited for estimating it. This is the paradigm TMLE is based upon: we want to build an algorithm **targeted to an estimand of interest**.
+First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to *first* determine the statistical quantity, or **estimand**, that best answers a scientific question, and *then* use the method, or **estimator**, best suited for estimating it. This is the paradigm TMLE is based upon: **we want to build an algorithm, or estimator, targeted to an estimand of interest**.
 
 <figure>
     <img src="/img/tmle/estimator.png"
     width= 70%
          alt="Estimator and Estimand"> 
-    <figcaption>An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield https://diff.healthpolicydatascience.org/</figcaption>
+    <figcaption>*An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield and [diff.healthpolicydatascience.org]( https://diff.healthpolicydatascience.org/).*</figcaption>
 </figure>
 
-Second, I thought flexible, data-adaptive models we commonly classify as *machine learning* could only be used for prediction, since they don't have asymptotic properties for inference (i.e. standard errors). However, certain semiparametric estimation methods like TMLE can actually use these models to obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models (e.g. linear and logistic regression). This is because machine learning models can often accommodate large numbers of confounders with complex relationships better than parametric models.
+Second, I thought flexible, data-adaptive statistical models we commonly classify as *machine learning* could only be used for prediction, since they don't have asymptotic properties for inference (i.e. standard errors). However, certain **semiparametric estimation methods** like TMLE can actually use these models to **obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models** (e.g. linear and logistic regression). This is because machine learning models can often accommodate **large numbers of covariates** with **complex, non-linear relationships**.
 
-> The way we use the machine learning estimates in TMLE, surprisingly enough, yields **known asymptotic properties of bias and variance** -- just like we see in parametric maximum likelihood estimation -- for our target estimand.
+<img src="/img/tmle/parametric_assumptions_comic.jpg" width=80%>
+ <figcaption>*Semi-parametric estimation methods like TMLE can rely on machine learning to avoid making unrealistic parametric assumptions about the underlying distribution of the data (e.g. multivariate normality).* </figcaption>
+
+The way we use the machine learning estimates in TMLE, surprisingly enough, yields **known asymptotic properties of bias and variance** -- just like we see in parametric maximum likelihood estimation -- for our target estimand.
 
 # Why the Visual Guide? 🎨
 
 TMLE was developed in 2007 by Mark van der Laan and colleagues at UC Berkeley, and it is slowly but surely starting to see more widespread use. Since learning about TMLE, I've believed many more analysts with a skill set similar to mine *could* be using TMLE, but perhaps find even the most introductory resources to be a bit daunting.
 
-I am a very applied thinker, and I've tried to write this tutorial in the way I would have found most useful and accessible when I began learning about TMLE. Each step is accompanied by a non-rigorous explanation, an equation using the simplest notation possible, in-line `R` code, and a small graphic representing the computation on a data frame or vector. This last piece is super important for me, because I remember best when I associate an image with what I've learned.
+I am a very applied thinker, and I've tried to write this tutorial in the way I would have found most useful and accessible when I began learning about TMLE. Each step is accompanied by:
+
+1. a non-rigorous explanation
+2. an equation using the simplest notation possible
+3. in-line `R` code
+4. a small graphic representing the computation on a data frame or vector
+
+This last piece is super important for me, because I remember best when I associate an image with what I've learned.
 
 This tutorial is not meant to replace the resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the [references](#references) I've listed at the end. TMLE is a very powerful method and will undoubtedly only grow in popularity in statistics and data science.
 
@@ -92,11 +102,11 @@ Although TMLE was developed for causal inference due to its many attractive stat
 
 TMLE can be used to estimate various statistical estimands (odds ratio, risk ratio, mean outcome difference, etc.) even when causal assumptions are not met. TMLE is, as its name implies, simply a tool for estimation.
 
-> In this tutorial I'll show a basic version of TMLE: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. Under causal assumptions, this is the Average Treatment Effect (ATE).
+> In this tutorial I'll show a basic version of TMLE: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. Under causal assumptions, this is called the Average Treatment Effect (ATE).
 
 # TMLE, Step-by-Step 🚶🏽‍♂️
 
-Let's look at the algorithm step-by-step. I describe each step in words, mathematical notation, a graphic, and `R` code. It may be helpful for you to look at this [corresponding key](https://khstats.com/blog/tmle/visual-key) while you go through the algorithm.
+Let's look at the algorithm step-by-step. I describe each in words, mathematical notation, a graphic, and `R` code. If the graphics are helpful to you, it may be helpful to open this [corresponding key](https://khstats.com/blog/tmle/visual-key) in another browser or print the [visual guide](https://github.com/hoffmakl/causal-inference-visual-guides) for reference.
 
 As you're reading, keep in mind that there are `R` packages that will do this for you as easily as running a `glm()` or `coxph()` function. This tutorial is to help understand what's going on behind-the-scenes.
 
@@ -106,7 +116,7 @@ One final note before we dive into the algorithm:
 
 I use the ensemble learning method **superlearning** (also known as "stacking") to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.
 
-For a tutorial on superlearning, you can check out my [previous blog post]https://khstats.com/blog/sl/superlearning). If you're new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use `SuperLearner()` in the following example code, I could have used `glm()`, `randomForest()`, or any other parametric or non-parametric supervised learning algorithm.
+For a tutorial on superlearning, you can check out my [previous blog post](https://khstats.com/blog/sl/superlearning). If you're new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use `SuperLearner()` in the following example code, I could have used `glm()`, `randomForest()`, or any other parametric or non-parametric supervised learning algorithm.
 
 ### Initial set up
 
@@ -129,11 +139,11 @@ Next, let's simulate a data set for demonstration of the algorithm. This data wi
 generate_data <- function(n){ 
     W1 <- rbinom(n, size=1, prob=0.2) # binary confounder
     W2 <- rbinom(n, size=1, prob=0.5) # binary confounder
-    W3 <- round(runif(n, min=0, max=5)) # continuous confounder
+    W3 <- round(runif(n, min=2, max=7)) # continuous confounder
     W4 <- round(runif(n, min=0, max=4)) # continuous confounder
-    A  <- rbinom(n, size=1, prob= plogis(-0.2 + 0.2*W2 + 0.1*W3 + 0.3*W4 + 0.2*W1*W4)) # binary treatment depends on confounders
-    Y <- rbinom(n, size=1, prob= plogis(-1 + A - 0.1*W1 + 0.2*W2 + 0.3*W3 - 0.1*W4 + 0.1*W2*W4)) # binary outcome depends on confounders
-    return(tibble(W1, W2, W3, W4, A, Y))
+    A  <- rbinom(n, size=1, prob= plogis(-0.2 + 0.2*W2 + log(0.1*W3) + 0.3*W4 + 0.2*W1*W4)) # binary treatment depends on confounders
+    Y <- rbinom(n, size=1, prob= plogis(-1 + A - 0.1*W1 + 0.2*W2 + 0.3*W3 - 0.1*W4 + sin(0.1*W2*W4))) # binary outcome depends on confounders
+    return(tibble(Y, W1, W2, W3, W4, A))
 }
 
 n <- 1000
@@ -142,20 +152,20 @@ dat_obs <- generate_data(n) # generate a data set with n observations
 kable(head(dat_obs), digits=2, caption = "Simulated data set.")
 ```
 
-As mentioned earlier, TMLE can estimate many different statistical estimands of interest. In this example, the statistical estimand is the mean difference in outcomes between those who received the treatment and those who did not, adjusting for confounders.
+As mentioned earlier, TMLE can estimate many different statistical estimands of interest. In this example, our statistical estimand is the mean difference in outcomes between those who received the treatment and those who did not, adjusting for confounders.
 
-Under causal assumptions, this could be identifiable as the Average Treatment Effect (ATE). Let's pretend for this example that we previously met causal assumptions and call our statistical estimand, $\Psi$, the ATE.
+Under causal assumptions, this could be *identifiable* as the Average Treatment Effect (ATE). I won't go through the identification process here (see Hernan or Pearl's books in [references](#resources-to-learn-more)), but since TMLE is often used for causal inference, let's pretend for this example that we previously met causal assumptions and call our statistical estimand, $\Psi$, the ATE.
 
 $$ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]$$
+Our ATE, once we estimate it, will be interpretable as the mean difference in outcomes in a hypothetical world where everyone received treatment compared to a hypothetical world where no one received treatment.
 
-At this point in set-up, we should also pick our statistical learning algorithms to combine when we use the superlearner to estimate the expected outcome and probability of treatment. Let's use LASSO (`glmnet`), random forests (`ranger`), and Multivariate Adaptive Regression Splines (MARS) (`earth`) for demonstration.
+At this point in set-up, we should also pick our statistical learning algorithms to combine when we use the superlearner to estimate the expected outcome and probability of treatment. Let's use LASSO (`glmnet`), random forests (`ranger`), Multivariate Adaptive Regression Splines (MARS) (`earth`), and a generalized linear model (`glm`) for demonstration.
 
 ```{r}
-sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.earth') # a library of machine learning algorithms (penalized regression, random forests, and multivariate adaptive regression splines)
+sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.earth', 'SL.glm') # a library of machine learning algorithms (penalized regression, random forests, and multivariate adaptive regression splines)
 ```
 
-*Note that the choice of models for superlearning is not the point of this post; we simply want to add flexible machine learning models which we think **may** reflect the underlying data distribution. We are not limited to a certain number or type of regressions.*
-
+*Note that the choice of regressions for superlearning is not the point of this post; we simply want to add flexible machine learning models which we think <u>**may**</u> reflect the underlying data distribution. A penalized regression such as LASSO may not be necessary with only four covariates, but in general this is a good candidate learner to try.*
 
 <html>
 <body>
@@ -349,7 +359,7 @@ kable(head(dat_tmle), digits=2, caption="TMLE Algorithm after Step 2")
 </body>
 </html>
 
-To reiterate, in Step 1 we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.
+To reiterate, in Step 1 we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. **We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.**
 
 <html>
    <head>
@@ -363,15 +373,13 @@ To reiterate, in Step 1 we estimated the expected outcome, conditional on treatm
    </body>
 </html>
 
-🚨 Warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let's first look at *what* we're doing, and then I'll discuss at a very high-level *why* we're doing that in a [later section](#why-does-tmle-work).
+🚨 Warning: 🚨 this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let's first look at *what* we're doing, and then I'll discuss at a very high-level *why* we're doing that in a [later section](#why-does-tmle-work).
 
-> The point of this step is to set up an estimating equation for the *efficient influence function* (EIF) of our estimand of interest.
+The point of this step is to solve an estimating equation for the *efficient influence function* (EIF) of our estimand of interest. Without diving into what an EIF or estimating equation is, let's accept for a moment that it will help us:
 
-Without diving into what an EIF is, let's accept for a moment that it will help us:
+  1. **Update our initial outcome estimates** so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#properties-of-tmle)).
 
-  1. Update our initial outcome estimates so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#properties-of-tmle)).
-
-  2. Calculate the variance, and thus the standard error, confidence interval, and p-value for our estimate of the ATE.
+  2. **Calculate the variance**, and thus the standard error, confidence interval, and p-value for our estimate of the ATE for hypothesis testing.
 
 Next, let's take a look at a model that will help us solve an EIF estimating equation and then update our estimates:
 
@@ -413,7 +421,17 @@ We will use both the fluctuation parameter and clever covariate in the next step
 </body>
 </html>
 
-To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the $logit$ scale using `qlogis()` because that's the scale we used to solve the fluctuation parameter in Step 3. Then we can add our update using the fluctuation parameter and clever covariate: $\hat{\epsilon} \times H(A,\mathbf{W})$. Finally, we can put the updated estimates back on the true outcome scale using `plogis()`.
+Almost done! Let's recap:
+
+- In Step 1, we obtained initial estimates of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate $E[Y|A,W]$, not the ATE.
+
+- We need to update those initial expected outcome estimates using information about the treatment mechanism, so we computed the expected probability of treatment, conditional on confounders, in Step 2.
+
+- Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn't talk about *why* we have to do this because it is impossible to explain correctly to beginners without distracting from *what* we're doing.
+
+- Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.
+
+To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the $logit$ scale using `qlogis()` because that's the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: $H(A,\mathbf{W}) \times \hat{\epsilon}$. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using `plogis()`.
 
 *Note we can use $expit$ to show the inverse of the $logit$ function, and we will denote updates to the outcome regressions as $\hat{\mathrm{E}}^*$ instead of $\hat{\mathrm{E}}$.*
 
@@ -474,7 +492,7 @@ If causal assumptions were not met, we would say, "the proportion of observation
 </body>
 </html>
 
-This point estimate is great, but usually standard errors are needed to compute confidence intervals and test statistics. To obtain the standard errors, we first need to compute the **Influence Function** (IF), which is the empirical version of what we used our estimating equation to figure out in step 3. The IF tells us how much each observation influences the final estimate. 
+This point estimate is great, but we usually need an estimate of variance so that we can compute confidence intervals and test statistics. To obtain the standard errors, we first need to compute the **Influence Function** (IF), which is the empirical version of what we used our estimating equation to figure out in step 3. The IF tells us how much each observation influences the final estimate. 
 
 The equation for the IF looks like this:
 
@@ -530,11 +548,12 @@ tmle_fit
 
 We can get the same result (variation due to randomness in the machine learning models) in just a few lines of code: the estimate using the original `tmle` package is `r round(tmle_fit$estimates$ATE$psi, 3)` (95% CI: `r round(tmle_fit$estimates$ATE$CI[[1]], 3)`, `r round(tmle_fit$estimates$ATE$CI[[2]], 3)`).
 
+
 # Properties of TMLE 📈
 
 TMLE is a **doubly robust** estimator, which means that if either the regression to estimate the expected outcome, or the regression to estimate the probability of treatment, are correctly specified (formally, their bias goes to zero as sample size grows large, meaning they are **consistent**), the final TMLE estimate will be consistent.
 
-If both regressions are consistent, the final estimate will reach the smallest possible variance at a rate of $\sqrt{n}$, which is the fastest possible rate of convergence and the same as "regular" maximum likelihood estimation. The reason we use superlearning for estimating the outcome and treatment regression fits is to give us the best possible chance of having correctly specified models.
+If both regressions are consistent, the final estimate will reach the smallest possible variance at a rate of $\sqrt{n}$, which is the fastest possible rate of convergence and the same as parametric maximum likelihood estimation. The reason we use superlearning for estimating the outcome and treatment regression fits is to give us the best possible chance of having correctly specified models.
 
 ![](/img/tmle_props.png)
 
@@ -546,17 +565,19 @@ As mentioned previously, understanding why TMLE works requires semi-parametric t
 
 **TMLE relies on the following ideas:**
 
-1. An **influence function** is a function that quantifies how much influence each observation has on the estimator. For this reason, it is very useful to characterize the variance of the estimator. In parametric maximum likelihood estimation, the influence function is the score function.
+1. Some estimands allow for **asymptotically linear estimation**. This means that estimators can be represented as sample averages (plus a term that converges to zero).
 
-2. Some statistical estimands have an **efficient influence function** (EIF), which means there exists an influence function that achieves the efficiency bound (think Cramer Rao Lower Bound from parametric maximum likelihood estimation) and can be used to create efficient estimators.
+2. The quantities being averaged for asymptotically linear estimators are called **influence functions**. An influence function is a function that quantifies how much influence each observation has on the estimator. For this reason, it is very **useful to characterize the variance of the estimator**. In parametric maximum likelihood estimation, the influence function is related the score function.
 
-3. If we want to estimate an estimand which has an EIF, we can try to construct an estimator that solves for it and thus takes advantage of its useful asymptotic properties.
+3. The **efficient influence function** (EIF) is the influence function that achieves the efficiency bound (think Cramer Rao Lower Bound from parametric maximum likelihood estimation) and **can be used to create efficient estimators.**
 
-**This is the reason TMLE allows us to use machine learning models "under the hood" while still obtaining asymptotic properties for inference: our estimand of interest has an EIF, and we've built an algorithm, or estimator, to utilize its beneficial properties.**
+4. If we want to **construct an estimator that is efficient**, we can take advantage of the EIF to endow the estimator with useful asymptotic properties.
+
+This is the reason TMLE allows us to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our **estimand** of interest admits **asymptotically linear estimation**, and we are **using properties of the EIF** to **construct an estimator** with **optimal statistical properties** (i.e. double robustness, efficiency).
 
 # Resources to learn more 🤓
 
-I could only cover so much in this post, so I'm sure you'll have plenty of questions! I've used the most while learning about TMLE and other semiparametric estimation methods:
+I could only cover so much in this post, but here are the resources I've used the most to learn about TMLE, semiparametric estimation methods, and causal inference. If you are brand new to any or all of it: there is a good chance it will take *several* reads of these materials before the concepts begin to make any sense. Don't get discouraged!
 
 ### TMLE
 
@@ -594,7 +615,9 @@ Feedback or clarifications on this post is welcome, either from the new learners
 
 # Acknowledgements
 
-This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Luque, Nick Williams, Axel Martin, Anjile An, and Will Simmons for providing very helpful feedback.
+This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Luque's helpful feedback on the visual guide.
+
+Lastly, many thanks to Nick Williams, Axel Martin, Anjile An, Adam Peterson, Alan Wu, and Will Simmons for providing suggestions on various drafts of this project!
 
 # Full tutorial code
 
@@ -610,11 +633,11 @@ sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.earth') # a library of machine learni
 generate_data <- function(n){ 
     W1 <- rbinom(n, size=1, prob=0.2) # binary confounder
     W2 <- rbinom(n, size=1, prob=0.5) # binary confounder
-    W3 <- round(runif(n, min=0, max=5)) # continuous confounder
+    W3 <- round(runif(n, min=2, max=7)) # continuous confounder
     W4 <- round(runif(n, min=0, max=4)) # continuous confounder
-    A  <- rbinom(n, size=1, prob= plogis(-0.2 + 0.2*W2 + 0.1*W3 + 0.3*W4 + 0.2*W1*W4)) # binary treatment depends on confounders
-    Y <- rbinom(n, size=1, prob= plogis(-1 + A - 0.1*W1 + 0.2*W2 + 0.3*W3 - 0.1*W4 + 0.1*W2*W4)) # binary outcome depends on confounders
-    return(tibble(W1, W2, W3, W4, A, Y))
+    A  <- rbinom(n, size=1, prob= plogis(-0.2 + 0.2*W2 + log(0.1*W3) + 0.3*W4 + 0.2*W1*W4)) # binary treatment depends on confounders
+    Y <- rbinom(n, size=1, prob= plogis(-1 + A - 0.1*W1 + 0.2*W2 + 0.3*W3 - 0.1*W4 + sin(0.1*W2*W4))) # binary outcome depends on confounders
+    return(tibble(Y, W1, W2, W3, W4, A))
 }
 
 n <- 1000
@@ -673,6 +696,10 @@ tmle_se <- sqrt(var(infl_fn)/nrow(dat_obs))
 conf_low <- tmle_ate - 1.96*tmle_se
 conf_high <- tmle_ate + 1.96*tmle_se
 pval <- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
+
+tmle_ate
+conf_low
+conf_high
 ```
 
 ```{r}

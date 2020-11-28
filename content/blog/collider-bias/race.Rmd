@@ -1,5 +1,5 @@
 ---
-title: "Whatcha measuring?? Collider Bias Examples in R"
+title: "Collider Bias Examples in R"
 author: "Katherine Hoffman"
 date: 2020-10-13T21:13:14-05:00
 categories: ["statistics"]
@@ -19,13 +19,9 @@ set.seed(7)
 n <- 5000
 ```
 
-Anyways, I wholeheartedly agree with this. I find many of the tools in causal inference (specifically Directed Acyclic Graphs) to be incredibly useful in recognizing what I *cannot* unbiasedly estimate.
+<!-- Anyways, I wholeheartedly agree with this. I find many of the tools in causal inference (specifically Directed Acyclic Graphs) to be incredibly useful in recognizing what I *cannot* unbiasedly estimate. -->
 
-I am an expert lurker on the statistics twitter (war) threads is a favorite pasttime of mine, so I was admittedly a bit sad it didn't gain more steam.
-
-
-
-So now your investigator wants to know the attributable mortality of race once someone is hospitalized. "We don't want your causal inference, we just want the *independent association*!" they tell you emphatically. "We *PROMISE* we won't talk about anything causally!" You think about Miguel Hernan's *The C-Word* paper. You don't believe them at all, but you let it go, for a moment.
+<!-- So now your investigator wants to know the attributable mortality of race once someone is hospitalized. "We don't want your causal inference, we just want the *independent association*!" they tell you emphatically. "We *PROMISE* we won't talk about anything causally!" You think about Miguel Hernan's *The C-Word* paper. You don't believe them at all, but you let it go, for a moment. -->
 
 
 Let's start with simulating race. Let's say our population of interest is approximately 50% of one race and 50% of another. We'll simulate that with a binomial distribution.

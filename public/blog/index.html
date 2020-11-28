@@ -133,7 +133,7 @@
   <meta property="og:description" content="Research Biostatistician"><meta property="og:image" content="/img/icon-192.png">
   <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-11-09T21:13:14-05:00">
+    <meta property="og:updated_time" content="2020-11-27T21:13:14-05:00">
   
 
   
@@ -346,22 +346,21 @@
   
   
   <div>
-    <h2><a href="/blog/tmle/tutorial/">An Illustrated Introduction to Targeted Maximum Likelihood Estimation (TMLE)</a></h2>
+    <h2><a href="/blog/tmle/tutorial/">An Illustrated Guide to Targeted Maximum Likelihood Estimation (TMLE)</a></h2>
     <div class="article-style">
       
-      A beginner’s guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the Average Treatment Effect (ATE).
-    HTML Image as link     There is a condensed version of this tutorial as an 8.5x11" pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available here.
+      A beginner’s guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the mean difference in an outcome, adjusting for confounders. In causal inference, this is called the Average Treatment Effect (ATE) when causal assumptions are met.
+    HTML Image as link     There is a condensed version of this tutorial as an 8.5x11" pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations.
       
     </div>
   </div>
   
   <div>
-    <h2><a href="/blog/collider-bias/race/">Whatcha measuring?? Collider Bias Examples in R</a></h2>
+    <h2><a href="/blog/collider-bias/race/">Collider Bias Examples in R</a></h2>
     <div class="article-style">
       
-      Anyways, I wholeheartedly agree with this. I find many of the tools in causal inference (specifically Directed Acyclic Graphs) to be incredibly useful in recognizing what I cannot unbiasedly estimate.
-I am an expert lurker on the statistics twitter (war) threads is a favorite pasttime of mine, so I was admittedly a bit sad it didn’t gain more steam.
-So now your investigator wants to know the attributable mortality of race once someone is hospitalized.
+      Let’s start with simulating race. Let’s say our population of interest is approximately 50% of one race and 50% of another. We’ll simulate that with a binomial distribution.
+race &lt;- rbinom(n, 1, 0.5)  Now we’ll simulate COVID-19 disease severity. Although there is some evidence suggesting COVID-19 disease severity is not random (i.e. it could be related to viral load, blood type, etc.), let’s assume for the sake of example that it is completely random.
       
     </div>
   </div>

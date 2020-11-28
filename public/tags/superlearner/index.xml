@@ -33,7 +33,7 @@ HTML Image as link
 &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
          width=100%&#34;&gt;
 &lt;figcaption&gt;
-&lt;strong&gt;&lt;em&gt;A Visual Guide…&lt;/em&gt;&lt;/strong&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;&lt;em&gt;Targeted Learning&lt;/em&gt;&lt;/a&gt; by Mark van der Laan and Sherri Rose. This “visual guide” I made for &lt;em&gt;Chapter 3: Superlearning&lt;/em&gt; by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
+&lt;strong&gt;&lt;em&gt;A Visual Guide…&lt;/em&gt;&lt;/strong&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;&lt;em&gt;Targeted Learning&lt;/em&gt;&lt;/a&gt; by Mark van der Laan and Sherri Rose. This “visual guide” I made for &lt;em&gt;Chapter 3: Superlearning&lt;/em&gt; by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
 &lt;/figcaption&gt;
 &lt;/a&gt;
 &lt;/body&gt;
@@ -560,7 +560,7 @@ sl_fit &amp;lt;- SuperLearner(Y = obs$y, X = x_df, family = gaussian(),
 &lt;div id=&#34;coming-soon-when-prediction-is-not-the-end-goal&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Coming soon… when prediction is not the end goal&lt;/h1&gt;
 &lt;p&gt;When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference. This is the reason I was reading &lt;em&gt;Targeted Learning&lt;/em&gt; in the first place; I am a statistician with collaborators who typically want estimates of treatment effects with confidence intervals, not predictions!&lt;/p&gt;
-&lt;p&gt;I’m working on a similar visual guide for one such semiparametric estimation method: &lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;Targeted Maximum Likelihood Estimation&lt;/a&gt; (TMLE)). TMLE allows the use of flexible statistical models like the superlearner algorithm when estimating treatment effects. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. If you’re curious about TMLE in the meantime, I really like &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;this tutorial&lt;/a&gt; by Miguel Angel Luque Fernandez.&lt;/p&gt;
+&lt;p&gt;I’m working on a similar visual guide for one such semiparametric estimation method: &lt;a href=&#34;https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;Targeted Maximum Likelihood Estimation&lt;/a&gt; (TMLE)). TMLE allows the use of flexible statistical models like the superlearner algorithm when estimating treatment effects. If you found this superlearning tutorial helpful, you may be interested in this &lt;a href=&#34;https://www.khstats.com/blog/tmle/tutorial/&#34;&gt;similarly visual tutorial&lt;/a&gt; on TMLE.&lt;/p&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;title&gt;
@@ -568,7 +568,7 @@ HTML Image as link
 &lt;/title&gt;
 &lt;/head&gt;
 &lt;body&gt;
-&lt;a href=&#34;https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;
+&lt;a href=&#34;https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;
 &lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/TMLE.jpg&#34;
          width=100%&#34;&gt;
 &lt;/a&gt;
@@ -706,13 +706,13 @@ HTML Image as link
 ## [21] rlang_0.4.8        readxl_1.3.1       rstudioapi_0.11    Matrix_1.2-18     
 ## [25] rmarkdown_2.1      labeling_0.3       munsell_0.5.0      broom_0.7.0       
 ## [29] compiler_3.6.3     modelr_0.1.6       xfun_0.19          pkgconfig_2.0.3   
-## [33] shape_1.4.4        htmltools_0.4.0    tidyselect_1.1.0   bookdown_0.19     
+## [33] shape_1.4.4        htmltools_0.5.0    tidyselect_1.1.0   bookdown_0.19     
 ## [37] codetools_0.2-16   fansi_0.4.1        crayon_1.3.4       dbplyr_1.4.3      
 ## [41] withr_2.2.0        cabinets_0.6.0     grid_3.6.3         jsonlite_1.7.1    
 ## [45] gtable_0.3.0       lifecycle_0.2.0    DBI_1.1.0          magrittr_1.5      
-## [49] scales_1.1.1       cli_2.1.0          stringi_1.5.3      farver_2.0.3      
+## [49] scales_1.1.1       cli_2.2.0          stringi_1.5.3      farver_2.0.3      
 ## [53] fs_1.4.1           xml2_1.3.0         ellipsis_0.3.1     generics_0.1.0    
-## [57] vctrs_0.3.4        Formula_1.2-3      iterators_1.0.12   tools_3.6.3       
+## [57] vctrs_0.3.5        Formula_1.2-3      iterators_1.0.12   tools_3.6.3       
 ## [61] glue_1.4.2         hms_0.5.3          plotrix_3.7-7      yaml_2.2.1        
 ## [65] colorspace_1.4-1   rvest_0.3.5        haven_2.2.0&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;

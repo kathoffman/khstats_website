@@ -5,7 +5,7 @@
     <link>/</link>
       <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <description>KHstats</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 09 Nov 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 27 Nov 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>KHstats</title>
@@ -15,7 +15,7 @@
     <item>
       <title>Posts</title>
       <link>/blog/</link>
-      <pubDate>Mon, 09 Nov 2020 21:13:14 -0500</pubDate>
+      <pubDate>Fri, 27 Nov 2020 21:13:14 -0500</pubDate>
       <guid>/blog/</guid>
       <description></description>
     </item>

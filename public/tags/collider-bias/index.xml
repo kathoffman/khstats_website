@@ -13,16 +13,15 @@
     </image>
     
     <item>
-      <title>Whatcha measuring?? Collider Bias Examples in R</title>
+      <title>Collider Bias Examples in R</title>
       <link>/blog/collider-bias/race/</link>
       <pubDate>Tue, 13 Oct 2020 21:13:14 -0500</pubDate>
       <guid>/blog/collider-bias/race/</guid>
       <description>
 
 
-&lt;p&gt;Anyways, I wholeheartedly agree with this. I find many of the tools in causal inference (specifically Directed Acyclic Graphs) to be incredibly useful in recognizing what I &lt;em&gt;cannot&lt;/em&gt; unbiasedly estimate.&lt;/p&gt;
-&lt;p&gt;I am an expert lurker on the statistics twitter (war) threads is a favorite pasttime of mine, so I was admittedly a bit sad it didn’t gain more steam.&lt;/p&gt;
-&lt;p&gt;So now your investigator wants to know the attributable mortality of race once someone is hospitalized. “We don’t want your causal inference, we just want the &lt;em&gt;independent association&lt;/em&gt;!” they tell you emphatically. “We &lt;em&gt;PROMISE&lt;/em&gt; we won’t talk about anything causally!” You think about Miguel Hernan’s &lt;em&gt;The C-Word&lt;/em&gt; paper. You don’t believe them at all, but you let it go, for a moment.&lt;/p&gt;
+&lt;!-- Anyways, I wholeheartedly agree with this. I find many of the tools in causal inference (specifically Directed Acyclic Graphs) to be incredibly useful in recognizing what I *cannot* unbiasedly estimate. --&gt;
+&lt;!-- So now your investigator wants to know the attributable mortality of race once someone is hospitalized. &#34;We don&#39;t want your causal inference, we just want the *independent association*!&#34; they tell you emphatically. &#34;We *PROMISE* we won&#39;t talk about anything causally!&#34; You think about Miguel Hernan&#39;s *The C-Word* paper. You don&#39;t believe them at all, but you let it go, for a moment. --&gt;
 &lt;p&gt;Let’s start with simulating race. Let’s say our population of interest is approximately 50% of one race and 50% of another. We’ll simulate that with a binomial distribution.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;race &amp;lt;- rbinom(n, 1, 0.5) &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we’ll simulate COVID-19 disease severity. Although there is some evidence suggesting COVID-19 disease severity is not random (i.e. it could be related to viral load, blood type, etc.), let’s assume for the sake of example that it is completely random.&lt;/p&gt;
@@ -99,6 +98,8 @@ race_death_count %&amp;gt;%
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -257,10 +258,6 @@ race_death_count %&amp;gt;%
   vertical-align: middle;
 }
 
-#fefxepmids .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
 #fefxepmids .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
@@ -338,6 +335,10 @@ race_death_count %&amp;gt;%
   border-top-style: double;
   border-top-width: 6px;
   border-top-color: #D3D3D3;
+}
+
+#fefxepmids .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
 }
 
 #fefxepmids .gt_table_body {
@@ -482,6 +483,8 @@ but what if it’s not right, what if you find being black is protective, or bei
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -640,10 +643,6 @@ but what if it’s not right, what if you find being black is protective, or bei
   vertical-align: middle;
 }
 
-#eexirarxtj .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
 #eexirarxtj .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
@@ -721,6 +720,10 @@ but what if it’s not right, what if you find being black is protective, or bei
   border-top-style: double;
   border-top-width: 6px;
   border-top-color: #D3D3D3;
+}
+
+#eexirarxtj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
 }
 
 #eexirarxtj .gt_table_body {
@@ -847,6 +850,8 @@ but what if it’s not right, what if you find being black is protective, or bei
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -1005,10 +1010,6 @@ but what if it’s not right, what if you find being black is protective, or bei
   vertical-align: middle;
 }
 
-#wfcbehcipe .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
 #wfcbehcipe .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
@@ -1086,6 +1087,10 @@ but what if it’s not right, what if you find being black is protective, or bei
   border-top-style: double;
   border-top-width: 6px;
   border-top-color: #D3D3D3;
+}
+
+#wfcbehcipe .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
 }
 
 #wfcbehcipe .gt_table_body {

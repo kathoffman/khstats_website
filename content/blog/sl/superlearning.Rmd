@@ -20,10 +20,11 @@ output:
    <head>
       <title>HTML Image as link</title>
    </head>
+   
    <body>
          <img alt="cheatsheet" src="/img/Superlearning.jpg"  
          width=100%">
-          <figcaption>***A Visual Guide...*** Over the winter, I read [*Targeted Learning*](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. This "visual guide" I made for *Chapter 3: Superlearning* by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an [8.5x11" pdf on Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/Superlearner.pdf), should you wish to print it out for reference (or desk decor).</figcaption>
+          <figcaption>***A Visual Guide...*** Over the winter, I read [*Targeted Learning*](https://www.springer.com/gp/book/9781441997814) by Mark van der Laan and Sherri Rose. This "visual guide" I made for *Chapter 3: Superlearning* by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an [8.5x11" pdf on Github](https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/Superlearner.pdf), should you wish to print it out for reference (or desk decor).</figcaption>
       </a>
    </body>
 </html>
@@ -362,14 +363,14 @@ The authors of `tidymodels` -- a suite of packages for machine learning includin
 
 When prediction is not the end goal, superlearning combines well with semi-parametric estimation methods for statistical inference. This is the reason I was reading *Targeted Learning* in the first place; I am a statistician with collaborators who typically want estimates of treatment effects with confidence intervals, not predictions!
 
-I'm working on a similar visual guide for one such semiparametric estimation method: [Targeted Maximum Likelihood Estimation](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf) (TMLE)). TMLE allows the use of flexible statistical models like the superlearner algorithm when estimating treatment effects. If you found this superlearning tutorial helpful, check back here later for another one on TMLE. If you're curious about TMLE in the meantime, I really like [this tutorial](https://migariane.github.io/TMLE.nb.html) by Miguel Angel Luque Fernandez.
+I'm working on a similar visual guide for one such semiparametric estimation method: [Targeted Maximum Likelihood Estimation](https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf) (TMLE)). TMLE allows the use of flexible statistical models like the superlearner algorithm when estimating treatment effects. If you found this superlearning tutorial helpful, you may be interested in this [similarly visual tutorial](https://www.khstats.com/blog/tmle/tutorial/) on TMLE.
 
 <html>
    <head>
       <title>HTML Image as link</title>
    </head>
    <body>
-      <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+      <a href="https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf">
          <img alt="cheatsheet" src="/img/TMLE.jpg"
          width=100%">
       </a>
