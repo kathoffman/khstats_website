@@ -617,7 +617,7 @@ Feedback or clarifications on this post is welcome, either from the new learners
 
 This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Luque's helpful feedback on the visual guide.
 
-Lastly, many thanks to Nick Williams, Axel Martin, Anjile An, Adam Peterson, Alan Wu, and Will Simmons for providing suggestions on various drafts of this project!
+Lastly, many thanks to Axel Martin, Nick Williams, Anjile An, Adam Peterson, Alan Wu, and Will Simmons for providing suggestions on various drafts of this project!
 
 # Full tutorial code
 
