@@ -17,7 +17,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-> A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the mean difference in an outcome, adjusting for confounders. In causal inference, this is called the Average Treatment Effect (ATE) when causal assumptions are met.
+> A beginner's guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the mean difference in an outcome, adjusting for confounders.
 
 <html>
    <head>
@@ -59,7 +59,7 @@ Targeted Maximum Likelihood Estimation (TMLE) is a general semiparametric estima
 
 When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:
 
-1. If the goal is <span style="color: #3366ff;">inference</span> (for example, an effect size with a confidence interval), use an <span style="color: #3366ff;">interpretable, usually parametric, model</span> and explain the meaning behind the coefficients and their standard errors. 
+1. If the goal is <span style="color: #3366ff;">inference</span> (e.g., an effect size with a confidence interval), use an <span style="color: #3366ff;">interpretable, usually parametric, model</span> and explain the meaning behind the coefficients and their standard errors. 
 
 2. If the goal is  <span style="color: #cc0000;">prediction</span>, use <span style="color: #cc0000;">flexible non- and semi-parametric machine learning algorithms</span> and then look at performance metrics and variable importance.
 
@@ -74,7 +74,7 @@ First, I was thinking about inference backwards: I was choosing a model based on
     <figcaption>*An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield and [diff.healthpolicydatascience.org]( https://diff.healthpolicydatascience.org/).*</figcaption>
 </figure>
 
-Second, I thought flexible, data-adaptive statistical models we commonly classify as *machine learning* could only be used for prediction, since they don't have asymptotic properties for inference (i.e. standard errors). However, certain **semiparametric estimation methods** like TMLE can actually use these models to **obtain a final estimate that is closer to the target quantity than would be obtained using standard parametric models** (e.g. linear and logistic regression). This is because machine learning models can often accommodate **large numbers of covariates** with **complex, non-linear relationships**.
+Second, I thought flexible, data-adaptive statistical models we commonly classify as **machine learning** could only be used for prediction, since they don't have **asymptotic properties for inference** (i.e. standard errors). However, certain **semiparametric estimation methods** like TMLE can actually use these models to **obtain a final estimate that is closer to the target quantity** than would be obtained using standard parametric models (e.g. linear and logistic regression). This is because machine learning models are generally designed to accommodate **large numbers of covariates** with **complex, non-linear relationships**.
 
 <img src="/img/tmle/parametric_assumptions_comic.jpg" width=80%>
  <figcaption>*Semi-parametric estimation methods like TMLE can rely on machine learning to avoid making unrealistic parametric assumptions about the underlying distribution of the data (e.g. multivariate normality).* </figcaption>
@@ -157,15 +157,15 @@ As mentioned earlier, TMLE can estimate many different statistical estimands of 
 Under causal assumptions, this could be *identifiable* as the Average Treatment Effect (ATE). I won't go through the identification process here (see Hernan or Pearl's books in [references](#resources-to-learn-more)), but since TMLE is often used for causal inference, let's pretend for this example that we previously met causal assumptions and call our statistical estimand, $\Psi$, the ATE.
 
 $$ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]$$
-Our ATE, once we estimate it, will be interpretable as the mean difference in outcomes in a hypothetical world where everyone received treatment compared to a hypothetical world where no one received treatment.
+The ATE, once we estimate it, will be interpretable as the mean difference in outcomes in a hypothetical world where everyone received the treatment compared to a hypothetical world where no one received the treatment.
 
-At this point in set-up, we should also pick our statistical learning algorithms to combine when we use the superlearner to estimate the expected outcome and probability of treatment. Let's use LASSO (`glmnet`), random forests (`ranger`), Multivariate Adaptive Regression Splines (MARS) (`earth`), and a generalized linear model (`glm`) for demonstration.
+At this point in set-up, we should also pick our machine learning algorithms to combine via superlearning to estimate the expected outcome and probability of treatment. Let's use LASSO (`glmnet`), random forests (`ranger`), Multivariate Adaptive Regression Splines (MARS) (`earth`), and a generalized linear model (`glm`) for demonstration.
 
 ```{r}
 sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.earth', 'SL.glm') # a library of machine learning algorithms (penalized regression, random forests, and multivariate adaptive regression splines)
 ```
 
-*Note that the choice of regressions for superlearning is not the point of this post; we simply want to add flexible machine learning models which we think <u>**may**</u> reflect the underlying data distribution. A penalized regression such as LASSO may not be necessary with only four covariates, but in general this is a good candidate learner to try.*
+*Note that the choice of regressions for superlearning is not the point of this post; we simply want to add flexible machine learning models which we think <u>**may**</u> reflect the underlying data distribution.*
 
 <html>
 <body>
