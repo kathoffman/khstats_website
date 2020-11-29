@@ -61,7 +61,7 @@ When I graduated with my MS in Biostatistics two years ago, I had a mental frame
 
 1. If the goal is <span style="color: #3366ff;">inference</span> (e.g., an effect size with a confidence interval), use an <span style="color: #3366ff;">interpretable, usually parametric, model</span> and explain the meaning behind the coefficients and their standard errors. 
 
-2. If the goal is  <span style="color: #cc0000;">prediction</span>, use <span style="color: #cc0000;">flexible non- and semi-parametric machine learning algorithms</span> and then look at performance metrics and variable importance.
+2. If the goal is  <span style="color: #cc0000;">prediction</span>, use <span style="color: #cc0000;">data-adaptive machine learning algorithms</span> and then look at performance metrics and variable importance.
 
 This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.
 
@@ -251,7 +251,7 @@ kable(head(dat_tmle), digits=2, caption = "TMLE Algorithm after Step 1")
 
 We could stop here and get our estimate of the ATE by computing the average difference between $\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$ and $\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$, which *would* be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called **standardization**, **simple substitution estimation**, or **G-computation**.
 
-$$\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \sum_{i=1}^{n}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])$$
+$$\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \frac{1}{N}\sum_{i=1}^{N}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])$$
 ![](/img/tmle/ate_gcomp.png){width=50%}
 ```{r}
 ate_gcomp <- mean(dat_tmle$Q_1 - dat_tmle$Q_0)
@@ -427,7 +427,7 @@ Almost done! Let's recap:
 
 - We need to update those initial expected outcome estimates using information about the treatment mechanism, so we computed the expected probability of treatment, conditional on confounders, in Step 2.
 
-- Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn't talk about *why* we have to do this because it is impossible to explain correctly to beginners without distracting from *what* we're doing.
+- Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn't talk about *why* this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).
 
 - Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.
 
@@ -473,7 +473,7 @@ Q_0_update <- plogis(qlogis(Q_0) + eps*H_0)
 
 We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:
 
-$$\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \sum_{i=1}^{n}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]$$
+$$\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \frac{1}{N}\sum_{i=1}^{N}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]$$
 
 ![](/img/tmle/14_compute_ATE.png){width=60%}
 
@@ -527,7 +527,7 @@ kable(tibble(tmle_ate, conf_low, conf_high), digits=3, caption = "TMLE Estimate 
 
 Then we can successfully report our ATE as `r round(tmle_ate, 3)` (95% CI: `r round(conf_low, 3)`, `r round(conf_high, 3)`).
 
-*Note that a TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.*
+*Note that a TMLE estimator is asymptotically normally distributed, so we could bootstrap the entire algorithm to get our standard errors instead.*
 
 # Using the `tmle` package 📦
 

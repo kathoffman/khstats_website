@@ -57,7 +57,7 @@ HTML Image as link
 <p>When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:</p>
 <ol style="list-style-type: decimal">
 <li><p>If the goal is <span style="color: #3366ff;">inference</span> (e.g., an effect size with a confidence interval), use an <span style="color: #3366ff;">interpretable, usually parametric, model</span> and explain the meaning behind the coefficients and their standard errors.</p></li>
-<li><p>If the goal is <span style="color: #cc0000;">prediction</span>, use <span style="color: #cc0000;">flexible non- and semi-parametric machine learning algorithms</span> and then look at performance metrics and variable importance.</p></li>
+<li><p>If the goal is <span style="color: #cc0000;">prediction</span>, use <span style="color: #cc0000;">data-adaptive machine learning algorithms</span> and then look at performance metrics and variable importance.</p></li>
 </ol>
 <p>This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.</p>
 <p>First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to <em>first</em> determine the statistical quantity, or <strong>estimand</strong>, that best answers a scientific question, and <em>then</em> use the method, or <strong>estimator</strong>, best suited for estimating it. This is the paradigm TMLE is based upon: <strong>we want to build an algorithm, or estimator, targeted to an estimand of interest</strong>.</p>
@@ -463,7 +463,7 @@ Q_1
 </table>
 <!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* -->
 <p>We could stop here and get our estimate of the ATE by computing the average difference between <span class="math inline">\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)</span> and <span class="math inline">\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)</span>, which <em>would</em> be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called <strong>standardization</strong>, <strong>simple substitution estimation</strong>, or <strong>G-computation</strong>.</p>
-<p><span class="math display">\[\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \sum_{i=1}^{n}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])\]</span>
+<p><span class="math display">\[\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \frac{1}{N}\sum_{i=1}^{N}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])\]</span>
 <img src="/img/tmle/ate_gcomp.png" style="width:50.0%" /></p>
 <pre class="r"><code>ate_gcomp &lt;- mean(dat_tmle$Q_1 - dat_tmle$Q_0)
 ate_gcomp</code></pre>
@@ -767,7 +767,7 @@ HTML Image as link
 <ul>
 <li><p>In Step 1, we obtained initial estimates of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate <span class="math inline">\(E[Y|A,W]\)</span>, not the ATE.</p></li>
 <li><p>We need to update those initial expected outcome estimates using information about the treatment mechanism, so we computed the expected probability of treatment, conditional on confounders, in Step 2.</p></li>
-<li><p>Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about <em>why</em> we have to do this because it is impossible to explain correctly to beginners without distracting from <em>what</em> we’re doing.</p></li>
+<li><p>Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about <em>why</em> this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).</p></li>
 <li><p>Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.</p></li>
 </ul>
 <p>To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the <span class="math inline">\(logit\)</span> scale using <code>qlogis()</code> because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: <span class="math inline">\(H(A,\mathbf{W}) \times \hat{\epsilon}\)</span>. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using <code>plogis()</code>.</p>
@@ -794,7 +794,7 @@ Q_A_update &lt;- plogis(qlogis(Q_A) + eps*H_A)</code></pre>
 </body>
 </html>
 <p>We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:</p>
-<p><span class="math display">\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \sum_{i=1}^{n}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]</span></p>
+<p><span class="math display">\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \frac{1}{N}\sum_{i=1}^{N}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]</span></p>
 <p><img src="/img/tmle/14_compute_ATE.png" style="width:60.0%" /></p>
 <pre class="r"><code>tmle_ate &lt;- mean(Q_1_update - Q_0_update)
 tmle_ate</code></pre>
@@ -856,7 +856,7 @@ conf_high
 </tbody>
 </table>
 <p>Then we can successfully report our ATE as 0.192 (95% CI: 0.134, 0.25).</p>
-<p><em>Note that a TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.</em></p>
+<p><em>Note that a TMLE estimator is asymptotically normally distributed, so we could bootstrap the entire algorithm to get our standard errors instead.</em></p>
 </div>
 </div>
 <div id="using-the-tmle-package" class="section level1">

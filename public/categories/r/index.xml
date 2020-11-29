@@ -62,7 +62,7 @@ HTML Image as link
 &lt;p&gt;When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;If the goal is &lt;span style=&#34;color: #3366ff;&#34;&gt;inference&lt;/span&gt; (e.g., an effect size with a confidence interval), use an &lt;span style=&#34;color: #3366ff;&#34;&gt;interpretable, usually parametric, model&lt;/span&gt; and explain the meaning behind the coefficients and their standard errors.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If the goal is &lt;span style=&#34;color: #cc0000;&#34;&gt;prediction&lt;/span&gt;, use &lt;span style=&#34;color: #cc0000;&#34;&gt;flexible non- and semi-parametric machine learning algorithms&lt;/span&gt; and then look at performance metrics and variable importance.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If the goal is &lt;span style=&#34;color: #cc0000;&#34;&gt;prediction&lt;/span&gt;, use &lt;span style=&#34;color: #cc0000;&#34;&gt;data-adaptive machine learning algorithms&lt;/span&gt; and then look at performance metrics and variable importance.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.&lt;/p&gt;
 &lt;p&gt;First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to &lt;em&gt;first&lt;/em&gt; determine the statistical quantity, or &lt;strong&gt;estimand&lt;/strong&gt;, that best answers a scientific question, and &lt;em&gt;then&lt;/em&gt; use the method, or &lt;strong&gt;estimator&lt;/strong&gt;, best suited for estimating it. This is the paradigm TMLE is based upon: &lt;strong&gt;we want to build an algorithm, or estimator, targeted to an estimand of interest&lt;/strong&gt;.&lt;/p&gt;
@@ -468,7 +468,7 @@ Q_1
 &lt;/table&gt;
 &lt;!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* --&gt;
 &lt;p&gt;We could stop here and get our estimate of the ATE by computing the average difference between &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)&lt;/span&gt;, which &lt;em&gt;would&lt;/em&gt; be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called &lt;strong&gt;standardization&lt;/strong&gt;, &lt;strong&gt;simple substitution estimation&lt;/strong&gt;, or &lt;strong&gt;G-computation&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \sum_{i=1}^{n}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])\]&lt;/span&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \frac{1}{N}\sum_{i=1}^{N}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])\]&lt;/span&gt;
 &lt;img src=&#34;/img/tmle/ate_gcomp.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ate_gcomp &amp;lt;- mean(dat_tmle$Q_1 - dat_tmle$Q_0)
 ate_gcomp&lt;/code&gt;&lt;/pre&gt;
@@ -772,7 +772,7 @@ HTML Image as link
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;In Step 1, we obtained initial estimates of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate &lt;span class=&#34;math inline&#34;&gt;\(E[Y|A,W]\)&lt;/span&gt;, not the ATE.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;We need to update those initial expected outcome estimates using information about the treatment mechanism, so we computed the expected probability of treatment, conditional on confounders, in Step 2.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about &lt;em&gt;why&lt;/em&gt; we have to do this because it is impossible to explain correctly to beginners without distracting from &lt;em&gt;what&lt;/em&gt; we’re doing.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about &lt;em&gt;why&lt;/em&gt; this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale using &lt;code&gt;qlogis()&lt;/code&gt; because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W}) \times \hat{\epsilon}\)&lt;/span&gt;. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using &lt;code&gt;plogis()&lt;/code&gt;.&lt;/p&gt;
@@ -799,7 +799,7 @@ Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H_A)&lt;/code&gt;&lt;/pre&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;p&gt;We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \sum_{i=1}^{n}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \frac{1}{N}\sum_{i=1}^{N}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/14_compute_ATE.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmle_ate &amp;lt;- mean(Q_1_update - Q_0_update)
 tmle_ate&lt;/code&gt;&lt;/pre&gt;
@@ -861,7 +861,7 @@ conf_high
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;Then we can successfully report our ATE as 0.192 (95% CI: 0.134, 0.25).&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Note that a TMLE estimate is asymptotically normal, so we could bootstrap the entire algorithm to get our standard errors instead.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note that a TMLE estimator is asymptotically normally distributed, so we could bootstrap the entire algorithm to get our standard errors instead.&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;using-the-tmle-package&#34; class=&#34;section level1&#34;&gt;
