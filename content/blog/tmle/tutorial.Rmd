@@ -173,7 +173,7 @@ sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.earth', 'SL.glm') # a library of mach
 </body>
 </html>
 
-The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors.
+The very first step of TMLE is to **estimate the expected value of the outcome** using treatment and confounders as predictors.
 
 This is what that looks like in mathematical notation. There is some function $Q$ which takes $A$ and $\mathbf{W}$ as inputs and yields the conditional expectation of $Y$:
 
@@ -431,7 +431,7 @@ Almost done! Let's recap:
 
 - Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.
 
-To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the $logit$ scale using `qlogis()` because that's the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: $H(A,\mathbf{W}) \times \hat{\epsilon}$. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using `plogis()`.
+To **update our expected outcome estimates**, we first need to put the initial expected outcome estimates on the $logit$ scale using `qlogis()` because that's the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: $H(A,\mathbf{W}) \times \hat{\epsilon}$. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using `plogis()`.
 
 *Note we can use $expit$ to show the inverse of the $logit$ function, and we will denote updates to the outcome regressions as $\hat{\mathrm{E}}^*$ instead of $\hat{\mathrm{E}}$.*
 
@@ -471,7 +471,7 @@ Q_0_update <- plogis(qlogis(Q_0) + eps*H_0)
 </body>
 </html>
 
-We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:
+We now have updated expected outcomes estimates, so we can **compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment**:
 
 $$\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \frac{1}{N}\sum_{i=1}^{N}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]$$
 

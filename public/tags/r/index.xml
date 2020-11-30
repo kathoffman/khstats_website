@@ -300,7 +300,7 @@ The ATE, once we estimate it, will be interpretable as the mean difference in ou
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors.&lt;/p&gt;
+&lt;p&gt;The very first step of TMLE is to &lt;strong&gt;estimate the expected value of the outcome&lt;/strong&gt; using treatment and confounders as predictors.&lt;/p&gt;
 &lt;p&gt;This is what that looks like in mathematical notation. There is some function &lt;span class=&#34;math inline&#34;&gt;\(Q\)&lt;/span&gt; which takes &lt;span class=&#34;math inline&#34;&gt;\(A\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(\mathbf{W}\)&lt;/span&gt; as inputs and yields the conditional expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt;:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[Q(A,\mathbf{W}) = \mathrm{E}[Y|A,\mathbf{W}]\]&lt;/span&gt;
 We can use any regression to estimate this conditional expectation, but it is best to use flexible machine learning models so that we don’t have unnecessary assumptions on the underlying distribution of the data.&lt;/p&gt;
@@ -775,7 +775,7 @@ HTML Image as link
 &lt;li&gt;&lt;p&gt;Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about &lt;em&gt;why&lt;/em&gt; this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale using &lt;code&gt;qlogis()&lt;/code&gt; because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W}) \times \hat{\epsilon}\)&lt;/span&gt;. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using &lt;code&gt;plogis()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To &lt;strong&gt;update our expected outcome estimates&lt;/strong&gt;, we first need to put the initial expected outcome estimates on the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale using &lt;code&gt;qlogis()&lt;/code&gt; because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W}) \times \hat{\epsilon}\)&lt;/span&gt;. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using &lt;code&gt;plogis()&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Note we can use &lt;span class=&#34;math inline&#34;&gt;\(expit\)&lt;/span&gt; to show the inverse of the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; function, and we will denote updates to the outcome regressions as &lt;span class=&#34;math inline&#34;&gt;\(\hat{\mathrm{E}}^*\)&lt;/span&gt; instead of &lt;span class=&#34;math inline&#34;&gt;\(\hat{\mathrm{E}}\)&lt;/span&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))\]&lt;/span&gt;&lt;/p&gt;
@@ -798,7 +798,7 @@ Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H_A)&lt;/code&gt;&lt;/pre&gt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:&lt;/p&gt;
+&lt;p&gt;We now have updated expected outcomes estimates, so we can &lt;strong&gt;compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment&lt;/strong&gt;:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \frac{1}{N}\sum_{i=1}^{N}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/14_compute_ATE.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmle_ate &amp;lt;- mean(Q_1_update - Q_0_update)
@@ -5635,7 +5635,7 @@ NA
     </item>
     
     <item>
-      <title>A Day in the Life of a Research Biostatistician</title>
+      <title>A Day in the Life of a Biostatistician</title>
       <link>/blog/ditl-biostats/</link>
       <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
       <guid>/blog/ditl-biostats/</guid>

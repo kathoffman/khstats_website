@@ -295,7 +295,7 @@ The ATE, once we estimate it, will be interpretable as the mean difference in ou
 </strong>
 </body>
 </html>
-<p>The very first step of TMLE is to estimate the expected value of the outcome using treatment and confounders as predictors.</p>
+<p>The very first step of TMLE is to <strong>estimate the expected value of the outcome</strong> using treatment and confounders as predictors.</p>
 <p>This is what that looks like in mathematical notation. There is some function <span class="math inline">\(Q\)</span> which takes <span class="math inline">\(A\)</span> and <span class="math inline">\(\mathbf{W}\)</span> as inputs and yields the conditional expectation of <span class="math inline">\(Y\)</span>:</p>
 <p><span class="math display">\[Q(A,\mathbf{W}) = \mathrm{E}[Y|A,\mathbf{W}]\]</span>
 We can use any regression to estimate this conditional expectation, but it is best to use flexible machine learning models so that we don’t have unnecessary assumptions on the underlying distribution of the data.</p>
@@ -770,7 +770,7 @@ HTML Image as link
 <li><p>Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about <em>why</em> this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).</p></li>
 <li><p>Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.</p></li>
 </ul>
-<p>To update our expected outcome estimates, we first need to put the initial expected outcome estimates on the <span class="math inline">\(logit\)</span> scale using <code>qlogis()</code> because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: <span class="math inline">\(H(A,\mathbf{W}) \times \hat{\epsilon}\)</span>. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using <code>plogis()</code>.</p>
+<p>To <strong>update our expected outcome estimates</strong>, we first need to put the initial expected outcome estimates on the <span class="math inline">\(logit\)</span> scale using <code>qlogis()</code> because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: <span class="math inline">\(H(A,\mathbf{W}) \times \hat{\epsilon}\)</span>. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using <code>plogis()</code>.</p>
 <p><em>Note we can use <span class="math inline">\(expit\)</span> to show the inverse of the <span class="math inline">\(logit\)</span> function, and we will denote updates to the outcome regressions as <span class="math inline">\(\hat{\mathrm{E}}^*\)</span> instead of <span class="math inline">\(\hat{\mathrm{E}}\)</span>.</em></p>
 <p><strong>1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.</strong></p>
 <p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))\]</span></p>
@@ -793,7 +793,7 @@ Q_A_update &lt;- plogis(qlogis(Q_A) + eps*H_A)</code></pre>
 </strong>
 </body>
 </html>
-<p>We now have updated expected outcomes estimates, so we can compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment:</p>
+<p>We now have updated expected outcomes estimates, so we can <strong>compute the ATE as the mean difference in the updated outcome estimates under treatment and no treatment</strong>:</p>
 <p><span class="math display">\[\hat{ATE}_{TMLE} = \hat{\Psi}_{TMLE} = \frac{1}{N}\sum_{i=1}^{N}[\hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}]]\]</span></p>
 <p><img src="/img/tmle/14_compute_ATE.png" style="width:60.0%" /></p>
 <pre class="r"><code>tmle_ate &lt;- mean(Q_1_update - Q_0_update)
