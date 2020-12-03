@@ -1213,7 +1213,7 @@ HTML Image as link
 </body>
 </html>
 <p>🚨 Warning: 🚨 this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let’s first look at <em>what</em> we’re doing, and then I’ll discuss at a very high-level <em>why</em> we’re doing that in a <a href="#why-does-tmle-work">later section</a>.</p>
-<p>The point of this step is to solve an estimating equation for the <em>efficient influence function</em> (EIF) of our estimand of interest. Without diving into what an EIF or estimating equation is, let’s accept for a moment that it will help us:</p>
+<p>The point of this step is to solve an <em>estimating equation</em> for the <em>efficient influence function</em> (EIF) of our estimand of interest. Without diving into what an EIF or estimating equation is, let’s accept for a moment that they will help us:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Update our initial outcome estimates</strong> so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the <a href="#properties-of-tmle">statistical properties section</a>).</p></li>
 <li><p><strong>Calculate the variance</strong>, and thus the standard error, confidence interval, and p-value for our estimate of the ATE for hypothesis testing.</p></li>
@@ -1419,7 +1419,7 @@ tmle_fit</code></pre>
 <div id="causal-inference" class="section level3">
 <h3>Causal Inference</h3>
 <ul>
-<li><p>If you want to learn more about the foundations of causal inference, I suggest <a href="http://bayes.cs.ucla.edu/PRIMER/"><em>Causal Inference in Statistics: A Primer</em></a> by Judea Pearl and <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>What If</em></a> (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the <em>causal assumptions</em> side of causal inference.</p></li>
+<li><p>If you want to learn more about the foundations of causal inference, I suggest <a href="http://bayes.cs.ucla.edu/PRIMER/"><em>Causal Inference in Statistics: A Primer</em></a> by Judea Pearl and <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>What If</em></a> (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the <em>identification</em> side of causal inference.</p></li>
 <li><p>I also think the introductory chapters of the previously mentioned <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book do an excellent job of setting up the “roadmap” of causal inference.</p></li>
 </ul>
 <p>I’ll continue to update this page with resources as I discover them.</p>
@@ -1428,7 +1428,7 @@ tmle_fit</code></pre>
 </div>
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
-<p>This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Luque’s helpful feedback on the visual guide.</p>
+<p>This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Angel Luque-Fernandez’s helpful feedback on the visual guide.</p>
 <p>Lastly, many thanks to Axel Martin, Nick Williams, Anjile An, Adam Peterson, Alan Wu, and Will Simmons for providing suggestions on various drafts of this project!</p>
 </div>
 <div id="full-tutorial-code" class="section level1">

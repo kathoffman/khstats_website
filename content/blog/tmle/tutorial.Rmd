@@ -375,7 +375,7 @@ To reiterate, in Step 1 we estimated the expected outcome, conditional on treatm
 
 🚨 Warning: 🚨 this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let's first look at *what* we're doing, and then I'll discuss at a very high-level *why* we're doing that in a [later section](#why-does-tmle-work).
 
-The point of this step is to solve an estimating equation for the *efficient influence function* (EIF) of our estimand of interest. Without diving into what an EIF or estimating equation is, let's accept for a moment that it will help us:
+The point of this step is to solve an *estimating equation* for the *efficient influence function* (EIF) of our estimand of interest. Without diving into what an EIF or estimating equation is, let's accept for a moment that they will help us:
 
   1. **Update our initial outcome estimates** so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the [statistical properties section](#properties-of-tmle)).
 
@@ -605,7 +605,7 @@ I could only cover so much in this post, but here are the resources I've used th
 
 ### Causal Inference
 
-- If you want to learn more about the foundations of causal inference, I suggest [*Causal Inference in Statistics: A Primer*](http://bayes.cs.ucla.edu/PRIMER/) by Judea Pearl and [*What If*](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/) (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the *causal assumptions* side of causal inference.
+- If you want to learn more about the foundations of causal inference, I suggest [*Causal Inference in Statistics: A Primer*](http://bayes.cs.ucla.edu/PRIMER/) by Judea Pearl and [*What If*](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/) (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the *identification* side of causal inference.
 
 - I also think the introductory chapters of the previously mentioned [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1) book do an excellent job of setting up the "roadmap" of causal inference.
 
@@ -615,7 +615,7 @@ Feedback or clarifications on this post is welcome, either from the new learners
 
 # Acknowledgements
 
-This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Luque's helpful feedback on the visual guide.
+This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Angel Luque-Fernandez's helpful feedback on the visual guide.
 
 Lastly, many thanks to Axel Martin, Nick Williams, Anjile An, Adam Peterson, Alan Wu, and Will Simmons for providing suggestions on various drafts of this project!
 
