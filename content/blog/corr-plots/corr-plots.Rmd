@@ -300,6 +300,7 @@ formatted_cors(mtcars) %>%
   scale_size(range=c(1,11), guide=NULL) 
 ```
 
+Please feel free to reach out with questions or suggestions. Thank you to Elena Leib for spotting a minor bug in a previous version of this post!
 
 # Just the code
 
@@ -333,5 +334,7 @@ formatted_cors(mtcars) %>%
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family="Roboto"))
+
+sessionInfo()
 ```
 

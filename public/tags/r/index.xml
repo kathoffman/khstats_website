@@ -922,7 +922,7 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;The paper I referred to most often while learning TMLE was &lt;a href=&#34;https://academic.oup.com/aje/article/185/1/65/2662306&#34;&gt;&lt;em&gt;Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies&lt;/em&gt;&lt;/a&gt; by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;I also really like the written explanations in the &lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4419-9782-1&#34;&gt;&lt;em&gt;Targeted Learning&lt;/em&gt;&lt;/a&gt; book by Mark van der Laan and Sherri Rose. The notation was too difficult for me to follow, but the words themselves make a lot of sense.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Miguel Luque wrote an &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;excellent bookdown tutorial on TMLE&lt;/a&gt;, also with step-by-step &lt;code&gt;R&lt;/code&gt; code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the &lt;a href=&#34;https://migariane.github.io/DeltaMethodEpiTutorial.nb.html&#34;&gt;functional delta method&lt;/a&gt; which is part of the theory behind Step 6.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Miguel Angel Luque-Fernandez wrote an &lt;a href=&#34;https://migariane.github.io/TMLE.nb.html&#34;&gt;excellent bookdown tutorial on TMLE&lt;/a&gt;, also with step-by-step &lt;code&gt;R&lt;/code&gt; code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the &lt;a href=&#34;https://migariane.github.io/DeltaMethodEpiTutorial.nb.html&#34;&gt;functional delta method&lt;/a&gt; which is part of the theory behind Step 6.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Other code-based web-based tutorials on TMLE include David Benkeser and Antoine Chambaz’ &lt;a href=&#34;https://achambaz.github.io/tlride/&#34;&gt;A Ride in Targeted Learning Territory&lt;/a&gt; and the authors of the &lt;code&gt;R&lt;/code&gt; package suite &lt;a href=&#34;https://tlverse.org/&#34;&gt;&lt;code&gt;tlverse&lt;/code&gt;&lt;/a&gt;’s &lt;a href=&#34;https://tlverse.org/tlverse-handbook/tmle3.html&#34;&gt;Hitchhiker’s Guide to Targeted Learning: The TMLE Framework&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
@@ -2511,9 +2511,23 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The correlation coefficients, &lt;code&gt;r&lt;/code&gt;:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$r) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
+&lt;colgroup&gt;
+&lt;col width=&#34;3%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;/colgroup&gt;
 &lt;thead&gt;
 &lt;tr class=&#34;header&#34;&gt;
-&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
@@ -2529,7 +2543,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
@@ -2543,7 +2557,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
@@ -2557,7 +2571,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
@@ -2571,7 +2585,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
@@ -2585,7 +2599,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
@@ -2599,7 +2613,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
@@ -2617,9 +2631,23 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;The p-values, &lt;code&gt;P&lt;/code&gt;:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;data.frame(mtcars_cor$P) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
+&lt;colgroup&gt;
+&lt;col width=&#34;4%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;7%&#34; /&gt;
+&lt;col width=&#34;7%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;col width=&#34;9%&#34; /&gt;
+&lt;/colgroup&gt;
 &lt;thead&gt;
 &lt;tr class=&#34;header&#34;&gt;
-&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
@@ -2635,7 +2663,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
@@ -2649,7 +2677,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.0010844&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
@@ -2663,7 +2691,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.0019423&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
@@ -2677,7 +2705,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.0252679&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;2.00e-07&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0e-07&lt;/td&gt;
@@ -2691,7 +2719,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.0000008&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;8.2e-06&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;5.3e-06&lt;/td&gt;
@@ -2705,7 +2733,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.6211834&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.00e+00&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0e-07&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.0e+00&lt;/td&gt;
@@ -2725,7 +2753,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr class=&#34;header&#34;&gt;
-&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
@@ -2741,7 +2769,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
@@ -2755,7 +2783,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
@@ -2769,7 +2797,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;32&lt;/td&gt;
@@ -2795,9 +2823,23 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Nothing too crazy happened in this function. Now we just have a list of three data frames. We can look at the the first element of our list using &lt;code&gt;first()&lt;/code&gt;, which shows us the correlations between all our variables:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cors(mtcars) %&amp;gt;% first() %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
+&lt;colgroup&gt;
+&lt;col width=&#34;3%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;/colgroup&gt;
 &lt;thead&gt;
 &lt;tr class=&#34;header&#34;&gt;
-&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;mpg&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;cyl&lt;/th&gt;
 &lt;th align=&#34;right&#34;&gt;disp&lt;/th&gt;
@@ -2813,7 +2855,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;/thead&gt;
 &lt;tbody&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;mpg&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
@@ -2827,7 +2869,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;-0.5509251&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;cyl&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;cyl&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8521620&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
@@ -2841,7 +2883,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.5269883&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;disp&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;disp&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8475514&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.9020329&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.0000000&lt;/td&gt;
@@ -2855,7 +2897,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.3949769&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;hp&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;hp&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.7761684&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.8324475&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.7909486&lt;/td&gt;
@@ -2869,7 +2911,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;0.7498125&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;odd&#34;&gt;
-&lt;td&gt;drat&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;drat&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.6999381&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.7102139&lt;/td&gt;
@@ -2883,7 +2925,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;-0.0907898&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
-&lt;td&gt;wt&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;wt&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;-0.8676594&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.7824958&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;0.8879799&lt;/td&gt;
@@ -2910,6 +2952,20 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   head() %&amp;gt;%
   kable()&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
+&lt;colgroup&gt;
+&lt;col width=&#34;6%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;col width=&#34;8%&#34; /&gt;
+&lt;/colgroup&gt;
 &lt;thead&gt;
 &lt;tr class=&#34;header&#34;&gt;
 &lt;th align=&#34;left&#34;&gt;measure1&lt;/th&gt;
@@ -3196,9 +3252,9 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   # change so everything is lower case
   rename(p = P) %&amp;gt;%
   mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
-           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
-           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) %&amp;gt;%
-  head() %&amp;gt;%
+           p_if_sig = ifelse(sig_p, p, NA),
+           r_if_sig = ifelse(sig_p, r, NA)) %&amp;gt;%
+  head() %&amp;gt;% 
   kable()&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -3262,7 +3318,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
 &lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
@@ -3285,8 +3341,8 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
     pivot_wider(names_from = id, values_from = value) %&amp;gt;%
     rename(p = P) %&amp;gt;%
     mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
-           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
-           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) 
+           p_if_sig = ifelse(sig_p, p, NA),
+           r_if_sig = ifelse(sig_p, r, NA)) 
 }&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;We can test the function works as expected:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;% head() %&amp;gt;% kable()&lt;/code&gt;&lt;/pre&gt;
@@ -3352,7 +3408,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
 &lt;td align=&#34;left&#34;&gt;TRUE&lt;/td&gt;
 &lt;td align=&#34;right&#34;&gt;1.78e-05&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.6811719&lt;/td&gt;
 &lt;/tr&gt;
 &lt;tr class=&#34;even&#34;&gt;
 &lt;td align=&#34;left&#34;&gt;mpg&lt;/td&gt;
@@ -3415,6 +3471,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;)) +
   scale_size(range=c(1,11), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Please feel free to reach out with questions or suggestions. Thank you to Elena Leib for spotting a minor bug in a previous version of this post!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;just-the-code&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Just the code&lt;/h1&gt;
@@ -3432,8 +3489,8 @@ formatted_cors &amp;lt;- function(df){
     pivot_wider(names_from = id, values_from = value) %&amp;gt;%
     rename(p = P) %&amp;gt;%
     mutate(sig_p = ifelse(p &amp;lt; .05, T, F),
-           p_if_sig = ifelse(p &amp;lt;.05, p, NA),
-           r_if_sig = ifelse(r &amp;lt;.05, r, NA)) 
+           p_if_sig = ifelse(sig_p, p, NA),
+           r_if_sig = ifelse(sig_p, r, NA)) 
 }
 
 formatted_cors(mtcars) %&amp;gt;%
@@ -3448,6 +3505,54 @@ formatted_cors(mtcars) %&amp;gt;%
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;R version 3.6.3 (2020-02-29)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Catalina 10.15.7&lt;/p&gt;
+&lt;p&gt;Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib&lt;/p&gt;
+&lt;p&gt;locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8&lt;/p&gt;
+&lt;p&gt;attached base packages:
+[1] stats graphics grDevices utils datasets methods base&lt;/p&gt;
+&lt;p&gt;other attached packages:
+[1] knitr_1.30 forcats_0.5.0 stringr_1.4.0 dplyr_1.0.2&lt;br /&gt;
+[5] purrr_0.3.4 readr_1.3.1 tidyr_1.1.2 tibble_3.0.4&lt;br /&gt;
+[9] ggplot2_3.3.2 tidyverse_1.3.0&lt;/p&gt;
+&lt;p&gt;loaded via a namespace (and not attached):
+[1] bitops_1.0-6 fs_1.4.1 lubridate_1.7.9&lt;br /&gt;
+[4] RColorBrewer_1.1-2 httr_1.4.2 tools_3.6.3&lt;br /&gt;
+[7] backports_1.1.8 R6_2.5.0 KernSmooth_2.23-16
+[10] rpart_4.1-15 Hmisc_4.4-0 DBI_1.1.0&lt;br /&gt;
+[13] colorspace_1.4-1 nnet_7.3-12 withr_2.2.0&lt;br /&gt;
+[16] tidyselect_1.1.0 gridExtra_2.3 cabinets_0.6.0&lt;br /&gt;
+[19] compiler_3.6.3 cli_2.2.0 rvest_0.3.5&lt;br /&gt;
+[22] htmlTable_1.13.3 TSP_1.1-10 xml2_1.3.0&lt;br /&gt;
+[25] labeling_0.3 bookdown_0.19 caTools_1.18.0&lt;br /&gt;
+[28] scales_1.1.1 checkmate_2.0.0 digest_0.6.27&lt;br /&gt;
+[31] foreign_0.8-75 rmarkdown_2.1 base64enc_0.1-3&lt;br /&gt;
+[34] jpeg_0.1-8.1 pkgconfig_2.0.3 htmltools_0.5.0&lt;br /&gt;
+[37] dbplyr_1.4.3 highr_0.8 htmlwidgets_1.5.1&lt;br /&gt;
+[40] rlang_0.4.8 readxl_1.3.1 rstudioapi_0.11&lt;br /&gt;
+[43] generics_0.1.0 farver_2.0.3 jsonlite_1.7.1&lt;br /&gt;
+[46] gtools_3.8.2 dendextend_1.13.4 acepack_1.4.1&lt;br /&gt;
+[49] magrittr_1.5 Formula_1.2-3 Matrix_1.2-18&lt;br /&gt;
+[52] Rcpp_1.0.5 munsell_0.5.0 fansi_0.4.1&lt;br /&gt;
+[55] viridis_0.5.1 lifecycle_0.2.0 stringi_1.5.3&lt;br /&gt;
+[58] yaml_2.2.1 MASS_7.3-51.5 plyr_1.8.6&lt;br /&gt;
+[61] gplots_3.1.1 grid_3.6.3 crayon_1.3.4&lt;br /&gt;
+[64] lattice_0.20-38 haven_2.2.0 splines_3.6.3&lt;br /&gt;
+[67] hms_0.5.3 pillar_1.4.6 reshape2_1.4.3&lt;br /&gt;
+[70] codetools_0.2-16 reprex_0.3.0 glue_1.4.2&lt;br /&gt;
+[73] gclus_1.3.2 evaluate_0.14 blogdown_0.19&lt;br /&gt;
+[76] latticeExtra_0.6-29 data.table_1.13.2 modelr_0.1.6&lt;br /&gt;
+[79] png_0.1-7 vctrs_0.3.5 foreach_1.5.0&lt;br /&gt;
+[82] cellranger_1.1.0 gtable_0.3.0 assertthat_0.2.1&lt;br /&gt;
+[85] xfun_0.19 broom_0.7.0 ggcorrplot_0.1.3&lt;br /&gt;
+[88] viridisLite_0.3.0 survival_3.1-11 seriation_1.2-8&lt;br /&gt;
+[91] corrgram_1.13 iterators_1.0.12 registry_0.5-1&lt;br /&gt;
+[94] cluster_2.1.0 corrplot_0.84 ellipsis_0.3.1&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>
