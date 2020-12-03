@@ -585,7 +585,7 @@ I could only cover so much in this post, but here are the resources I've used th
 
 - I also really like the written explanations in the [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1) book by Mark van der Laan and Sherri Rose. The notation was too difficult for me to follow, but the words themselves make a lot of sense.
 
-- Miguel Luque wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the [functional delta method](https://migariane.github.io/DeltaMethodEpiTutorial.nb.html) which is part of the theory behind Step 6.
+- Miguel Angel Luque-Fernandez wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the [functional delta method](https://migariane.github.io/DeltaMethodEpiTutorial.nb.html) which is part of the theory behind Step 6.
 
 - Other code-based web-based tutorials on TMLE include David Benkeser and Antoine Chambaz' [A Ride in Targeted Learning Territory](https://achambaz.github.io/tlride/) and the authors of the `R` package suite [`tlverse`](https://tlverse.org/)'s [Hitchhiker's Guide to Targeted Learning: The TMLE Framework](https://tlverse.org/tlverse-handbook/tmle3.html).
 

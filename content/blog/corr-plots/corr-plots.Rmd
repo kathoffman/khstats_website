@@ -30,8 +30,8 @@ formatted_cors <- function(df){
     pivot_wider(names_from = id, values_from = value) %>%
     rename(p = P) %>%
     mutate(sig_p = ifelse(p < .05, T, F),
-           p_if_sig = ifelse(p <.05, p, NA),
-           r_if_sig = ifelse(p <.05, r, NA))
+           p_if_sig = ifelse(sig_p, p, NA),
+           r_if_sig = ifelse(sig_p, r, NA))
 }
 ```
 
@@ -62,7 +62,6 @@ formatted_cors(mtcars) %>%
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family="Roboto"))
 ```
-
 
 - If you just want the code, [skip to the end](#just-the-code).
 
@@ -211,9 +210,9 @@ cors(mtcars) %>%
   # change so everything is lower case
   rename(p = P) %>%
   mutate(sig_p = ifelse(p < .05, T, F),
-           p_if_sig = ifelse(p <.05, p, NA),
-           r_if_sig = ifelse(r <.05, r, NA)) %>%
-  head() %>%
+           p_if_sig = ifelse(sig_p, p, NA),
+           r_if_sig = ifelse(sig_p, r, NA)) %>%
+  head() %>% 
   kable()
 ```
 
@@ -228,8 +227,8 @@ formatted_cors <- function(df){
     pivot_wider(names_from = id, values_from = value) %>%
     rename(p = P) %>%
     mutate(sig_p = ifelse(p < .05, T, F),
-           p_if_sig = ifelse(p <.05, p, NA),
-           r_if_sig = ifelse(r <.05, r, NA)) 
+           p_if_sig = ifelse(sig_p, p, NA),
+           r_if_sig = ifelse(sig_p, r, NA)) 
 }
 ```
 
@@ -319,8 +318,8 @@ formatted_cors <- function(df){
     pivot_wider(names_from = id, values_from = value) %>%
     rename(p = P) %>%
     mutate(sig_p = ifelse(p < .05, T, F),
-           p_if_sig = ifelse(p <.05, p, NA),
-           r_if_sig = ifelse(r <.05, r, NA)) 
+           p_if_sig = ifelse(sig_p, p, NA),
+           r_if_sig = ifelse(sig_p, r, NA)) 
 }
 
 formatted_cors(mtcars) %>%
