@@ -513,7 +513,8 @@ HTML Image as link
 </body>
 </html>
 <hr />
-<p><strong><em>Jump to…</em></strong></p>
+<div id="table-of-contents" class="section level1">
+<h1>Table of Contents</h1>
 <ol style="list-style-type: decimal">
 <li><a href="#tmle-in-three-sentences">TMLE in three sentences 🎯</a></li>
 <li><a href="#an-analysts-motivation-for-learning-tmle">An Analyst’s Motivation for Learning TMLE 👩🏼‍💻</a></li>
@@ -526,6 +527,7 @@ HTML Image as link
 <li><a href="#resources-to-learn-more">Resources to learn more 🤓</a></li>
 </ol>
 <hr />
+</div>
 <div id="tmle-in-three-sentences" class="section level1">
 <h1>TMLE in three sentences 🎯</h1>
 <p>Targeted Maximum Likelihood Estimation (TMLE) is a general semiparametric estimation framework to <strong>estimate a statistical quantity of interest</strong>. TMLE allows the use of <strong>machine learning</strong> (ML) models which place <strong>minimal assumptions on the distribution of the data</strong>. Unlike estimates normally obtained from ML, the <strong>final TMLE estimate will still have valid standard errors for statistical inference</strong>.</p>
@@ -574,6 +576,7 @@ HTML Image as link
 <blockquote>
 <p>In this tutorial I’ll show a basic version of TMLE: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. Under causal assumptions, this is called the Average Treatment Effect (ATE).</p>
 </blockquote>
+<p><a href="#table-of-contents"><em>Jump back to the table of contents…</em></a></p>
 </div>
 <div id="tmle-step-by-step-️" class="section level1">
 <h1>TMLE, Step-by-Step 🚶🏽‍♂️</h1>
@@ -1335,6 +1338,7 @@ conf_high
 </table>
 <p>Then we can successfully report our ATE as 0.192 (95% CI: 0.134, 0.25).</p>
 <p><em>Note that a TMLE estimator is asymptotically normally distributed, so we could bootstrap the entire algorithm to get our standard errors instead.</em></p>
+<p><a href="#table-of-contents"><em>Jump back to the table of contents…</em></a></p>
 </div>
 </div>
 <div id="using-the-tmle-package" class="section level1">
@@ -1374,6 +1378,7 @@ tmle_fit</code></pre>
 <p>If both regressions are consistent, the final estimate will reach the smallest possible variance at a rate of <span class="math inline">\(\sqrt{n}\)</span>, which is the fastest possible rate of convergence and the same as parametric maximum likelihood estimation. The reason we use superlearning for estimating the outcome and treatment regression fits is to give us the best possible chance of having correctly specified models.</p>
 <p><img src="/img/tmle_props.png" /></p>
 <p>Besides allowing for the use of machine learning models which do not assume an underlying distribution of the data, TMLE is appealing because its estimates will always stay in the bounds of the original outcome. This is because it is part of a class of <strong>substitution estimators</strong>. There is another class of semiparametric estimation methods frequently used in causal inference that are referred to as <strong>one-step estimators</strong>, but they can sometimes yield final estimates that are outside the original outcome scale.</p>
+<p><a href="#table-of-contents"><em>Jump back to the table of contents…</em></a></p>
 </div>
 <div id="why-does-tmle-work" class="section level1">
 <h1>Why does TMLE work? ✨</h1>
@@ -1389,6 +1394,16 @@ tmle_fit</code></pre>
 </div>
 <div id="resources-to-learn-more" class="section level1">
 <h1>Resources to learn more 🤓</h1>
+<html>
+<head>
+</head>
+<body>
+<a href="">
+<img src="/img/tmle/self_portrait.jpg"
+               style="float:right; padding-right:20px; padding-top:-20px; padding-left:20px; padding-bottom:-50px;" width="32%">
+</a>
+</body>
+</html>
 <p>I could only cover so much in this post, but here are the resources I’ve used the most to learn about TMLE, semiparametric estimation methods, and causal inference. If you are brand new to any or all of it: there is a good chance it will take <em>several</em> reads of these materials before the concepts begin to make any sense. Don’t get discouraged!</p>
 <div id="tmle" class="section level3">
 <h3>TMLE</h3>
@@ -1424,6 +1439,7 @@ tmle_fit</code></pre>
 </ul>
 <p>I’ll continue to update this page with resources as I discover them.</p>
 <p>Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through <a href="mailto:kathoffman.stats@gmail.com">email</a>.</p>
+<p><a href="#table-of-contents"><em>Jump back to the table of contents…</em></a></p>
 </div>
 </div>
 <div id="acknowledgements" class="section level1">
@@ -1551,6 +1567,7 @@ conf_high</code></pre>
 ## [61] tools_3.6.3        glue_1.4.2         hms_0.5.3          plotrix_3.7-7     
 ## [65] yaml_2.2.1         colorspace_1.4-1   rvest_0.3.5        knitr_1.30        
 ## [69] haven_2.2.0</code></pre>
+<p><a href="#table-of-contents"><em>Jump back to the table of contents…</em></a></p>
 </div>
 
     </div>

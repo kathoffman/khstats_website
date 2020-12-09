@@ -1,0 +1,65 @@
+---
+title: "Just how many ways are there to get a SOFA Score of 10?"
+author: "Katherine Hoffman"
+date: 2020-09-30T01:13:14-05:00
+categories: ["statistics"]
+tags: ["critical care research","sofa scores","combinatorics"]
+draft: false
+output: 
+  blogdown::html_page:
+    toc: false
+    smart: false
+    df_print: "paged"
+---
+
+>  A brain-teaser problem for combinatorics and critical care enthusiasts alike, written with the help of pulmonologist and intensivist Dr. Edward Schenck.
+
+The **Serial Organ Failure Assessment (SOFA)** is a measure used in hospitals to define and assign **severity of illness** in acutely ill patients. The score measures general dysfunction in **six vital organ systems**: the lung, brain, heart, liver, kidney, and blood. Each of these organs receive an **integer subscore, ranging from 0 to 4**, using routinely collected labs and vital signs. The **sum of the six subscores, ranging from 0 to 24, creates a patient’s SOFA score**. The higher a patient's SOFA score, the sicker they are. There are plenty of [online calculators](https://www.mdcalc.com/sequential-organ-failure-assessment-sofa-score) for SOFA scores that you can check out you’re curious about exactly what goes into each of the subscores.
+
+SOFA scores are useful as a quick live-check for physicians of a patient’s overall well-being, but they’re moreso used extensively in critical care observational research. We use SOFA scores to adjust for severity of illness as a confounder in observational studies, and they’re often used as inclusion criteria for deciding which patients are eligible for therapies in a Randomized Control Trial (RCT). There are plenty of pros and cons of SOFA, but one aspect of SOFA scores that is perhaps non-intuitive for many physicians is just how many ways there are for a patient with a drastically different clinical profile to have the same SOFA score as another patient.
+
+Recently a pulmonologist who I work closely with, Dr. Edward Schenck, sent me an email with the subject line “Help!!”
+I clicked on his email, and found an interesting question:
+
+> ***There is only one way for a patient to have a SOFA score of 0 (all six subscores are 0). There are six ways a patient could have a SOFA score of 6 (one of the six subscores is 1). But how many ways are there for a patient to get a SOFA score of 10?***
+
+It was a serious question from him, but a beautiful mid-day brainteaser break for me. What *are* the number of possible combinations to get every possible SOFA score, from 0 to 24?
+
+I’ll solve this problem first using R code, then combinatorics, and finally I’ll talk about the implications this has in acute care research, including randomized clinical trials for acute-care therapies (COVID-19 included!) which use SOFA scores as an inclusion criteria.
+
+## Solving in `R`
+
+
+We can solve this problem with only a few lines of code in `R` by using `expand.grid()` to 
+
+```{r}
+combos <- expand.grid("lung" = 0:4, "liver" = 0:4, "heart" = 0:4, "blood" = 0:4, "brain" = 0:4, "kidney" = 0:4)
+combos
+combos$total_sofa <- rowSums(combos)
+combos
+sofa_counts <- table(combos$total_sofa)
+sofa_counts
+```
+
+
+```{r, echo=F}
+library(tidyverse)
+theme_set(theme_bw(base_size = 15, base_family = "Roboto Condensed"))
+
+combos %>%
+  count(total_sofa) %>%
+  ggplot(aes(total_sofa, n, fill=total_sofa)) +
+  #geom_bar(stat="identity", fill="#3C639A") +
+  geom_bar(stat="identity") +
+  labs(x="Total SOFA Score", y="Number of Combinations") +
+  scale_y_continuous(expand=c(0,0), limits=c(0,1800)) +
+  guides(fill=F) +
+  scale_x_continuous(expand=c(0,0))  +
+  scale_fill_gradient(low="navy",high="firebrick2") +
+  theme_bw()
+
+```
+
+## Solving with Combinatorics 
+
+This problem is akin to rolling a dice 

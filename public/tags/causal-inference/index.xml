@@ -40,7 +40,8 @@ HTML Image as link
 &lt;/body&gt;
 &lt;/html&gt;
 &lt;hr /&gt;
-&lt;p&gt;&lt;strong&gt;&lt;em&gt;Jump to…&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;div id=&#34;table-of-contents&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Table of Contents&lt;/h1&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;a href=&#34;#tmle-in-three-sentences&#34;&gt;TMLE in three sentences 🎯&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#an-analysts-motivation-for-learning-tmle&#34;&gt;An Analyst’s Motivation for Learning TMLE 👩🏼‍💻&lt;/a&gt;&lt;/li&gt;
@@ -53,6 +54,7 @@ HTML Image as link
 &lt;li&gt;&lt;a href=&#34;#resources-to-learn-more&#34;&gt;Resources to learn more 🤓&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;hr /&gt;
+&lt;/div&gt;
 &lt;div id=&#34;tmle-in-three-sentences&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE in three sentences 🎯&lt;/h1&gt;
 &lt;p&gt;Targeted Maximum Likelihood Estimation (TMLE) is a general semiparametric estimation framework to &lt;strong&gt;estimate a statistical quantity of interest&lt;/strong&gt;. TMLE allows the use of &lt;strong&gt;machine learning&lt;/strong&gt; (ML) models which place &lt;strong&gt;minimal assumptions on the distribution of the data&lt;/strong&gt;. Unlike estimates normally obtained from ML, the &lt;strong&gt;final TMLE estimate will still have valid standard errors for statistical inference&lt;/strong&gt;.&lt;/p&gt;
@@ -101,6 +103,7 @@ HTML Image as link
 &lt;blockquote&gt;
 &lt;p&gt;In this tutorial I’ll show a basic version of TMLE: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. Under causal assumptions, this is called the Average Treatment Effect (ATE).&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;#table-of-contents&#34;&gt;&lt;em&gt;Jump back to the table of contents…&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;tmle-step-by-step-️&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;TMLE, Step-by-Step 🚶🏽‍♂️&lt;/h1&gt;
@@ -862,6 +865,7 @@ conf_high
 &lt;/table&gt;
 &lt;p&gt;Then we can successfully report our ATE as 0.192 (95% CI: 0.134, 0.25).&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Note that a TMLE estimator is asymptotically normally distributed, so we could bootstrap the entire algorithm to get our standard errors instead.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;#table-of-contents&#34;&gt;&lt;em&gt;Jump back to the table of contents…&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;using-the-tmle-package&#34; class=&#34;section level1&#34;&gt;
@@ -901,6 +905,7 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;If both regressions are consistent, the final estimate will reach the smallest possible variance at a rate of &lt;span class=&#34;math inline&#34;&gt;\(\sqrt{n}\)&lt;/span&gt;, which is the fastest possible rate of convergence and the same as parametric maximum likelihood estimation. The reason we use superlearning for estimating the outcome and treatment regression fits is to give us the best possible chance of having correctly specified models.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle_props.png&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Besides allowing for the use of machine learning models which do not assume an underlying distribution of the data, TMLE is appealing because its estimates will always stay in the bounds of the original outcome. This is because it is part of a class of &lt;strong&gt;substitution estimators&lt;/strong&gt;. There is another class of semiparametric estimation methods frequently used in causal inference that are referred to as &lt;strong&gt;one-step estimators&lt;/strong&gt;, but they can sometimes yield final estimates that are outside the original outcome scale.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;#table-of-contents&#34;&gt;&lt;em&gt;Jump back to the table of contents…&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;why-does-tmle-work&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Why does TMLE work? ✨&lt;/h1&gt;
@@ -916,6 +921,16 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;div id=&#34;resources-to-learn-more&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Resources to learn more 🤓&lt;/h1&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;a href=&#34;&#34;&gt;
+&lt;img src=&#34;/img/tmle/self_portrait.jpg&#34;
+               style=&#34;float:right; padding-right:20px; padding-top:-20px; padding-left:20px; padding-bottom:-50px;&#34; width=&#34;32%&#34;&gt;
+&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;
 &lt;p&gt;I could only cover so much in this post, but here are the resources I’ve used the most to learn about TMLE, semiparametric estimation methods, and causal inference. If you are brand new to any or all of it: there is a good chance it will take &lt;em&gt;several&lt;/em&gt; reads of these materials before the concepts begin to make any sense. Don’t get discouraged!&lt;/p&gt;
 &lt;div id=&#34;tmle&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;TMLE&lt;/h3&gt;
@@ -951,6 +966,7 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;/ul&gt;
 &lt;p&gt;I’ll continue to update this page with resources as I discover them.&lt;/p&gt;
 &lt;p&gt;Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through &lt;a href=&#34;mailto:kathoffman.stats@gmail.com&#34;&gt;email&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;#table-of-contents&#34;&gt;&lt;em&gt;Jump back to the table of contents…&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;acknowledgements&#34; class=&#34;section level1&#34;&gt;
@@ -1078,6 +1094,7 @@ conf_high&lt;/code&gt;&lt;/pre&gt;
 ## [61] tools_3.6.3        glue_1.4.2         hms_0.5.3          plotrix_3.7-7     
 ## [65] yaml_2.2.1         colorspace_1.4-1   rvest_0.3.5        knitr_1.30        
 ## [69] haven_2.2.0&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;a href=&#34;#table-of-contents&#34;&gt;&lt;em&gt;Jump back to the table of contents…&lt;/em&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 </description>
     </item>

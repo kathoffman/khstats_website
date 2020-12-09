@@ -153,6 +153,11 @@
   </url>
   
   <url>
+    <loc>/tags/combinatorics/</loc>
+    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/tags/coronavirus/</loc>
     <lastmod>2020-09-30T01:13:14-05:00</lastmod>
   </url>
@@ -168,7 +173,22 @@
   </url>
   
   <url>
+    <loc>/tags/critical-care-research/</loc>
+    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/blog/sofa/sofa-of-10/</loc>
+    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/blog/covid/covid/</loc>
+    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/sofa-scores/</loc>
     <lastmod>2020-09-30T01:13:14-05:00</lastmod>
   </url>
   
