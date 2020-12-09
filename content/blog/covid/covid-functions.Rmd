@@ -1,7 +1,7 @@
 ---
-title: "My favorite lines of data wrangling code during the NYC COVID-19 outbreak"
+title: "Lessons learned: my top five coding 'tricks' during the NYC COVID-19 outbreak"
 author: "Katherine Hoffman"
-date: 2020-09-10T21:13:14-05:00
+date: 2020-07-10T21:13:14-05:00
 categories: ["R"]
 tags: ["R","Electronic Health Record","COVID-19","data wrangling","tidyverse","tidylog","gtsummary"]
 math: true

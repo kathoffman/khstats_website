@@ -197,65 +197,17 @@
     </item>
     
     <item>
-      <title>data wrangling</title>
-      <link>/tags/data-wrangling/</link>
-      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/data-wrangling/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Electronic Health Record</title>
-      <link>/tags/electronic-health-record/</link>
-      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/electronic-health-record/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>gtsummary</title>
-      <link>/tags/gtsummary/</link>
-      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/gtsummary/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tidylog</title>
-      <link>/tags/tidylog/</link>
-      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/tidylog/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>tidyverse</title>
-      <link>/tags/tidyverse/</link>
-      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/tidyverse/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>correlation</title>
       <link>/tags/correlation/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <pubDate>Mon, 24 Aug 2020 21:13:14 -0500</pubDate>
       <guid>/tags/correlation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>expectations</title>
-      <link>/tags/expectations/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
-      <guid>/tags/expectations/</guid>
       <description></description>
     </item>
     
     <item>
       <title>ggplot2</title>
       <link>/tags/ggplot2/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <pubDate>Mon, 24 Aug 2020 21:13:14 -0500</pubDate>
       <guid>/tags/ggplot2/</guid>
       <description></description>
     </item>
@@ -263,8 +215,56 @@
     <item>
       <title>purrr</title>
       <link>/tags/purrr/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <pubDate>Mon, 24 Aug 2020 21:13:14 -0500</pubDate>
       <guid>/tags/purrr/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>expectations</title>
+      <link>/tags/expectations/</link>
+      <pubDate>Fri, 31 Jul 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/expectations/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data wrangling</title>
+      <link>/tags/data-wrangling/</link>
+      <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/data-wrangling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Electronic Health Record</title>
+      <link>/tags/electronic-health-record/</link>
+      <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/electronic-health-record/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>gtsummary</title>
+      <link>/tags/gtsummary/</link>
+      <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/gtsummary/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidylog</title>
+      <link>/tags/tidylog/</link>
+      <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/tidylog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tidyverse</title>
+      <link>/tags/tidyverse/</link>
+      <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
+      <guid>/tags/tidyverse/</guid>
       <description></description>
     </item>
     

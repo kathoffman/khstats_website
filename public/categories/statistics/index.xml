@@ -63,7 +63,7 @@ HTML Image as link
 &lt;h1&gt;An Analyst’s Motivation for Learning TMLE 👩🏼‍💻&lt;/h1&gt;
 &lt;p&gt;When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;&lt;p&gt;If the goal is &lt;span style=&#34;color: #3366ff;&#34;&gt;inference&lt;/span&gt; (e.g., an effect size with a confidence interval), use an &lt;span style=&#34;color: #3366ff;&#34;&gt;interpretable, usually parametric, model&lt;/span&gt; and explain the meaning behind the coefficients and their standard errors.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If the goal is &lt;span style=&#34;color: #3366ff;&#34;&gt;inference&lt;/span&gt; (e.g., an effect size with a confidence interval), use an &lt;span style=&#34;color: #3366ff;&#34;&gt;interpretable, usually parametric, model&lt;/span&gt; and explain what the coefficients and their standard errors mean.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;If the goal is &lt;span style=&#34;color: #cc0000;&#34;&gt;prediction&lt;/span&gt;, use &lt;span style=&#34;color: #cc0000;&#34;&gt;data-adaptive machine learning algorithms&lt;/span&gt; and then look at performance metrics and variable importance.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.&lt;/p&gt;
@@ -742,8 +742,8 @@ HTML Image as link
 &lt;/a&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;🚨 Warning: 🚨 this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let’s first look at &lt;em&gt;what&lt;/em&gt; we’re doing, and then I’ll discuss at a very high-level &lt;em&gt;why&lt;/em&gt; we’re doing that in a &lt;a href=&#34;#why-does-tmle-work&#34;&gt;later section&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;The point of this step is to solve an &lt;em&gt;estimating equation&lt;/em&gt; for the &lt;em&gt;efficient influence function&lt;/em&gt; (EIF) of our estimand of interest. Without diving into what an EIF or estimating equation is, let’s accept for a moment that they will help us:&lt;/p&gt;
+&lt;p&gt;🚨 Warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let’s first look at &lt;em&gt;what&lt;/em&gt; we’re doing, and then I’ll discuss at a very high-level &lt;em&gt;why&lt;/em&gt; we’re doing that in a &lt;a href=&#34;#why-does-tmle-work&#34;&gt;later section&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The point of this step is to solve an &lt;em&gt;estimating equation&lt;/em&gt; for the &lt;em&gt;efficient influence function&lt;/em&gt; (EIF) of our estimand of interest. Without diving into what an EIF or an estimating equation is, let’s accept for a moment that they will help us:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Update our initial outcome estimates&lt;/strong&gt; so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the &lt;a href=&#34;#properties-of-tmle&#34;&gt;statistical properties section&lt;/a&gt;).&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;&lt;strong&gt;Calculate the variance&lt;/strong&gt;, and thus the standard error, confidence interval, and p-value for our estimate of the ATE for hypothesis testing.&lt;/p&gt;&lt;/li&gt;
@@ -773,12 +773,12 @@ HTML Image as link
 &lt;/html&gt;
 &lt;p&gt;Almost done! Let’s recap:&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;In Step 1, we obtained initial estimates of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate &lt;span class=&#34;math inline&#34;&gt;\(E[Y|A,W]\)&lt;/span&gt;, not the ATE.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;We need to update those initial expected outcome estimates using information about the treatment mechanism, so we computed the expected probability of treatment, conditional on confounders, in Step 2.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about &lt;em&gt;why&lt;/em&gt; this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;In Step 1, we obtained &lt;strong&gt;initial estimates&lt;/strong&gt; of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate &lt;span class=&#34;math inline&#34;&gt;\(E[Y|A,W]\)&lt;/span&gt;, not the ATE.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;We need to update those initial expected outcome estimates using &lt;strong&gt;information about the treatment mechanism&lt;/strong&gt;, so we computed the expected probability of treatment, conditional on confounders, in Step 2.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Then, in Step 3, we used quantities from Step 1 and Step 2 to &lt;strong&gt;solve an estimating equation for the EIF&lt;/strong&gt;. We didn’t talk about &lt;em&gt;why&lt;/em&gt; this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Now, we will &lt;strong&gt;update our initial outcome estimates&lt;/strong&gt; from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;To &lt;strong&gt;update our expected outcome estimates&lt;/strong&gt;, we first need to put the initial expected outcome estimates on the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale using &lt;code&gt;qlogis()&lt;/code&gt; because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W}) \times \hat{\epsilon}\)&lt;/span&gt;. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using &lt;code&gt;plogis()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To update our expected outcome estimates, we first need to &lt;strong&gt;put the initial expected outcome estimates on the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; scale&lt;/strong&gt; using &lt;code&gt;qlogis()&lt;/code&gt; because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can &lt;strong&gt;calculate how much we need to fluctuate our initial estimates&lt;/strong&gt; using the product of the clever covariate and fluctuation parameter: &lt;span class=&#34;math inline&#34;&gt;\(H(A,\mathbf{W}) \times \hat{\epsilon}\)&lt;/span&gt;. These are our outputs of Step 2 and 3, respectively. We will &lt;strong&gt;add that quantity to the initial outcome estimates to create updated outcome estimates&lt;/strong&gt;. Finally, we can &lt;strong&gt;put the updated estimates back on the true outcome scale&lt;/strong&gt; using &lt;code&gt;plogis()&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Note we can use &lt;span class=&#34;math inline&#34;&gt;\(expit\)&lt;/span&gt; to show the inverse of the &lt;span class=&#34;math inline&#34;&gt;\(logit\)&lt;/span&gt; function, and we will denote updates to the outcome regressions as &lt;span class=&#34;math inline&#34;&gt;\(\hat{\mathrm{E}}^*\)&lt;/span&gt; instead of &lt;span class=&#34;math inline&#34;&gt;\(\hat{\mathrm{E}}\)&lt;/span&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))\]&lt;/span&gt;&lt;/p&gt;
@@ -817,12 +817,13 @@ tmle_ate&lt;/code&gt;&lt;/pre&gt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;This point estimate is great, but we usually need an estimate of variance so that we can compute confidence intervals and test statistics. To obtain the standard errors, we first need to compute the &lt;strong&gt;Influence Function&lt;/strong&gt; (IF), which is the empirical version of what we used our estimating equation to figure out in step 3. The IF tells us how much each observation influences the final estimate.&lt;/p&gt;
+&lt;p&gt;This point estimate is great, but we usually need an &lt;strong&gt;estimate of variance&lt;/strong&gt; so that we can compute confidence intervals, test statistics, p-values, etc.&lt;/p&gt;
+&lt;p&gt;🚨: This is another step that contains quite a lot of theory, so I’ll give another birds-eye-view for now. If you’re curious, you can read more in the &lt;a href=&#34;#why-does-tmle-work&#34;&gt;Why Does TMLE Work?&lt;/a&gt; and &lt;a href=&#34;#resources-to-learn-more&#34;&gt;Resources to Learn More&lt;/a&gt; sections.&lt;/p&gt;
+&lt;p&gt;To obtain the standard errors, we first need to compute the &lt;strong&gt;Influence Function&lt;/strong&gt; (IF), which is the empirical version of what we used our estimating equation to figure out in step 3. The IF tells us &lt;strong&gt;how much each observation influences the final estimate&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;The equation for the IF looks like this:&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{IF} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]&lt;/span&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;infl_fn &amp;lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Once we have the IF, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;Note: This is another step that is theory-heavy so I won’t get into the details; however, I’ve linked resources in &lt;a href=&#34;#references&#34;&gt;References&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Once we have the IF, we can &lt;strong&gt;take the square-root of its variance divided by the number of observations&lt;/strong&gt; to get the standard error of our estimate.&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[\hat{SE} = \sqrt{\frac{var(\hat{IF})}{N}} \]&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;/img/tmle/15_ses.png&#34; style=&#34;width:100.0%&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tmle_se &amp;lt;- sqrt(var(infl_fn)/nrow(dat_obs))&lt;/code&gt;&lt;/pre&gt;
@@ -920,7 +921,7 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This is the reason TMLE allows us to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our &lt;strong&gt;estimand&lt;/strong&gt; of interest admits &lt;strong&gt;asymptotically linear estimation&lt;/strong&gt;, and we are &lt;strong&gt;using properties of the EIF&lt;/strong&gt; to &lt;strong&gt;construct an estimator&lt;/strong&gt; with &lt;strong&gt;optimal statistical properties&lt;/strong&gt; (i.e. double robustness, efficiency).&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;resources-to-learn-more&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Resources to learn more 🤓&lt;/h1&gt;
+&lt;h1&gt;Resources to learn more&lt;/h1&gt;
 &lt;html&gt;
 &lt;head&gt;
 &lt;/head&gt;
@@ -961,7 +962,7 @@ tmle_fit&lt;/code&gt;&lt;/pre&gt;
 &lt;div id=&#34;causal-inference&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Causal Inference&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;p&gt;If you want to learn more about the foundations of causal inference, I suggest &lt;a href=&#34;http://bayes.cs.ucla.edu/PRIMER/&#34;&gt;&lt;em&gt;Causal Inference in Statistics: A Primer&lt;/em&gt;&lt;/a&gt; by Judea Pearl and &lt;a href=&#34;https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/&#34;&gt;&lt;em&gt;What If&lt;/em&gt;&lt;/a&gt; (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the &lt;em&gt;identification&lt;/em&gt; side of causal inference.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If you want to learn more about the foundations of causal inference, I suggest &lt;a href=&#34;http://bayes.cs.ucla.edu/PRIMER/&#34;&gt;&lt;em&gt;Causal Inference in Statistics: A Primer&lt;/em&gt;&lt;/a&gt; by Judea Pearl and &lt;a href=&#34;https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/&#34;&gt;&lt;em&gt;What If&lt;/em&gt;&lt;/a&gt; (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the &lt;em&gt;causal assumptions&lt;/em&gt; necessary for causal inference.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;I also think the introductory chapters of the previously mentioned &lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4419-9782-1&#34;&gt;&lt;em&gt;Targeted Learning&lt;/em&gt;&lt;/a&gt; book do an excellent job of setting up the “roadmap” of causal inference.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;I’ll continue to update this page with resources as I discover them.&lt;/p&gt;
@@ -1032,24 +1033,24 @@ dat_tmle &amp;lt;- # add clever covariate data to dat_tmle
                        A == 0 ~ H_0))  # if A is 0 (not treated), assign H_0
 
 ### Step 3: Estimate fluctuation parameter
-glm_fit &amp;lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial)
-eps &amp;lt;- coef(glm_fit)
+glm_fit &amp;lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial) # fixed intercept logistic regression
+eps &amp;lt;- coef(glm_fit) # save the only coefficient, called epsilon in TMLE lit
 
 ### Step 4: Update Q&amp;#39;s
 H_A &amp;lt;- dat_tmle$H_A # for cleaner code in Q_A_update
-Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H_A)
-Q_1_update &amp;lt;- plogis(qlogis(Q_1) + eps*H_1)
-Q_0_update &amp;lt;- plogis(qlogis(Q_0) + eps*H_0)
+Q_A_update &amp;lt;- plogis(qlogis(Q_A) + eps*H_A) # updated expected outcome given treatment actually received
+Q_1_update &amp;lt;- plogis(qlogis(Q_1) + eps*H_1) # updated expected outcome for everyone receiving treatment
+Q_0_update &amp;lt;- plogis(qlogis(Q_0) + eps*H_0) # updated expected outcome for everyone not receiving treatment
 
 ### Step 5: Compute ATE
-tmle_ate &amp;lt;- mean(Q_1_update - Q_0_update)
+tmle_ate &amp;lt;- mean(Q_1_update - Q_0_update) # mean diff in updated expected outcome estimates
 
 ### Step 6: compute standard error, CIs and pvals
-infl_fn &amp;lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
-tmle_se &amp;lt;- sqrt(var(infl_fn)/nrow(dat_obs))
-conf_low &amp;lt;- tmle_ate - 1.96*tmle_se
+infl_fn &amp;lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate # influence function
+tmle_se &amp;lt;- sqrt(var(infl_fn)/nrow(dat_obs)) # standard error
+conf_low &amp;lt;- tmle_ate - 1.96*tmle_se # 95% CI
 conf_high &amp;lt;- tmle_ate + 1.96*tmle_se
-pval &amp;lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
+pval &amp;lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se))) # p-value at alpha .05
 
 tmle_ate
 conf_low
@@ -3107,7 +3108,7 @@ I’m no expert in causal inference, but at this point I at least have an opinio
     <item>
       <title>Understanding Conditional and Iterated Expectations with a Linear Regression Model</title>
       <link>/blog/iterated-expectations/iterated-expectations/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <pubDate>Fri, 31 Jul 2020 21:13:14 -0500</pubDate>
       <guid>/blog/iterated-expectations/iterated-expectations/</guid>
       <description>
 &lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
@@ -3142,13 +3143,15 @@ penguins %&amp;gt;%
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#mcysheiceb .gt_table {
+#evxjckkhfd .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -3165,7 +3168,7 @@ penguins %&amp;gt;%
   border-left-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_heading {
+#evxjckkhfd .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3177,7 +3180,7 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_title {
+#evxjckkhfd .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3187,7 +3190,7 @@ penguins %&amp;gt;%
   border-bottom-width: 0;
 }
 
-#mcysheiceb .gt_subtitle {
+#evxjckkhfd .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3197,13 +3200,13 @@ penguins %&amp;gt;%
   border-top-width: 0;
 }
 
-#mcysheiceb .gt_bottom_border {
+#evxjckkhfd .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_col_headings {
+#evxjckkhfd .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3218,7 +3221,7 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_col_heading {
+#evxjckkhfd .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3238,7 +3241,7 @@ penguins %&amp;gt;%
   overflow-x: hidden;
 }
 
-#mcysheiceb .gt_column_spanner_outer {
+#evxjckkhfd .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3250,15 +3253,15 @@ penguins %&amp;gt;%
   padding-right: 4px;
 }
 
-#mcysheiceb .gt_column_spanner_outer:first-child {
+#evxjckkhfd .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mcysheiceb .gt_column_spanner_outer:last-child {
+#evxjckkhfd .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mcysheiceb .gt_column_spanner {
+#evxjckkhfd .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3270,7 +3273,7 @@ penguins %&amp;gt;%
   width: 100%;
 }
 
-#mcysheiceb .gt_group_heading {
+#evxjckkhfd .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3292,7 +3295,7 @@ penguins %&amp;gt;%
   vertical-align: middle;
 }
 
-#mcysheiceb .gt_empty_group_heading {
+#evxjckkhfd .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3307,19 +3310,15 @@ penguins %&amp;gt;%
   vertical-align: middle;
 }
 
-#mcysheiceb .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#mcysheiceb .gt_from_md &gt; :first-child {
+#evxjckkhfd .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#mcysheiceb .gt_from_md &gt; :last-child {
+#evxjckkhfd .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#mcysheiceb .gt_row {
+#evxjckkhfd .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3338,7 +3337,7 @@ penguins %&amp;gt;%
   overflow-x: hidden;
 }
 
-#mcysheiceb .gt_stub {
+#evxjckkhfd .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3350,7 +3349,7 @@ penguins %&amp;gt;%
   padding-left: 12px;
 }
 
-#mcysheiceb .gt_summary_row {
+#evxjckkhfd .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3360,7 +3359,7 @@ penguins %&amp;gt;%
   padding-right: 5px;
 }
 
-#mcysheiceb .gt_first_summary_row {
+#evxjckkhfd .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3370,7 +3369,7 @@ penguins %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_grand_summary_row {
+#evxjckkhfd .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3380,7 +3379,7 @@ penguins %&amp;gt;%
   padding-right: 5px;
 }
 
-#mcysheiceb .gt_first_grand_summary_row {
+#evxjckkhfd .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3390,7 +3389,11 @@ penguins %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_table_body {
+#evxjckkhfd .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#evxjckkhfd .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3399,7 +3402,7 @@ penguins %&amp;gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_footnotes {
+#evxjckkhfd .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3413,13 +3416,13 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_footnote {
+#evxjckkhfd .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#mcysheiceb .gt_sourcenotes {
+#evxjckkhfd .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3433,46 +3436,46 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_sourcenote {
+#evxjckkhfd .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#mcysheiceb .gt_left {
+#evxjckkhfd .gt_left {
   text-align: left;
 }
 
-#mcysheiceb .gt_center {
+#evxjckkhfd .gt_center {
   text-align: center;
 }
 
-#mcysheiceb .gt_right {
+#evxjckkhfd .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mcysheiceb .gt_font_normal {
+#evxjckkhfd .gt_font_normal {
   font-weight: normal;
 }
 
-#mcysheiceb .gt_font_bold {
+#evxjckkhfd .gt_font_bold {
   font-weight: bold;
 }
 
-#mcysheiceb .gt_font_italic {
+#evxjckkhfd .gt_font_italic {
   font-style: italic;
 }
 
-#mcysheiceb .gt_super {
+#evxjckkhfd .gt_super {
   font-size: 65%;
 }
 
-#mcysheiceb .gt_footnote_marks {
+#evxjckkhfd .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 &lt;/style&gt;
-&lt;div id=&#34;mcysheiceb&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+&lt;div id=&#34;evxjckkhfd&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
   
   &lt;thead class=&#34;gt_col_headings&#34;&gt;
     &lt;tr&gt;
@@ -3526,13 +3529,15 @@ penguins %&amp;gt;%
   font-family: -apple-system, BlinkMacSystemFont, &#39;Segoe UI&#39;, Roboto, Oxygen, Ubuntu, Cantarell, &#39;Helvetica Neue&#39;, &#39;Fira Sans&#39;, &#39;Droid Sans&#39;, Arial, sans-serif;
 }
 
-#ecegfguyhs .gt_table {
+#gkoadyzagv .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -3549,7 +3554,7 @@ penguins %&amp;gt;%
   border-left-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_heading {
+#gkoadyzagv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -3561,7 +3566,7 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_title {
+#gkoadyzagv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -3571,7 +3576,7 @@ penguins %&amp;gt;%
   border-bottom-width: 0;
 }
 
-#ecegfguyhs .gt_subtitle {
+#gkoadyzagv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -3581,13 +3586,13 @@ penguins %&amp;gt;%
   border-top-width: 0;
 }
 
-#ecegfguyhs .gt_bottom_border {
+#gkoadyzagv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_col_headings {
+#gkoadyzagv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3602,7 +3607,7 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_col_heading {
+#gkoadyzagv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3622,7 +3627,7 @@ penguins %&amp;gt;%
   overflow-x: hidden;
 }
 
-#ecegfguyhs .gt_column_spanner_outer {
+#gkoadyzagv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3634,15 +3639,15 @@ penguins %&amp;gt;%
   padding-right: 4px;
 }
 
-#ecegfguyhs .gt_column_spanner_outer:first-child {
+#gkoadyzagv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ecegfguyhs .gt_column_spanner_outer:last-child {
+#gkoadyzagv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ecegfguyhs .gt_column_spanner {
+#gkoadyzagv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -3654,7 +3659,7 @@ penguins %&amp;gt;%
   width: 100%;
 }
 
-#ecegfguyhs .gt_group_heading {
+#gkoadyzagv .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3676,7 +3681,7 @@ penguins %&amp;gt;%
   vertical-align: middle;
 }
 
-#ecegfguyhs .gt_empty_group_heading {
+#gkoadyzagv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -3691,19 +3696,15 @@ penguins %&amp;gt;%
   vertical-align: middle;
 }
 
-#ecegfguyhs .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#ecegfguyhs .gt_from_md &gt; :first-child {
+#gkoadyzagv .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
 
-#ecegfguyhs .gt_from_md &gt; :last-child {
+#gkoadyzagv .gt_from_md &gt; :last-child {
   margin-bottom: 0;
 }
 
-#ecegfguyhs .gt_row {
+#gkoadyzagv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3722,7 +3723,7 @@ penguins %&amp;gt;%
   overflow-x: hidden;
 }
 
-#ecegfguyhs .gt_stub {
+#gkoadyzagv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -3734,7 +3735,7 @@ penguins %&amp;gt;%
   padding-left: 12px;
 }
 
-#ecegfguyhs .gt_summary_row {
+#gkoadyzagv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3744,7 +3745,7 @@ penguins %&amp;gt;%
   padding-right: 5px;
 }
 
-#ecegfguyhs .gt_first_summary_row {
+#gkoadyzagv .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3754,7 +3755,7 @@ penguins %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_grand_summary_row {
+#gkoadyzagv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -3764,7 +3765,7 @@ penguins %&amp;gt;%
   padding-right: 5px;
 }
 
-#ecegfguyhs .gt_first_grand_summary_row {
+#gkoadyzagv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -3774,7 +3775,11 @@ penguins %&amp;gt;%
   border-top-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_table_body {
+#gkoadyzagv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#gkoadyzagv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -3783,7 +3788,7 @@ penguins %&amp;gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_footnotes {
+#gkoadyzagv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3797,13 +3802,13 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_footnote {
+#gkoadyzagv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#ecegfguyhs .gt_sourcenotes {
+#gkoadyzagv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -3817,46 +3822,46 @@ penguins %&amp;gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_sourcenote {
+#gkoadyzagv .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#ecegfguyhs .gt_left {
+#gkoadyzagv .gt_left {
   text-align: left;
 }
 
-#ecegfguyhs .gt_center {
+#gkoadyzagv .gt_center {
   text-align: center;
 }
 
-#ecegfguyhs .gt_right {
+#gkoadyzagv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ecegfguyhs .gt_font_normal {
+#gkoadyzagv .gt_font_normal {
   font-weight: normal;
 }
 
-#ecegfguyhs .gt_font_bold {
+#gkoadyzagv .gt_font_bold {
   font-weight: bold;
 }
 
-#ecegfguyhs .gt_font_italic {
+#gkoadyzagv .gt_font_italic {
   font-style: italic;
 }
 
-#ecegfguyhs .gt_super {
+#gkoadyzagv .gt_super {
   font-size: 65%;
 }
 
-#ecegfguyhs .gt_footnote_marks {
+#gkoadyzagv .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 &lt;/style&gt;
-&lt;div id=&#34;ecegfguyhs&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
+&lt;div id=&#34;gkoadyzagv&#34; style=&#34;overflow-x:auto;overflow-y:auto;width:auto;height:auto;&#34;&gt;&lt;table class=&#34;gt_table&#34;&gt;
   
   &lt;thead class=&#34;gt_col_headings&#34;&gt;
     &lt;tr&gt;
@@ -3947,15 +3952,15 @@ penguins %&amp;gt;%
 &lt;div class=&#34;footnotes&#34;&gt;
 &lt;hr /&gt;
 &lt;ol&gt;
-&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;Because we’re making our outer expectation conditional on &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt;, we can also move &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt; into our inner expectation. This becomes obvious in the &lt;code&gt;penguins&lt;/code&gt; example, since we only use the fitted values from one category of &lt;code&gt;species&lt;/code&gt; to get the adjusted group mean for that category.&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn2&#34;&gt;&lt;p&gt;We can rewrite &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; as the weighted summation of all possible values &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; can take. &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; will only ever be able to take values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; that vary over the range of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; since our value &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt; is already fixed. We can weight each of these possible &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; values by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt;, since that’s the probabilty &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; will take value &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; at our already-fixed &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt;. Thus, we can start to find &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt; by weighting each &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt; and adding them all up (see Partition Theorem).&lt;a href=&#34;#fnref2&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn3&#34;&gt;&lt;p&gt;We can get the expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; at each of those possible values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; by a similar process as step 2 (weighting each &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(Y=y|X=x, Z=z)\)&lt;/span&gt;.&lt;a href=&#34;#fnref3&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn4&#34;&gt;&lt;p&gt;By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.&lt;a href=&#34;#fnref4&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn5&#34;&gt;&lt;p&gt;The denominator of the first fraction cancels out with the numerator of the second fraction.&lt;a href=&#34;#fnref5&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn6&#34;&gt;&lt;p&gt;We can switch the summations around so that &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; is outside the summation over all values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt;. This lets us get the joint distribution of only &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt;.&lt;a href=&#34;#fnref6&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn7&#34;&gt;&lt;p&gt;This is a conditional expectation, written in the form of a joint distribution.&lt;a href=&#34;#fnref7&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn8&#34;&gt;&lt;p&gt;By the Partition Theorem.&lt;a href=&#34;#fnref8&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;li id=&#34;fn9&#34;&gt;&lt;p&gt;Rewriting the previous equation as an expectation.&lt;a href=&#34;#fnref9&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;Because we’re making our outer expectation conditional on &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt;, we can also move &lt;span class=&#34;math inline&#34;&gt;\(Z=z\)&lt;/span&gt; into our inner expectation. This becomes obvious in the &lt;code&gt;penguins&lt;/code&gt; example, since we only use the fitted values from one category of &lt;code&gt;species&lt;/code&gt; to get the adjusted group mean for that category.&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn2&#34;&gt;&lt;p&gt;We can rewrite &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; as the weighted summation of all possible values &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; can take. &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X,Z=z]\)&lt;/span&gt; will only ever be able to take values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; that vary over the range of &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; since our value &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt; is already fixed. We can weight each of these possible &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; values by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt;, since that’s the probabilty &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; will take value &lt;span class=&#34;math inline&#34;&gt;\(x\)&lt;/span&gt; at our already-fixed &lt;span class=&#34;math inline&#34;&gt;\(z\)&lt;/span&gt;. Thus, we can start to find &lt;span class=&#34;math inline&#34;&gt;\(E[E[Y|X,Z=z]|Z=z]\)&lt;/span&gt; by weighting each &lt;span class=&#34;math inline&#34;&gt;\(E[Y|X=x,Z=z]\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(X=x|Z=z)\)&lt;/span&gt; and adding them all up (see Partition Theorem).&lt;a href=&#34;#fnref2&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn3&#34;&gt;&lt;p&gt;We can get the expectation of &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; at each of those possible values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt; by a similar process as step 2 (weighting each &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; by &lt;span class=&#34;math inline&#34;&gt;\(P(Y=y|X=x, Z=z)\)&lt;/span&gt;.&lt;a href=&#34;#fnref3&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn4&#34;&gt;&lt;p&gt;By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.&lt;a href=&#34;#fnref4&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn5&#34;&gt;&lt;p&gt;The denominator of the first fraction cancels out with the numerator of the second fraction.&lt;a href=&#34;#fnref5&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn6&#34;&gt;&lt;p&gt;We can switch the summations around so that &lt;span class=&#34;math inline&#34;&gt;\(y\)&lt;/span&gt; is outside the summation over all values of &lt;span class=&#34;math inline&#34;&gt;\(X\)&lt;/span&gt;. This lets us get the joint distribution of only &lt;span class=&#34;math inline&#34;&gt;\(Y\)&lt;/span&gt; and &lt;span class=&#34;math inline&#34;&gt;\(Z\)&lt;/span&gt;.&lt;a href=&#34;#fnref6&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn7&#34;&gt;&lt;p&gt;This is a conditional expectation, written in the form of a joint distribution.&lt;a href=&#34;#fnref7&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn8&#34;&gt;&lt;p&gt;By the Partition Theorem.&lt;a href=&#34;#fnref8&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn9&#34;&gt;&lt;p&gt;Rewriting the previous equation as an expectation.&lt;a href=&#34;#fnref9&#34; class=&#34;footnote-back&#34;&gt;↩︎&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
 </description>

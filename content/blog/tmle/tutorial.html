@@ -58,7 +58,7 @@ HTML Image as link
 <h1>An Analyst’s Motivation for Learning TMLE 👩🏼‍💻</h1>
 <p>When I graduated with my MS in Biostatistics two years ago, I had a mental framework of statistics and data science that I think is pretty common among new graduates. It went like this:</p>
 <ol style="list-style-type: decimal">
-<li><p>If the goal is <span style="color: #3366ff;">inference</span> (e.g., an effect size with a confidence interval), use an <span style="color: #3366ff;">interpretable, usually parametric, model</span> and explain the meaning behind the coefficients and their standard errors.</p></li>
+<li><p>If the goal is <span style="color: #3366ff;">inference</span> (e.g., an effect size with a confidence interval), use an <span style="color: #3366ff;">interpretable, usually parametric, model</span> and explain what the coefficients and their standard errors mean.</p></li>
 <li><p>If the goal is <span style="color: #cc0000;">prediction</span>, use <span style="color: #cc0000;">data-adaptive machine learning algorithms</span> and then look at performance metrics and variable importance.</p></li>
 </ol>
 <p>This mentality changed drastically when I started learning about semiparametric estimation methods like TMLE in the context of causal inference. I quickly realized two flaws in this mental framework.</p>
@@ -737,8 +737,8 @@ HTML Image as link
 </a>
 </body>
 </html>
-<p>🚨 Warning: 🚨 this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let’s first look at <em>what</em> we’re doing, and then I’ll discuss at a very high-level <em>why</em> we’re doing that in a <a href="#why-does-tmle-work">later section</a>.</p>
-<p>The point of this step is to solve an <em>estimating equation</em> for the <em>efficient influence function</em> (EIF) of our estimand of interest. Without diving into what an EIF or estimating equation is, let’s accept for a moment that they will help us:</p>
+<p>🚨 Warning: this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let’s first look at <em>what</em> we’re doing, and then I’ll discuss at a very high-level <em>why</em> we’re doing that in a <a href="#why-does-tmle-work">later section</a>.</p>
+<p>The point of this step is to solve an <em>estimating equation</em> for the <em>efficient influence function</em> (EIF) of our estimand of interest. Without diving into what an EIF or an estimating equation is, let’s accept for a moment that they will help us:</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Update our initial outcome estimates</strong> so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see the <a href="#properties-of-tmle">statistical properties section</a>).</p></li>
 <li><p><strong>Calculate the variance</strong>, and thus the standard error, confidence interval, and p-value for our estimate of the ATE for hypothesis testing.</p></li>
@@ -768,12 +768,12 @@ HTML Image as link
 </html>
 <p>Almost done! Let’s recap:</p>
 <ul>
-<li><p>In Step 1, we obtained initial estimates of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate <span class="math inline">\(E[Y|A,W]\)</span>, not the ATE.</p></li>
-<li><p>We need to update those initial expected outcome estimates using information about the treatment mechanism, so we computed the expected probability of treatment, conditional on confounders, in Step 2.</p></li>
-<li><p>Then, in Step 3, we used quantities from Step 1 and Step 2 to solve an estimating equation for the EIF. We didn’t talk about <em>why</em> this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).</p></li>
-<li><p>Now, we will update our initial outcome estimates from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.</p></li>
+<li><p>In Step 1, we obtained <strong>initial estimates</strong> of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate <span class="math inline">\(E[Y|A,W]\)</span>, not the ATE.</p></li>
+<li><p>We need to update those initial expected outcome estimates using <strong>information about the treatment mechanism</strong>, so we computed the expected probability of treatment, conditional on confounders, in Step 2.</p></li>
+<li><p>Then, in Step 3, we used quantities from Step 1 and Step 2 to <strong>solve an estimating equation for the EIF</strong>. We didn’t talk about <em>why</em> this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).</p></li>
+<li><p>Now, we will <strong>update our initial outcome estimates</strong> from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.</p></li>
 </ul>
-<p>To <strong>update our expected outcome estimates</strong>, we first need to put the initial expected outcome estimates on the <span class="math inline">\(logit\)</span> scale using <code>qlogis()</code> because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can calculate how much we need to fluctuate our initial estimates using the product of the clever covariate and fluctuation parameter: <span class="math inline">\(H(A,\mathbf{W}) \times \hat{\epsilon}\)</span>. These are our outputs of Step 2 and 3, respectively. We will add that quantity to the initial outcome estimates to create updated outcome estimates. Finally, we can put the updated estimates back on the true outcome scale using <code>plogis()</code>.</p>
+<p>To update our expected outcome estimates, we first need to <strong>put the initial expected outcome estimates on the <span class="math inline">\(logit\)</span> scale</strong> using <code>qlogis()</code> because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can <strong>calculate how much we need to fluctuate our initial estimates</strong> using the product of the clever covariate and fluctuation parameter: <span class="math inline">\(H(A,\mathbf{W}) \times \hat{\epsilon}\)</span>. These are our outputs of Step 2 and 3, respectively. We will <strong>add that quantity to the initial outcome estimates to create updated outcome estimates</strong>. Finally, we can <strong>put the updated estimates back on the true outcome scale</strong> using <code>plogis()</code>.</p>
 <p><em>Note we can use <span class="math inline">\(expit\)</span> to show the inverse of the <span class="math inline">\(logit\)</span> function, and we will denote updates to the outcome regressions as <span class="math inline">\(\hat{\mathrm{E}}^*\)</span> instead of <span class="math inline">\(\hat{\mathrm{E}}\)</span>.</em></p>
 <p><strong>1. Update the expected outcomes of all observations, given the treatment they actually received and their baseline confounders.</strong></p>
 <p><span class="math display">\[\hat{\mathrm{E}}^*[Y|A,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A,\mathbf{W}]) + \hat{\epsilon}H(A,\mathbf{W}))\]</span></p>
@@ -812,12 +812,13 @@ tmle_ate</code></pre>
 </strong>
 </body>
 </html>
-<p>This point estimate is great, but we usually need an estimate of variance so that we can compute confidence intervals and test statistics. To obtain the standard errors, we first need to compute the <strong>Influence Function</strong> (IF), which is the empirical version of what we used our estimating equation to figure out in step 3. The IF tells us how much each observation influences the final estimate.</p>
+<p>This point estimate is great, but we usually need an <strong>estimate of variance</strong> so that we can compute confidence intervals, test statistics, p-values, etc.</p>
+<p>🚨: This is another step that contains quite a lot of theory, so I’ll give another birds-eye-view for now. If you’re curious, you can read more in the <a href="#why-does-tmle-work">Why Does TMLE Work?</a> and <a href="#resources-to-learn-more">Resources to Learn More</a> sections.</p>
+<p>To obtain the standard errors, we first need to compute the <strong>Influence Function</strong> (IF), which is the empirical version of what we used our estimating equation to figure out in step 3. The IF tells us <strong>how much each observation influences the final estimate</strong>.</p>
 <p>The equation for the IF looks like this:</p>
 <p><span class="math display">\[\hat{IF} = (Y-\hat{E^*}[Y|A,\mathbf{W}])H(A,\mathbf{W}) + \hat{E^*}[Y|A=1,\mathbf{W}] - \hat{E^*}[Y|A=0,\mathbf{W}] - \hat{ATE}\]</span></p>
 <pre class="r"><code>infl_fn &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate</code></pre>
-<p>Once we have the IF, we can take the square-root of its variance divided by the number of observations to get the standard error of our estimate.</p>
-<p><em>Note: This is another step that is theory-heavy so I won’t get into the details; however, I’ve linked resources in <a href="#references">References</a>.</em></p>
+<p>Once we have the IF, we can <strong>take the square-root of its variance divided by the number of observations</strong> to get the standard error of our estimate.</p>
 <p><span class="math display">\[\hat{SE} = \sqrt{\frac{var(\hat{IF})}{N}} \]</span></p>
 <p><img src="/img/tmle/15_ses.png" style="width:100.0%" /></p>
 <pre class="r"><code>tmle_se &lt;- sqrt(var(infl_fn)/nrow(dat_obs))</code></pre>
@@ -915,7 +916,7 @@ tmle_fit</code></pre>
 <p>This is the reason TMLE allows us to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our <strong>estimand</strong> of interest admits <strong>asymptotically linear estimation</strong>, and we are <strong>using properties of the EIF</strong> to <strong>construct an estimator</strong> with <strong>optimal statistical properties</strong> (i.e. double robustness, efficiency).</p>
 </div>
 <div id="resources-to-learn-more" class="section level1">
-<h1>Resources to learn more 🤓</h1>
+<h1>Resources to learn more</h1>
 <html>
 <head>
 </head>
@@ -956,7 +957,7 @@ tmle_fit</code></pre>
 <div id="causal-inference" class="section level3">
 <h3>Causal Inference</h3>
 <ul>
-<li><p>If you want to learn more about the foundations of causal inference, I suggest <a href="http://bayes.cs.ucla.edu/PRIMER/"><em>Causal Inference in Statistics: A Primer</em></a> by Judea Pearl and <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>What If</em></a> (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the <em>identification</em> side of causal inference.</p></li>
+<li><p>If you want to learn more about the foundations of causal inference, I suggest <a href="http://bayes.cs.ucla.edu/PRIMER/"><em>Causal Inference in Statistics: A Primer</em></a> by Judea Pearl and <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>What If</em></a> (Part I) by Miguel Hernan and James Robins. These are both good starters for learning about the <em>causal assumptions</em> necessary for causal inference.</p></li>
 <li><p>I also think the introductory chapters of the previously mentioned <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book do an excellent job of setting up the “roadmap” of causal inference.</p></li>
 </ul>
 <p>I’ll continue to update this page with resources as I discover them.</p>
@@ -1027,24 +1028,24 @@ dat_tmle &lt;- # add clever covariate data to dat_tmle
                        A == 0 ~ H_0))  # if A is 0 (not treated), assign H_0
 
 ### Step 3: Estimate fluctuation parameter
-glm_fit &lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial)
-eps &lt;- coef(glm_fit)
+glm_fit &lt;- glm(Y ~ -1 + offset(qlogis(Q_A)) + H_A, data=dat_tmle, family=binomial) # fixed intercept logistic regression
+eps &lt;- coef(glm_fit) # save the only coefficient, called epsilon in TMLE lit
 
 ### Step 4: Update Q&#39;s
 H_A &lt;- dat_tmle$H_A # for cleaner code in Q_A_update
-Q_A_update &lt;- plogis(qlogis(Q_A) + eps*H_A)
-Q_1_update &lt;- plogis(qlogis(Q_1) + eps*H_1)
-Q_0_update &lt;- plogis(qlogis(Q_0) + eps*H_0)
+Q_A_update &lt;- plogis(qlogis(Q_A) + eps*H_A) # updated expected outcome given treatment actually received
+Q_1_update &lt;- plogis(qlogis(Q_1) + eps*H_1) # updated expected outcome for everyone receiving treatment
+Q_0_update &lt;- plogis(qlogis(Q_0) + eps*H_0) # updated expected outcome for everyone not receiving treatment
 
 ### Step 5: Compute ATE
-tmle_ate &lt;- mean(Q_1_update - Q_0_update)
+tmle_ate &lt;- mean(Q_1_update - Q_0_update) # mean diff in updated expected outcome estimates
 
 ### Step 6: compute standard error, CIs and pvals
-infl_fn &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate
-tmle_se &lt;- sqrt(var(infl_fn)/nrow(dat_obs))
-conf_low &lt;- tmle_ate - 1.96*tmle_se
+infl_fn &lt;- (Y - Q_A_update) * H_A + Q_1_update - Q_0_update - tmle_ate # influence function
+tmle_se &lt;- sqrt(var(infl_fn)/nrow(dat_obs)) # standard error
+conf_low &lt;- tmle_ate - 1.96*tmle_se # 95% CI
 conf_high &lt;- tmle_ate + 1.96*tmle_se
-pval &lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se)))
+pval &lt;- 2 * (1 - pnorm(abs(tmle_ate / tmle_se))) # p-value at alpha .05
 
 tmle_ate
 conf_low

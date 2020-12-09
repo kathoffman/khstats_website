@@ -1,7 +1,7 @@
 ---
 title: "Customizable correlation plots in R"
 author: "Katherine Hoffman"
-date: 2020-03-14T21:13:14-05:00
+date: 2020-08-24T21:13:14-05:00
 categories: ["R","data visualization"]
 tags: ["R","ggplot2","purrr","rstats","correlation"]
 output: 

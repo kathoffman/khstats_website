@@ -406,16 +406,6 @@ I’m no expert in causal inference, but at this point I at least have an opinio
   </div>
   
   <div>
-    <h2><a href="/blog/covid/covid-functions/">My favorite lines of data wrangling code during the NYC COVID-19 outbreak</a></h2>
-    <div class="article-style">
-      
-      In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a 100% 200% COVID-19 statistician. I received many analysis requests, though not all of them from official investigators:
-My family recently learned I am the statistician for my hospital’s pulmonologists and now I get COVID-19 analysis requests from them, too pic.twitter.com/wlHmUaBh6Y — Kat Hoffman (@rkatlady) April 10, 2020   Jokes aside, I was really, really busy during the outbreak.
-      
-    </div>
-  </div>
-  
-  <div>
     <h2><a href="/blog/corr-plots/corr-plots/">Customizable correlation plots in R</a></h2>
     <div class="article-style">
       
@@ -433,6 +423,16 @@ My family recently learned I am the statistician for my hospital’s pulmonologi
       TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
  We can see this in a simple example using the palmerpenguins data:
   #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/covid/covid-functions/">Lessons learned: my top five coding &#39;tricks&#39; during the NYC COVID-19 outbreak</a></h2>
+    <div class="article-style">
+      
+      In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a 100% 200% COVID-19 statistician. I received many analysis requests, though not all of them from official investigators:
+My family recently learned I am the statistician for my hospital’s pulmonologists and now I get COVID-19 analysis requests from them, too pic.twitter.com/wlHmUaBh6Y — Kat Hoffman (@rkatlady) April 10, 2020   Jokes aside, I was really, really busy during the outbreak.
       
     </div>
   </div>

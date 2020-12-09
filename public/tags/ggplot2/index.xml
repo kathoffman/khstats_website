@@ -5,7 +5,7 @@
     <link>/tags/ggplot2/</link>
       <atom:link href="/tags/ggplot2/index.xml" rel="self" type="application/rss+xml" />
     <description>ggplot2</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 14 Mar 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 24 Aug 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>ggplot2</title>
@@ -15,7 +15,7 @@
     <item>
       <title>Customizable correlation plots in R</title>
       <link>/blog/corr-plots/corr-plots/</link>
-      <pubDate>Sat, 14 Mar 2020 21:13:14 -0500</pubDate>
+      <pubDate>Mon, 24 Aug 2020 21:13:14 -0500</pubDate>
       <guid>/blog/corr-plots/corr-plots/</guid>
       <description>
 

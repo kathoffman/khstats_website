@@ -1,7 +1,7 @@
 ---
 title: "Understanding Conditional and Iterated Expectations with a Linear Regression Model"
 author: "Katherine Hoffman"
-date: 2020-03-14T21:13:14-05:00
+date: 2020-07-31T21:13:14-05:00
 categories: ["R", "statistics"]
 tags: ["R","statistics","expectations"]
 math: true
@@ -44,13 +44,15 @@ penguins %&gt;%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#mcysheiceb .gt_table {
+#evxjckkhfd .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -67,7 +69,7 @@ penguins %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_heading {
+#evxjckkhfd .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -79,7 +81,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_title {
+#evxjckkhfd .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -89,7 +91,7 @@ penguins %&gt;%
   border-bottom-width: 0;
 }
 
-#mcysheiceb .gt_subtitle {
+#evxjckkhfd .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -99,13 +101,13 @@ penguins %&gt;%
   border-top-width: 0;
 }
 
-#mcysheiceb .gt_bottom_border {
+#evxjckkhfd .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_col_headings {
+#evxjckkhfd .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -120,7 +122,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_col_heading {
+#evxjckkhfd .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -140,7 +142,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#mcysheiceb .gt_column_spanner_outer {
+#evxjckkhfd .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -152,15 +154,15 @@ penguins %&gt;%
   padding-right: 4px;
 }
 
-#mcysheiceb .gt_column_spanner_outer:first-child {
+#evxjckkhfd .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#mcysheiceb .gt_column_spanner_outer:last-child {
+#evxjckkhfd .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#mcysheiceb .gt_column_spanner {
+#evxjckkhfd .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -172,7 +174,7 @@ penguins %&gt;%
   width: 100%;
 }
 
-#mcysheiceb .gt_group_heading {
+#evxjckkhfd .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -194,7 +196,7 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#mcysheiceb .gt_empty_group_heading {
+#evxjckkhfd .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -209,19 +211,15 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#mcysheiceb .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#mcysheiceb .gt_from_md > :first-child {
+#evxjckkhfd .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#mcysheiceb .gt_from_md > :last-child {
+#evxjckkhfd .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#mcysheiceb .gt_row {
+#evxjckkhfd .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -240,7 +238,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#mcysheiceb .gt_stub {
+#evxjckkhfd .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -252,7 +250,7 @@ penguins %&gt;%
   padding-left: 12px;
 }
 
-#mcysheiceb .gt_summary_row {
+#evxjckkhfd .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -262,7 +260,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#mcysheiceb .gt_first_summary_row {
+#evxjckkhfd .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -272,7 +270,7 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_grand_summary_row {
+#evxjckkhfd .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -282,7 +280,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#mcysheiceb .gt_first_grand_summary_row {
+#evxjckkhfd .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -292,7 +290,11 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_table_body {
+#evxjckkhfd .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#evxjckkhfd .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -301,7 +303,7 @@ penguins %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_footnotes {
+#evxjckkhfd .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -315,13 +317,13 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_footnote {
+#evxjckkhfd .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#mcysheiceb .gt_sourcenotes {
+#evxjckkhfd .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -335,46 +337,46 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#mcysheiceb .gt_sourcenote {
+#evxjckkhfd .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#mcysheiceb .gt_left {
+#evxjckkhfd .gt_left {
   text-align: left;
 }
 
-#mcysheiceb .gt_center {
+#evxjckkhfd .gt_center {
   text-align: center;
 }
 
-#mcysheiceb .gt_right {
+#evxjckkhfd .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#mcysheiceb .gt_font_normal {
+#evxjckkhfd .gt_font_normal {
   font-weight: normal;
 }
 
-#mcysheiceb .gt_font_bold {
+#evxjckkhfd .gt_font_bold {
   font-weight: bold;
 }
 
-#mcysheiceb .gt_font_italic {
+#evxjckkhfd .gt_font_italic {
   font-style: italic;
 }
 
-#mcysheiceb .gt_super {
+#evxjckkhfd .gt_super {
   font-size: 65%;
 }
 
-#mcysheiceb .gt_footnote_marks {
+#evxjckkhfd .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="mcysheiceb" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="evxjckkhfd" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -428,13 +430,15 @@ penguins %&gt;%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#ecegfguyhs .gt_table {
+#gkoadyzagv .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -451,7 +455,7 @@ penguins %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_heading {
+#gkoadyzagv .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -463,7 +467,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_title {
+#gkoadyzagv .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -473,7 +477,7 @@ penguins %&gt;%
   border-bottom-width: 0;
 }
 
-#ecegfguyhs .gt_subtitle {
+#gkoadyzagv .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -483,13 +487,13 @@ penguins %&gt;%
   border-top-width: 0;
 }
 
-#ecegfguyhs .gt_bottom_border {
+#gkoadyzagv .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_col_headings {
+#gkoadyzagv .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -504,7 +508,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_col_heading {
+#gkoadyzagv .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -524,7 +528,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#ecegfguyhs .gt_column_spanner_outer {
+#gkoadyzagv .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -536,15 +540,15 @@ penguins %&gt;%
   padding-right: 4px;
 }
 
-#ecegfguyhs .gt_column_spanner_outer:first-child {
+#gkoadyzagv .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ecegfguyhs .gt_column_spanner_outer:last-child {
+#gkoadyzagv .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ecegfguyhs .gt_column_spanner {
+#gkoadyzagv .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -556,7 +560,7 @@ penguins %&gt;%
   width: 100%;
 }
 
-#ecegfguyhs .gt_group_heading {
+#gkoadyzagv .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -578,7 +582,7 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#ecegfguyhs .gt_empty_group_heading {
+#gkoadyzagv .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -593,19 +597,15 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#ecegfguyhs .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
-#ecegfguyhs .gt_from_md > :first-child {
+#gkoadyzagv .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ecegfguyhs .gt_from_md > :last-child {
+#gkoadyzagv .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ecegfguyhs .gt_row {
+#gkoadyzagv .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -624,7 +624,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#ecegfguyhs .gt_stub {
+#gkoadyzagv .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -636,7 +636,7 @@ penguins %&gt;%
   padding-left: 12px;
 }
 
-#ecegfguyhs .gt_summary_row {
+#gkoadyzagv .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -646,7 +646,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#ecegfguyhs .gt_first_summary_row {
+#gkoadyzagv .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -656,7 +656,7 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_grand_summary_row {
+#gkoadyzagv .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -666,7 +666,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#ecegfguyhs .gt_first_grand_summary_row {
+#gkoadyzagv .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -676,7 +676,11 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_table_body {
+#gkoadyzagv .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#gkoadyzagv .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -685,7 +689,7 @@ penguins %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_footnotes {
+#gkoadyzagv .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -699,13 +703,13 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_footnote {
+#gkoadyzagv .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#ecegfguyhs .gt_sourcenotes {
+#gkoadyzagv .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -719,46 +723,46 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#ecegfguyhs .gt_sourcenote {
+#gkoadyzagv .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#ecegfguyhs .gt_left {
+#gkoadyzagv .gt_left {
   text-align: left;
 }
 
-#ecegfguyhs .gt_center {
+#gkoadyzagv .gt_center {
   text-align: center;
 }
 
-#ecegfguyhs .gt_right {
+#gkoadyzagv .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ecegfguyhs .gt_font_normal {
+#gkoadyzagv .gt_font_normal {
   font-weight: normal;
 }
 
-#ecegfguyhs .gt_font_bold {
+#gkoadyzagv .gt_font_bold {
   font-weight: bold;
 }
 
-#ecegfguyhs .gt_font_italic {
+#gkoadyzagv .gt_font_italic {
   font-style: italic;
 }
 
-#ecegfguyhs .gt_super {
+#gkoadyzagv .gt_super {
   font-size: 65%;
 }
 
-#ecegfguyhs .gt_footnote_marks {
+#gkoadyzagv .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="ecegfguyhs" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="gkoadyzagv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -849,14 +853,14 @@ penguins %&gt;%
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Because we’re making our outer expectation conditional on <span class="math inline">\(Z=z\)</span>, we can also move <span class="math inline">\(Z=z\)</span> into our inner expectation. This becomes obvious in the <code>penguins</code> example, since we only use the fitted values from one category of <code>species</code> to get the adjusted group mean for that category.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>We can rewrite <span class="math inline">\(E[Y|X,Z=z]\)</span> as the weighted summation of all possible values <span class="math inline">\(X\)</span> can take. <span class="math inline">\(E[Y|X,Z=z]\)</span> will only ever be able to take values of <span class="math inline">\(X\)</span> that vary over the range of <span class="math inline">\(x\)</span>, <span class="math inline">\(E[Y|X=x,Z=z]\)</span> since our value <span class="math inline">\(z\)</span> is already fixed. We can weight each of these possible <span class="math inline">\(E[Y|X=x,Z=z]\)</span> values by <span class="math inline">\(P(X=x|Z=z)\)</span>, since that’s the probabilty <span class="math inline">\(X\)</span> will take value <span class="math inline">\(x\)</span> at our already-fixed <span class="math inline">\(z\)</span>. Thus, we can start to find <span class="math inline">\(E[E[Y|X,Z=z]|Z=z]\)</span> by weighting each <span class="math inline">\(E[Y|X=x,Z=z]\)</span> by <span class="math inline">\(P(X=x|Z=z)\)</span> and adding them all up (see Partition Theorem).<a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>We can get the expectation of <span class="math inline">\(Y\)</span> at each of those possible values of <span class="math inline">\(X\)</span> by a similar process as step 2 (weighting each <span class="math inline">\(y\)</span> by <span class="math inline">\(P(Y=y|X=x, Z=z)\)</span>.<a href="#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p>By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.<a href="#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn5"><p>The denominator of the first fraction cancels out with the numerator of the second fraction.<a href="#fnref5" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p>We can switch the summations around so that <span class="math inline">\(y\)</span> is outside the summation over all values of <span class="math inline">\(X\)</span>. This lets us get the joint distribution of only <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span>.<a href="#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p>This is a conditional expectation, written in the form of a joint distribution.<a href="#fnref7" class="footnote-back">↩</a></p></li>
-<li id="fn8"><p>By the Partition Theorem.<a href="#fnref8" class="footnote-back">↩</a></p></li>
-<li id="fn9"><p>Rewriting the previous equation as an expectation.<a href="#fnref9" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>Because we’re making our outer expectation conditional on <span class="math inline">\(Z=z\)</span>, we can also move <span class="math inline">\(Z=z\)</span> into our inner expectation. This becomes obvious in the <code>penguins</code> example, since we only use the fitted values from one category of <code>species</code> to get the adjusted group mean for that category.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>We can rewrite <span class="math inline">\(E[Y|X,Z=z]\)</span> as the weighted summation of all possible values <span class="math inline">\(X\)</span> can take. <span class="math inline">\(E[Y|X,Z=z]\)</span> will only ever be able to take values of <span class="math inline">\(X\)</span> that vary over the range of <span class="math inline">\(x\)</span>, <span class="math inline">\(E[Y|X=x,Z=z]\)</span> since our value <span class="math inline">\(z\)</span> is already fixed. We can weight each of these possible <span class="math inline">\(E[Y|X=x,Z=z]\)</span> values by <span class="math inline">\(P(X=x|Z=z)\)</span>, since that’s the probabilty <span class="math inline">\(X\)</span> will take value <span class="math inline">\(x\)</span> at our already-fixed <span class="math inline">\(z\)</span>. Thus, we can start to find <span class="math inline">\(E[E[Y|X,Z=z]|Z=z]\)</span> by weighting each <span class="math inline">\(E[Y|X=x,Z=z]\)</span> by <span class="math inline">\(P(X=x|Z=z)\)</span> and adding them all up (see Partition Theorem).<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>We can get the expectation of <span class="math inline">\(Y\)</span> at each of those possible values of <span class="math inline">\(X\)</span> by a similar process as step 2 (weighting each <span class="math inline">\(y\)</span> by <span class="math inline">\(P(Y=y|X=x, Z=z)\)</span>.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p>By the Law of Conditional Probability, we can rewrite our conditional probabilities as joint distributions.<a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+<li id="fn5"><p>The denominator of the first fraction cancels out with the numerator of the second fraction.<a href="#fnref5" class="footnote-back">↩︎</a></p></li>
+<li id="fn6"><p>We can switch the summations around so that <span class="math inline">\(y\)</span> is outside the summation over all values of <span class="math inline">\(X\)</span>. This lets us get the joint distribution of only <span class="math inline">\(Y\)</span> and <span class="math inline">\(Z\)</span>.<a href="#fnref6" class="footnote-back">↩︎</a></p></li>
+<li id="fn7"><p>This is a conditional expectation, written in the form of a joint distribution.<a href="#fnref7" class="footnote-back">↩︎</a></p></li>
+<li id="fn8"><p>By the Partition Theorem.<a href="#fnref8" class="footnote-back">↩︎</a></p></li>
+<li id="fn9"><p>Rewriting the previous equation as an expectation.<a href="#fnref9" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>

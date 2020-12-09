@@ -5,7 +5,7 @@
     <link>/tags/tidylog/</link>
       <atom:link href="/tags/tidylog/index.xml" rel="self" type="application/rss+xml" />
     <description>tidylog</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 10 Sep 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 10 Jul 2020 21:13:14 -0500</lastBuildDate>
     <image>
       <url>/img/icon-192.png</url>
       <title>tidylog</title>
@@ -13,9 +13,9 @@
     </image>
     
     <item>
-      <title>My favorite lines of data wrangling code during the NYC COVID-19 outbreak</title>
+      <title>Lessons learned: my top five coding &#39;tricks&#39; during the NYC COVID-19 outbreak</title>
       <link>/blog/covid/covid-functions/</link>
-      <pubDate>Thu, 10 Sep 2020 21:13:14 -0500</pubDate>
+      <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
       <guid>/blog/covid/covid-functions/</guid>
       <description>
 &lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
@@ -155,6 +155,8 @@ labs &amp;lt;- map_dfr(100:110, function(x){
   margin-right: auto;
   color: #333333;
   font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
   background-color: #FFFFFF;
   width: auto;
   border-top-style: solid;
@@ -313,10 +315,6 @@ labs &amp;lt;- map_dfr(100:110, function(x){
   vertical-align: middle;
 }
 
-#juwvdhggpz .gt_striped {
-  background-color: rgba(128, 128, 128, 0.05);
-}
-
 #juwvdhggpz .gt_from_md &gt; :first-child {
   margin-top: 0;
 }
@@ -394,6 +392,10 @@ labs &amp;lt;- map_dfr(100:110, function(x){
   border-top-style: double;
   border-top-width: 6px;
   border-top-color: #D3D3D3;
+}
+
+#juwvdhggpz .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
 }
 
 #juwvdhggpz .gt_table_body {
