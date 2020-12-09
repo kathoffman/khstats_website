@@ -4,7 +4,7 @@ author: "Katherine Hoffman"
 date: 2020-09-30T01:13:14-05:00
 categories: ["statistics"]
 tags: ["critical care research","sofa scores","combinatorics"]
-draft: false
+draft: true
 output: 
   blogdown::html_page:
     toc: false
