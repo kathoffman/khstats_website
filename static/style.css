@@ -1,0 +1,6 @@
+/* by element type */
+h2 { 
+    color: navy; /* all <h2> elements are navy and bold */
+    font-weight: bold;
+}
+

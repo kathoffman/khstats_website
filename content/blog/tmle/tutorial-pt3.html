@@ -1,0 +1,96 @@
+---
+title: "An Illustrated Guide to TMLE, Part III: Properties, Theory, and Learning More"
+author: "Katherine Hoffman"
+date: 2020-12-11T02:13:14-05:00
+draft: false
+categories: ["statistics","R"]
+math: true
+tags: ["statistics","causal inference","R","lmtp","TMLE","Targeted Maximum Likelihood Estimation","introduction to TMLE","targeted learning"]
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+---
+
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
+
+
+<blockquote>
+<p>The is the third and final post in a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). In this section, I discuss more <a href="#properties-of-tmle"><strong>statistical properties of TMLE</strong></a>, offer a brief <a href="#why-does-tmle-work"><strong>explanation for the theory behind TMLE</strong></a>, and provide <a href="#resources-to-learn-more"><strong>resources for learning more</strong></a>.</p>
+</blockquote>
+<hr />
+<div id="properties-of-tmle" class="section level1">
+<h1>Properties of TMLE 📈</h1>
+<p>To reiterate a point from <em>Parts I</em> and <em>II</em>, a main motivation for TMLE is that it <strong>allows the use of machine learning algorithms while still yielding asymptotic properties for inference</strong>. This is notably <em>not</em> true for many estimators. For example, in <a href="https://khstats.com/blog/tmle/tutorial-pt2"><em>Part II</em></a> we walked through TMLE for the Average Treatment Effect (ATE). Two frequently used alternatives to estimating the ATE are G-computation and Inverse Probability Weighting (see <em>Part II, Step 1</em> and <em>references</em>). In general, neither yield valid standard errors unless <em>a-priori</em> specified parametric models are used, but this reliance on parametric models can bias results. There are many simulation studies that show this.</p>
+<p>Another beneficial property of TMLE is that it is a <strong>doubly robust</strong> estimator. This means that if either the regression to estimate the expected outcome, or the regression to estimate the probability of treatment, are correctly specified (formally, their bias goes to zero as sample size grows large, meaning they are <strong>consistent</strong>), the final TMLE estimate will be consistent.</p>
+<p>If both regressions are consistent, the <strong>final estimate will reach the smallest possible variance at a rate of <span class="math inline">\(\sqrt{n}\)</span></strong>, which is the fastest possible rate of convergence and equivalent to parametric maximum likelihood estimation. The reason we use superlearning for estimating the outcome and treatment regressions is to give us the best possible chance of having two correctly specified models and obtaining <strong>efficiency</strong>.</p>
+<p><img src="/img/tmle_props.png" /></p>
+<p>Even among other doubly robust estimators, TMLE is appealing because its estimates will always stay within the bounds of the original outcome. This is because it is part of a class of <strong>substitution estimators</strong>. There is another class of doubly robust, semiparametric estimation methods frequently used in causal inference that are referred to as <strong>one-step estimators</strong>, but they can sometimes yield final estimates that are outside the original outcome scale. The equivalent one-step estimator for the ATE is called <strong>Augmented Inverse Probability Weighting (AIPW)</strong>.</p>
+</div>
+<div id="why-does-tmle-work" class="section level1">
+<h1>Why does TMLE work? ✨</h1>
+<p>Truly understanding why TMLE works requires semiparametric theory that falls far outside the scope of this tutorial. However, the theory is interesting, so I’ll give a brief, high-level explanation, and then you can look at the <a href="#resources-to-learn-more">references</a> if you’re curious to learn more. Importantly, the explanation I outline here is more than sufficient and certainly not necessary to appropriately implement TMLE as an analyst.</p>
+<p><strong>TMLE relies on the following ideas:</strong></p>
+<ol style="list-style-type: decimal">
+<li><p>Some estimands allow for <strong>asymptotically linear estimation</strong>. This means that estimators can be represented as sample averages (plus a term that converges to zero).</p></li>
+<li><p>The quantities being averaged for asymptotically linear estimators are called <strong>influence functions</strong>. An influence function is a function that quantifies how much influence each observation has on the estimator. For this reason, it is very <strong>useful to characterize the variance of the estimator</strong>. In parametric maximum likelihood estimation, the influence function is related the score function.</p></li>
+<li><p>The <strong>efficient influence function</strong> (EIF) is the influence function that achieves the efficiency bound (think Cramer Rao Lower Bound from parametric maximum likelihood estimation) and <strong>can be used to create efficient estimators.</strong></p></li>
+<li><p>If we want to <strong>construct an estimator that is efficient</strong>, we can take advantage of the EIF to endow the estimator with useful asymptotic properties.</p></li>
+</ol>
+<p>This is the reason TMLE allows us to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our <strong>estimand</strong> of interest admits <strong>asymptotically linear estimation</strong>, and we are <strong>using properties of the EIF</strong> to <strong>construct an estimator</strong> with <strong>optimal statistical properties</strong> (e.g. double robustness).</p>
+</div>
+<div id="resources-to-learn-more" class="section level1">
+<h1>Resources to learn more</h1>
+<!-- ![](/img/tmle/self_portrait.jpg){width=45%} -->
+<html>
+<head>
+</head>
+<body>
+<a href="">
+<img src="/img/tmle/self_portrait.jpg"
+               style="float:right; padding-right:20px; padding-top:-20px; padding-left:20px; padding-bottom:-50px;" width="34%">
+</a>
+</body>
+</html>
+<p>I could only cover so much in this post, but here are the resources I’ve used the most to learn about TMLE, semiparametric estimation, and causal inference. If you are new to any or all of it, there is a good chance it will take <em>several</em> reads of these materials before the concepts begin to make any sense. Don’t get discouraged!</p>
+<div id="tmle" class="section level3">
+<h3>TMLE</h3>
+<ul>
+<li><p>The paper I referred to most often while learning TMLE was <a href="https://academic.oup.com/aje/article/185/1/65/2662306"><em>Targeted Maximum Likelihood Estimation for Causal Inference in Observational Studies</em></a> by Megan S. Schuler and Sherri Rose. It has a nice step-by-step written explanation and details the statistical advantages of TMLE for an applied thinker.</p></li>
+<li><p>I also really like the written explanations in the <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book (Chapters 4 and 5) by Mark van der Laan and Sherri Rose. The notation was often too difficult for me to follow, but the words themselves make a lot of sense.</p></li>
+<li><p>Miguel Angel Luque-Fernandez wrote an <a href="https://migariane.github.io/TMLE.nb.html">excellent bookdown tutorial on TMLE</a>, also with step-by-step <code>R</code> code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the <a href="https://migariane.github.io/DeltaMethodEpiTutorial.nb.html">functional delta method</a> which is part of the theory behind the standard errors (see <a href="https://khstats.com/blog/tmle/tutorial-pt3"><em>Part II, Step 6</em></a>).</p></li>
+<li><p>Other code-based web-based tutorials on TMLE include David Benkeser and Antoine Chambaz’ <a href="https://achambaz.github.io/tlride/">A Ride in Targeted Learning Territory</a> and the authors of the <code>R</code> package suite <a href="https://tlverse.org/"><code>tlverse</code></a>’s <a href="https://tlverse.org/tlverse-handbook/tmle3.html">Hitchhiker’s Guide to Targeted Learning: The TMLE Framework</a>.</p></li>
+</ul>
+</div>
+<div id="semiparametric-theory-and-influence-functions" class="section level3">
+<h3>Semiparametric Theory and Influence Functions</h3>
+<ul>
+<li><p>Edward Kennedy has several well-written pieces on semiparametric estimation in causal inference. I recommend starting with:</p>
+<ul>
+<li><p>His introductory paper on <a href="https://arxiv.org/pdf/1709.06418.pdf">Semiparametric Theory</a></p></li>
+<li><p>His <a href="http://www.ehkennedy.com/uploads/5/8/4/5/58450265/unc_2019_cirg.pdf">slideshow tutorial</a> <em>Nonparametric efficiency theory and machine learning in causal inference</em></p></li>
+</ul></li>
+<li><p>My favorite resource so far for learning specifically about influence functions has been <a href="https://www.tandfonline.com/doi/full/10.1080/00031305.2020.1717620">Visually Communicating Influence Functions</a> by Aaron Fisher and Edward Kennedy. However, this paper didn’t make sense to me until I worked through this <a href="https://observablehq.com/@herbps10/one-step-estimators-and-pathwise-derivatives">interactive tutorial</a> by Herb Susmann. I suggest playing around with the interactive examples first, and then trying to work through the paper.</p></li>
+<li><p>The derivation of the Efficient Influence Function (EIF) in TMLE is in the Appendix of <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a>.</p></li>
+</ul>
+</div>
+<div id="causal-inference" class="section level3">
+<h3>Causal Inference</h3>
+<ul>
+<li><p>As noted in <em>Part I</em>, TMLE is an estimation technique which <em>can</em> be used for causal inference. If you want to learn about the foundations of causal inference, I suggest two different introductory texts below. Note that these provide fairly different frameworks (notation, descriptions of assumptions) to reach the same conclusions, but both provide useful perspectives.</p>
+<ul>
+<li><p><a href="http://bayes.cs.ucla.edu/PRIMER/"><em>Causal Inference in Statistics: A Primer</em></a> by Judea Pearl. Notably, Pearl does not discuss estimation methods, he only focuses on the assumptions side of causal inference.</p></li>
+<li><p><a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>What If</em></a> by Miguel Hernan and James Robins. Notably, Hernan and Robins only discuss parametric estimation methods, so you will not find TMLE or AIPW in these texts.</p></li>
+</ul></li>
+<li><p>I also think the introductory chapters of the previously mentioned <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> book (Chapters 1 and 2) do an excellent job of setting up the “roadmap” of causal inference.</p></li>
+</ul>
+<p>I’ll continue to update this page with resources as I discover them.</p>
+<p>Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through <a href="mailto:kathoffman.stats@gmail.com">email</a>.</p>
+</div>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1>Acknowledgements</h1>
+<p>This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Angel Luque-Fernandez’s helpful feedback on the visual guide.</p>
+<p>Lastly, many thanks to Axel Martin, Nick Williams, Anjile An, Adam Peterson, Alan Wu, and Will Simmons for providing suggestions on various drafts of this art project!</p>
+</div>
