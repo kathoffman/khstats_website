@@ -24,11 +24,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 To reiterate a point from *Parts I* and *II*, a main motivation for TMLE is that it **allows the use of machine learning algorithms while still yielding asymptotic properties for inference**. This is notably *not* true for many estimators.
 
-For example, in [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2) we walked through TMLE for the Average Treatment Effect (ATE). Two frequently used alternatives to estimating the ATE are G-computation and Inverse Probability Weighting (see [*Part II, Step 1*](https://khstats.com/blog/tmle/tutorial-pt2/#step-1-estimate-the-outcome) and *references*(#resources-to-learn-more)). In general, neither yield valid standard errors unless *a-priori* specified parametric models are used, but this reliance on parametric assumptions can bias results. There are many simulation studies that show this.
+For example, in [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2) we walked through TMLE for the Average Treatment Effect (ATE). Two frequently used alternatives to estimating the ATE are G-computation and Inverse Probability Weighting (see [*Part II, Step 1*](https://khstats.com/blog/tmle/tutorial-pt2/#step-1-estimate-the-outcome) and [*references*](#resources-to-learn-more)). In general, neither yield valid standard errors unless *a-priori* specified parametric models are used, and this reliance on parametric assumptions can bias results. There are many simulation studies that show this.
 
 Another beneficial property of TMLE is that it is a **doubly robust** estimator. This means that if either the regression to estimate the expected outcome, or the regression to estimate the probability of treatment, are correctly specified (formally, their bias goes to zero as sample size grows large, meaning they are **consistent**), the final TMLE estimate will be consistent.
 
-If both regressions are consistent, the **final estimate will reach the smallest possible variance at a rate of $\sqrt{n}$**, which is the fastest possible rate of convergence and equivalent to parametric maximum likelihood estimation. The reason we use superlearning for estimating the outcome and treatment regressions is to give us the best possible chance of having two correctly specified models and obtaining **efficiency**.
+If both regressions are consistent, the **final estimate will reach the smallest possible variance at a rate of $\sqrt{n}$**, which is the fastest possible rate of convergence and equivalent to parametric maximum likelihood estimation. The reason we use superlearning for estimating the outcome and treatment regressions is to give us the best possible chance of having two correctly specified models and obtaining an **efficient estimate**.
 
 ![](/img/tmle_props.png)
 
@@ -92,15 +92,15 @@ I could only cover so much in this post, but here are the resources I've used th
 
 ### Causal Inference
 
-- As noted in *Part I*, TMLE is an estimation technique which *can* be used for causal inference. If you want to learn about the foundations of causal inference, I suggest two different introductory texts below. Note that these provide fairly different frameworks (notation, descriptions of assumptions) to reach the same conclusions, but both provide useful perspectives.
+- As emphasized in *Part I*, TMLE is an estimation technique which *can* be used for causal inference. If you want to learn about the foundations of causal inference, I suggest two different introductory texts below. Note that these provide fairly different frameworks (notation, descriptions of assumptions) to reach the same conclusions, but both provide useful perspectives.
 
-  - [*Causal Inference in Statistics: A Primer*](http://bayes.cs.ucla.edu/PRIMER/) by Judea Pearl. Notably, Pearl does not discuss estimation methods, he only focuses on the assumptions side of causal inference.
+  - [*Causal Inference in Statistics: A Primer*](http://bayes.cs.ucla.edu/PRIMER/) by Judea Pearl. Pearl does not discuss estimation methods, but rather focuses on the assumptions, or identification, side of causal inference. Thus, you will not find TMLE mentioned in this text.
   
-  - [*What If*](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/) by Miguel Hernan and James Robins. Notably, Hernan and Robins only discuss parametric estimation methods, so you will not find TMLE or AIPW in these texts.
+  - [*What If*](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/) by Miguel Hernan and James Robins. Notably, Hernan and Robins only discuss parametric estimation methods, so you will also not find TMLE or AIPW in this text.
   
 - I also think the introductory chapters of the previously mentioned [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1) book (Chapters 1 and 2) do an excellent job of setting up the "roadmap" of causal inference.
 
-I'll continue to update this page with resources as I discover them.
+I'll continue to update this page with beginner's resources as I discover them.
 
 Feedback or clarifications on this post is welcome, either from the new learners of TMLE or experts in causal inference. The best way to reach me is through [email](mailto:kathoffman.stats@gmail.com).
 

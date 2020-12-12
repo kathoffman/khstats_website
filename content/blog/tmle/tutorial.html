@@ -43,7 +43,7 @@ output:
 <h3>Part III: Evaluation</h3>
 <ol start="7" style="list-style-type: decimal">
 <li><a href="https://khstats.com/blog/tmle/tutorial-pt3/#properties-of-tmle">Properties of TMLE 📈</a></li>
-<li><a href="https://khstats.com/blog/tumletutorial-pt3/#why-does-tmle-work">Why does TMLE work? ✨</a></li>
+<li><a href="https://khstats.com/blog/tmle/tutorial-pt3/#why-does-tmle-work">Why does TMLE work? ✨</a></li>
 <li><a href="https://khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more">Resources to learn more 🤓</a></li>
 </ol>
 <hr />
@@ -76,24 +76,24 @@ output:
 <em>Semiparametric estimation methods like TMLE can rely on machine learning to avoid making unrealistic parametric assumptions about the underlying distribution of the data (e.g. multivariate normality).</em>
 </figcaption>
 <p>The way we use the machine learning estimates in TMLE, surprisingly enough, yields <strong>known asymptotic properties of bias and variance</strong> – just like we see in parametric maximum likelihood estimation – for our target estimand.</p>
-<p>Besides allowing us to compute 95% confidence intervals and p-values around our estimands of interest even after using ML “under the hood,” TMLE boasts a number of other beneficial properties, such as double robustness. These are discussed further in <a href="https://khstats.com/blog/tmle/tutorial-pt3/"><em>Part III</em></a>.</p>
+<p>Besides allowing us to compute 95% confidence intervals and p-values around our estimates even after using machine learning, TMLE boasts a number of other beneficial properties, such as double robustness. These are discussed further in <a href="https://khstats.com/blog/tmle/tutorial-pt3/"><em>Part III</em></a>.</p>
 </div>
 <div id="is-tmle-causal-inference" class="section level1">
 <h1>Is TMLE Causal Inference? 🤔</h1>
 <p>If you’ve heard about TMLE before, it was likely in the context of <strong>causal inference</strong>. Although TMLE was developed for causal inference due to its many attractive statistical properties, it cannot be considered causal inference by itself. Causal inference is a two-step process that first requires <strong>causal assumptions</strong><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> before a statistical estimand can be interpreted causally.</p>
 <p><strong>TMLE can be used to estimate various statistical estimands</strong> (odds ratio, risk ratio, mean outcome difference, etc.) <strong>even when causal assumptions are not met</strong>. TMLE is, as its name implies, simply a tool for estimation.</p>
-<p>In <a href="https://khstats.com/blog/tmle/tutorial-pt2/"><em>Part II</em></a>, I’ll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the <strong>Average Treatment Effect (ATE)</strong>, or the mean difference in outcomes for a world in which everyone had received the treatment compared to a world in which everyone had not.</p>
+<p>In <a href="https://khstats.com/blog/tmle/tutorial-pt2/"><em>Part II</em></a>, I’ll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the <strong>Average Treatment Effect (ATE)</strong>, or the mean difference in outcomes in a world in which everyone had received the treatment compared to a world in which everyone had not.</p>
 <p>⤴️<a href="#table-of-contents"><em>Back to the top</em></a></p>
 <hr />
 <div id="references" class="section level3">
 <h3><em>References</em></h3>
-<p>My primary reference for all three posts is <em>Targeted Learning</em> by Mark van der Laan and Sherri Rose. I detail many other resources I’ve used to learn TMLE, semiparametric theory, and causal inference in <a href="https://khstats.com/blog/tmle/tutorial-pt3/"><em>Part III</em></a>.</p>
+<p>My primary reference for all three posts is <a href="https://link.springer.com/book/10.1007/978-1-4419-9782-1"><em>Targeted Learning</em></a> by Mark van der Laan and Sherri Rose. I detail many other resources I’ve used to learn TMLE, semiparametric theory, and causal inference in <a href="https://khstats.com/blog/tmle/tutorial-pt3/"><em>Part III</em></a>.</p>
 </div>
 </div>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>An informal way to think about semiparametric estimation is that we’re allowing at least one of the parameters in the model to go without a particular functional form. You can contrast this to linear regression, which is parametric and assumes that each coefficient is normally distributed with mean 0 and a standard deviation of <span class="math inline">\(\sigma^2\)</span>. I’ve found this <a href="https://sites.stat.washington.edu/jaw/JAW-papers/NR/jaw-BKR-EncylSS.pdf">review of semiparametric inference</a> to be helpful.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>I won’t discuss causal assumptions in these posts, but this is referring to foundational concepts in causal inference like consistency, exchangeability, and positivity. A primary motivation for using TMLE and other semiparametric estimation methods for causal inference is that once you’ve spent time carefully designing a study and evaluating these assumptions, it does not make sense to risk damaging an otherwise well-designed analysis by making an unrealistic assumption about the underlying distribution of the data.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>Semiparametric estimation means we’re allowing at least one of the parameters in our model to have infinite dimensions. You can contrast this to linear regression, which is parametric and assumes that each coefficient is normally distributed with mean 0 and a standard deviation of <span class="math inline">\(\sigma^2\)</span>. I’ve found this <a href="https://sites.stat.washington.edu/jaw/JAW-papers/NR/jaw-BKR-EncylSS.pdf">review of semiparametric inference</a> to be helpful.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>I won’t discuss causal assumptions in these posts, but this is referring to foundational concepts in causal inference like consistency, exchangeability, and positivity. A primary motivation for using TMLE and other semiparametric estimation methods for causal inference is that carefully evaluating causal assumptions takes time and effort, and it does not make sense to then “ruin” an otherwise well-designed analysis by making an unrealistic assumption about the underlying distribution of the data.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
