@@ -1,5 +1,5 @@
 ---
-title: "An Illustrated Guide to TMLE, Part I: An Analyst's Motivation to Learn"
+title: "An Illustrated Guide to TMLE, Part I: Introduction and Motivation"
 author: "Katherine Hoffman"
 date: 2020-12-11T00:13:14-05:00
 draft: false
@@ -22,7 +22,7 @@ output:
 <hr />
 <div id="table-of-contents" class="section level1">
 <h1>Table of Contents</h1>
-<p>This blog post series has three parts:</p>
+<p><em>This blog post series has three parts:</em></p>
 <div id="part-i-motivation" class="section level3">
 <h3>Part I: Motivation</h3>
 <ol style="list-style-type: decimal">
@@ -64,14 +64,14 @@ output:
 <p>First, I was thinking about inference backwards: I was choosing a model based on my outcome type (binary, continuous, time-to-event, repeated measures) and then interpreting specific coefficients as my estimates of interest. Yet it makes way more sense to <em>first</em> determine the statistical quantity, or <strong>estimand</strong>, that best answers a scientific question, and <em>then</em> use the method, or <strong>estimator</strong>, best suited for estimating it. This is the paradigm TMLE is based upon: <strong>we want to build an algorithm, or estimator, targeted to an estimand of interest</strong>.</p>
 <figure>
 <img src="/img/tmle/estimator.png"
-    width= 70%
+    width= 90%
          alt="Estimator and Estimand">
 <figcaption>
 <em>An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield and <a href="https://diff.healthpolicydatascience.org/">diff.healthpolicydatascience.org</a>.</em>
 </figcaption>
 </figure>
 <p>Second, I thought flexible, data-adaptive statistical models we commonly classify as <strong>machine learning</strong> (e.g. LASSO, random forests, gradient boosting, etc.) could only be used for prediction, since they don’t have <strong>asymptotic properties for inference</strong> (i.e. standard errors). However, certain <strong>semiparametric estimation methods</strong><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> like TMLE can actually use these models to <strong>obtain a final estimate that is closer to the target quantity</strong> than would be obtained using standard parametric models (e.g. linear and logistic regression). This is because machine learning models are generally designed to accommodate <strong>large numbers of covariates</strong> with <strong>complex, non-linear relationships</strong>.</p>
-<img src="/img/tmle/parametric_assumptions_comic.jpg" width=80%>
+<img src="/img/tmle/parametric_assumptions_comic.jpg" width=100%>
 <figcaption>
 <em>Semiparametric estimation methods like TMLE can rely on machine learning to avoid making unrealistic parametric assumptions about the underlying distribution of the data (e.g. multivariate normality).</em>
 </figcaption>

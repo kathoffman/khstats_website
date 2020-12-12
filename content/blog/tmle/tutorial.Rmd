@@ -1,5 +1,5 @@
 ---
-title: "An Illustrated Guide to TMLE, Part I: An Analyst's Motivation to Learn"
+title: "An Illustrated Guide to TMLE, Part I: Introduction and Motivation"
 author: "Katherine Hoffman"
 date: 2020-12-11T00:13:14-05:00
 draft: false
@@ -22,7 +22,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Table of Contents
 
-This blog post series has three parts:
+*This blog post series has three parts:*
 
 ### Part I: Motivation
 1. [TMLE in three sentences 🎯](#tmle-in-three-sentences)
@@ -59,14 +59,14 @@ First, I was thinking about inference backwards: I was choosing a model based on
 
 <figure>
     <img src="/img/tmle/estimator.png"
-    width= 70%
+    width= 90%
          alt="Estimator and Estimand"> 
     <figcaption>*An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield and [diff.healthpolicydatascience.org]( https://diff.healthpolicydatascience.org/).*</figcaption>
 </figure>
 
 Second, I thought flexible, data-adaptive statistical models we commonly classify as **machine learning** (e.g. LASSO, random forests, gradient boosting, etc.) could only be used for prediction, since they don't have **asymptotic properties for inference** (i.e. standard errors). However, certain **semiparametric estimation methods**^[Semiparametric estimation means we’re allowing at least one of the parameters in our model to have infinite dimensions. You can contrast this to linear regression, which is parametric and assumes that each coefficient is normally distributed with mean 0 and a standard deviation of $\sigma^2$. I've found this [review of semiparametric inference](https://sites.stat.washington.edu/jaw/JAW-papers/NR/jaw-BKR-EncylSS.pdf) to be helpful.] like TMLE can actually use these models to **obtain a final estimate that is closer to the target quantity** than would be obtained using standard parametric models (e.g. linear and logistic regression). This is because machine learning models are generally designed to accommodate **large numbers of covariates** with **complex, non-linear relationships**.
 
-<img src="/img/tmle/parametric_assumptions_comic.jpg" width=80%>
+<img src="/img/tmle/parametric_assumptions_comic.jpg" width=100%>
  <figcaption>*Semiparametric estimation methods like TMLE can rely on machine learning to avoid making unrealistic parametric assumptions about the underlying distribution of the data (e.g. multivariate normality).* </figcaption>
 
 The way we use the machine learning estimates in TMLE, surprisingly enough, yields **known asymptotic properties of bias and variance** -- just like we see in parametric maximum likelihood estimation -- for our target estimand.
