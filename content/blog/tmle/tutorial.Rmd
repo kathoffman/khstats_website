@@ -30,14 +30,14 @@ This blog post series has three parts:
 3. [Is TMLE Causal Inference? 🤔](#is-tmle-causal-inference)
 
 ### Part II: Algorithm
-4. [Why the Visual Guide? 🎨](https://khstats.com/blog/tutorial/tutorial-pt2/#why-the-visual-guide)
-5. [TMLE, Step-by-Step 🚶🏽](https://khstats.com/blog/tutorial/tutorial-pt2/#tmle-step-by-step)
-6. [Using the `tmle` package 📦](https://khstats.com/blog/tutorial/tutorial-pt2/#using-the-tmle-package)
+4. [Why the Visual Guide? 🎨](https://khstats.com/blog/tmle/tutorial-pt2/#why-the-visual-guide)
+5. [TMLE, Step-by-Step 🚶🏽](https://khstats.com/blog/tmle/tutorial-pt2/#tmle-step-by-step)
+6. [Using the `tmle` package 📦](https://khstats.com/blog/tmle/tutorial-pt2/#using-the-tmle-package)
 
 ### Part III: Evaluation
-7. [Properties of TMLE 📈](https://khstats.com/blog/tutorial/tutorial-pt3/#properties-of-tmle)
-8. [Why does TMLE work? ✨](https://khstats.com/blog/tutorial/tutorial-pt3/#why-does-tmle-work)
-9. [Resources to learn more 🤓](https://khstats.com/blog/tutorial/tutorial-pt3/#resources-to-learn-more)
+7. [Properties of TMLE 📈](https://khstats.com/blog/tmle/tutorial-pt3/#properties-of-tmle)
+8. [Why does TMLE work? ✨](https://khstats.com/blog/tumletutorial-pt3/#why-does-tmle-work)
+9. [Resources to learn more 🤓](https://khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more)
 
 ***
 
@@ -71,7 +71,7 @@ Second, I thought flexible, data-adaptive statistical models we commonly classif
 
 The way we use the machine learning estimates in TMLE, surprisingly enough, yields **known asymptotic properties of bias and variance** -- just like we see in parametric maximum likelihood estimation -- for our target estimand.
 
-Besides allowing us to compute 95% confidence intervals and p-values around our estimands of interest even after using ML "under the hood," TMLE boasts a number of other beneficial properties, such as double robustness. These are discussed further in [*Part III*](https://khstats.com/blog/tutorial/tutorial-pt3/). 
+Besides allowing us to compute 95% confidence intervals and p-values around our estimands of interest even after using ML "under the hood," TMLE boasts a number of other beneficial properties, such as double robustness. These are discussed further in [*Part III*](https://khstats.com/blog/tmle/tutorial-pt3/). 
 
 # Is TMLE Causal Inference? 🤔
 
@@ -79,7 +79,7 @@ If you've heard about TMLE before, it was likely in the context of **causal infe
 
 **TMLE can be used to estimate various statistical estimands** (odds ratio, risk ratio, mean outcome difference, etc.) **even when causal assumptions are not met**. TMLE is, as its name implies, simply a tool for estimation.
 
-In [*Part II*](https://khstats.com/blog/tutorial/tutorial-pt2/), I'll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the **Average Treatment Effect (ATE)**, or the mean difference in outcomes for a world in which everyone had received the treatment compared to a world in which everyone had not.
+In [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2/), I'll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the **Average Treatment Effect (ATE)**, or the mean difference in outcomes for a world in which everyone had received the treatment compared to a world in which everyone had not.
 
 ⤴️[*Back to the top*](#table-of-contents)
 
@@ -87,5 +87,5 @@ In [*Part II*](https://khstats.com/blog/tutorial/tutorial-pt2/), I'll walk step-
 
 ### *References*
 
-My primary reference for all three posts is *Targeted Learning* by Mark van der Laan and Sherri Rose. I detail many other resources I've used to learn TMLE, semiparametric theory, and causal inference in [*Part III*](https://khstats.com/blog/tutorial/tutorial-pt3/).
+My primary reference for all three posts is *Targeted Learning* by Mark van der Laan and Sherri Rose. I detail many other resources I've used to learn TMLE, semiparametric theory, and causal inference in [*Part III*](https://khstats.com/blog/tmle/tutorial-pt3/).
 
