@@ -41,12 +41,12 @@ HTML Image as link
 <p><a href="#why-the-visual-guide">Why the Visual Guide? 🎨</a></p>
 <p><a href="#tmle-step-by-step">TMLE, Step-by-Step 🚶🏽️</a></p>
 <ol style="list-style-type: decimal">
-<li><p><a href="##step-1-estimate-the-outcome">Estimate the Outcome</a></p></li>
-<li><p><a href="##step-2-estimate-the-probability-of-treatment">Estimate the Probability of Treatment</a></p></li>
-<li><p><a href="##step-3-estimate-the-fluctuation-parameter">Estimate the Fluctuation Parameter</a></p></li>
-<li><p><a href="##step-4-update-the-initial-estimates-of-the-expected-outcome">Update the Initial Estimates of the Expected Outcome</a></p></li>
-<li><p><a href="##step-5-compute-the-statistical-estimand-of-interest">Compute the Statistical Estimand of Interest</a></p></li>
-<li><p><a href="##step-2-calculate-the-standard-errors-for-confidence-intervals-and-p-values">Calculate the Standard Errors for Confidence Intervals and P-values</a></p></li>
+<li><p><a href="#step-1-estimate-the-outcome">Estimate the Outcome</a></p></li>
+<li><p><a href="#step-2-estimate-the-probability-of-treatment">Estimate the Probability of Treatment</a></p></li>
+<li><p><a href="#step-3-estimate-the-fluctuation-parameter">Estimate the Fluctuation Parameter</a></p></li>
+<li><p><a href="#step-4-update-the-initial-estimates-of-the-expected-outcome">Update the Initial Estimates of the Expected Outcome</a></p></li>
+<li><p><a href="#step-5-compute-the-statistical-estimand-of-interest">Compute the Statistical Estimand of Interest</a></p></li>
+<li><p><a href="#step-6-calculate-the-standard-errors-for-confidence-intervals-and-p-values">Calculate the Standard Errors for Confidence Intervals and P-values</a></p></li>
 </ol>
 <p><a href="#using-the-tmle-package">Using the <code>tmle</code> package 📦</a></p>
 <p><a href="#full-tutorial-code">Full tutorial code 💻</a></p>
@@ -665,7 +665,7 @@ H_A
 </div>
 <div id="step-3-estimate-the-fluctuation-parameter" class="section level2">
 <h2>Step 3: Estimate the Fluctuation Parameter</h2>
-<p>To reiterate, in Step 1 we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. <strong>We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.</strong></p>
+<p>To reiterate, in <a href="#step-1-estimate-the-outcome">Step 1</a> we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. <strong>We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.</strong></p>
 <html>
 <head>
 <title>
@@ -706,9 +706,9 @@ HTML Image as link
 <h2>Step 4: Update the Initial Estimates of the Expected Outcome</h2>
 <p>Almost done! Let’s recap:</p>
 <ul>
-<li><p>In Step 1, we obtained <strong>initial estimates</strong> of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate <span class="math inline">\(E[Y|A,W]\)</span>, not the ATE.</p></li>
-<li><p>We need to update those initial expected outcome estimates using <strong>information about the treatment mechanism</strong>, so we computed the expected probability of treatment, conditional on confounders, in Step 2.</p></li>
-<li><p>Then, in Step 3, we used quantities from Step 1 and Step 2 to <strong>solve an estimating equation for the EIF</strong>. We didn’t talk about <em>why</em> this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).</p></li>
+<li><p>In <a href="#estimate-the-outcome">Step 1</a>, we obtained <strong>initial estimates</strong> of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate <span class="math inline">\(E[Y|A,W]\)</span>, not the ATE.</p></li>
+<li><p>We need to update those initial expected outcome estimates using <strong>information about the treatment mechanism</strong>, so we computed the expected probability of treatment, conditional on confounders, in <a href="#estimate-the-probability-of-treatment">Step 2</a>.</p></li>
+<li><p>Then, in <a href="#estimate-the-fluctuation-parameter">Step 3</a>, we used quantities from Step 1 and Step 2 to <strong>solve an estimating equation for the EIF</strong>. We didn’t talk about <em>why</em> this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).</p></li>
 <li><p>Now, we will <strong>update our initial outcome estimates</strong> from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.</p></li>
 </ul>
 <p>To update our expected outcome estimates, we first need to <strong>put the initial expected outcome estimates on the <span class="math inline">\(logit\)</span> scale</strong> using <code>qlogis()</code> because that’s the scale we used to solve our estimating equation for the EIF in Step 3. Then we can <strong>calculate how much we need to fluctuate our initial estimates</strong> using the product of the clever covariate and fluctuation parameter: <span class="math inline">\(H(A,\mathbf{W}) \times \hat{\epsilon}\)</span>. These are our outputs of Step 2 and 3, respectively. We will <strong>add that quantity to the initial outcome estimates to create updated outcome estimates</strong>. Finally, we can <strong>put the updated estimates back on the true outcome scale</strong> using <code>plogis()</code>.</p>

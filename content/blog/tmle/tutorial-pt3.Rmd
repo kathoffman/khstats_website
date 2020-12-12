@@ -22,7 +22,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Properties of TMLE 📈
 
-To reiterate a point from *Parts I* and *II*, a main motivation for TMLE is that it **allows the use of machine learning algorithms while still yielding asymptotic properties for inference**. This is notably *not* true for many estimators. For example, in [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2) we walked through TMLE for the Average Treatment Effect (ATE). Two frequently used alternatives to estimating the ATE are G-computation and Inverse Probability Weighting (see *Part II, Step 1* and *references*). In general, neither yield valid standard errors unless *a-priori* specified parametric models are used, but this reliance on parametric models can bias results. There are many simulation studies that show this.
+To reiterate a point from *Parts I* and *II*, a main motivation for TMLE is that it **allows the use of machine learning algorithms while still yielding asymptotic properties for inference**. This is notably *not* true for many estimators.
+
+For example, in [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2) we walked through TMLE for the Average Treatment Effect (ATE). Two frequently used alternatives to estimating the ATE are G-computation and Inverse Probability Weighting (see [*Part II, Step 1*](https://khstats.com/blog/tmle/tutorial-pt2/#step-1-estimate-the-outcome) and *references*(#resources-to-learn-more)). In general, neither yield valid standard errors unless *a-priori* specified parametric models are used, but this reliance on parametric assumptions can bias results. There are many simulation studies that show this.
 
 Another beneficial property of TMLE is that it is a **doubly robust** estimator. This means that if either the regression to estimate the expected outcome, or the regression to estimate the probability of treatment, are correctly specified (formally, their bias goes to zero as sample size grows large, meaning they are **consistent**), the final TMLE estimate will be consistent.
 

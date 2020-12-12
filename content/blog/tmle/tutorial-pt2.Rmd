@@ -42,17 +42,17 @@ knitr::opts_chunk$set(echo = TRUE)
 
 [TMLE, Step-by-Step 🚶🏽️](#tmle-step-by-step)
 
-  1. [Estimate the Outcome](##step-1-estimate-the-outcome)
+  1. [Estimate the Outcome](#step-1-estimate-the-outcome)
   
-  2. [Estimate the Probability of Treatment](##step-2-estimate-the-probability-of-treatment)
+  2. [Estimate the Probability of Treatment](#step-2-estimate-the-probability-of-treatment)
   
-  3. [Estimate the Fluctuation Parameter](##step-3-estimate-the-fluctuation-parameter)
+  3. [Estimate the Fluctuation Parameter](#step-3-estimate-the-fluctuation-parameter)
   
-  4. [Update the Initial Estimates of the Expected Outcome](##step-4-update-the-initial-estimates-of-the-expected-outcome)
+  4. [Update the Initial Estimates of the Expected Outcome](#step-4-update-the-initial-estimates-of-the-expected-outcome)
   
-  5. [Compute the Statistical Estimand of Interest](##step-5-compute-the-statistical-estimand-of-interest)
+  5. [Compute the Statistical Estimand of Interest](#step-5-compute-the-statistical-estimand-of-interest)
   
-  6. [Calculate the Standard Errors for Confidence Intervals and P-values](##step-2-calculate-the-standard-errors-for-confidence-intervals-and-p-values)
+  6. [Calculate the Standard Errors for Confidence Intervals and P-values](#step-6-calculate-the-standard-errors-for-confidence-intervals-and-p-values)
   
 [Using the `tmle` package 📦](#using-the-tmle-package)
 
@@ -306,7 +306,7 @@ kable(head(dat_tmle), digits=2, caption="TMLE Algorithm after Step 2")
 
 ## Step 3: Estimate the Fluctuation Parameter
 
-To reiterate, in Step 1 we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. **We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.**
+To reiterate, in [Step 1](#step-1-estimate-the-outcome) we estimated the expected outcome, conditional on treatment and confounders. We know those machine learning fits have an optimal bias-variance trade-off for estimating the outcome (conditional on treatment and confounders), rather than the ATE. **We will now use information about the treatment mechanism (from Step 2) to optimize the bias-variance trade-off for the ATE so we can obtain valid inference.**
 
 <html>
    <head>
@@ -368,11 +368,11 @@ We will use both the fluctuation parameter and clever covariate in the next step
 
 Almost done! Let's recap:
 
-- In Step 1, we obtained **initial estimates** of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate $E[Y|A,W]$, not the ATE.
+- In [Step 1](#estimate-the-outcome), we obtained **initial estimates** of the expected outcome using machine learning (ML). These ML estimates are optimized to estimate $E[Y|A,W]$, not the ATE.
 
-- We need to update those initial expected outcome estimates using **information about the treatment mechanism**, so we computed the expected probability of treatment, conditional on confounders, in Step 2.
+- We need to update those initial expected outcome estimates using **information about the treatment mechanism**, so we computed the expected probability of treatment, conditional on confounders, in [Step 2](#estimate-the-probability-of-treatment).
 
-- Then, in Step 3, we used quantities from Step 1 and Step 2 to **solve an estimating equation for the EIF**. We didn't talk about *why* this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).
+- Then, in [Step 3](#estimate-the-fluctuation-parameter), we used quantities from Step 1 and Step 2 to **solve an estimating equation for the EIF**. We didn't talk about *why* this works; we simply accepted for now that this is how we can target our estimand of interest (the ATE).
 
 - Now, we will **update our initial outcome estimates** from Step 1 using information from Step 2 and 3 to obtain the correct bias-variance tradeoff for the ATE.
 
