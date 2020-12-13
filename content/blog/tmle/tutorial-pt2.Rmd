@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
     <link rel="stylesheet" href="/style.css" />
 </html>
 
-> The second post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section walks through the **TMLE algorithm for the mean difference in outcomes for a binary treatment and binary outcome**. <br> <br> This post is an expansion of a printable "visual guide" available on my [Github](https://github.com/hoffmakl/causal-inference-visual-guides). I hope it helps an analyst who feels out-of-practice reading mathematical notation follow along with the TMLE algorithm. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).
+> The second post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section walks through the **TMLE algorithm for the mean difference in outcomes for a binary treatment and binary outcome**. <br> <br> This post is an expansion of a printable "visual guide" available on my [Github](https://github.com/hoffmakl/causal-inference-visual-guides). I hope it helps analysts who feel out-of-practice reading mathematical notation follow along with the TMLE algorithm. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).
 
 <html>
    <head>

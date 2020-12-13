@@ -32,7 +32,7 @@ If both regressions are consistent, the **final estimate will reach the smallest
 
 ![](/img/tmle_props.png)
 
-Even among other doubly robust estimators, TMLE is appealing because its estimates will always stay within the bounds of the original outcome. This is because it is part of a class of **substitution estimators**. There is another class of doubly robust, semiparametric estimation methods frequently used in causal inference that are referred to as **one-step estimators**, but they can sometimes yield final estimates that are outside the original outcome scale. The equivalent one-step estimator for the ATE is called **Augmented Inverse Probability Weighting (AIPW)**.
+Even among other doubly robust estimators, TMLE is appealing because its estimates will always stay within the bounds of the original outcome. This is because it is part of a class of **substitution estimators**. There is another class of doubly robust, semiparametric estimation methods frequently used in causal inference that are referred to as **one-step estimators**, but they can sometimes yield final estimates that are outside the original outcome scale. The one-step estimator for the ATE is called **Augmented Inverse Probability Weighting (AIPW)**.
 
 # Why does TMLE work? ✨
 
