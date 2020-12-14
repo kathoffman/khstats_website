@@ -129,7 +129,7 @@ kable(head(dat_obs), digits=2, caption = "Simulated data set.")
 
 As mentioned earlier, TMLE can estimate many different statistical estimands of interest. In this example, our statistical estimand is the mean difference in outcomes between those who received the treatment and those who did not, adjusting for confounders.
 
-Under causal assumptions, this could be *identifiable* as the Average Treatment Effect (ATE). I won't go through the identification process here (see [*Part III, References*](www.khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more)), but since TMLE is often used for causal inference, let's pretend for this example that we previously met causal assumptions and call our statistical estimand, $\Psi$, the ATE.
+Under causal assumptions, this could be *identifiable* as the Average Treatment Effect (ATE). I won't go through the identification process here (see [*Part III, References*](https://khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more)), but since TMLE is often used for causal inference, let's pretend for this example that we previously met causal assumptions and call our statistical estimand, $\Psi$, the ATE.
 
 $$ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]$$
 The ATE, once we estimate it, will be interpretable as the mean difference in outcomes in a hypothetical world where everyone received the treatment compared to a hypothetical world where no one received the treatment.
@@ -328,7 +328,7 @@ To reiterate, in [Step 1](#step-1-estimate-the-outcome) we estimated the expecte
 
 The point of this step is to solve an *estimating equation* for the *efficient influence function* (EIF) of our estimand of interest. Without diving into what an EIF or an estimating equation is, let's accept for a moment that they will help us:
 
-  1. **Update our initial outcome estimates** so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see [*Part III, Statistical Properties*](www.khstats.com/blog/tmle/tutorial-pt3/#properties-of-tmle)).
+  1. **Update our initial outcome estimates** so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see [*Part III, Statistical Properties*](https://khstats.com/blog/tmle/tutorial-pt3/#properties-of-tmle)).
 
   2. **Calculate the variance**, and thus the standard error, confidence interval, and p-value for our estimate of the ATE for hypothesis testing.
 

@@ -251,7 +251,7 @@ A
 </tbody>
 </table>
 <p>As mentioned earlier, TMLE can estimate many different statistical estimands of interest. In this example, our statistical estimand is the mean difference in outcomes between those who received the treatment and those who did not, adjusting for confounders.</p>
-<p>Under causal assumptions, this could be <em>identifiable</em> as the Average Treatment Effect (ATE). I won’t go through the identification process here (see <a href="www.khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more"><em>Part III, References</em></a>), but since TMLE is often used for causal inference, let’s pretend for this example that we previously met causal assumptions and call our statistical estimand, <span class="math inline">\(\Psi\)</span>, the ATE.</p>
+<p>Under causal assumptions, this could be <em>identifiable</em> as the Average Treatment Effect (ATE). I won’t go through the identification process here (see <a href="https://khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more"><em>Part III, References</em></a>), but since TMLE is often used for causal inference, let’s pretend for this example that we previously met causal assumptions and call our statistical estimand, <span class="math inline">\(\Psi\)</span>, the ATE.</p>
 <p><span class="math display">\[ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]\]</span>
 The ATE, once we estimate it, will be interpretable as the mean difference in outcomes in a hypothetical world where everyone received the treatment compared to a hypothetical world where no one received the treatment.</p>
 <p>At this point in set-up, we should also pick our machine learning algorithms to combine via superlearning to estimate the expected outcome and probability of treatment. Let’s use LASSO (<code>glmnet</code>), random forests (<code>ranger</code>), Multivariate Adaptive Regression Splines (MARS) (<code>earth</code>), and a generalized linear model (<code>glm</code>) for demonstration.</p>
@@ -684,7 +684,7 @@ HTML Image as link
 <p>🚨 <strong><em>Warning:</em></strong> this step is easy to code, but difficult to understand unless you have a background in semiparametric theory. Let’s first look at <em>what</em> we’re doing, and then I’ll discuss at a very high-level <em>why</em> we’re doing that in a <a href="#why-does-tmle-work">later section</a>.</p>
 <p>The point of this step is to solve an <em>estimating equation</em> for the <em>efficient influence function</em> (EIF) of our estimand of interest. Without diving into what an EIF or an estimating equation is, let’s accept for a moment that they will help us:</p>
 <ol style="list-style-type: decimal">
-<li><p><strong>Update our initial outcome estimates</strong> so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see <a href="www.khstats.com/blog/tmle/tutorial-pt3/#properties-of-tmle"><em>Part III, Statistical Properties</em></a>).</p></li>
+<li><p><strong>Update our initial outcome estimates</strong> so that our estimate of the ATE is asymptotically unbiased (under certain conditions, see <a href="https://khstats.com/blog/tmle/tutorial-pt3/#properties-of-tmle"><em>Part III, Statistical Properties</em></a>).</p></li>
 <li><p><strong>Calculate the variance</strong>, and thus the standard error, confidence interval, and p-value for our estimate of the ATE for hypothesis testing.</p></li>
 </ol>
 <p>Next, let’s take a look at a model that will help us solve an EIF estimating equation and then update our estimates:</p>

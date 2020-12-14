@@ -29,12 +29,12 @@ knitr::opts_chunk$set(echo = TRUE)
 2. [An Analyst's Motivation for Learning TMLE 👩🏼‍💻](#an-analysts-motivation-for-learning-tmle)
 3. [Is TMLE Causal Inference? 🤔](#is-tmle-causal-inference)
 
-### [Part II: Algorithm](www.khstats.com/blog/tmle/tutorial-pt2)
+### [Part II: Algorithm](https://khstats.com/blog/tmle/tutorial-pt2)
 4. [Why the Visual Guide? 🎨](https://khstats.com/blog/tmle/tutorial-pt2/#why-the-visual-guide)
 5. [TMLE, Step-by-Step 🚶🏽](https://khstats.com/blog/tmle/tutorial-pt2/#tmle-step-by-step)
 6. [Using the `tmle` package 📦](https://khstats.com/blog/tmle/tutorial-pt2/#using-the-tmle-package)
 
-### [Part III: Evaluation](www.khstats.com/blog/tmle/tutorial-pt3)
+### [Part III: Evaluation](https://khstats.com/blog/tmle/tutorial-pt3)
 7. [Properties of TMLE 📈](https://khstats.com/blog/tmle/tutorial-pt3/#properties-of-tmle)
 8. [Why does TMLE work? ✨](https://khstats.com/blog/tmle/tutorial-pt3/#why-does-tmle-work)
 9. [Resources to learn more 🤓](https://khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more)
@@ -83,7 +83,7 @@ In [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2/), I'll walk step-by-s
 
 ⤴️[*Back to the top*](#table-of-contents)
 
-➡️[*Continue to Part II: The Algorithm*](www.khstats.com/blog/tmle/tutorial-pt2/)
+➡️[*Continue to Part II: The Algorithm*](https://khstats.com/blog/tmle/tutorial-pt2/)
 
 ***
 
