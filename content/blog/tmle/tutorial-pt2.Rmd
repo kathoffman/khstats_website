@@ -87,11 +87,24 @@ One final note before we dive into the algorithm:
 
 ### Superlearning 
 
-I use the ensemble learning method **superlearning** (also known as "stacking") to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.
+I use the ensemble learning method superlearning (also known as "stacking") to demonstrate TMLE. This is because superlearning is theoretically and empirically proven to yield the best results in TMLE.
 
 If you're new to superlearning/stacking, the necessary knowledge for this post is that it allows you to combine many machine learning algorithms for prediction. When I use `SuperLearner()` in the following example code, I could have used `glm()`, `randomForest()`, or any other parametric or non-parametric supervised learning algorithm.
 
-Note that the choice of specific regressions for superlearning is not the point of this post. In practice we simply want to add flexible machine learning models which we think **may** reflect the underlying data distribution. For a tutorial on superlearning, you can check out one of my [previous blog posts](https://khstats.com/blog/sl/superlearning). 
+<html>
+   <head>
+      <title>HTML Image as link</title>
+   </head>
+   
+   <body>
+   <a href="https://khstats.com/blog/sl/superlearning">
+         <img alt="cheatsheet" src="/img/Superlearning.jpg"  
+         width="50%" style="float:right; padding-left:60px;">
+      </a>
+   </body>
+</html>
+
+Note that the choice of base learners for superlearning is not the point of this post. In practice we simply want to add flexible machine learning models which we think **may** reflect the underlying data distribution. For a tutorial on superlearning, you can check out one of my [previous blog posts](https://khstats.com/blog/sl/superlearning). 
 
 ### Initial set up
 
@@ -134,7 +147,7 @@ Under causal assumptions, this could be *identifiable* as the Average Treatment 
 $$ATE = \Psi = E_W[\mathrm{E}[Y|A=1,\mathbf{W}] - \mathrm{E}[Y|A=0,\mathbf{W}]]$$
 The ATE, once we estimate it, will be interpretable as the mean difference in outcomes in a hypothetical world where everyone received the treatment compared to a hypothetical world where no one received the treatment.
 
-At this point in set-up, we should also pick our machine learning algorithms to combine via superlearning to estimate the expected outcome and probability of treatment. Let's use LASSO (`glmnet`), random forests (`ranger`), Multivariate Adaptive Regression Splines (MARS) (`earth`), and a generalized linear model (`glm`) for demonstration.
+At this point in set-up, we should also pick our base machine learning algorithms to combine via superlearning to estimate the expected outcome and probability of treatment. Let's use LASSO (`glmnet`), random forests (`ranger`), Multivariate Adaptive Regression Splines (MARS) (`earth`), and a generalized linear model (`glm`) for demonstration.
 
 ```{r}
 sl_libs <- c('SL.glmnet', 'SL.ranger', 'SL.earth', 'SL.glm') # a library of machine learning algorithms (penalized regression, random forests, and multivariate adaptive regression splines)
