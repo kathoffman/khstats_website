@@ -37,17 +37,15 @@ formatted_cors <- function(df){
 
 ***
 
-# TL;DR
+> If you're ever felt limited by correlogram packages in `R`, this post will show you how to write your own function to tidy the many correlations into a `ggplot2`-friendly form for plotting.
 
-- If you're ever felt limited by correlogram packages in `R`, this post will show you how to write your own function to tidy the many correlations into a `ggplot2`-friendly form for plotting.
-
-- By the end, you will be able to run one function to get a tidied data frame of correlations:
+By the end of this post, you will be able to run one function to get a tidied data frame of correlations:
 
 ```{r}
 formatted_cors(mtcars) %>% head() %>% kable()
 ```
 
-- You can then run `ggplot2` code on this data to make your own correlation heat maps.
+You can then run `ggplot2` code on this data to make your own correlation heat maps.
 
 ```{r, echo=F}
 formatted_cors(mtcars) %>%
@@ -63,7 +61,7 @@ formatted_cors(mtcars) %>%
   theme(text=element_text(family="Roboto"))
 ```
 
-- If you just want the code, [skip to the end](#just-the-code).
+If you just want the code, [skip to the end](#just-the-code).
 
 ***
 

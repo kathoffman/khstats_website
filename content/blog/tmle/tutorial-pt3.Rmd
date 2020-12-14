@@ -51,9 +51,7 @@ Truly understanding why TMLE works requires semiparametric theory that falls far
 This is the reason TMLE allows us to use machine learning models “under the hood” while still obtaining asymptotic properties for inference: our **estimand** of interest admits **asymptotically linear estimation**, and we are **using properties of the EIF** to **construct an estimator** with **optimal statistical properties** (e.g. double robustness).
 
 # Resources to learn more
-
-<!-- ![](/img/tmle/self_portrait.jpg){width=45%} -->
-
+<!-- ![](/img/tmle/self_portrait.jpg){width=40%} -->
 
 <html>
    <head>
@@ -74,7 +72,7 @@ I could only cover so much in this post, but here are the resources I've used th
 
 - I also really like the written explanations in the [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1) book (Chapters 4 and 5) by Mark van der Laan and Sherri Rose. The notation was often too difficult for me to follow, but the words themselves make a lot of sense.
 
-- Miguel Angel Luque-Fernandez wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the [functional delta method](https://migariane.github.io/DeltaMethodEpiTutorial.nb.html) which is part of the theory behind the standard errors (see [*Part II, Step 6*](https://khstats.com/blog/tmle/tutorial-pt3)).
+- Miguel Angel Luque-Fernandez wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the [functional delta method](https://migariane.github.io/DeltaMethodEpiTutorial.nb.html) which is part of the theory behind the way we compute the standard errors (see [*Part II, Step 6*](https://khstats.com/blog/tmle/tutorial-pt2/#step-6-calculate-the-standard-errors-for-confidence-intervals-and-p-values)).
 
 - Other code-based web-based tutorials on TMLE include David Benkeser and Antoine Chambaz' [A Ride in Targeted Learning Territory](https://achambaz.github.io/tlride/) and the authors of the `R` package suite [`tlverse`](https://tlverse.org/)'s [Hitchhiker's Guide to Targeted Learning: The TMLE Framework](https://tlverse.org/tlverse-handbook/tmle3.html).
 
@@ -106,7 +104,8 @@ Feedback or clarifications on this post is welcome, either from the new learners
 
 # Acknowledgements
 
-
 This tutorial would not have been possible without my colleague Iván Díaz patiently answering many, many questions on TMLE. I am also very appreciative of Miguel Angel Luque-Fernandez's helpful feedback on the visual guide.
 
 Lastly, many thanks to Axel Martin, Nick Williams, Anjile An, Adam Peterson, Alan Wu, and Will Simmons for providing suggestions on various drafts of this art project!
+
+<!-- ![](/img/tmle/self_portrait.jpg){width=45%} -->

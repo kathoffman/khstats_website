@@ -1,5 +1,5 @@
 ---
-title: "Understanding Conditional and Iterated Expectations with a Linear Regression Model"
+title: "Rethinking Conditional and Iterated Expectations with Linear Regression Models"
 author: "Katherine Hoffman"
 date: 2020-07-31T21:13:14-05:00
 categories: ["R", "statistics"]
@@ -17,6 +17,8 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, results="asis", message=F, warning=F)
 ```
+
+> An "aha!" moment: the day I realized I should rethink all the probability theorems using linear regressions.
 
 ***
 
