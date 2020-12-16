@@ -175,7 +175,6 @@ Q <- SuperLearner(Y = Y, # Y is the outcome vector
                   family=binomial(), # specify we have a binary outcome
                   SL.library = sl_libs) # specify our superlearner library of LASSO, RF, and MARS
 ```
-
 Then, we should estimate the outcome for every observation under three different scenarios:
 
 **1. If every observation received the treatment they *actually* received.**
@@ -222,7 +221,7 @@ W_A0 <- W_A %>% mutate(A = 0) # data set where no one received treatment
 Q_0 <- as.vector(predict(Q, newdata = W_A0)$pred)
 ```
 
-Let's create a new data frame, `dat_tmle`, to hold the three vectors we've created so far, along with the treatment status $A$ and observed outcome $Y$. Notice that when $A=1$, the expected outcome $\mathrm{\hat{E}}[Y|A,\mathbf{W}]$ equals the expected outcome under treatment $\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$. When $A=0$, the expected outcome $\mathrm{\hat{E}}[Y|A,\mathbf{W}]$ equals the expected outcome under no treatment $\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$.
+***Next***, let's create a new data frame, `dat_tmle`, to hold the three vectors we've created so far, along with the treatment status $A$ and observed outcome $Y$. Notice that when $A=1$, the expected outcome $\mathrm{\hat{E}}[Y|A,\mathbf{W}]$ equals the expected outcome under treatment $\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$. When $A=0$, the expected outcome $\mathrm{\hat{E}}[Y|A,\mathbf{W}]$ equals the expected outcome under no treatment $\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$.
 
 ```{r}
 dat_tmle <- tibble(Y = dat_obs$Y, A = dat_obs$A, Q_A, Q_0, Q_1)
@@ -231,7 +230,7 @@ kable(head(dat_tmle), digits=2, caption = "TMLE Algorithm after Step 1")
 
 <!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* -->
 
-We could stop here and get our estimate of the ATE by computing the average difference between $\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$ and $\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$, which *would* be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called **standardization**, **simple substitution estimation**, or **G-computation**.
+We could stop here and get our estimate of the ATE by computing the average difference between $\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]$ and $\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]$, which *would* be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called **standardization**, **simple substitution estimation**, **g-formula estimation**, or **G-computation**.
 
 $$\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \frac{1}{N}\sum_{i=1}^{N}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])$$
 ![](/img/tmle/ate_gcomp.png){width=50%}
@@ -239,15 +238,13 @@ $$\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \frac{1}{N}\sum_{i=1}^{N}(\mathrm{\h
 ate_gcomp <- mean(dat_tmle$Q_1 - dat_tmle$Q_0)
 ate_gcomp
 ```
-
 However, this G-computation ATE estimate does not have the appropriate bias-variance tradeoff for the ATE because it was built to have the best bias-variance tradeoff for estimating the *outcome*, conditional on confounders, rather than the ATE. We also cannot compute the standard error of the estimator because we don't know the sampling distribution of the machine learning estimates.
 
 ⤴️[*Back to the top*](#part-ii-the-algorithm)
 
 ## Step 2: Estimate the Probability of Treatment
 
-The next step is to estimate the probability of treatment, given confounders. This quantity is often called the **propensity score**, as in it gives the *propensity* that an observation will receive a treatment of interest.
-
+The next step is to estimate the probability of treatment, given confounders. This quantity is often called the **propensity score**, as in it gives the probability or *propensity* that an observation will receive a treatment of interest.
 
 $$g(\mathbf{W}) = \mathrm{Pr}(A=1|\mathbf{W})$$
 ![](/img/tmle/6_treatment_fit.png){width=60%}
