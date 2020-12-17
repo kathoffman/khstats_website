@@ -307,7 +307,7 @@ Q_1 &lt;- as.vector(predict(Q, newdata = W_A1)$pred) # predict on that everyone-
 <p><img src="/img/tmle/5_Q1.png" style="width:80.0%" /></p>
 <pre class="r"><code>W_A0 &lt;- W_A %&gt;% mutate(A = 0) # data set where no one received treatment
 Q_0 &lt;- as.vector(predict(Q, newdata = W_A0)$pred)</code></pre>
-<p>Let’s create a new data frame, <code>dat_tmle</code>, to hold the three vectors we’ve created so far, along with the treatment status <span class="math inline">\(A\)</span> and observed outcome <span class="math inline">\(Y\)</span>. Notice that when <span class="math inline">\(A=1\)</span>, the expected outcome <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> equals the expected outcome under treatment <span class="math inline">\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)</span>. When <span class="math inline">\(A=0\)</span>, the expected outcome <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> equals the expected outcome under no treatment <span class="math inline">\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)</span>.</p>
+<p><strong><em>Next</em></strong>, let’s create a new data frame, <code>dat_tmle</code>, to hold the three vectors we’ve created so far, along with the treatment status <span class="math inline">\(A\)</span> and observed outcome <span class="math inline">\(Y\)</span>. Notice that when <span class="math inline">\(A=1\)</span>, the expected outcome <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> equals the expected outcome under treatment <span class="math inline">\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)</span>. When <span class="math inline">\(A=0\)</span>, the expected outcome <span class="math inline">\(\mathrm{\hat{E}}[Y|A,\mathbf{W}]\)</span> equals the expected outcome under no treatment <span class="math inline">\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)</span>.</p>
 <pre class="r"><code>dat_tmle &lt;- tibble(Y = dat_obs$Y, A = dat_obs$A, Q_A, Q_0, Q_1)
 kable(head(dat_tmle), digits=2, caption = &quot;TMLE Algorithm after Step 1&quot;)</code></pre>
 <table>
@@ -439,7 +439,7 @@ Q_1
 </tbody>
 </table>
 <!-- *Also note that our expected outcomes are on the original outcome scale (i.e. probability, rather than the $logit$ probability).* -->
-<p>We could stop here and get our estimate of the ATE by computing the average difference between <span class="math inline">\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)</span> and <span class="math inline">\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)</span>, which <em>would</em> be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called <strong>standardization</strong>, <strong>simple substitution estimation</strong>, or <strong>G-computation</strong>.</p>
+<p>We could stop here and get our estimate of the ATE by computing the average difference between <span class="math inline">\(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]\)</span> and <span class="math inline">\(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]\)</span>, which <em>would</em> be the mean difference in the expected outcomes, conditional on confounders. This estimation method is often called <strong>standardization</strong>, <strong>simple substitution estimation</strong>, <strong>g-formula estimation</strong>, or <strong>G-computation</strong>.</p>
 <p><span class="math display">\[\hat{ATE}_{G-comp}= \hat{\Psi}_{G-comp} = \frac{1}{N}\sum_{i=1}^{N}(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]-\mathrm{\hat{E}}[Y|A=0,\mathbf{W}])\]</span>
 <img src="/img/tmle/ate_gcomp.png" style="width:50.0%" /></p>
 <pre class="r"><code>ate_gcomp &lt;- mean(dat_tmle$Q_1 - dat_tmle$Q_0)
@@ -450,7 +450,7 @@ ate_gcomp</code></pre>
 </div>
 <div id="step-2-estimate-the-probability-of-treatment" class="section level2">
 <h2>Step 2: Estimate the Probability of Treatment</h2>
-<p>The next step is to estimate the probability of treatment, given confounders. This quantity is often called the <strong>propensity score</strong>, as in it gives the <em>propensity</em> that an observation will receive a treatment of interest.</p>
+<p>The next step is to estimate the probability of treatment, given confounders. This quantity is often called the <strong>propensity score</strong>, as in it gives the probability or <em>propensity</em> that an observation will receive a treatment of interest.</p>
 <p><span class="math display">\[g(\mathbf{W}) = \mathrm{Pr}(A=1|\mathbf{W})\]</span>
 <img src="/img/tmle/6_treatment_fit.png" style="width:60.0%" /></p>
 <p>We will estimate <span class="math inline">\(\mathrm{Pr}(A=1|\mathbf{W})\)</span> in the same way as we estimated <span class="math inline">\(\mathrm{E}[Y|A,\mathbf{W}]\)</span>: using the superlearner algorithm.</p>

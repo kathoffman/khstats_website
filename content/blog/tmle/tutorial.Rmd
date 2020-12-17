@@ -16,7 +16,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-> The first post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section contains a brief overview of the **targeted learning framework** and motivation for **semiparametric estimation methods for inference**, including causal inference.
+> The **introductory post** of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section contains a brief overview of the **targeted learning framework** and motivation for **semiparametric estimation methods for inference**, including causal inference.
 
 ***
 
@@ -79,7 +79,7 @@ If you've heard about TMLE before, it was likely in the context of **causal infe
 
 **TMLE can be used to estimate various statistical estimands** (odds ratio, risk ratio, mean outcome difference, etc.) **even when causal assumptions are not met**. TMLE is, as its name implies, simply a tool for estimation.
 
-In [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2/), I'll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the **Average Treatment Effect (ATE)**, or the mean difference in outcomes in a world in which everyone had received the treatment compared to a world in which everyone had not.
+In [*Part II*](https://khstats.com/blog/tmle/tutorial-pt2/), I'll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the **Average Treatment Effect (ATE)**, or the mean difference in outcomes in a world in which everyone had received the treatment compared to a world in which everyone had not.
 
 ⤴️[*Back to the top*](#table-of-contents)
 

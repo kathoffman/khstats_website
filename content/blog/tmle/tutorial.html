@@ -17,7 +17,7 @@ output:
 
 
 <blockquote>
-<p>The first post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section contains a brief overview of the <strong>targeted learning framework</strong> and motivation for <strong>semiparametric estimation methods for inference</strong>, including causal inference.</p>
+<p>The <strong>introductory post</strong> of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section contains a brief overview of the <strong>targeted learning framework</strong> and motivation for <strong>semiparametric estimation methods for inference</strong>, including causal inference.</p>
 </blockquote>
 <hr />
 <div id="table-of-contents" class="section level1">
@@ -51,7 +51,7 @@ output:
 </div>
 <div id="tmle-in-three-sentences" class="section level1">
 <h1>TMLE in three sentences 🎯</h1>
-<p>Targeted Maximum Likelihood Estimation (TMLE) is a general semiparametric estimation framework to <strong>estimate a statistical quantity of interest</strong>. TMLE allows the use of <strong>machine learning</strong> (ML) models which place <strong>minimal assumptions on the distribution of the data</strong>. Unlike estimates normally obtained from ML, the <strong>final TMLE estimate will still have valid standard errors for statistical inference</strong>.</p>
+<p>Targeted Maximum Likelihood Estimation (TMLE) is a semiparametric estimation framework to <strong>estimate a statistical quantity of interest</strong>. TMLE allows the use of <strong>machine learning</strong> (ML) models which place <strong>minimal assumptions on the distribution of the data</strong>. Unlike estimates normally obtained from ML, the <strong>final TMLE estimate will still have valid standard errors for statistical inference</strong>.</p>
 </div>
 <div id="an-analysts-motivation-for-learning-tmle" class="section level1">
 <h1>An Analyst’s Motivation for Learning TMLE 👩🏼‍💻</h1>
@@ -67,7 +67,7 @@ output:
     width= 90%
          alt="Estimator and Estimand">
 <figcaption>
-<em>An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an algorithm, or estimator, to estimate it. Image courtesy of Dr. Laura Hatfield and <a href="https://diff.healthpolicydatascience.org/">diff.healthpolicydatascience.org</a>.</em>
+<em>An estimand is a quantity that answers a scientific question of interest. Once we figure out the estimand, we can build an estimator, or algorithm, to estimate it. Image courtesy of Dr. Laura Hatfield and <a href="https://diff.healthpolicydatascience.org/">diff.healthpolicydatascience.org</a>.</em>
 </figcaption>
 </figure>
 <p>Second, I thought flexible, data-adaptive models we commonly classify as statistical and/or <strong>machine learning</strong> (e.g. LASSO, random forests, gradient boosting, etc.) could only be used for prediction, since they don’t have <strong>asymptotic properties for inference</strong> (i.e. standard errors). However, certain <strong>semiparametric estimation methods</strong> like TMLE can actually use these models to <strong>obtain a final estimate that is closer to the target quantity</strong> than would be obtained using classic parametric models (e.g. linear and logistic regression). This is because machine learning models are generally designed to accommodate <strong>large numbers of covariates</strong> with <strong>complex, non-linear relationships</strong>.</p>
@@ -82,7 +82,7 @@ output:
 <h1>Is TMLE Causal Inference? 🤔</h1>
 <p>If you’ve heard about TMLE before, it was likely in the context of <strong>causal inference</strong>. Although TMLE was developed for causal inference due to its many attractive properties, it cannot be considered causal inference by itself. Causal inference is a two-step process that first requires <strong>causal assumptions</strong><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> before a statistical estimand can be interpreted causally.</p>
 <p><strong>TMLE can be used to estimate various statistical estimands</strong> (odds ratio, risk ratio, mean outcome difference, etc.) <strong>even when causal assumptions are not met</strong>. TMLE is, as its name implies, simply a tool for estimation.</p>
-<p>In <a href="https://khstats.com/blog/tmle/tutorial-pt2/"><em>Part II</em></a>, I’ll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for baseline confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the <strong>Average Treatment Effect (ATE)</strong>, or the mean difference in outcomes in a world in which everyone had received the treatment compared to a world in which everyone had not.</p>
+<p>In <a href="https://khstats.com/blog/tmle/tutorial-pt2/"><em>Part II</em></a>, I’ll walk step-by-step through a basic version of the TMLE algorithm: estimating the mean difference in outcomes, adjusted for confounders, for a binary outcome and binary treatment. If causal assumptions are met, this is called the <strong>Average Treatment Effect (ATE)</strong>, or the mean difference in outcomes in a world in which everyone had received the treatment compared to a world in which everyone had not.</p>
 <p>⤴️<a href="#table-of-contents"><em>Back to the top</em></a></p>
 <p>➡️<a href="https://khstats.com/blog/tmle/tutorial-pt2/"><em>Continue to Part II: The Algorithm</em></a></p>
 <hr />
