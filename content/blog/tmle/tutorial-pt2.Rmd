@@ -489,7 +489,7 @@ Then we can successfully report our ATE as `r round(tmle_ate, 3)` (95% CI: `r ro
 
 # Using the `tmle` package 📦
 
-Luckily there are `R` packages so that you don't have to hand code TMLE yourself. `R` packages to implement the TMLE algorithm include [`tmle`](https://www.jstatsoft.org/article/view/v051i13), [`tmle3`](https://tlverse.org/tlverse-handbook/tmle3.html), [`ltmle`](https://www.jstatsoft.org/article/view/v081i01), and [`lmtp`](https://htmlpreview.github.io/?https://gist.githubusercontent.com/nt-williams/ddd44c48390b8d976fad71750e48d8bf/raw/45db700a02bf92e2a55790e60ed48266a97ca4e7/intro-lmtp.html).
+Luckily there are `R` packages so that you don't have to hand code TMLE yourself. `R` packages to implement the TMLE algorithm include [`tmle`](https://www.jstatsoft.org/article/view/v051i13), [`tmle3`](https://tlverse.org/tlverse-handbook/tmle3.html), [`ltmle`](https://www.jstatsoft.org/article/view/v081i01), [`drtmle`](https://cran.r-project.org/web/packages/drtmle/vignettes/using_drtmle.html), and [`lmtp`](https://htmlpreview.github.io/?https://gist.githubusercontent.com/nt-williams/ddd44c48390b8d976fad71750e48d8bf/raw/45db700a02bf92e2a55790e60ed48266a97ca4e7/intro-lmtp.html).
 
 The code using the original `tmle` package's `tmle()` function is:
 
