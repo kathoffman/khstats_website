@@ -1,7 +1,7 @@
 ---
-title: "The Key to Learning Causal Inference"
+title: "Beginner's Guide to Reading a Causal Inference Paper"
 author: "Katherine Hoffman"
-date: 2020-09-12T21:13:14-05:00
+date: 2020-12-25T21:13:14-05:00
 categories: ["statistics"]
 draft: true
 math: true
@@ -14,18 +14,67 @@ output:
     print_df: paged
 ---
 
-I've been trying to learn causal inference for the past year and a half. Not in the way people say, "I've been trying to learn guitar" or "I've been trying to learn Japanese", either. Trying as in, spent too many pre-pandemic Sundays at crowded coffee shops with a backpack causal inference books, and even dragged a binder of notes to a vacation in Costa Rica...
+> This post outlines the difference between two distinct parts of causal inference --  *identification* and *estimation* -- and provides a strategy for reading a new paper on causal inference.
 
-![](/img/causal_at_beach.jpg)
-I'm no expert in causal inference, but at this point I at least have an opinion on the best way to *learn* causal inference. It's actually a pretty simple concept, but I was really spinning my wheels until I learned it. So, in case you're early into your causal inference journey and haven't discovered it yet:
+## First things first, learning causal inference is hard
+
+It's no secret that causal inference, or the study of what *would* have happened if a certain variable in a system were manipulated, is a rapidly expanding field. I love to read new (and old!) papers in the causal inference literature because it helps me do better medical research as an applied biostatistician.
+
+However, I struggled for several months to make *any* headway when I'd pick up th. It wasn't the jargon that overwhelmed me (although that's definitely a barrier for learning causal inference), but rather that I had no clear "big picture" view of causal inference. I was collecting a lot of small pieces of information, but I was missing how they all fit together.
+
+In this post I want to share a strategy that really helped me improve my ability to read a new causal inference paper.
+
+The main barrier I have when I'm learning causal inference is that its always really hard for me to figure out where the piece of information I'm learning belongs in the vast field of causal inference.
+
+Causal inference is a rapidly developing field, and there are people working on methods in many different domains (statistics, epidemiology, economics, computer science, to name a few) speaking different jargons. Even *within* fields people call the same idea by many different names, and there is no common mathematical notation, making it really hard for a beginner to know where to start.
+
+Anyways, if you think learning causal inference is hard, it's because it is :-) Luckily I think that will change in the coming years as more books aimed at beginners start to get published. In the meantime, I thought I'd share a high-level organizational map of causal inference that's really helped me learn.
+
+The framework I'll soon discuss contains none of my own thoughts or opinions, I've just tried to summarize it in a way that I would have understood best as a new learner. Please see my references at the end for a formal description of all of these topics -- **this post is only intended to provide a conceptual map so that you can go learn more!**
+
+Anyways, the first and most important idea is that causal inference can be thought of as two very distinct halves, only one of which deals with actually running code to analyze data. I'll call these two halves **identification** and **estimation.**
+
+Identification is the process of using 
+
+Some of the reasons the causal inference literature is difficult to just pick up and learn is because . Even within the field of statistics, there are some very distinct "lineages" of methodology (e.g. Robins, Pearl, and Rubin), which makes even the starting frameworks really hard to translate when you're a beginner.
+
+It's no secret that causal inference is a rapidly developing field. If you're tried to learn pieces of causal inference already (rightly so!) that it can be pretty difficult. 
+
+really easy point to miss when you're first learning causal inference. It is the idea that you should always **keep identification separate from estimation** when you're reading a new topic in causal inference.
+
+Of course there are exceptions. Notably, Miguel Hernan and James Robins recently published *What If* book is written for a beginner audience. 
+
+1. What **causal estimand** is this paper concerned with?
+
+2. What **assumptions** are needed to **identify** this causal estimand as a statistical estimand?
+
+3. What **estimator** is the paper proposing for the statistical estimand?
+
+4. How does this estimator **compare** to other estimators to estimate the same statistical estimand? 
+
+<!-- ![](/img/causal_at_beach.jpg) -->
+
+## Causal Estimand
+
+**Causal estimand:** a quantity that exists in some hypothetical world where you can administer multiple interventions, or treatments, and then observe the outcome under all of those interventions.
+
+*Alternative names:* causal parameter, functional.
+
+*Examples:* Average Treatment Effect
+
+
+1. Causal inference has been in development by a *ton* of different fields (economics, epidemiology, computer science, statistics) and has just recently begun to explode. 
+
+Here's a list of some estimands discussed in the causal inference literature:
+
+
 
 > I believe the key to learning (and applying) causal inference is to always keep **identification** separate from **estimation**.
-
 Now what does *that* mean!? Broadly, **identification means figuring out whether you can write a causal estimand of interest in terms of data** (i.e., in forms of expectations of random variables).
 
 A **causal estimand** is just some summary quantity that would be interesting to evaluate in the system you're studying. A few common causal estimands are the Average Treatment Effect and the Conditional Average Treatment Effect. There are many, many more though, such as the Dose Response Curve, Causal Odds Ratio, Causal Risk Ratio, and Marginal Structural Model.
 
-To determine whether you can identify your causal estimand of interest in your system of study and with the data you have, careful thought is required. It's the stage of a problem when you, as a statistician, sit down and talk with subject matter experts about the precise question they'd like to answer. You may draw *Directed Acyclic Graphs* (DAGs) or *Single World Intervention Graphs* (SWIGs), or write out the *Non Parametric Structural Equations* of the system.
+To determine whether you can identify your causal estimand of interest in your system of study and with the data you have, careful thought is required. It's the stage of a problem when you, as a statistician, sit down and talk with subject matter experts about the precise question they'd like to answer. You may draw *Directed Acyclic Graphs* (DAGs) or *Single World Intervention Graphs* (SWIGs), or write out the *Non Parametric Structural Causal Equations* of the system.
 
 These tools will help you evaluate some of the main requirements of causal inference: for the causal estimand of interest to be identified, you must satisfy causal assumptions of *positivity*, *exchangeability*, and *ignorability*, while still avoiding the usual pitfalls in statistics like *selection bias* and *unmeasured confounding*.
 
@@ -51,30 +100,5 @@ $Odds ratio = E[Y]$
 $Relative risk = E[Y]$
 
 $\mathrm{ATE} = E[Y]$
-
-
-
-
-
-
-A common example is figuring out whether the Average Treatment Effect (ATE), or the difference in outcomes if everyone were to receive the exposure compared to if everyone had not received the exposure
-
-$\theta^* = E[E[Y|A=1,W]-E[Y|A=0,W]]$
-
-
-Sure, propensity scores are part of causal inference, but they're part of the *estimation* side of causal inference. A propensity score can't fix a research question with a causal estimand that does not meet causal assumptions.
-
-Causal 
-
-
-I think causal inference is the most interesting topic in all of statistics-- I think it's so cool that sometimes I make really dweeby comics about it:
-
-
-
-
-
-
-
-
 
 

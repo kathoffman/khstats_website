@@ -44,20 +44,35 @@ sofa_counts
 
 ```{r, echo=F}
 library(tidyverse)
-theme_set(theme_bw(base_size = 15, base_family = "Roboto Condensed"))
+#theme_set(theme_bw(base_size = 15, base_family = "Roboto Condensed"))
 
 combos %>%
   count(total_sofa) %>%
-  ggplot(aes(total_sofa, n, fill=total_sofa)) +
+  ggplot(aes(total_sofa, n, label=formatC(n, format="d", big.mark=","))) +
+  geom_point(size=2) +
+  geom_segment(aes(x=total_sofa, xend=total_sofa, y=0, yend=n)) +
+  geom_text(nudge_y = 60) +
   #geom_bar(stat="identity", fill="#3C639A") +
-  geom_bar(stat="identity") +
+  #geom_bar(stat="identity") +
   labs(x="Total SOFA Score", y="Number of Combinations") +
-  scale_y_continuous(expand=c(0,0), limits=c(0,1800)) +
+  scale_y_continuous(expand=c(0,0), limits=c(-20,2000), labels=scales::comma_format()) +
+  scale_x_continuous(breaks = 0:24) +
   guides(fill=F) +
-  scale_x_continuous(expand=c(0,0))  +
+  #scale_x_continuous(expand=c(0,0))  +
   scale_fill_gradient(low="navy",high="firebrick2") +
-  theme_bw()
-
+  theme_classic() +
+  theme(axis.line = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.x = element_blank(),
+         plot.title = element_text(hjust = 0.5,
+                                  face = "bold", size = 20),
+        #axis.title.x = element_text(face="bold"),
+        axis.text.x = element_text(size=12, face="bold", vjust=2.5)
+        ) +
+  labs(title="Number of subscore combinations per SOFA score") + 
+  annotate("segment", x = 6, xend = 9, y = 1800, yend = 1600, colour = "red", size=1, arrow=arrow())
 ```
 
 ## Solving with Combinatorics 
