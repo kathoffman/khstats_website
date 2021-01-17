@@ -1,7 +1,7 @@
 ---
 title: "Becoming a Biostatistician: A Follow-up to 'A Day in the Life of a Biostatistician'"
 author: "Katherine Hoffman"
-date: 2020-01-16T21:13:14-05:00
+date: 2021-01-15T21:13:14-05:00
 categories: ["career"]
 tags: ["career", "biostatistics"]
 ---

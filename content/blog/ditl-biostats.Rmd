@@ -119,7 +119,14 @@ I close the report; I will continue working on this analysis tomorrow.
 I hope if there are any 22, 42, or 14 year-olds out there considering a career in biostatistics and struggling to figure out what on earth we actually do, that you find this post and it lessens your confusion!
 
 All the best,
+
 Kat
+
+***
+
+If you found this post useful, you might be interested in a [follow up post](https://www.khstats.com/blog/ditl/ditl-followup/) I wrote answering common email questions I've received. I also interviewed my friend from grad school who is a Biostatistician for a pharmaceutical CRO in a [separate blog post](https://www.khstats.com/blog/ditl/pharma-cro/).
+
+***
 
 \*Not a real statistic.
 
