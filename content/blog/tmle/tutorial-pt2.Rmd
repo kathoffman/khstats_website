@@ -408,7 +408,7 @@ Q_A_update <- plogis(qlogis(Q_A) + eps*H_A)
 
 **2. Update the expected outcomes, conditional on baseline confounders and everyone receiving the treatment.**
 
-$$\hat{\mathrm{E}}^*[Y|A=1,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]) + \hat{\epsilon}H(A,1))$$
+$$\hat{\mathrm{E}}^*[Y|A=1,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=1,\mathbf{W}]) + \hat{\epsilon}H(1,A))$$
 ![](/img/tmle/12_update_Q1.png){width=70%}
 
 ```{r}
@@ -417,7 +417,7 @@ Q_1_update <- plogis(qlogis(Q_1) + eps*H_1)
 
 **3. Update the expected outcomes, conditional on baseline confounders and no one receiving the treatment.**
 
-$$\hat{\mathrm{E}}^*[Y|A=0,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]) + \hat{\epsilon}H(A,0))$$
+$$\hat{\mathrm{E}}^*[Y|A=0,\mathbf{W}] = expit(logit(\mathrm{\hat{E}}[Y|A=0,\mathbf{W}]) + \hat{\epsilon}H(0,W))$$
 ![](/img/tmle/13_update_Q0.png){width=70%}
 
 ```{r}
