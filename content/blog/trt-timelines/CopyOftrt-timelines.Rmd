@@ -2,6 +2,7 @@
 title: "Patient Treatment Timelines for Longitudinal Survival Data"
 author: "Katherine Hoffman"
 date: 2019-11-28T21:13:14-05:00
+draft: true
 categories: ["R","data visualization"]
 tags: ["R","ggplot2","swimmer plots","treatment timelines","longitudinal survival"]
 output: 
@@ -354,6 +355,41 @@ dat_cc_miss %>%
 ```
 
 If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.
+
+```{r}
+dat$trt_mod <- sample(c("No","Yes",NA),nrow(dat),replace=T)
+```
+
+```{r}
+dat %>%
+  group_by(pt_id) %>%
+  mutate(last_month_followup = max(months_followup), 
+         month_death = case_when(death == 1 ~ last_month_followup, TRUE ~ NA_real_)) %>%
+  ungroup() %>%
+  mutate(pt_id = fct_rev(fct_reorder(pt_id, last_month_followup)),
+         # make the treatment variable labels nicer
+         trt = factor(trt, levels=0:1, labels=c("No","Yes"))) %>%
+  ggplot(aes(x = months_followup, y = pt_id, group = pt_id, col = trt)) +
+  geom_line()  + 
+  #geom_point(shape = 15) + 
+  geom_point(aes(x = month_death, y = pt_id), col = "black", shape = 4) +
+  geom_point(aes(x = months_followup, y = pt_id, shape = trt_mod), col="black") +
+  theme_bw() +
+  labs(x = "Months of Follow-Up", y = "Patient ID", col = "Treatment",
+       title = "Patient Treatment Timeline",
+       subtitle = "x indicates month of patient death") +
+  # edit legend box and make patient ids small
+  theme(axis.text.y = element_text(size=6),
+        legend.position = c(.6, .9), legend.direction = "horizontal",
+        legend.background = element_rect(linetype="solid", colour ="black")) +
+  # remove extra space around timeline
+  scale_x_continuous(expand=c(0.01,0.01)) +
+  # set the color of the lines and points
+  scale_color_manual(values=c("dodgerblue","firebrick1")) +
+  scale_shape_manual(values = c(1,2,3))
+```
+
+
 
 Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!
 
