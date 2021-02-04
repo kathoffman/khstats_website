@@ -72,7 +72,7 @@ I love when I am able to focus on one project and optimize my code to be really 
 
 **What’s your least favorite part of your job? **
 
-It is working with those who either 1) think they have equivalent knowledge to me in statistics after taking one or two introductory statistics courses or 2) know very little about statistics and do not see a value in learning more. Both types of people tend to want to be very hands-on in my analyses and this usually results in me explaining (to little avail) why we cannot do what they think we should do. I don’t think this is unique to my job, or academia, or even statistics, however, it is definitely my least favorite part.
+It is working with individuals who either believe they have equivalent knowledge to me in statistics after taking an introductory course, or who know very little about statistics, do not desire to learn more, and yet do not trust my knowledge. Both types of people tend to want to be very hands-on in my analyses and this usually results in me explaining (to little avail) why we cannot do the analysis they think we should do. I don’t think this is unique to my job or even academia, however, it is definitely my least favorite part.
 
 ***
 
