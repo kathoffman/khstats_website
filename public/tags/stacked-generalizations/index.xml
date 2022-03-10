@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>stacked generalizations | KHstats</title>
-    <link>/tags/stacked-generalizations/</link>
-      <atom:link href="/tags/stacked-generalizations/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/stacked-generalizations/</link>
+      <atom:link href="https://khstats.com/tags/stacked-generalizations/index.xml" rel="self" type="application/rss+xml" />
     <description>stacked generalizations</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Oct 2020 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>stacked generalizations</title>
-      <link>/tags/stacked-generalizations/</link>
+      <link>https://khstats.com/tags/stacked-generalizations/</link>
     </image>
     
     <item>
       <title>Become a Superlearner! An Illustrated Guide to Superlearning</title>
-      <link>/blog/sl/superlearning/</link>
+      <link>https://khstats.com/blog/sl/superlearning/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/sl/superlearning/</guid>
+      <guid>https://khstats.com/blog/sl/superlearning/</guid>
       <description>
 
 
@@ -30,7 +30,7 @@ HTML Image as link
 &lt;/title&gt;
 &lt;/head&gt;
 &lt;body&gt;
-&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;https://khstats.com/img/Superlearning.jpg&#34;  
          width=100%&#34;&gt;
 &lt;figcaption&gt;
 &lt;strong&gt;&lt;em&gt;A Visual Guide…&lt;/em&gt;&lt;/strong&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;&lt;em&gt;Targeted Learning&lt;/em&gt;&lt;/a&gt; by Mark van der Laan and Sherri Rose. This “visual guide” I made for &lt;em&gt;Chapter 3: Superlearning&lt;/em&gt; by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
@@ -46,7 +46,7 @@ HTML Image as link
 &lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;a mix of multiple algorithms may be more optimal for a given data set than any single algorithm&lt;/strong&gt;. For example, a tree based model averaged with a linear model (e.g. random forests and LASSO) could smooth some of the model’s edges to improve predictive performance.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Superlearning is also called stacking, stacked generalizations, and weighted ensembling by different specializations within the realms of statistics and data science.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;/img/spiderman_meme.jpg&#34; style=&#34;width:42.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/spiderman_meme.jpg&#34; style=&#34;width:42.0%&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;superlearning-step-by-step&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Superlearning, step by step&lt;/h1&gt;
@@ -138,7 +138,7 @@ kable(head(obs), digits=3, caption = &amp;quot;Simulated data set&amp;quot;)&lt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
 The superlearner algorithm relies on K-fold cross-validation (CV) to avoid overfitting. We will start this process by splitting the data into 10 folds. The easiest way to do this is by creating indices for each CV fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;k &amp;lt;- 10 # 10 fold cv
 cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # create indices for each CV fold. We need each fold K to contain n (all the rows of our data set) divided by k rows. in our example this is 5000/10 = 500 rows in each fold&lt;/code&gt;&lt;/pre&gt;
@@ -150,7 +150,7 @@ cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # create indices for each CV fol
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the CV folds (k = 1,2,…,9) &lt;em&gt;except&lt;/em&gt; for the very last one: &lt;code&gt;cv_index == 10&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The individual algorithms or &lt;strong&gt;base learners&lt;/strong&gt; that we’ll use here are three linear regressions with differently specified parameters:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
@@ -172,7 +172,7 @@ fit_1c &amp;lt;- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR&lt;/code&
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step3.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step3.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We can then get use our validation data, &lt;code&gt;cv_index == 10&lt;/code&gt;, to obtain our first set of cross-validated predictions.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_valid_1 &amp;lt;- obs[which(cv_index == 10),] # make a data set that only contains observations except in k=10
 pred_1a &amp;lt;- predict(fit_1a, newdata = cv_valid_1) # use that data set as the validation for all the models in the SL library
@@ -232,7 +232,7 @@ pred_1c &amp;lt;- predict(fit_1c, newdata = cv_valid_1)&lt;/code&gt;&lt;/pre&gt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We’ll want to get those predictions for &lt;em&gt;every&lt;/em&gt; fold. So, using your favorite &lt;code&gt;for&lt;/code&gt; loop, &lt;code&gt;apply&lt;/code&gt; statement, or &lt;code&gt;map&lt;/code&gt;ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in &lt;code&gt;obs&lt;/code&gt;ervations.&lt;/p&gt;
 &lt;p&gt;The way I chose to code this was to make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data), then use &lt;code&gt;map_dfr()&lt;/code&gt; from the &lt;code&gt;purrr&lt;/code&gt; package to repeat over all 10 CV folds. I saved the results in a new data frame called &lt;code&gt;cv_preds&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_folds &amp;lt;- as.list(1:k)
@@ -324,7 +324,7 @@ cv_preds %&amp;gt;% arrange(obs_id) %&amp;gt;% head() %&amp;gt;% kable(digits=2,
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step5.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step5.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;This is the key step of the superlearner algorithm: we will use a new learner, a &lt;strong&gt;metalearner&lt;/strong&gt;, to take information from all of the base learners and create that new algorithm.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -388,7 +388,7 @@ kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression 
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step6.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step6.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;After we fit the metalearner, we officially have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the full data set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_a &amp;lt;- glm(y ~ x2 + x4, data=obs)
 fit_b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
@@ -401,7 +401,7 @@ fit_c &amp;lt;- glm(y ~ x1*x2*x3, data=obs)&lt;/code&gt;&lt;/pre&gt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step7.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step7.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We’ll use &lt;em&gt;those&lt;/em&gt; base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using cross-validated predictions, rather than fitting the base learners on the whole data set. This was to avoid overfitting.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pred_a &amp;lt;- predict(fit_a)
 pred_b &amp;lt;- predict(fit_b)
@@ -415,7 +415,7 @@ full_data_preds &amp;lt;- tibble(pred_a, pred_b, pred_c)&lt;/code&gt;&lt;/pre&gt
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step8.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step8.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_predictions &amp;lt;- predict(sl_fit, newdata = full_data_preds)
 kable(head(sl_predictions), col.names = &amp;quot;sl_predictions&amp;quot;, digits= 2, caption = &amp;quot;Final SL predictions (manual)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
@@ -569,7 +569,7 @@ HTML Image as link
 &lt;/head&gt;
 &lt;body&gt;
 &lt;a href=&#34;https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;
-&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/TMLE.jpg&#34;
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;https://khstats.com/img/TMLE.jpg&#34;
          width=100%&#34;&gt;
 &lt;/a&gt;
 &lt;/body&gt;
@@ -596,7 +596,7 @@ HTML Image as link
   theme_bw() +
   guides(col=F) +
   labs(x = &amp;quot;Base Learner&amp;quot;, y=&amp;quot;Squared Error&amp;quot;, title=&amp;quot;Squared Errors of Learner A, B, and C&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/sl/superlearning_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;528&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/sl/superlearning_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;528&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;And then take the mean of those three cross-validated squared error columns, grouped by &lt;code&gt;cv_fold&lt;/code&gt;, to get the CV-MSE for each fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks &amp;lt;-
   cv_sq_error %&amp;gt;%
@@ -616,7 +616,7 @@ HTML Image as link
   theme_bw()  +
     scale_x_continuous(breaks = 1:10) +
   labs(x = &amp;quot;Cross-Validation (CV) Fold&amp;quot;, y=&amp;quot;Mean Squared Error (MSE)&amp;quot;, col = &amp;quot;Base Learner&amp;quot;, title=&amp;quot;CV-MSEs for Base Learners A, B, and C&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/sl/superlearning_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/sl/superlearning_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and 0.45. We can take another mean to get the overall CV-MSE for each learner.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks %&amp;gt;%
   select(-cv_fold) %&amp;gt;%
@@ -658,7 +658,7 @@ HTML Image as link
 &lt;div id=&#34;another-visual-guide-for-superlearning&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Another visual guide for superlearning&lt;/h3&gt;
 &lt;p&gt;The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the &lt;em&gt;Targeted Learning&lt;/em&gt; book:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_diagram.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_diagram.png&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;acknowledgments&#34; class=&#34;section level1&#34;&gt;

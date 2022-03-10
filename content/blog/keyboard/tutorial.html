@@ -1,0 +1,108 @@
+---
+title: "Biostatician Builds: Mechanical Keyboard"
+author: "Katherine Hoffman"
+date: 2021-12-01T21:13:14-05:00
+categories: ["miscellaneous"]
+draft: true
+tags: ["mechanical keyboard","diy"]
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+    print_df: paged
+---
+
+
+
+<p>Hello, it’s been a while! I hope you’re all doing well and staying healthy. I was feeling pretty burnt out last year, thus a hiatus from posts<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, but I hope you’ll enjoy this non-stats one.</p>
+<p>It’s about a project I did last fall – building a mechanical keyboard. I’m no expert, but I enjoyed the process so much that I thought I would share some helpful resources and lessons learned. Even if you have no interest in building your own mechanical keyboard right now, I hope it encourages you to learn something new that you may have initially felt intimidated by!</p>
+<div id="whats-a-mechanical-keyboard" class="section level1">
+<h1>What’s a mechanical keyboard?</h1>
+<p>A mechanical keyboard is the typing tool that comes with a desktop computer as opposed to a laptop. The keys are taller and provide more feedback in feel and sound when you hit them. Gamers, typists, and coders are the types of people most likely to use a mechanical keyboard with their laptop.</p>
+</div>
+<div id="why-would-i-want-to-build-a-mechanical-keyboard" class="section level1">
+<h1>Why would I want to build a mechanical keyboard?</h1>
+<p>The practical reason to build your own keyboard is customizability. Picking out your own components provides freedom in colors, layout, feel/sound of the keys, and more. Yet the primary reason, in my opinion, is that it’s fun. If you enjoy DIY projects, you’ll probably enjoy the challenge that comes with building your own keyboard.</p>
+</div>
+<div id="what-components-do-i-need-to-buy" class="section level1">
+<h1>What components do I need to buy?</h1>
+<p>Building a keyboard can be overwhelming! Yet it all boils down to six components that you’ll need:</p>
+<ol style="list-style-type: decimal">
+<li><a href="#case">Case</a></li>
+<li><a href="#pcb">Printed Circuit Board (PCB)</a></li>
+<li><a href="#keyboard-plate">Keyboard plate</a></li>
+<li><a href="#key-switches">Key switches</a></li>
+<li><a href="#key-stabilizers">Key stabilizers</a></li>
+<li><a href="#key-caps">Key caps</a></li>
+</ol>
+<div id="case" class="section level2">
+<h2>Case</h2>
+<p>The <strong>case</strong> is the outside of your keyboard. The size of the case you choose will limit how many keys you can have on your keyboard. Case sizes are described in percentages, i.e. 100%, 80%, 75%, 60%, 40%, which corresponds to how many keys fit on the board.</p>
+</div>
+<div id="pcb" class="section level2">
+<h2>PCB</h2>
+<p>The <strong>PCB</strong> is the electronic circuitry of your keyboard. You will need to choose a PCB that fits into whatever size case you’ve picked. The main option with a PCB is whether it has RGB underglow on it, which means it has tiny lights on it that you can program to display different colors.</p>
+</div>
+<div id="keyboard-plate" class="section level2">
+<h2>Keyboard plate</h2>
+<p><strong>Keyboard plates</strong> are what you put on top of PCBs to hold your keys in place. You can choose from aluminum, brass, or steel. In my humble first-time-builder opinion, if you’re feeling overwhelmed, this isn’t something you should stress about. You can barely see it below the keys, so color doesn’t matter much, and the differences in sound/material from the material seem minimal. You should make sure to get one that matches the layout of the keys that you want, though.</p>
+</div>
+<div id="key-switches" class="section level2">
+<h2>Key switches</h2>
+<p>This is a fun choice! <strong>Key switches</strong> are what go below the keys to provide the majority of sound and feel. You can choose from many different brands, e.g. Cherry MX or Gateron, and types of switch feels, e.g. tactile, linear, clicky. I won’t go into all the differences here, but you should know that <em>switch colors correspond to certain sounds/feels</em>. The color of the switch won’t be seen unless you have translucent key caps.</p>
+</div>
+<div id="key-stabilizers" class="section level2">
+<h2>Key stabilizers</h2>
+<p><strong>Key stabilizers</strong> are necessary but a bit boring. They go beneath the wider keys like space bar and shift to help distribute the weight of your finger to press the button.</p>
+</div>
+<div id="key-caps" class="section level2">
+<h2>Key caps</h2>
+<p><strong>Key caps</strong> are, in my opinion, the most exciting part! They go on top of the switches and are the most visible part of the keyboard. You can choose the material and colors, and either buy as a set or pick out unique single keycaps.</p>
+</div>
+</div>
+<div id="my-build" class="section level1">
+<h1>My build</h1>
+</div>
+<div id="the-steps" class="section level1">
+<h1>The steps</h1>
+<p>I’ll briefly outline the steps to building the keyboard below. If you’re actually in the process of building, I highly recommend finding a recorded live stream and/or tutorials on Youtube to walk you through the process. I found one by <a href="https://www.youtube.com/channel/UCMHXMAeKkI6HXlPfLiYvo9g">Taeha Types</a> for my <a href="(https://www.youtube.com/watch?v=O7uJprfBlos)">exact build</a>, and watched it almost in entirety.</p>
+<div id="test-your-pcb" class="section level2">
+<h2>1. Test your PCB</h2>
+<p>First you’ll want to download a keyboard programming app like VIA, plug your keyboard into your computer, take a pair of tweezers, and test each point of key circuitry on your PCB plate.</p>
+</div>
+<div id="lubricate-the-stabilizers" class="section level2">
+<h2>2. Lubricate the stabilizers</h2>
+<p>If your PCB plate is working properly, go ahead and add lubricant and put together your stabilizers. I found the whole process a bit tricky, but this Youtube video helped a lot.</p>
+</div>
+<div id="place-your-stabilizers-on-the-pcb" class="section level2">
+<h2>3. Place your stabilizers on the PCB</h2>
+<p>Don’t be nervous, click those stabilizers into place! You can put the respective keycaps on and make sure you like the feel at this point.</p>
+</div>
+<div id="add-the-plate-and-solder-click-the-key-switches-into-the-pcb" class="section level2">
+<h2>4. Add the plate and solder click the key switches into the PCB</h2>
+<p>You can now overlay your plate on the PCB and start clicking each key switch’s metal prongs into the small holes on the PCB. You should feel a click when it locks into place, and the switches should not fall out if you flip the board over.</p>
+</div>
+<div id="soldering" class="section level2">
+<h2>5. Soldering</h2>
+<p>This was hands-down my favorite part of the entire process. Soldering (pronounced soddering) is SO much fun. There’s a ton of videos online about it, and you can buy a kit to practice if you want, but honestly I just went for it. You basically melt a piece of metal (flux) and then place the soldering iron right next to the key switch prongs and PCB ring of metal to create an electrical conduction.</p>
+<p>One important note with soldering is that you should wait a day and retest your keys to make sure the conduction stayed. I had an issue where I would successfully test the keys about five minutes after soldering, but the next day the same keys would no longer work.</p>
+<p>One other tip is to pay attention to the temperature of where you’re soldering. The fumes are a bit intense (and can be toxic) so I was soldering outside on a summer night. As the sun went down, I realized that my soldering iron was no longer as hot as it said it was (~400 degrees Fareignheit) because the wind/outside air was cooling it down. This contributed to the faulty conduction noted in my previous paragraph.</p>
+</div>
+<div id="section" class="section level2">
+<h2>6.</h2>
+</div>
+</div>
+<div id="my-build-1" class="section level1">
+<h1>My Build</h1>
+</div>
+<div id="lessons-learned" class="section level1">
+<h1>Lessons learned</h1>
+<p>In the end, the process of learning to build a mechanical keyboard felt just like learning any new concept in statistics/data science. The knowledge took some time to find, and the jargon was a bit intimidating, but after spending some time sifting through information I could always find what I needed. The entire process was very enjoyable, and I’m already looking forward to my next build!</p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I also got a bit behind answering emails – I’ve tried to respond to all emails I’ve received but please reach out if I missed yours! Sometimes messages go into junk and I don’t check them before they’re auto-deleted :(<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>

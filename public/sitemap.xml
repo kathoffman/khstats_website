@@ -3,473 +3,443 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/courses/example/example1/</loc>
+    <loc>https://khstats.com/courses/example/example1/</loc>
     <lastmod>2019-05-05T00:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/courses/example/</loc>
+    <loc>https://khstats.com/courses/example/</loc>
     <lastmod>2018-09-09T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/courses/example/example2/</loc>
+    <loc>https://khstats.com/courses/example/example2/</loc>
     <lastmod>2019-05-05T00:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/tmle/tutorial/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/blog/ditl/ditl-followup/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/biostatistics/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/causal-inference/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/career/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/introduction-to-tmle/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/categories/career/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/categories/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/lmtp/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/blog/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/r/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/</loc>
+    <lastmod>2021-01-15T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/blog/tmle/tutorial-pt3/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/statistics/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/causal-inference/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/statistics/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/introduction-to-tmle/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/lmtp/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/targeted-learning/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/r/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/targeted-maximum-likelihood-estimation/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/categories/r/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/tmle/</loc>
-    <lastmod>2020-11-27T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/statistics/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/collider-bias/</loc>
-    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/categories/statistics/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/collider-bias/race/</loc>
-    <lastmod>2020-10-13T21:13:14-05:00</lastmod>
+    <loc>https://khstats.com/tags/targeted-learning/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/sl/superlearning/</loc>
+    <loc>https://khstats.com/tags/targeted-maximum-likelihood-estimation/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://khstats.com/tags/tmle/</loc>
+    <lastmod>2020-12-11T02:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://khstats.com/blog/tmle/tutorial-pt2/</loc>
+    <lastmod>2020-12-11T01:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://khstats.com/blog/tmle/tutorial/</loc>
+    <lastmod>2020-12-11T00:13:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://khstats.com/blog/sl/superlearning/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/ensemble-learning/</loc>
+    <loc>https://khstats.com/tags/ensemble-learning/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/rstats/</loc>
+    <loc>https://khstats.com/tags/rstats/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/sl3/</loc>
+    <loc>https://khstats.com/tags/sl3/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/stacked-generalizations/</loc>
+    <loc>https://khstats.com/tags/stacked-generalizations/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/stacking/</loc>
+    <loc>https://khstats.com/tags/stacking/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/superlearner/</loc>
+    <loc>https://khstats.com/tags/superlearner/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/superlearning/</loc>
+    <loc>https://khstats.com/tags/superlearning/</loc>
     <lastmod>2020-10-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/biostatistics/</loc>
+    <loc>https://khstats.com/tags/coronavirus/</loc>
     <lastmod>2020-09-30T01:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/career/</loc>
+    <loc>https://khstats.com/tags/covid-19/</loc>
     <lastmod>2020-09-30T01:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/combinatorics/</loc>
+    <loc>https://khstats.com/tags/covid-19-data-analysis/</loc>
     <lastmod>2020-09-30T01:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/coronavirus/</loc>
+    <loc>https://khstats.com/blog/covid/covid/</loc>
     <lastmod>2020-09-30T01:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/covid-19/</loc>
-    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/covid-19-data-analysis/</loc>
-    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/critical-care-research/</loc>
-    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/sofa/sofa-of-10/</loc>
-    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/covid/covid/</loc>
-    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/sofa-scores/</loc>
-    <lastmod>2020-09-30T01:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/collider-bias/hardest_part_of_causal/</loc>
-    <lastmod>2020-09-12T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/correlation/</loc>
+    <loc>https://khstats.com/tags/correlation/</loc>
     <lastmod>2020-08-24T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/corr-plots/corr-plots/</loc>
+    <loc>https://khstats.com/blog/corr-plots/corr-plots/</loc>
     <lastmod>2020-08-24T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/data-visualization/</loc>
+    <loc>https://khstats.com/categories/data-visualization/</loc>
     <lastmod>2020-08-24T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/ggplot2/</loc>
+    <loc>https://khstats.com/tags/ggplot2/</loc>
     <lastmod>2020-08-24T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/purrr/</loc>
+    <loc>https://khstats.com/tags/purrr/</loc>
     <lastmod>2020-08-24T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/sepsis/</loc>
+    <loc>https://khstats.com/talk/sepsis/</loc>
     <lastmod>2020-08-05T10:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/</loc>
+    <loc>https://khstats.com/talk/</loc>
     <lastmod>2020-08-05T10:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/expectations/</loc>
+    <loc>https://khstats.com/tags/expectations/</loc>
     <lastmod>2020-07-31T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/iterated-expectations/iterated-expectations/</loc>
+    <loc>https://khstats.com/blog/iterated-expectations/iterated-expectations/</loc>
     <lastmod>2020-07-31T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/data-wrangling/</loc>
+    <loc>https://khstats.com/tags/data-wrangling/</loc>
     <lastmod>2020-07-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/electronic-health-record/</loc>
+    <loc>https://khstats.com/tags/electronic-health-record/</loc>
     <lastmod>2020-07-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/gtsummary/</loc>
+    <loc>https://khstats.com/tags/gtsummary/</loc>
     <lastmod>2020-07-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/covid/covid-functions/</loc>
+    <loc>https://khstats.com/blog/covid/covid-functions/</loc>
     <lastmod>2020-07-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/tidylog/</loc>
+    <loc>https://khstats.com/tags/tidylog/</loc>
     <lastmod>2020-07-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/tidyverse/</loc>
+    <loc>https://khstats.com/tags/tidyverse/</loc>
     <lastmod>2020-07-10T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/longitudinal-survival/</loc>
+    <loc>https://khstats.com/tags/longitudinal-survival/</loc>
     <lastmod>2019-11-28T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/trt-timelines/trt-timelines/</loc>
+    <loc>https://khstats.com/blog/trt-timelines/trt-timelines/</loc>
     <lastmod>2019-11-28T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/swimmer-plots/</loc>
+    <loc>https://khstats.com/tags/swimmer-plots/</loc>
     <lastmod>2019-11-28T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/treatment-timelines/</loc>
+    <loc>https://khstats.com/tags/treatment-timelines/</loc>
     <lastmod>2019-11-28T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/project/</loc>
+    <loc>https://khstats.com/project/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/project/external-project/</loc>
+    <loc>https://khstats.com/project/external-project/</loc>
     <lastmod>2019-11-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/career/</loc>
+    <loc>https://khstats.com/tags/interview/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/interview/</loc>
+    <loc>https://khstats.com/tags/sas/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/sas/</loc>
+    <loc>https://khstats.com/blog/ditl/pharma-cro/</loc>
     <lastmod>2019-10-06T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/ditl/pharma-cro/</loc>
-    <lastmod>2019-10-06T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/blog/sl/sl/</loc>
+    <loc>https://khstats.com/blog/sl/sl/</loc>
     <lastmod>2019-09-12T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/superlearner/</loc>
+    <loc>https://khstats.com/talk/superlearner/</loc>
     <lastmod>2019-09-10T19:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/power-sims/</loc>
+    <loc>https://khstats.com/talk/power-sims/</loc>
     <lastmod>2019-08-13T12:30:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/digoxin/</loc>
+    <loc>https://khstats.com/talk/digoxin/</loc>
     <lastmod>2019-07-30T10:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/lightning-talk/</loc>
+    <loc>https://khstats.com/talk/lightning-talk/</loc>
     <lastmod>2019-06-17T19:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/blog/</loc>
+    <loc>https://khstats.com/categories/blog/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/new-york-r-conference/</loc>
+    <loc>https://khstats.com/tags/new-york-r-conference/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/r-markdown/</loc>
+    <loc>https://khstats.com/tags/r-markdown/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/rstatsnyc/</loc>
+    <loc>https://khstats.com/tags/rstatsnyc/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/nyrconf/nyr-conf-2019/</loc>
+    <loc>https://khstats.com/blog/nyrconf/nyr-conf-2019/</loc>
     <lastmod>2019-06-01T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/courses/</loc>
+    <loc>https://khstats.com/courses/</loc>
     <lastmod>2019-05-05T00:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/ditl-biostats/</loc>
+    <loc>https://khstats.com/blog/ditl-biostats/</loc>
     <lastmod>2019-04-16T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/biostatistician/</loc>
+    <loc>https://khstats.com/tags/biostatistician/</loc>
     <lastmod>2019-04-16T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/stem/</loc>
+    <loc>https://khstats.com/tags/stem/</loc>
     <lastmod>2019-04-16T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/headers-in-functions/</loc>
+    <loc>https://khstats.com/tags/headers-in-functions/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/headers/headers-in-functions/</loc>
+    <loc>https://khstats.com/blog/headers/headers-in-functions/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/rmarkdown/</loc>
+    <loc>https://khstats.com/tags/rmarkdown/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/rmarkdown/</loc>
+    <loc>https://khstats.com/categories/rmarkdown/</loc>
     <lastmod>2019-04-16T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/dplyr/data-wrangling/</loc>
+    <loc>https://khstats.com/blog/dplyr/data-wrangling/</loc>
     <lastmod>2019-03-05T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/tags/dplyr/</loc>
+    <loc>https://khstats.com/tags/dplyr/</loc>
     <lastmod>2019-03-05T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/slides/</loc>
+    <loc>https://khstats.com/slides/</loc>
     <lastmod>2019-02-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/slides/example/</loc>
+    <loc>https://khstats.com/slides/example/</loc>
     <lastmod>2019-02-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/blog/tmle/visual-key/</loc>
+    <loc>https://khstats.com/blog/tmle/visual-key/</loc>
     <lastmod>2019-01-09T21:13:14-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/privacy/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/terms/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/talk/shanghai/</loc>
+    <loc>https://khstats.com/talk/shanghai/</loc>
     <lastmod>2018-03-01T10:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/authors/admin/</loc>
+    <loc>https://khstats.com/authors/admin/</loc>
   </url>
   
   <url>
-    <loc>/authors/</loc>
+    <loc>https://khstats.com/authors/</loc>
   </url>
   
   <url>
-    <loc>/publication_types/</loc>
+    <loc>https://khstats.com/publication_types/</loc>
   </url>
   
   <url>
-    <loc>/publication/</loc>
+    <loc>https://khstats.com/publication/</loc>
   </url>
   
   <url>
-    <loc>/tutorial/</loc>
+    <loc>https://khstats.com/tutorial/</loc>
   </url>
   
 </urlset>

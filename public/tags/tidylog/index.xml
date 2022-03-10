@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>tidylog | KHstats</title>
-    <link>/tags/tidylog/</link>
-      <atom:link href="/tags/tidylog/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/tidylog/</link>
+      <atom:link href="https://khstats.com/tags/tidylog/index.xml" rel="self" type="application/rss+xml" />
     <description>tidylog</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 10 Jul 2020 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>tidylog</title>
-      <link>/tags/tidylog/</link>
+      <link>https://khstats.com/tags/tidylog/</link>
     </image>
     
     <item>
       <title>Lessons learned: my top five coding &#39;tricks&#39; during the NYC COVID-19 outbreak</title>
-      <link>/blog/covid/covid-functions/</link>
+      <link>https://khstats.com/blog/covid/covid-functions/</link>
       <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/covid/covid-functions/</guid>
+      <guid>https://khstats.com/blog/covid/covid-functions/</guid>
       <description>
-&lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
-&lt;script src=&#34;/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://khstats.com/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a &lt;strike&gt;100%&lt;/strike&gt; 200% COVID-19 statistician. I received many analysis requests, though not all of them from official investigators:&lt;/p&gt;

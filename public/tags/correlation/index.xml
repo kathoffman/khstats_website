@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>correlation | KHstats</title>
-    <link>/tags/correlation/</link>
-      <atom:link href="/tags/correlation/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/correlation/</link>
+      <atom:link href="https://khstats.com/tags/correlation/index.xml" rel="self" type="application/rss+xml" />
     <description>correlation</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Mon, 24 Aug 2020 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>correlation</title>
-      <link>/tags/correlation/</link>
+      <link>https://khstats.com/tags/correlation/</link>
     </image>
     
     <item>
       <title>Customizable correlation plots in R</title>
-      <link>/blog/corr-plots/corr-plots/</link>
+      <link>https://khstats.com/blog/corr-plots/corr-plots/</link>
       <pubDate>Mon, 24 Aug 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/corr-plots/corr-plots/</guid>
+      <guid>https://khstats.com/blog/corr-plots/corr-plots/</guid>
       <description>
 
 
@@ -107,7 +107,7 @@
 &lt;ul&gt;
 &lt;li&gt;You can then run &lt;code&gt;ggplot2&lt;/code&gt; code on this data to make your own correlation heat maps.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;If you just want the code, &lt;a href=&#34;#just-the-code&#34;&gt;skip to the end&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
@@ -117,14 +117,14 @@
 &lt;h1&gt;Less-customizable options&lt;/h1&gt;
 &lt;p&gt;I really appreciate some of the packages and functions that allow me to make correlation plots super quickly using &lt;code&gt;R&lt;/code&gt;. Here are a few examples:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrplot::corrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrgram::corrgram(mtcars)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Registered S3 method overwritten by &amp;#39;seriation&amp;#39;:
 ##   method         from 
 ##   reorder.hclust gclus&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggcorrplot::ggcorrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;All of these are nice, but none of them are ultimately as customizable as I need them to be. I’ll next show how you can bypass using someone else’s function constraints to prepare correlations in your data in a &lt;code&gt;ggplot2&lt;/code&gt;-friendly format.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;getting-the-correlations&#34; class=&#34;section level1&#34;&gt;
@@ -1062,7 +1062,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(x = measure1, y = measure2, fill = r)) +
   geom_tile()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(x = measure1, y = measure2, fill = r)) +
@@ -1076,7 +1076,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_y_discrete(expand=c(0,0)) +
   # change global font to roboto
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column &lt;code&gt;r_if_sig&lt;/code&gt; that outputs from &lt;code&gt;formatted_cors()&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
@@ -1089,7 +1089,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Another version of this could involve squares with different sizes to denote strength of correlation using &lt;code&gt;geom_point&lt;/code&gt; with &lt;code&gt;shape&lt;/code&gt; set to a value from &lt;a href=&#34;http://www.sthda.com/english/wiki/ggplot2-point-shapes&#34;&gt;these available &lt;code&gt;geom_shape&lt;/code&gt;s&lt;/a&gt;. Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
@@ -1102,7 +1102,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;)) +
   scale_size(range=c(1,11), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Please feel free to reach out with questions or suggestions. Thank you to Elena Leib for spotting a minor bug in a previous version of this post!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;just-the-code&#34; class=&#34;section level1&#34;&gt;
@@ -1136,7 +1136,7 @@ formatted_cors(mtcars) %&amp;gt;%
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;R version 3.6.3 (2020-02-29)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)

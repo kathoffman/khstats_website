@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>COVID-19 | KHstats</title>
-    <link>/tags/covid-19/</link>
-      <atom:link href="/tags/covid-19/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/covid-19/</link>
+      <atom:link href="https://khstats.com/tags/covid-19/index.xml" rel="self" type="application/rss+xml" />
     <description>COVID-19</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 30 Sep 2020 01:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>COVID-19</title>
-      <link>/tags/covid-19/</link>
+      <link>https://khstats.com/tags/covid-19/</link>
     </image>
     
     <item>
       <title>On the Sidelines: NYC&#39;s COVID-19 Outbreak from the Eyes of a Pulmonary and Critical Care Team&#39;s Biostatistician</title>
-      <link>/blog/covid/covid/</link>
+      <link>https://khstats.com/blog/covid/covid/</link>
       <pubDate>Wed, 30 Sep 2020 01:13:14 -0500</pubDate>
-      <guid>/blog/covid/covid/</guid>
+      <guid>https://khstats.com/blog/covid/covid/</guid>
       <description>
-&lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
-&lt;script src=&#34;/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://khstats.com/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;blockquote&gt;
@@ -62,12 +62,12 @@
     
     <item>
       <title>Lessons learned: my top five coding &#39;tricks&#39; during the NYC COVID-19 outbreak</title>
-      <link>/blog/covid/covid-functions/</link>
+      <link>https://khstats.com/blog/covid/covid-functions/</link>
       <pubDate>Fri, 10 Jul 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/covid/covid-functions/</guid>
+      <guid>https://khstats.com/blog/covid/covid-functions/</guid>
       <description>
-&lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
-&lt;script src=&#34;/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://khstats.com/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;In non-coronavirus times, I am the biostatistician for a team of NYC pulmonologists and intensivists. When the pandemic hit NYC in mid-March, I immediately became a &lt;strike&gt;100%&lt;/strike&gt; 200% COVID-19 statistician. I received many analysis requests, though not all of them from official investigators:&lt;/p&gt;

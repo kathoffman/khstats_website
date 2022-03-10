@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>rstats | KHstats</title>
-    <link>/tags/rstats/</link>
-      <atom:link href="/tags/rstats/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/rstats/</link>
+      <atom:link href="https://khstats.com/tags/rstats/index.xml" rel="self" type="application/rss+xml" />
     <description>rstats</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 10 Oct 2020 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>rstats</title>
-      <link>/tags/rstats/</link>
+      <link>https://khstats.com/tags/rstats/</link>
     </image>
     
     <item>
       <title>Become a Superlearner! An Illustrated Guide to Superlearning</title>
-      <link>/blog/sl/superlearning/</link>
+      <link>https://khstats.com/blog/sl/superlearning/</link>
       <pubDate>Sat, 10 Oct 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/sl/superlearning/</guid>
+      <guid>https://khstats.com/blog/sl/superlearning/</guid>
       <description>
 
 
@@ -30,7 +30,7 @@ HTML Image as link
 &lt;/title&gt;
 &lt;/head&gt;
 &lt;body&gt;
-&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/Superlearning.jpg&#34;  
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;https://khstats.com/img/Superlearning.jpg&#34;  
          width=100%&#34;&gt;
 &lt;figcaption&gt;
 &lt;strong&gt;&lt;em&gt;A Visual Guide…&lt;/em&gt;&lt;/strong&gt; Over the winter, I read &lt;a href=&#34;https://www.springer.com/gp/book/9781441997814&#34;&gt;&lt;em&gt;Targeted Learning&lt;/em&gt;&lt;/a&gt; by Mark van der Laan and Sherri Rose. This “visual guide” I made for &lt;em&gt;Chapter 3: Superlearning&lt;/em&gt; by Rose, van der Laan, and Eric Polley is a condensed version of the following tutorial. It is available as an &lt;a href=&#34;https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/Superlearner.pdf&#34;&gt;8.5x11&#34; pdf on Github&lt;/a&gt;, should you wish to print it out for reference (or desk decor).
@@ -46,7 +46,7 @@ HTML Image as link
 &lt;li&gt;&lt;p&gt;The motivation for this type of “ensembling” is that &lt;strong&gt;a mix of multiple algorithms may be more optimal for a given data set than any single algorithm&lt;/strong&gt;. For example, a tree based model averaged with a linear model (e.g. random forests and LASSO) could smooth some of the model’s edges to improve predictive performance.&lt;/p&gt;&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;Superlearning is also called stacking, stacked generalizations, and weighted ensembling by different specializations within the realms of statistics and data science.&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;/img/spiderman_meme.jpg&#34; style=&#34;width:42.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/spiderman_meme.jpg&#34; style=&#34;width:42.0%&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;superlearning-step-by-step&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Superlearning, step by step&lt;/h1&gt;
@@ -138,7 +138,7 @@ kable(head(obs), digits=3, caption = &amp;quot;Simulated data set&amp;quot;)&lt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step1.png&#34; style=&#34;width:50.0%&#34; /&gt;
 The superlearner algorithm relies on K-fold cross-validation (CV) to avoid overfitting. We will start this process by splitting the data into 10 folds. The easiest way to do this is by creating indices for each CV fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;k &amp;lt;- 10 # 10 fold cv
 cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # create indices for each CV fold. We need each fold K to contain n (all the rows of our data set) divided by k rows. in our example this is 5000/10 = 500 rows in each fold&lt;/code&gt;&lt;/pre&gt;
@@ -150,7 +150,7 @@ cv_index &amp;lt;- sample(rep(1:k, each = n/k)) # create indices for each CV fol
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step2.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Recall that in K-fold CV, each fold serves as the validation set one time. In this first round of CV, we will train all of our base learners on all the CV folds (k = 1,2,…,9) &lt;em&gt;except&lt;/em&gt; for the very last one: &lt;code&gt;cv_index == 10&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;The individual algorithms or &lt;strong&gt;base learners&lt;/strong&gt; that we’ll use here are three linear regressions with differently specified parameters:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
@@ -172,7 +172,7 @@ fit_1c &amp;lt;- glm(y ~ x1*x2*x3, data=cv_train_1) # and the third LR&lt;/code&
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step3.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step3.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We can then get use our validation data, &lt;code&gt;cv_index == 10&lt;/code&gt;, to obtain our first set of cross-validated predictions.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_valid_1 &amp;lt;- obs[which(cv_index == 10),] # make a data set that only contains observations except in k=10
 pred_1a &amp;lt;- predict(fit_1a, newdata = cv_valid_1) # use that data set as the validation for all the models in the SL library
@@ -232,7 +232,7 @@ pred_1c &amp;lt;- predict(fit_1c, newdata = cv_valid_1)&lt;/code&gt;&lt;/pre&gt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step4.png&#34; style=&#34;width:32.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We’ll want to get those predictions for &lt;em&gt;every&lt;/em&gt; fold. So, using your favorite &lt;code&gt;for&lt;/code&gt; loop, &lt;code&gt;apply&lt;/code&gt; statement, or &lt;code&gt;map&lt;/code&gt;ping function, fit the base learners and obtain predictions for each of them, so that there are 1000 predictions – one for every point in &lt;code&gt;obs&lt;/code&gt;ervations.&lt;/p&gt;
 &lt;p&gt;The way I chose to code this was to make a generic function that combines Step 2 (base learners fit to the training data) and Step 3 (predictions on the validation data), then use &lt;code&gt;map_dfr()&lt;/code&gt; from the &lt;code&gt;purrr&lt;/code&gt; package to repeat over all 10 CV folds. I saved the results in a new data frame called &lt;code&gt;cv_preds&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_folds &amp;lt;- as.list(1:k)
@@ -324,7 +324,7 @@ cv_preds %&amp;gt;% arrange(obs_id) %&amp;gt;% head() %&amp;gt;% kable(digits=2,
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step5.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step5.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;This is the key step of the superlearner algorithm: we will use a new learner, a &lt;strong&gt;metalearner&lt;/strong&gt;, to take information from all of the base learners and create that new algorithm.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -388,7 +388,7 @@ kable(broom::tidy(sl_fit), digits=3, caption = &amp;quot;Metalearner regression 
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step6.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step6.png&#34; style=&#34;width:50.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;After we fit the metalearner, we officially have our superlearner algorithm, so it’s time to input data and obtain predictions! To implement the algorithm and obtain final predictions, we first need to fit the base learners on the full data set.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit_a &amp;lt;- glm(y ~ x2 + x4, data=obs)
 fit_b &amp;lt;- glm(y ~ x1 + x2 + x1*x3 + sin(x4), data=obs)
@@ -401,7 +401,7 @@ fit_c &amp;lt;- glm(y ~ x1*x2*x3, data=obs)&lt;/code&gt;&lt;/pre&gt;
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step7.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step7.png&#34; style=&#34;width:40.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We’ll use &lt;em&gt;those&lt;/em&gt; base learner fits to get predictions from each of the base learners for the entire data set, and then we will plug those predictions into the metalearner fit. Remember, we were previously using cross-validated predictions, rather than fitting the base learners on the whole data set. This was to avoid overfitting.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;pred_a &amp;lt;- predict(fit_a)
 pred_b &amp;lt;- predict(fit_b)
@@ -415,7 +415,7 @@ full_data_preds &amp;lt;- tibble(pred_a, pred_b, pred_c)&lt;/code&gt;&lt;/pre&gt
 &lt;/strong&gt;
 &lt;/body&gt;
 &lt;/html&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_steps/step8.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_steps/step8.png&#34; style=&#34;width:60.0%&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Once we have the predictions from the full data set, we can input them to the metalearner, where the output will be a final prediction for &lt;code&gt;y&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sl_predictions &amp;lt;- predict(sl_fit, newdata = full_data_preds)
 kable(head(sl_predictions), col.names = &amp;quot;sl_predictions&amp;quot;, digits= 2, caption = &amp;quot;Final SL predictions (manual)&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
@@ -569,7 +569,7 @@ HTML Image as link
 &lt;/head&gt;
 &lt;body&gt;
 &lt;a href=&#34;https://github.com/hoffmakl/causal-inference-visual-guides/blob/master/visual-guides/TMLE.pdf&#34;&gt;
-&lt;img alt=&#34;cheatsheet&#34; src=&#34;/img/TMLE.jpg&#34;
+&lt;img alt=&#34;cheatsheet&#34; src=&#34;https://khstats.com/img/TMLE.jpg&#34;
          width=100%&#34;&gt;
 &lt;/a&gt;
 &lt;/body&gt;
@@ -596,7 +596,7 @@ HTML Image as link
   theme_bw() +
   guides(col=F) +
   labs(x = &amp;quot;Base Learner&amp;quot;, y=&amp;quot;Squared Error&amp;quot;, title=&amp;quot;Squared Errors of Learner A, B, and C&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/sl/superlearning_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;528&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/sl/superlearning_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;528&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;And then take the mean of those three cross-validated squared error columns, grouped by &lt;code&gt;cv_fold&lt;/code&gt;, to get the CV-MSE for each fold.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks &amp;lt;-
   cv_sq_error %&amp;gt;%
@@ -616,7 +616,7 @@ HTML Image as link
   theme_bw()  +
     scale_x_continuous(breaks = 1:10) +
   labs(x = &amp;quot;Cross-Validation (CV) Fold&amp;quot;, y=&amp;quot;Mean Squared Error (MSE)&amp;quot;, col = &amp;quot;Base Learner&amp;quot;, title=&amp;quot;CV-MSEs for Base Learners A, B, and C&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/sl/superlearning_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/sl/superlearning_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We see that across each fold, Learner B consistently has an MSE around 0.02, while Learner C hovers around 0.1, and Learner A varies between 0.35 and 0.45. We can take another mean to get the overall CV-MSE for each learner.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cv_risks %&amp;gt;%
   select(-cv_fold) %&amp;gt;%
@@ -658,7 +658,7 @@ HTML Image as link
 &lt;div id=&#34;another-visual-guide-for-superlearning&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Another visual guide for superlearning&lt;/h3&gt;
 &lt;p&gt;The steps of the superlearner algorithm are summarized nicely in this graphic in Chapter 3 of the &lt;em&gt;Targeted Learning&lt;/em&gt; book:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/sl_diagram.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/sl_diagram.png&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;acknowledgments&#34; class=&#34;section level1&#34;&gt;
@@ -721,9 +721,9 @@ HTML Image as link
     
     <item>
       <title>Customizable correlation plots in R</title>
-      <link>/blog/corr-plots/corr-plots/</link>
+      <link>https://khstats.com/blog/corr-plots/corr-plots/</link>
       <pubDate>Mon, 24 Aug 2020 21:13:14 -0500</pubDate>
-      <guid>/blog/corr-plots/corr-plots/</guid>
+      <guid>https://khstats.com/blog/corr-plots/corr-plots/</guid>
       <description>
 
 
@@ -814,7 +814,7 @@ HTML Image as link
 &lt;ul&gt;
 &lt;li&gt;You can then run &lt;code&gt;ggplot2&lt;/code&gt; code on this data to make your own correlation heat maps.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;If you just want the code, &lt;a href=&#34;#just-the-code&#34;&gt;skip to the end&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
@@ -824,14 +824,14 @@ HTML Image as link
 &lt;h1&gt;Less-customizable options&lt;/h1&gt;
 &lt;p&gt;I really appreciate some of the packages and functions that allow me to make correlation plots super quickly using &lt;code&gt;R&lt;/code&gt;. Here are a few examples:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrplot::corrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;corrgram::corrgram(mtcars)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Registered S3 method overwritten by &amp;#39;seriation&amp;#39;:
 ##   method         from 
 ##   reorder.hclust gclus&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggcorrplot::ggcorrplot(cor(mtcars))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;All of these are nice, but none of them are ultimately as customizable as I need them to be. I’ll next show how you can bypass using someone else’s function constraints to prepare correlations in your data in a &lt;code&gt;ggplot2&lt;/code&gt;-friendly format.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;getting-the-correlations&#34; class=&#34;section level1&#34;&gt;
@@ -1769,7 +1769,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(x = measure1, y = measure2, fill = r)) +
   geom_tile()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We can make some minor aesthetic changes, such as the fill coloring scale, titles, and font family.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(x = measure1, y = measure2, fill = r)) +
@@ -1783,7 +1783,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_y_discrete(expand=c(0,0)) +
   # change global font to roboto
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;We can add the correlations for extra information. For this particular plot, I only added significant (p-value less than 0.05) correlations, using the column &lt;code&gt;r_if_sig&lt;/code&gt; that outputs from &lt;code&gt;formatted_cors()&lt;/code&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(measure1, measure2, fill=r, label=round(r_if_sig,2))) +
@@ -1796,7 +1796,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Another version of this could involve squares with different sizes to denote strength of correlation using &lt;code&gt;geom_point&lt;/code&gt; with &lt;code&gt;shape&lt;/code&gt; set to a value from &lt;a href=&#34;http://www.sthda.com/english/wiki/ggplot2-point-shapes&#34;&gt;these available &lt;code&gt;geom_shape&lt;/code&gt;s&lt;/a&gt;. Make sure you take the absolute value of the correlation so that strong negative correlations can also be denoted larger.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;formatted_cors(mtcars) %&amp;gt;%
   ggplot(aes(measure1, measure2, col=r)) + ## to get the rect filled
@@ -1809,7 +1809,7 @@ library(tidyverse, warn.conflict=F)&lt;/code&gt;&lt;/pre&gt;
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;)) +
   scale_size(range=c(1,11), guide=NULL) &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;576&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Please feel free to reach out with questions or suggestions. Thank you to Elena Leib for spotting a minor bug in a previous version of this post!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;just-the-code&#34; class=&#34;section level1&#34;&gt;
@@ -1843,7 +1843,7 @@ formatted_cors(mtcars) %&amp;gt;%
   scale_x_discrete(expand=c(0,0)) +
   scale_y_discrete(expand=c(0,0)) +
   theme(text=element_text(family=&amp;quot;Roboto&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/corr-plots/corr-plots_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;sessionInfo()&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;R version 3.6.3 (2020-02-29)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
@@ -1898,9 +1898,9 @@ LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dy
     
     <item>
       <title>Tips and Tricks from the New York R Conference</title>
-      <link>/blog/nyrconf/nyr-conf-2019/</link>
+      <link>https://khstats.com/blog/nyrconf/nyr-conf-2019/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/nyrconf/nyr-conf-2019/</guid>
+      <guid>https://khstats.com/blog/nyrconf/nyr-conf-2019/</guid>
       <description>
 
 
@@ -1914,7 +1914,7 @@ LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dy
 library(tidyverse)
 library(naniar)
 vis_miss(airquality) # a base R data set&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;It returns a &lt;code&gt;ggplot2&lt;/code&gt; object so you can edit titles, colors, etc. if necessary. You can also add various sorting and clustering arguments to make it easier to see patterns of missingness in your data.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;checking-out-data-differences-with-daff&#34; class=&#34;section level1&#34;&gt;
@@ -1965,19 +1965,19 @@ read_pptx() %&amp;gt;%
 &lt;div id=&#34;going-from-rmarkdown-to-word-and-back-again-with-redoc&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Going from RMarkdown to Word, and back again with &lt;code&gt;redoc&lt;/code&gt;&lt;/h1&gt;
 &lt;p&gt;Noam also shared his new package, &lt;code&gt;redoc&lt;/code&gt;, which allows you to reload an Rmd-generated word file back into R as a modified Rmd file.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/redoc.png&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;This is part of his goal to decrease the pain of “the valley of heartbreak.” &lt;img src=&#34;/img/valleyofheartbreak.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/redoc.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This is part of his goal to decrease the pain of “the valley of heartbreak.” &lt;img src=&#34;https://khstats.com/img/valleyofheartbreak.jpg&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Installation command is:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#remotes::install_github(&amp;quot;noamross/redoc&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;You may need to update several packages to get it to run correctly, but after that the main commands are just &lt;code&gt;redoc&lt;/code&gt; and &lt;code&gt;dedoc&lt;/code&gt;. To see for yourself, try running my &lt;a href=&#34;https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd&#34;&gt;github code&lt;/a&gt;, making some changes to your word doc, and reloading back into Rmarkdown with the &lt;code&gt;dedoc()&lt;/code&gt; function.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;pipelines-in-drake&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Pipelines in &lt;code&gt;drake&lt;/code&gt;&lt;/h1&gt;
-&lt;p&gt;&lt;img src=&#34;/img/drake.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/drake.jpg&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This could definitely be an entire computing club presentation… but for long projects that you have to redo with new data often, &lt;code&gt;drake&lt;/code&gt; is becoming really popular. Amanda Dobbyn gave an awesome presentation and you can see her slides &lt;a href=&#34;https://aedobbyn.github.io/nyr-2019/#1&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;A super informative bookdown guide by the authors can be found &lt;a href=&#34;https://ropenscilabs.github.io/drake-manual/&#34;&gt;here&lt;/a&gt;.
 Essentially their motto is “what gets done stays done” so that you are not redoing work you’ve already done in order to update your results. Yet, you’re still redoing what needs to be done in a reproducible way!&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/drake_pipeline.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/drake_pipeline.png&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;git-merge-conflicts&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Git merge conflicts&lt;/h1&gt;
@@ -2025,15 +2025,17 @@ genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;
     
     <item>
       <title>A Day in the Life of a Biostatistician</title>
-      <link>/blog/ditl-biostats/</link>
+      <link>https://khstats.com/blog/ditl-biostats/</link>
       <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/ditl-biostats/</guid>
+      <guid>https://khstats.com/blog/ditl-biostats/</guid>
       <description>
+&lt;link href=&#34;https://khstats.com/rmarkdown-libs/anchor-sections/anchor-sections.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/anchor-sections/anchor-sections.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;It seems fitting that my first blog post is on a topic that I tried and failed to find via Google search a few years ago.&lt;/p&gt;
 &lt;p&gt;I’ll back up for a second. A few years ago I was a recent college graduate, and trying hard to “figure out my life.” My major was biochemistry, which is one of those degrees where 99%* of people just keep on going to school.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/sadcat.png&#34;  width=&#34;48%&#34; alt=&#34;cat&#34; style=&#34;float:right; padding-left:65px;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/sadcat.png&#34;  width=&#34;48%&#34; alt=&#34;cat&#34; style=&#34;float:right; padding-left:65px;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I was working full-time night-shift at a hospital as a nurse technician. The key word in that sentence is “night-shift” which meant that even on my days off, I didn’t sleep at night, but all my friends and family did. So, I was often alone and awake, with a lot of time to think about my future… and surf the web for potential careers.&lt;/p&gt;
 &lt;p&gt;I knew I wanted a job in healthcare, but I was confused as to where in medicine would be a good fit for me. I could visualize very clearly what my days at work would look like if I were to become a physician, or a physician assistant, or a registered nurse (all careers I developed lengthy pros and cons lists for).&lt;/p&gt;
 &lt;p&gt;However, there was another career involving medicine that I was drawn to but didn’t know enough about. “Biostatistics” was a class biochemistry majors took at my university, but I had been exempted because I took AP Statistics in high school.&lt;/p&gt;
@@ -2041,7 +2043,7 @@ genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;
 &lt;p&gt;I ultimately lucked out during a conversation with a professor during my senior year of college. I was rambling about my many life plans and he mentioned his cousin was the chair of a well-known Biostatistics program. He encouraged me to email her my questions about biostatistics, and I am so grateful she took time to respond with detailed answers. Her description of life as a biostatistician was enough for me to choose going to graduate school for an MS in biostatistics over medical school/physician assistant school/second-degree nursing.&lt;/p&gt;
 &lt;p&gt;I feel wholeheartedly that although I would have enjoyed my life as an MD/PA/RN, biostatistics is the right career for me. So, in honor of my confused younger self, and as a way of paying it forward, I’ve dedicated this topic for my very first blog post!&lt;/p&gt;
 &lt;p style=&#34;text-align: center; padding-bottom: -30px; padding-left: 0px; float: left;&#34;&gt;
-&lt;img src=&#34;/img/ditl/nursing.jpg&#34; width=&#34;40%&#34;/&gt;&lt;span&gt;&lt;em&gt;Hanging out with my mom (an RN of 41 years and counting!) after a particularly exhausting night shift as a nurse technician.&lt;/em&gt;&lt;/span&gt;
+&lt;img src=&#34;https://khstats.com/img/ditl/nursing.jpg&#34; width=&#34;40%&#34;/&gt;&lt;span&gt;&lt;em&gt;Hanging out with my mom (an RN of 41 years and counting!) after a particularly exhausting night shift as a nurse technician.&lt;/em&gt;&lt;/span&gt;
 &lt;/p&gt;
 &lt;p&gt;A disclaimer: what follows is a day in the life of one masters-level, academic research-focused biostatistician and I cannot make claims about the careers of statisticians in industry or pharmaceuticals or hospitals or government. In addition, here’s a bit more background before I get into the granular details of my work:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
@@ -2049,11 +2051,11 @@ genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;
 &lt;li&gt;&lt;p&gt;I will mention R/Rstudio a bit. For those who are not familiar with it, &lt;a href=&#34;https://www.r-project.org/&#34;&gt;R&lt;/a&gt; is an open-source (which means anyone can help contribute) programming language that is well-equipped for statistical analysis. It’s arguably very similar to &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt;, which is a more widely used language, but statisticians tend to use R more because its statistical packages are very well-developed. During grad school I used Python because I worked in a computational biology lab, and I learned &lt;a href=&#34;https://www.sas.com/en_us/home.html&#34;&gt;SAS&lt;/a&gt; (another statistical programming language) in some of my classes, but R is what I prefer these days. &lt;a href=&#34;https://www.rstudio.com/&#34;&gt;Rstudio&lt;/a&gt; is a platform that makes it more user friendly to use R.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;So, without further ado! An average day**:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/desk.png&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/desk.png&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;9:30AM&lt;/strong&gt; - I arrive at my office and spend a few minutes chatting with my coworkers. To set the scene for you, I have a fairly spacious cubicle within a group of five other cubicles. I sit next to another research biostatistician, two health informatics professionals, and two clinical trial grant specialists. I’m actually not completely sure what that last pair’s title is, but I know their primary task is to make sure several multi-million dollar clinical trial grants stay funded (woah). Everyone I sit by is young and goofy, but very driven, making for a fun office environment.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;9:45AM&lt;/strong&gt; - I check and answer new emails from researchers I collaborate on projects with. I send my availability for a meeting to a group of doctors who want to go over the results of a recent analysis I did on Body Mass Index and death rates in the Intensive Care Unit. In a different thread of emails, I thank several researchers from another university for clarifying their methods and sending me code for an analysis similar to one I will soon work on.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;10:00AM&lt;/strong&gt; - I open a manuscript draft for a paper I received yesterday. It’s from a group of residents and medical students I worked with a few months ago. Their study looks at the association between blood levels of a certain biomarker and the time to death in cancer patients. My role in the analysis was to examine the associations between several biomarkers such as phosphorus, phosphate, and calcitriol. I then fit a regression model, just like y=mx+b, but with way more math. For this analysis I used a model for when your y is a time to an event (death, in this case), fittingly called a survival model. After adjusting for confounding factors like age, which affects both tumor progression and biomarker levels, there was a significant association between the biomarker and time to death in cancer patients.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/ditl-biostats_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/ditl-biostats_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span&gt; &lt;em&gt;An example of a figure for a manuscript. This particular plot suggests that cancer patients with an elevated biomarker died at a faster rate than patients who did not have an elevated biomarker.&lt;/em&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The researchers have asked for my assistance in writing the methods section. The methods section of a scientific article is the steps the scientists took to analyze data explicitly written out for anyone looking to review or learn about their work. I read through their current draft of the paper carefully, make some edits, and send it back. They are hoping to submit this paper to a peer-reviewed journal within a few weeks.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;10:45AM&lt;/strong&gt; - I have a weekly meeting a few blocks from my office with a neurologist I spend a large portion of my time working with. She is a leader in the field of Alzheimer’s research, and I find it very rewarding to work on her data and be a small part of a growing body of research in the field. I am “contracted” out to her research as I am to all of the researchers I work with—it’s how my institution budgets funding for grants. One of the faculty-level biostatisticians in my department—which means he has a PhD and specializes in certain statistical methods—is also part of this contract, and some days, like today, he joins me at these meetings.&lt;/p&gt;
@@ -2061,7 +2063,7 @@ genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;
 &lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/katalan.gif&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;12:00PM&lt;/strong&gt; - I head to lunch with a group of coworkers. They have gotten food from a nearby salad place, and we sit in one of our favorite buildings on campus and eat together. Our jokes oscillate from incredibly nerdy to pretty stupid. One of my coworkers points out that our hair is styled the same way for the third day in a row.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;12:45PM&lt;/strong&gt; - I get back to my desk and type up my handwritten notes from the neurology meeting and put them in that project’s “Notes” folder. It’s important to me that I keep track of all my meetings electronically - I fear losing my notebooks or someone else having to decipher my cursive should I ever have to pass off a project.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/notes.jpg&#34; width=&#34;50%&#34; style=&#34;float:right; padding-left:25px&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/notes.jpg&#34; width=&#34;50%&#34; style=&#34;float:right; padding-left:25px&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1:00PM&lt;/strong&gt; - I start to make a plan for a different analysis I’m working on. This project is something new for me - it involves a protein assay and data for 1000+ different protein expression levels. The researcher I’m working with wants to know which proteins are over- and under-expressed in people with a specific autoimmune disorder and a certain type of lung disease. I’ve recently spoken to some bioinformaticians and have a clearer idea of the analysis I need to do. I draw out a little map of the code organization I think would be the most efficient for this analysis and open up Rstudio.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1:30PM&lt;/strong&gt; - I get to work writing up functions, which is just a fancy programming way of saying your code can do the same thing to multiple data sets (or subsets of patients, as is the case of this protein expression study I’m doing). Sometimes it takes a bit longer to write my functions than it would if I were to just copy and paste my code several different times, but the final code is much more readable and less prone to errors. By the time I’m done working, I have some interactive plots showing the significant and non-significant results. When you hover over them, they show what protein corresponds to which point on the graph. They look like this, except this is not the real data we used in her study.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/volcano.gif&#34; /&gt;&lt;/p&gt;
@@ -2070,15 +2072,18 @@ genius_lyrics(&amp;quot;the beatles&amp;quot;, &amp;quot;hey jude&amp;quot;)&lt;
 &lt;p&gt;I close the report; I will continue working on this analysis tomorrow.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;4:45PM&lt;/strong&gt; - It’s time for my last meeting of the day. I head to another floor of my office building and get my laptop set up in a conference room. I await the arrival of several doctors. It will be my first time meeting most of them, and our task today is to discuss the data collection process for a future study involving both genetic mutation data from tumor biopsies and clinical data from electronic health records on thousands of patients with lung cancer.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;5:00PM&lt;/strong&gt; - The doctors arrive and, after introductions, we talk about the current stage of the project and what the goals are. We discuss the timing of starting chart reviews of patients, how we will upload the information to a database efficiently, and what might be the best way to condense the highly detailed genetics data into useful information for an analysis. Our solution will likely involve a series of iterative searches through the columns containing genetic information.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/data_dict.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/data_dict.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span&gt;&lt;em&gt;The start of a database I am helping researchers build to collect data for their study. This is not my favorite part of my job, but it is a crucial step for good scientific research.&lt;/em&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;6:00PM&lt;/strong&gt; - The meeting ends, and I go back to my desk to record more handwritten notes. I log the hours I spent on each project that day into Toggl, which is the time-tracking application our team uses. This is so we know how much time we’re spending on each project, and is as much for our own sake as it is anyone else’s. I update my to-do list, which is a giant color-coded excel spreadsheet, and eat a few chocolate covered raisins as my reward for a productive day.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;6:30PM&lt;/strong&gt; - I leave work! I typically have some kind of activity, like happy hour (see my cute cubicle buddies below), a sports game, or Spanish class that I’m heading off to. Some days I attend coding workshops hosted by groups such as R-ladies. On nights when I’m feeling especially nerdy, I’ll go home and read a statistics paper or sift through the #rstats tips on twitter.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/coworkers.jpg&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/coworkers.jpg&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
 &lt;p&gt;…So, there you have it. One average daily experience as an early career masters-level statistician. All in all, I have an excellent work-life balance and overall work environment. Every day I get to learn more about science, medicine, statistics, and the intersection of these wonderful ideas. Although it varies quite a bit, approximately 10% of each day involves writing, 20% interacting with other researchers, and the rest of it is spent thinking critically and finding answers to problems I am passionate about.&lt;/p&gt;
 &lt;p&gt;I hope if there are any 22, 42, or 14 year-olds out there considering a career in biostatistics and struggling to figure out what on earth we actually do, that you find this post and it lessens your confusion!&lt;/p&gt;
-&lt;p&gt;All the best,
-Kat&lt;/p&gt;
+&lt;p&gt;All the best,&lt;/p&gt;
+&lt;p&gt;Kat&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;If you found this post useful, you might be interested in a &lt;a href=&#34;https://www.khstats.com/blog/ditl/ditl-followup/&#34;&gt;follow up post&lt;/a&gt; I wrote answering common email questions I’ve received. I also interviewed my friend from grad school who is a Biostatistician for a pharmaceutical CRO in a &lt;a href=&#34;https://www.khstats.com/blog/ditl/pharma-cro/&#34;&gt;separate blog post&lt;/a&gt;.&lt;/p&gt;
+&lt;hr /&gt;
 &lt;p&gt;*Not a real statistic.&lt;/p&gt;
 &lt;p&gt;**Exact details and diseases of the studies I am currently working on have been generalized or altered to protect the research interests of my collaborators.&lt;/p&gt;
 </description>
@@ -2086,16 +2091,16 @@ Kat&lt;/p&gt;
     
     <item>
       <title>Data Wrangling with dplyr</title>
-      <link>/blog/dplyr/data-wrangling/</link>
+      <link>https://khstats.com/blog/dplyr/data-wrangling/</link>
       <pubDate>Tue, 05 Mar 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/dplyr/data-wrangling/</guid>
+      <guid>https://khstats.com/blog/dplyr/data-wrangling/</guid>
       <description>
-&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;div id=&#34;a-presentation-for-weill-cornell-medicines-biostatistics-computing-club&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;A Presentation for Weill Cornell Medicine’s Biostatistics Computing Club&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&#34;/img/dplyr_image.jpg&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/dplyr_image.jpg&#34; /&gt;
 &lt;em&gt;Image courtesy of Allison Horst’s Twitter: &lt;span class=&#34;citation&#34;&gt;@allison_horst&lt;/span&gt;&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
@@ -3209,7 +3214,7 @@ Sepal.Length.Sq
   filter(Species != &amp;quot;setosa&amp;quot;) %&amp;gt;%
   ggplot(aes(Sepal.Length, Petal.Width, col=Species)) +
   geom_point()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-41-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-41-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;finding-columns-of-interest&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Finding columns of interest&lt;/h2&gt;
@@ -3533,7 +3538,7 @@ irisSummary(group = &amp;quot;Species&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 }
 
 irisScatPlot(x=&amp;quot;Sepal.Length&amp;quot;,y=&amp;quot;Petal.Length&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-49-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-49-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>

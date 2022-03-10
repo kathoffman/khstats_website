@@ -31,7 +31,7 @@
   <meta name="description" content="Research Biostatistician">
 
   
-  <link rel="alternate" hreflang="en-us" href="/tags/statistics/">
+  <link rel="alternate" hreflang="en-us" href="https://khstats.com/tags/statistics/">
 
   
 
@@ -112,7 +112,7 @@
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/tags/statistics/">
+  <link rel="canonical" href="https://khstats.com/tags/statistics/">
 
   
   
@@ -128,12 +128,12 @@
   <meta property="twitter:creator" content="@rkatlady">
   
   <meta property="og:site_name" content="KHstats">
-  <meta property="og:url" content="/tags/statistics/">
+  <meta property="og:url" content="https://khstats.com/tags/statistics/">
   <meta property="og:title" content="statistics | KHstats">
-  <meta property="og:description" content="Research Biostatistician"><meta property="og:image" content="/img/icon-192.png">
-  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  <meta property="og:description" content="Research Biostatistician"><meta property="og:image" content="https://khstats.com/img/icon-192.png">
+  <meta property="twitter:image" content="https://khstats.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
-    <meta property="og:updated_time" content="2020-11-27T21:13:14-05:00">
+    <meta property="og:updated_time" content="2020-12-11T02:13:14-05:00">
   
 
   
@@ -346,30 +346,41 @@
   
   
   <div>
-    <h2><a href="/blog/tmle/tutorial/">An Illustrated Guide to Targeted Maximum Likelihood Estimation (TMLE)</a></h2>
+    <h2><a href="/blog/tmle/tutorial-pt3/">An Illustrated Guide to TMLE, Part III: Properties, Theory, and Learning More</a></h2>
     <div class="article-style">
       
-      A beginner’s guide to understanding Targeted Maximum Likelihood Estimation (TMLE) via a step-by-step tutorial for estimating the mean difference in an outcome, adjusting for confounders.
-    HTML Image as link     There is a condensed version of this tutorial as an 8.5x11" pdf on my Github in case you would like to print it out for reference as you read more formal TMLE explanations.
+      The is the third and final post in a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). In this section, I discuss more statistical properties of TMLE, offer a brief explanation for the theory behind TMLE, and provide resources for learning more.
+ Properties of TMLE 📈 To reiterate a point from Parts I and II, a main motivation for TMLE is that it allows the use of machine learning algorithms while still yielding asymptotic properties for inference.
       
     </div>
   </div>
   
   <div>
-    <h2><a href="/blog/collider-bias/race/">Collider Bias Examples in R</a></h2>
+    <h2><a href="/blog/tmle/tutorial-pt2/">An Illustrated Guide to TMLE, Part II: The Algorithm</a></h2>
     <div class="article-style">
       
-      Let’s start with simulating race. Let’s say our population of interest is approximately 50% of one race and 50% of another. We’ll simulate that with a binomial distribution.
-race &lt;- rbinom(n, 1, 0.5)  Now we’ll simulate COVID-19 disease severity. Although there is some evidence suggesting COVID-19 disease severity is not random (i.e. it could be related to viral load, blood type, etc.), let’s assume for the sake of example that it is completely random.
+      The second post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section walks through the TMLE algorithm for the mean difference in outcomes for a binary treatment and binary outcome. This post is an expansion of a printable “visual guide” available on my Github. I hope it helps analysts who feel out-of-practice reading mathematical notation follow along with the TMLE algorithm.
       
     </div>
   </div>
   
   <div>
-    <h2><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></h2>
+    <h2><a href="/blog/tmle/tutorial/">An Illustrated Guide to TMLE, Part I: Introduction and Motivation</a></h2>
     <div class="article-style">
       
-      TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
+      The introductory post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section contains a brief overview of the targeted learning framework and motivation for semiparametric estimation methods for inference, including causal inference.
+ Table of Contents This blog post series has three parts:
+Part I: Motivation TMLE in three sentences 🎯 An Analyst’s Motivation for Learning TMLE 👩🏼‍💻 Is TMLE Causal Inference?
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/blog/iterated-expectations/iterated-expectations/">Rethinking Conditional and Iterated Expectations with Linear Regression Models</a></h2>
+    <div class="article-style">
+      
+      An “aha!” moment: the day I realized I should rethink all the probability theorems using linear regressions.
+ TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
  We can see this in a simple example using the palmerpenguins data:
   #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .
       
@@ -513,16 +524,6 @@ I’ll back up for a second. A few years ago I was a recent college graduate, an
   
   <div class="container">
     <footer class="site-footer">
-  
-  <p class="powered-by">
-    
-      <a href="/privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="/terms/">Terms</a>
-        
-  </p>
   
 
   <p class="powered-by">

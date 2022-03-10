@@ -26,7 +26,7 @@ social:
   link: 'mailto:kathoffman.stats@gmail.com'
 - icon: twitter
   icon_pack: fab
-  link: https://twitter.com/rkatlady
+  link: https://twitter.com/kat_hoffman_
 - icon: github
   icon_pack: fab
   link: https://github.com/hoffmakl
@@ -36,6 +36,8 @@ user_groups:
 - Visitors
 ---
 
-I am a Research Biostatistician at Weill Cornell Medicine in New York City who is passionate about meaningful, reproducible medical research. In addition to my research collaborations, I assist with multiple courses in WCM’s [Biostatistics and Data Science MS program](https://hpr.weill.cornell.edu/graduate-education-clinical-training/masters-track/biostatistics-data-science).
+I am a Research Biostatistician at Weill Cornell Medicine in New York City who is passionate about meaningful, reproducible medical research. In addition to my research collaborations, I help teach courses in the [Biostatistics and Data Science MS program](https://hpr.weill.cornell.edu/graduate-education-clinical-training/masters-track/biostatistics-data-science) and manage the [Biostatistics Computing Club](https://wcm-computing-club.github.io/).
 
-Prior to becoming a statistician, I cared for patients in the hospital as a nurse tech, played collegiate softball and coached high schoolers, and wrote a [thesis](http://dspace.udmercy.edu:8080/bitstream/handle/10429/777/Hoffman_UDMHonorsThesis.pdf?sequence=1) on artists’ portrayal of mental illness.
+This website is primarily for my blog -- most of my posts are about statistics, programming, or the role of the statistician in healthcare.
+
+

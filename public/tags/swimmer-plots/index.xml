@@ -2,27 +2,27 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>swimmer plots | KHstats</title>
-    <link>/tags/swimmer-plots/</link>
-      <atom:link href="/tags/swimmer-plots/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/swimmer-plots/</link>
+      <atom:link href="https://khstats.com/tags/swimmer-plots/index.xml" rel="self" type="application/rss+xml" />
     <description>swimmer plots</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Thu, 28 Nov 2019 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>swimmer plots</title>
-      <link>/tags/swimmer-plots/</link>
+      <link>https://khstats.com/tags/swimmer-plots/</link>
     </image>
     
     <item>
       <title>Patient Treatment Timelines for Longitudinal Survival Data</title>
-      <link>/blog/trt-timelines/trt-timelines/</link>
+      <link>https://khstats.com/blog/trt-timelines/trt-timelines/</link>
       <pubDate>Thu, 28 Nov 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/trt-timelines/trt-timelines/</guid>
+      <guid>https://khstats.com/blog/trt-timelines/trt-timelines/</guid>
       <description>
 
 
 &lt;p&gt;I am a biostatistician at a research university, and I often find myself working with longitudinal survival data. As with any data analysis, I need to examine the quality of my data before deciding which statistical methods to implement.&lt;/p&gt;
 &lt;p&gt;This post contains reproducible examples for how I prefer to visually explore survival data containing longitudinal exposures or covariates. I create a “treatment timeline” for each patient, and the end product looks something like this:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;960&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;960&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Each line represents one patient, and each square represents a measurement at a specified point. I find these graphs useful to look for patterns or discrepancies in follow up times, treatment, and missingness. They also allow me to verify that my coding is correct as I move through different data manipulations for my analyses.&lt;/p&gt;
 &lt;p&gt;For the following examples I generate longitudinal survival data sets. I skip over how I made this data because it’s not the focus of this post, but if you have questions about the data generation please let me know. In general, I am trying to work from the point in a survival data analysis where you’ve already calculated each individual’s time to event.&lt;/p&gt;
 &lt;div id=&#34;example-1-binary-treatment&#34; class=&#34;section level1&#34;&gt;
@@ -101,7 +101,7 @@ dat &amp;lt;-
   ggplot(aes(x = months_followup, y = pt_id, group = pt_id, col = trt)) +
   geom_line()  + 
   geom_point(shape = 15)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Okay, it’s not &lt;em&gt;that&lt;/em&gt; cute. But that little bit of code is really the core of the plot! If you want to add markers of death (or any other event) and rearrange by length of follow up time it just takes a little bit of extra data manipulation and one additional line of &lt;code&gt;ggplot2&lt;/code&gt; code.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat %&amp;gt;%
   group_by(pt_id) %&amp;gt;%
@@ -119,7 +119,7 @@ dat &amp;lt;-
   # add in a new mapping layer of points that correspond to death
   geom_point(aes(x = month_death, y = pt_id), col = &amp;quot;black&amp;quot;, shape = 4) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 515 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Don’t worry about the warning for removing missing values – it’s because we have &lt;code&gt;NA&lt;/code&gt;s at most months for our &lt;code&gt;month_death&lt;/code&gt;, so &lt;code&gt;geom_point&lt;/code&gt; doesn’t know where to put an ‘x’ marker.&lt;/p&gt;
 &lt;p&gt;Finally, let’s work on making the plot a bit nicer to look at:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat %&amp;gt;%
@@ -147,7 +147,7 @@ dat &amp;lt;-
   # set the color of the lines and points
   scale_color_manual(values=c(&amp;quot;dodgerblue&amp;quot;,&amp;quot;firebrick1&amp;quot;))&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 515 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;I have never made one of these plots for publication, so I don’t mind that the subtitle contains legend information. If you wanted to have the &lt;code&gt;month_death&lt;/code&gt; markers in a legend, you could change:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;geom_point(aes(x = month_death, y = pt_id), col = &amp;quot;black&amp;quot;, shape = 4)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;to:&lt;/p&gt;
@@ -254,7 +254,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;, high=&amp;quot;firebrick1&amp;quot;, na.value = &amp;quot;lightgray&amp;quot;,
                        breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Alternatively, we could rearrange our timelines by the number of measures we have for each patient’s &lt;code&gt;cov&lt;/code&gt;ariate of interest by making a new column containing the &lt;code&gt;sum(!is.na(cov))&lt;/code&gt; and rearranging our &lt;code&gt;pt_id&lt;/code&gt; by that column.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
   group_by(pt_id) %&amp;gt;%
@@ -283,7 +283,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;,
                        breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;From this plot we can start to see that patients with more missing measurements have higher covariate measurements. This becomes clearer if we rearrange patients by their &lt;em&gt;proportion&lt;/em&gt; of non-missing measurements.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dat_cc_miss %&amp;gt;%
   group_by(pt_id) %&amp;gt;%
@@ -309,7 +309,7 @@ dat_cc_miss  &amp;lt;- dat_cc %&amp;gt;%
   scale_color_gradient(low=&amp;quot;dodgerblue&amp;quot;,high=&amp;quot;firebrick1&amp;quot;,na.value = &amp;quot;lightgray&amp;quot;,
                        breaks=c(90, 120, 150, 180)) &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## Warning: Removed 143 rows containing missing values (geom_point).&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;768&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/trt-timelines/trt-timelines_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;768&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;If this were my real data, I would follow up with my research collaborators for more information on the missingness mechanism.&lt;/p&gt;
 &lt;p&gt;Please let me know if you have questions or a suggestion for a data set. Happy treatment timeline plotting!&lt;/p&gt;
 &lt;/div&gt;

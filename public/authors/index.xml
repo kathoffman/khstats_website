@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Authors | KHstats</title>
-    <link>/authors/</link>
-      <atom:link href="/authors/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/authors/</link>
+      <atom:link href="https://khstats.com/authors/index.xml" rel="self" type="application/rss+xml" />
     <description>Authors</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>Authors</title>
-      <link>/authors/</link>
+      <link>https://khstats.com/authors/</link>
     </image>
     
     <item>
       <title></title>
-      <link>/authors/admin/</link>
+      <link>https://khstats.com/authors/admin/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>/authors/admin/</guid>
+      <guid>https://khstats.com/authors/admin/</guid>
       <description>&lt;p&gt;I am a Research Biostatistician at Weill Cornell Medicine in New York City who is passionate about meaningful, reproducible medical research. In addition to my research collaborations, I assist with multiple courses in WCM’s &lt;a href=&#34;https://hpr.weill.cornell.edu/graduate-education-clinical-training/masters-track/biostatistics-data-science&#34;&gt;Biostatistics and Data Science MS program&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Prior to becoming a statistician, I cared for patients in the hospital as a nurse tech, played collegiate softball and coached high schoolers, and wrote a &lt;a href=&#34;http://dspace.udmercy.edu:8080/bitstream/handle/10429/777/Hoffman_UDMHonorsThesis.pdf?sequence=1&#34;&gt;thesis&lt;/a&gt; on artists’ portrayal of mental illness.&lt;/p&gt;
 </description>

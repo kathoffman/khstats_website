@@ -31,7 +31,7 @@
   <meta name="description" content="Research Biostatistician">
 
   
-  <link rel="alternate" hreflang="en-us" href="/tags/expectations/">
+  <link rel="alternate" hreflang="en-us" href="https://khstats.com/tags/expectations/">
 
   
 
@@ -112,7 +112,7 @@
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/tags/expectations/">
+  <link rel="canonical" href="https://khstats.com/tags/expectations/">
 
   
   
@@ -128,10 +128,10 @@
   <meta property="twitter:creator" content="@rkatlady">
   
   <meta property="og:site_name" content="KHstats">
-  <meta property="og:url" content="/tags/expectations/">
+  <meta property="og:url" content="https://khstats.com/tags/expectations/">
   <meta property="og:title" content="expectations | KHstats">
-  <meta property="og:description" content="Research Biostatistician"><meta property="og:image" content="/img/icon-192.png">
-  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  <meta property="og:description" content="Research Biostatistician"><meta property="og:image" content="https://khstats.com/img/icon-192.png">
+  <meta property="twitter:image" content="https://khstats.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     <meta property="og:updated_time" content="2020-07-31T21:13:14-05:00">
   
@@ -346,10 +346,11 @@
   
   
   <div>
-    <h2><a href="/blog/iterated-expectations/iterated-expectations/">Understanding Conditional and Iterated Expectations with a Linear Regression Model</a></h2>
+    <h2><a href="/blog/iterated-expectations/iterated-expectations/">Rethinking Conditional and Iterated Expectations with Linear Regression Models</a></h2>
     <div class="article-style">
       
-      TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
+      An “aha!” moment: the day I realized I should rethink all the probability theorems using linear regressions.
+ TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
  We can see this in a simple example using the palmerpenguins data:
   #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm + species, data = .
       
@@ -470,16 +471,6 @@
   
   <div class="container">
     <footer class="site-footer">
-  
-  <p class="powered-by">
-    
-      <a href="/privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="/terms/">Terms</a>
-        
-  </p>
   
 
   <p class="powered-by">

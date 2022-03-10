@@ -27,6 +27,16 @@
   name = "Publications"
   url = "https://scholar.google.com/citations?user=73RvTUoAAAAJ&hl=en"
   weight = 90
+  
+  [[main]]
+  name = "Presentations"
+  url = "#talks"
+  weight = 80
+  
+   [[main]]
+  name = "CV"
+  url = "https://github.com/hoffmakl/resume/blob/main/resume.pdf"
+  weight = 100
 
 #[[main]]
  # name = "Publications"

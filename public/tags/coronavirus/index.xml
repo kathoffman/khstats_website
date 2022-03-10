@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>coronavirus | KHstats</title>
-    <link>/tags/coronavirus/</link>
-      <atom:link href="/tags/coronavirus/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/coronavirus/</link>
+      <atom:link href="https://khstats.com/tags/coronavirus/index.xml" rel="self" type="application/rss+xml" />
     <description>coronavirus</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 30 Sep 2020 01:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>coronavirus</title>
-      <link>/tags/coronavirus/</link>
+      <link>https://khstats.com/tags/coronavirus/</link>
     </image>
     
     <item>
       <title>On the Sidelines: NYC&#39;s COVID-19 Outbreak from the Eyes of a Pulmonary and Critical Care Team&#39;s Biostatistician</title>
-      <link>/blog/covid/covid/</link>
+      <link>https://khstats.com/blog/covid/covid/</link>
       <pubDate>Wed, 30 Sep 2020 01:13:14 -0500</pubDate>
-      <guid>/blog/covid/covid/</guid>
+      <guid>https://khstats.com/blog/covid/covid/</guid>
       <description>
-&lt;link href=&#34;/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
-&lt;script src=&#34;/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;https://khstats.com/rmarkdown-libs/pagedtable/css/pagedtable.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/pagedtable/js/pagedtable.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;blockquote&gt;

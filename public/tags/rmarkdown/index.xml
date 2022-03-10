@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Rmarkdown | KHstats</title>
-    <link>/tags/rmarkdown/</link>
-      <atom:link href="/tags/rmarkdown/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/rmarkdown/</link>
+      <atom:link href="https://khstats.com/tags/rmarkdown/index.xml" rel="self" type="application/rss+xml" />
     <description>Rmarkdown</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 16 Apr 2019 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>Rmarkdown</title>
-      <link>/tags/rmarkdown/</link>
+      <link>https://khstats.com/tags/rmarkdown/</link>
     </image>
     
     <item>
       <title>Outputting Rmarkdown Headers within Functions</title>
-      <link>/blog/headers/headers-in-functions/</link>
+      <link>https://khstats.com/blog/headers/headers-in-functions/</link>
       <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
-      <guid>/blog/headers/headers-in-functions/</guid>
+      <guid>https://khstats.com/blog/headers/headers-in-functions/</guid>
       <description>
 
 

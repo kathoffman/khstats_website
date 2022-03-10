@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>R Markdown | KHstats</title>
-    <link>/tags/r-markdown/</link>
-      <atom:link href="/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/r-markdown/</link>
+      <atom:link href="https://khstats.com/tags/r-markdown/index.xml" rel="self" type="application/rss+xml" />
     <description>R Markdown</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2019 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>R Markdown</title>
-      <link>/tags/r-markdown/</link>
+      <link>https://khstats.com/tags/r-markdown/</link>
     </image>
     
     <item>
       <title>Tips and Tricks from the New York R Conference</title>
-      <link>/blog/nyrconf/nyr-conf-2019/</link>
+      <link>https://khstats.com/blog/nyrconf/nyr-conf-2019/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/nyrconf/nyr-conf-2019/</guid>
+      <guid>https://khstats.com/blog/nyrconf/nyr-conf-2019/</guid>
       <description>
 
 
@@ -30,7 +30,7 @@
 library(tidyverse)
 library(naniar)
 vis_miss(airquality) # a base R data set&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/nyrconf/nyr-conf-2019_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;It returns a &lt;code&gt;ggplot2&lt;/code&gt; object so you can edit titles, colors, etc. if necessary. You can also add various sorting and clustering arguments to make it easier to see patterns of missingness in your data.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;checking-out-data-differences-with-daff&#34; class=&#34;section level1&#34;&gt;
@@ -81,19 +81,19 @@ read_pptx() %&amp;gt;%
 &lt;div id=&#34;going-from-rmarkdown-to-word-and-back-again-with-redoc&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Going from RMarkdown to Word, and back again with &lt;code&gt;redoc&lt;/code&gt;&lt;/h1&gt;
 &lt;p&gt;Noam also shared his new package, &lt;code&gt;redoc&lt;/code&gt;, which allows you to reload an Rmd-generated word file back into R as a modified Rmd file.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/redoc.png&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;This is part of his goal to decrease the pain of “the valley of heartbreak.” &lt;img src=&#34;/img/valleyofheartbreak.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/redoc.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This is part of his goal to decrease the pain of “the valley of heartbreak.” &lt;img src=&#34;https://khstats.com/img/valleyofheartbreak.jpg&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Installation command is:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#remotes::install_github(&amp;quot;noamross/redoc&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;You may need to update several packages to get it to run correctly, but after that the main commands are just &lt;code&gt;redoc&lt;/code&gt; and &lt;code&gt;dedoc&lt;/code&gt;. To see for yourself, try running my &lt;a href=&#34;https://github.com/hoffmakl/nyr-conf-comp-club/blob/master/redoc_example.Rmd&#34;&gt;github code&lt;/a&gt;, making some changes to your word doc, and reloading back into Rmarkdown with the &lt;code&gt;dedoc()&lt;/code&gt; function.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;pipelines-in-drake&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Pipelines in &lt;code&gt;drake&lt;/code&gt;&lt;/h1&gt;
-&lt;p&gt;&lt;img src=&#34;/img/drake.jpg&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/drake.jpg&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;This could definitely be an entire computing club presentation… but for long projects that you have to redo with new data often, &lt;code&gt;drake&lt;/code&gt; is becoming really popular. Amanda Dobbyn gave an awesome presentation and you can see her slides &lt;a href=&#34;https://aedobbyn.github.io/nyr-2019/#1&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;A super informative bookdown guide by the authors can be found &lt;a href=&#34;https://ropenscilabs.github.io/drake-manual/&#34;&gt;here&lt;/a&gt;.
 Essentially their motto is “what gets done stays done” so that you are not redoing work you’ve already done in order to update your results. Yet, you’re still redoing what needs to be done in a reproducible way!&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/drake_pipeline.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/drake_pipeline.png&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;git-merge-conflicts&#34; class=&#34;section level1&#34;&gt;
 &lt;h1&gt;Git merge conflicts&lt;/h1&gt;

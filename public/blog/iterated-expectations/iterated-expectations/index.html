@@ -28,12 +28,13 @@
   
     
   
-  <meta name="description" content="TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
+  <meta name="description" content="An “aha!” moment: the day I realized I should rethink all the probability theorems using linear regressions.
+ TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
  We can see this in a simple example using the palmerpenguins data:
   #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm &#43; species, data = .">
 
   
-  <link rel="alternate" hreflang="en-us" href="/blog/iterated-expectations/iterated-expectations/">
+  <link rel="alternate" hreflang="en-us" href="https://khstats.com/blog/iterated-expectations/iterated-expectations/">
 
   
 
@@ -112,7 +113,7 @@
   <link rel="icon" type="image/png" href="/img/icon-32.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="/blog/iterated-expectations/iterated-expectations/">
+  <link rel="canonical" href="https://khstats.com/blog/iterated-expectations/iterated-expectations/">
 
   
   
@@ -128,12 +129,13 @@
   <meta property="twitter:creator" content="@rkatlady">
   
   <meta property="og:site_name" content="KHstats">
-  <meta property="og:url" content="/blog/iterated-expectations/iterated-expectations/">
-  <meta property="og:title" content="Understanding Conditional and Iterated Expectations with a Linear Regression Model | KHstats">
-  <meta property="og:description" content="TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
+  <meta property="og:url" content="https://khstats.com/blog/iterated-expectations/iterated-expectations/">
+  <meta property="og:title" content="Rethinking Conditional and Iterated Expectations with Linear Regression Models | KHstats">
+  <meta property="og:description" content="An “aha!” moment: the day I realized I should rethink all the probability theorems using linear regressions.
+ TL;DR  You can a regress an outcome on a grouping variable plus any other variable(s) and the unadjusted and adjusted group means will be identical.
  We can see this in a simple example using the palmerpenguins data:
-  #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm &#43; species, data = ."><meta property="og:image" content="/img/icon-192.png">
-  <meta property="twitter:image" content="/img/icon-192.png"><meta property="og:locale" content="en-us">
+  #remotes::install_github(&quot;allisonhorst/palmerpenguins&quot;) library(palmerpenguins) library(tidyverse) library(gt) # use complete cases for simplicity penguins &lt;- drop_na(penguins) penguins %&gt;% # fit a linear regression for bill length given bill depth and species # make a new column containing the fitted values for bill length mutate(preds = predict(lm(bill_length_mm ~ bill_depth_mm &#43; species, data = ."><meta property="og:image" content="https://khstats.com/img/icon-192.png">
+  <meta property="twitter:image" content="https://khstats.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
     
       <meta property="article:published_time" content="2020-07-31T21:13:14-05:00">
@@ -150,7 +152,7 @@
 
 
 
-  <title>Understanding Conditional and Iterated Expectations with a Linear Regression Model | KHstats</title>
+  <title>Rethinking Conditional and Iterated Expectations with Linear Regression Models | KHstats</title>
 
 </head>
 
@@ -336,7 +338,7 @@
   
   
 <div class="article-container pt-3">
-  <h1 itemprop="name">Understanding Conditional and Iterated Expectations with a Linear Regression Model</h1>
+  <h1 itemprop="name">Rethinking Conditional and Iterated Expectations with Linear Regression Models</h1>
 
   
 
@@ -391,7 +393,7 @@
       
       
       <li>
-        <a href="https://twitter.com/intent/tweet?url=/blog/iterated-expectations/iterated-expectations/&amp;text=Understanding%20Conditional%20and%20Iterated%20Expectations%20with%20a%20Linear%20Regression%20Model" target="_blank" rel="noopener" class="share-btn-twitter">
+        <a href="https://twitter.com/intent/tweet?url=https://khstats.com/blog/iterated-expectations/iterated-expectations/&amp;text=Rethinking%20Conditional%20and%20Iterated%20Expectations%20with%20Linear%20Regression%20Models" target="_blank" rel="noopener" class="share-btn-twitter">
           <i class="fab fa-twitter"></i>
         </a>
       </li>
@@ -404,7 +406,7 @@
       
       
       <li>
-        <a href="https://www.facebook.com/sharer.php?u=/blog/iterated-expectations/iterated-expectations/&amp;t=Understanding%20Conditional%20and%20Iterated%20Expectations%20with%20a%20Linear%20Regression%20Model" target="_blank" rel="noopener" class="share-btn-facebook">
+        <a href="https://www.facebook.com/sharer.php?u=https://khstats.com/blog/iterated-expectations/iterated-expectations/&amp;t=Rethinking%20Conditional%20and%20Iterated%20Expectations%20with%20Linear%20Regression%20Models" target="_blank" rel="noopener" class="share-btn-facebook">
           <i class="fab fa-facebook-f"></i>
         </a>
       </li>
@@ -417,7 +419,7 @@
       
       
       <li>
-        <a href="mailto:?subject=Understanding%20Conditional%20and%20Iterated%20Expectations%20with%20a%20Linear%20Regression%20Model&amp;body=/blog/iterated-expectations/iterated-expectations/" target="_blank" rel="noopener" class="share-btn-email">
+        <a href="mailto:?subject=Rethinking%20Conditional%20and%20Iterated%20Expectations%20with%20Linear%20Regression%20Models&amp;body=https://khstats.com/blog/iterated-expectations/iterated-expectations/" target="_blank" rel="noopener" class="share-btn-email">
           <i class="fas fa-envelope"></i>
         </a>
       </li>
@@ -430,7 +432,7 @@
       
       
       <li>
-        <a href="https://www.linkedin.com/shareArticle?url=/blog/iterated-expectations/iterated-expectations/&amp;title=Understanding%20Conditional%20and%20Iterated%20Expectations%20with%20a%20Linear%20Regression%20Model" target="_blank" rel="noopener" class="share-btn-linkedin">
+        <a href="https://www.linkedin.com/shareArticle?url=https://khstats.com/blog/iterated-expectations/iterated-expectations/&amp;title=Rethinking%20Conditional%20and%20Iterated%20Expectations%20with%20Linear%20Regression%20Models" target="_blank" rel="noopener" class="share-btn-linkedin">
           <i class="fab fa-linkedin-in"></i>
         </a>
       </li>
@@ -443,7 +445,7 @@
       
       
       <li>
-        <a href="https://web.whatsapp.com/send?text=Understanding%20Conditional%20and%20Iterated%20Expectations%20with%20a%20Linear%20Regression%20Model%20/blog/iterated-expectations/iterated-expectations/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+        <a href="https://web.whatsapp.com/send?text=Rethinking%20Conditional%20and%20Iterated%20Expectations%20with%20Linear%20Regression%20Models%20https://khstats.com/blog/iterated-expectations/iterated-expectations/" target="_blank" rel="noopener" class="share-btn-whatsapp">
           <i class="fab fa-whatsapp"></i>
         </a>
       </li>
@@ -456,7 +458,7 @@
       
       
       <li>
-        <a href="https://service.weibo.com/share/share.php?url=/blog/iterated-expectations/iterated-expectations/&amp;title=Understanding%20Conditional%20and%20Iterated%20Expectations%20with%20a%20Linear%20Regression%20Model" target="_blank" rel="noopener" class="share-btn-weibo">
+        <a href="https://service.weibo.com/share/share.php?url=https://khstats.com/blog/iterated-expectations/iterated-expectations/&amp;title=Rethinking%20Conditional%20and%20Iterated%20Expectations%20with%20Linear%20Regression%20Models" target="_blank" rel="noopener" class="share-btn-weibo">
           <i class="fab fa-weibo"></i>
         </a>
       </li>
@@ -495,8 +497,13 @@
       
 <link href="/rmarkdown-libs/pagedtable/css/pagedtable.css" rel="stylesheet" />
 <script src="/rmarkdown-libs/pagedtable/js/pagedtable.js"></script>
+<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
 
 
+<blockquote>
+<p>An “aha!” moment: the day I realized I should rethink all the probability theorems using linear regressions.</p>
+</blockquote>
 <hr />
 <div id="tldr" class="section level1">
 <h1>TL;DR</h1>
@@ -525,7 +532,7 @@ penguins %&gt;%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#evxjckkhfd .gt_table {
+#albqohbuls .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -550,7 +557,7 @@ penguins %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_heading {
+#albqohbuls .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -562,7 +569,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_title {
+#albqohbuls .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -572,7 +579,7 @@ penguins %&gt;%
   border-bottom-width: 0;
 }
 
-#evxjckkhfd .gt_subtitle {
+#albqohbuls .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -582,13 +589,13 @@ penguins %&gt;%
   border-top-width: 0;
 }
 
-#evxjckkhfd .gt_bottom_border {
+#albqohbuls .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_col_headings {
+#albqohbuls .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -603,7 +610,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_col_heading {
+#albqohbuls .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -623,7 +630,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#evxjckkhfd .gt_column_spanner_outer {
+#albqohbuls .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -635,15 +642,15 @@ penguins %&gt;%
   padding-right: 4px;
 }
 
-#evxjckkhfd .gt_column_spanner_outer:first-child {
+#albqohbuls .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#evxjckkhfd .gt_column_spanner_outer:last-child {
+#albqohbuls .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#evxjckkhfd .gt_column_spanner {
+#albqohbuls .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -655,7 +662,7 @@ penguins %&gt;%
   width: 100%;
 }
 
-#evxjckkhfd .gt_group_heading {
+#albqohbuls .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -677,7 +684,7 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#evxjckkhfd .gt_empty_group_heading {
+#albqohbuls .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -692,15 +699,15 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#evxjckkhfd .gt_from_md > :first-child {
+#albqohbuls .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#evxjckkhfd .gt_from_md > :last-child {
+#albqohbuls .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#evxjckkhfd .gt_row {
+#albqohbuls .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -719,7 +726,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#evxjckkhfd .gt_stub {
+#albqohbuls .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -731,7 +738,7 @@ penguins %&gt;%
   padding-left: 12px;
 }
 
-#evxjckkhfd .gt_summary_row {
+#albqohbuls .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -741,7 +748,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#evxjckkhfd .gt_first_summary_row {
+#albqohbuls .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -751,7 +758,7 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_grand_summary_row {
+#albqohbuls .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -761,7 +768,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#evxjckkhfd .gt_first_grand_summary_row {
+#albqohbuls .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -771,11 +778,11 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_striped {
+#albqohbuls .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#evxjckkhfd .gt_table_body {
+#albqohbuls .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -784,7 +791,7 @@ penguins %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_footnotes {
+#albqohbuls .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -798,13 +805,13 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_footnote {
+#albqohbuls .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#evxjckkhfd .gt_sourcenotes {
+#albqohbuls .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -818,46 +825,46 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#evxjckkhfd .gt_sourcenote {
+#albqohbuls .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#evxjckkhfd .gt_left {
+#albqohbuls .gt_left {
   text-align: left;
 }
 
-#evxjckkhfd .gt_center {
+#albqohbuls .gt_center {
   text-align: center;
 }
 
-#evxjckkhfd .gt_right {
+#albqohbuls .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#evxjckkhfd .gt_font_normal {
+#albqohbuls .gt_font_normal {
   font-weight: normal;
 }
 
-#evxjckkhfd .gt_font_bold {
+#albqohbuls .gt_font_bold {
   font-weight: bold;
 }
 
-#evxjckkhfd .gt_font_italic {
+#albqohbuls .gt_font_italic {
   font-style: italic;
 }
 
-#evxjckkhfd .gt_super {
+#albqohbuls .gt_super {
   font-size: 65%;
 }
 
-#evxjckkhfd .gt_footnote_marks {
+#albqohbuls .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="evxjckkhfd" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="albqohbuls" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -911,7 +918,7 @@ penguins %&gt;%
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#gkoadyzagv .gt_table {
+#yqntzeljkj .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -936,7 +943,7 @@ penguins %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_heading {
+#yqntzeljkj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -948,7 +955,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_title {
+#yqntzeljkj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -958,7 +965,7 @@ penguins %&gt;%
   border-bottom-width: 0;
 }
 
-#gkoadyzagv .gt_subtitle {
+#yqntzeljkj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -968,13 +975,13 @@ penguins %&gt;%
   border-top-width: 0;
 }
 
-#gkoadyzagv .gt_bottom_border {
+#yqntzeljkj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_col_headings {
+#yqntzeljkj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -989,7 +996,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_col_heading {
+#yqntzeljkj .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1009,7 +1016,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#gkoadyzagv .gt_column_spanner_outer {
+#yqntzeljkj .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1021,15 +1028,15 @@ penguins %&gt;%
   padding-right: 4px;
 }
 
-#gkoadyzagv .gt_column_spanner_outer:first-child {
+#yqntzeljkj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gkoadyzagv .gt_column_spanner_outer:last-child {
+#yqntzeljkj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gkoadyzagv .gt_column_spanner {
+#yqntzeljkj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1041,7 +1048,7 @@ penguins %&gt;%
   width: 100%;
 }
 
-#gkoadyzagv .gt_group_heading {
+#yqntzeljkj .gt_group_heading {
   padding: 8px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1063,7 +1070,7 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#gkoadyzagv .gt_empty_group_heading {
+#yqntzeljkj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1078,15 +1085,15 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#gkoadyzagv .gt_from_md > :first-child {
+#yqntzeljkj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gkoadyzagv .gt_from_md > :last-child {
+#yqntzeljkj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gkoadyzagv .gt_row {
+#yqntzeljkj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1105,7 +1112,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#gkoadyzagv .gt_stub {
+#yqntzeljkj .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1117,7 +1124,7 @@ penguins %&gt;%
   padding-left: 12px;
 }
 
-#gkoadyzagv .gt_summary_row {
+#yqntzeljkj .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1127,7 +1134,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#gkoadyzagv .gt_first_summary_row {
+#yqntzeljkj .gt_first_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1137,7 +1144,7 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_grand_summary_row {
+#yqntzeljkj .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1147,7 +1154,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#gkoadyzagv .gt_first_grand_summary_row {
+#yqntzeljkj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1157,11 +1164,11 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_striped {
+#yqntzeljkj .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gkoadyzagv .gt_table_body {
+#yqntzeljkj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1170,7 +1177,7 @@ penguins %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_footnotes {
+#yqntzeljkj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1184,13 +1191,13 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_footnote {
+#yqntzeljkj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding: 4px;
 }
 
-#gkoadyzagv .gt_sourcenotes {
+#yqntzeljkj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1204,46 +1211,46 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#gkoadyzagv .gt_sourcenote {
+#yqntzeljkj .gt_sourcenote {
   font-size: 90%;
   padding: 4px;
 }
 
-#gkoadyzagv .gt_left {
+#yqntzeljkj .gt_left {
   text-align: left;
 }
 
-#gkoadyzagv .gt_center {
+#yqntzeljkj .gt_center {
   text-align: center;
 }
 
-#gkoadyzagv .gt_right {
+#yqntzeljkj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gkoadyzagv .gt_font_normal {
+#yqntzeljkj .gt_font_normal {
   font-weight: normal;
 }
 
-#gkoadyzagv .gt_font_bold {
+#yqntzeljkj .gt_font_bold {
   font-weight: bold;
 }
 
-#gkoadyzagv .gt_font_italic {
+#yqntzeljkj .gt_font_italic {
   font-style: italic;
 }
 
-#gkoadyzagv .gt_super {
+#yqntzeljkj .gt_super {
   font-size: 65%;
 }
 
-#gkoadyzagv .gt_footnote_marks {
+#yqntzeljkj .gt_footnote_marks {
   font-style: italic;
   font-size: 65%;
 }
 </style>
-<div id="gkoadyzagv" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<div id="yqntzeljkj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -1394,7 +1401,7 @@ penguins %&gt;%
     
 
     <div class="media-body">
-      <h5 class="card-title" itemprop="name"><a href="/">Katherine Hoffman</a></h5>
+      <h5 class="card-title" itemprop="name"><a href="https://khstats.com/">Katherine Hoffman</a></h5>
       <h6 class="card-subtitle">Research Biostatistician</h6>
       <p class="card-text" itemprop="description">I am passionate about meaningful, reproducible medical research.</p>
       <ul class="network-icon" aria-hidden="true">
@@ -1598,16 +1605,6 @@ penguins %&gt;%
   
   <div class="container">
     <footer class="site-footer">
-  
-  <p class="powered-by">
-    
-      <a href="/privacy/">Privacy Policy</a>
-    
-    
-       &middot; 
-      <a href="/terms/">Terms</a>
-        
-  </p>
   
 
   <p class="powered-by">

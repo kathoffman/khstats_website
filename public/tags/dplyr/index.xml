@@ -2,28 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>dplyr | KHstats</title>
-    <link>/tags/dplyr/</link>
-      <atom:link href="/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/dplyr/</link>
+      <atom:link href="https://khstats.com/tags/dplyr/index.xml" rel="self" type="application/rss+xml" />
     <description>dplyr</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 05 Mar 2019 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>dplyr</title>
-      <link>/tags/dplyr/</link>
+      <link>https://khstats.com/tags/dplyr/</link>
     </image>
     
     <item>
       <title>Data Wrangling with dplyr</title>
-      <link>/blog/dplyr/data-wrangling/</link>
+      <link>https://khstats.com/blog/dplyr/data-wrangling/</link>
       <pubDate>Tue, 05 Mar 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/dplyr/data-wrangling/</guid>
+      <guid>https://khstats.com/blog/dplyr/data-wrangling/</guid>
       <description>
-&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;div id=&#34;a-presentation-for-weill-cornell-medicines-biostatistics-computing-club&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;A Presentation for Weill Cornell Medicine’s Biostatistics Computing Club&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&#34;/img/dplyr_image.jpg&#34; /&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/dplyr_image.jpg&#34; /&gt;
 &lt;em&gt;Image courtesy of Allison Horst’s Twitter: &lt;span class=&#34;citation&#34;&gt;@allison_horst&lt;/span&gt;&lt;/em&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
@@ -1137,7 +1137,7 @@ Sepal.Length.Sq
   filter(Species != &amp;quot;setosa&amp;quot;) %&amp;gt;%
   ggplot(aes(Sepal.Length, Petal.Width, col=Species)) +
   geom_point()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-41-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-41-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;finding-columns-of-interest&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Finding columns of interest&lt;/h2&gt;
@@ -1461,7 +1461,7 @@ irisSummary(group = &amp;quot;Species&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 }
 
 irisScatPlot(x=&amp;quot;Sepal.Length&amp;quot;,y=&amp;quot;Petal.Length&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-49-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/tutorial/dplyr/data-wrangling_files/figure-html/unnamed-chunk-49-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 </description>

@@ -2,14 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tutorials | KHstats</title>
-    <link>/tutorial/</link>
-      <atom:link href="/tutorial/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tutorial/</link>
+      <atom:link href="https://khstats.com/tutorial/index.xml" rel="self" type="application/rss+xml" />
     <description>Tutorials</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>Tutorials</title>
-      <link>/tutorial/</link>
+      <link>https://khstats.com/tutorial/</link>
     </image>
     
   </channel>

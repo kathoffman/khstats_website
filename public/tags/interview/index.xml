@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>interview | KHstats</title>
-    <link>/tags/interview/</link>
-      <atom:link href="/tags/interview/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/interview/</link>
+      <atom:link href="https://khstats.com/tags/interview/index.xml" rel="self" type="application/rss+xml" />
     <description>interview</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sun, 06 Oct 2019 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>interview</title>
-      <link>/tags/interview/</link>
+      <link>https://khstats.com/tags/interview/</link>
     </image>
     
     <item>
       <title>Stats on Drugs: An Interview with a Pharmaceutical CRO Biostatistician</title>
-      <link>/blog/ditl/pharma-cro/</link>
+      <link>https://khstats.com/blog/ditl/pharma-cro/</link>
       <pubDate>Sun, 06 Oct 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/ditl/pharma-cro/</guid>
+      <guid>https://khstats.com/blog/ditl/pharma-cro/</guid>
       <description>
 
 
-&lt;p&gt;&lt;img src=&#34;/img/kim1.png&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/kim1.png&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Earlier this year I wrote my first blog post, &lt;a href=&#34;https://www.khstats.com/blog/ditl-biostats/&#34;&gt;“A Day in the Life of a Biostatistician,”&lt;/a&gt; documenting the granular details of my work as an early career academic research biostatistician. I’m excited to announce I am turning that post into a “day in the life” series in which I interview other biostatisticians with differing roles. My hope is that it will enlighten anyone interested in the field of biostatistics, and especially help undergraduate and current biostatistics Masters students make informed decisions about their careers.&lt;/p&gt;
 &lt;p&gt;My first interviewee is Kim Hirschhorn, a former classmate and good friend from my time at the University of Michigan School of Public Health. Kim is an avid reality TV show watcher, loves Eggo waffles and Hostess Ho-Hos, and is a great statistician; so great, professors were often confused as to why she wasn’t planning to pursue a PhD. Kim, however, has always been adamant that she doesn’t need a PhD to have the career she wants.&lt;/p&gt;
 &lt;p&gt;Kim’s determination to find a job which allowed for ample career growth with “only” an MS in Biostatistics paid off. After graduating in 2018, she chose to work as a biostatistician at PRA Health Sciences, a Contract Research Organization (CRO) for pharmaceutical companies. Biostatistician roles at CROs offer excellent career trajectory for Masters-level statisticians and don’t have a job title ceiling as some careers in statistics notoriously do for those without a PhD. Additionally, it’s a lucrative job option for a Masters-level biostatistician. (🤑!) For more information on salaries of early career statisticians you can check out the &lt;a href=&#34;https://magazine.amstat.org/blog/2019/08/01/mastergraduate/&#34;&gt;American Statistical Association’s recent survey of 2018 Masters in Statistics graduates&lt;/a&gt;. But, to learn more about what Kim actually does as a biostatistician at a pharmaceutical CRO, read on!&lt;/p&gt;

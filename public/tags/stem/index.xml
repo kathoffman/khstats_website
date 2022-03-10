@@ -2,27 +2,29 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>STEM | KHstats</title>
-    <link>/tags/stem/</link>
-      <atom:link href="/tags/stem/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/tags/stem/</link>
+      <atom:link href="https://khstats.com/tags/stem/index.xml" rel="self" type="application/rss+xml" />
     <description>STEM</description>
     <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 16 Apr 2019 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>STEM</title>
-      <link>/tags/stem/</link>
+      <link>https://khstats.com/tags/stem/</link>
     </image>
     
     <item>
       <title>A Day in the Life of a Biostatistician</title>
-      <link>/blog/ditl-biostats/</link>
+      <link>https://khstats.com/blog/ditl-biostats/</link>
       <pubDate>Tue, 16 Apr 2019 21:13:14 -0500</pubDate>
-      <guid>/blog/ditl-biostats/</guid>
+      <guid>https://khstats.com/blog/ditl-biostats/</guid>
       <description>
+&lt;link href=&#34;https://khstats.com/rmarkdown-libs/anchor-sections/anchor-sections.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;https://khstats.com/rmarkdown-libs/anchor-sections/anchor-sections.js&#34;&gt;&lt;/script&gt;
 
 
 &lt;p&gt;It seems fitting that my first blog post is on a topic that I tried and failed to find via Google search a few years ago.&lt;/p&gt;
 &lt;p&gt;I’ll back up for a second. A few years ago I was a recent college graduate, and trying hard to “figure out my life.” My major was biochemistry, which is one of those degrees where 99%* of people just keep on going to school.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/sadcat.png&#34;  width=&#34;48%&#34; alt=&#34;cat&#34; style=&#34;float:right; padding-left:65px;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/sadcat.png&#34;  width=&#34;48%&#34; alt=&#34;cat&#34; style=&#34;float:right; padding-left:65px;&#34;&gt;&lt;/p&gt;
 &lt;p&gt;I was working full-time night-shift at a hospital as a nurse technician. The key word in that sentence is “night-shift” which meant that even on my days off, I didn’t sleep at night, but all my friends and family did. So, I was often alone and awake, with a lot of time to think about my future… and surf the web for potential careers.&lt;/p&gt;
 &lt;p&gt;I knew I wanted a job in healthcare, but I was confused as to where in medicine would be a good fit for me. I could visualize very clearly what my days at work would look like if I were to become a physician, or a physician assistant, or a registered nurse (all careers I developed lengthy pros and cons lists for).&lt;/p&gt;
 &lt;p&gt;However, there was another career involving medicine that I was drawn to but didn’t know enough about. “Biostatistics” was a class biochemistry majors took at my university, but I had been exempted because I took AP Statistics in high school.&lt;/p&gt;
@@ -30,7 +32,7 @@
 &lt;p&gt;I ultimately lucked out during a conversation with a professor during my senior year of college. I was rambling about my many life plans and he mentioned his cousin was the chair of a well-known Biostatistics program. He encouraged me to email her my questions about biostatistics, and I am so grateful she took time to respond with detailed answers. Her description of life as a biostatistician was enough for me to choose going to graduate school for an MS in biostatistics over medical school/physician assistant school/second-degree nursing.&lt;/p&gt;
 &lt;p&gt;I feel wholeheartedly that although I would have enjoyed my life as an MD/PA/RN, biostatistics is the right career for me. So, in honor of my confused younger self, and as a way of paying it forward, I’ve dedicated this topic for my very first blog post!&lt;/p&gt;
 &lt;p style=&#34;text-align: center; padding-bottom: -30px; padding-left: 0px; float: left;&#34;&gt;
-&lt;img src=&#34;/img/ditl/nursing.jpg&#34; width=&#34;40%&#34;/&gt;&lt;span&gt;&lt;em&gt;Hanging out with my mom (an RN of 41 years and counting!) after a particularly exhausting night shift as a nurse technician.&lt;/em&gt;&lt;/span&gt;
+&lt;img src=&#34;https://khstats.com/img/ditl/nursing.jpg&#34; width=&#34;40%&#34;/&gt;&lt;span&gt;&lt;em&gt;Hanging out with my mom (an RN of 41 years and counting!) after a particularly exhausting night shift as a nurse technician.&lt;/em&gt;&lt;/span&gt;
 &lt;/p&gt;
 &lt;p&gt;A disclaimer: what follows is a day in the life of one masters-level, academic research-focused biostatistician and I cannot make claims about the careers of statisticians in industry or pharmaceuticals or hospitals or government. In addition, here’s a bit more background before I get into the granular details of my work:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
@@ -38,11 +40,11 @@
 &lt;li&gt;&lt;p&gt;I will mention R/Rstudio a bit. For those who are not familiar with it, &lt;a href=&#34;https://www.r-project.org/&#34;&gt;R&lt;/a&gt; is an open-source (which means anyone can help contribute) programming language that is well-equipped for statistical analysis. It’s arguably very similar to &lt;a href=&#34;https://www.python.org/&#34;&gt;Python&lt;/a&gt;, which is a more widely used language, but statisticians tend to use R more because its statistical packages are very well-developed. During grad school I used Python because I worked in a computational biology lab, and I learned &lt;a href=&#34;https://www.sas.com/en_us/home.html&#34;&gt;SAS&lt;/a&gt; (another statistical programming language) in some of my classes, but R is what I prefer these days. &lt;a href=&#34;https://www.rstudio.com/&#34;&gt;Rstudio&lt;/a&gt; is a platform that makes it more user friendly to use R.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;So, without further ado! An average day**:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/desk.png&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/desk.png&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;9:30AM&lt;/strong&gt; - I arrive at my office and spend a few minutes chatting with my coworkers. To set the scene for you, I have a fairly spacious cubicle within a group of five other cubicles. I sit next to another research biostatistician, two health informatics professionals, and two clinical trial grant specialists. I’m actually not completely sure what that last pair’s title is, but I know their primary task is to make sure several multi-million dollar clinical trial grants stay funded (woah). Everyone I sit by is young and goofy, but very driven, making for a fun office environment.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;9:45AM&lt;/strong&gt; - I check and answer new emails from researchers I collaborate on projects with. I send my availability for a meeting to a group of doctors who want to go over the results of a recent analysis I did on Body Mass Index and death rates in the Intensive Care Unit. In a different thread of emails, I thank several researchers from another university for clarifying their methods and sending me code for an analysis similar to one I will soon work on.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;10:00AM&lt;/strong&gt; - I open a manuscript draft for a paper I received yesterday. It’s from a group of residents and medical students I worked with a few months ago. Their study looks at the association between blood levels of a certain biomarker and the time to death in cancer patients. My role in the analysis was to examine the associations between several biomarkers such as phosphorus, phosphate, and calcitriol. I then fit a regression model, just like y=mx+b, but with way more math. For this analysis I used a model for when your y is a time to an event (death, in this case), fittingly called a survival model. After adjusting for confounding factors like age, which affects both tumor progression and biomarker levels, there was a significant association between the biomarker and time to death in cancer patients.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/blog/ditl-biostats_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/blog/ditl-biostats_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span&gt; &lt;em&gt;An example of a figure for a manuscript. This particular plot suggests that cancer patients with an elevated biomarker died at a faster rate than patients who did not have an elevated biomarker.&lt;/em&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The researchers have asked for my assistance in writing the methods section. The methods section of a scientific article is the steps the scientists took to analyze data explicitly written out for anyone looking to review or learn about their work. I read through their current draft of the paper carefully, make some edits, and send it back. They are hoping to submit this paper to a peer-reviewed journal within a few weeks.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;10:45AM&lt;/strong&gt; - I have a weekly meeting a few blocks from my office with a neurologist I spend a large portion of my time working with. She is a leader in the field of Alzheimer’s research, and I find it very rewarding to work on her data and be a small part of a growing body of research in the field. I am “contracted” out to her research as I am to all of the researchers I work with—it’s how my institution budgets funding for grants. One of the faculty-level biostatisticians in my department—which means he has a PhD and specializes in certain statistical methods—is also part of this contract, and some days, like today, he joins me at these meetings.&lt;/p&gt;
@@ -50,7 +52,7 @@
 &lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/katalan.gif&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;12:00PM&lt;/strong&gt; - I head to lunch with a group of coworkers. They have gotten food from a nearby salad place, and we sit in one of our favorite buildings on campus and eat together. Our jokes oscillate from incredibly nerdy to pretty stupid. One of my coworkers points out that our hair is styled the same way for the third day in a row.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;12:45PM&lt;/strong&gt; - I get back to my desk and type up my handwritten notes from the neurology meeting and put them in that project’s “Notes” folder. It’s important to me that I keep track of all my meetings electronically - I fear losing my notebooks or someone else having to decipher my cursive should I ever have to pass off a project.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/notes.jpg&#34; width=&#34;50%&#34; style=&#34;float:right; padding-left:25px&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/notes.jpg&#34; width=&#34;50%&#34; style=&#34;float:right; padding-left:25px&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1:00PM&lt;/strong&gt; - I start to make a plan for a different analysis I’m working on. This project is something new for me - it involves a protein assay and data for 1000+ different protein expression levels. The researcher I’m working with wants to know which proteins are over- and under-expressed in people with a specific autoimmune disorder and a certain type of lung disease. I’ve recently spoken to some bioinformaticians and have a clearer idea of the analysis I need to do. I draw out a little map of the code organization I think would be the most efficient for this analysis and open up Rstudio.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;1:30PM&lt;/strong&gt; - I get to work writing up functions, which is just a fancy programming way of saying your code can do the same thing to multiple data sets (or subsets of patients, as is the case of this protein expression study I’m doing). Sometimes it takes a bit longer to write my functions than it would if I were to just copy and paste my code several different times, but the final code is much more readable and less prone to errors. By the time I’m done working, I have some interactive plots showing the significant and non-significant results. When you hover over them, they show what protein corresponds to which point on the graph. They look like this, except this is not the real data we used in her study.&lt;/p&gt;
 &lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/hoffmakl/khoffman_website/master/content/blog/volcano.gif&#34; /&gt;&lt;/p&gt;
@@ -59,15 +61,18 @@
 &lt;p&gt;I close the report; I will continue working on this analysis tomorrow.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;4:45PM&lt;/strong&gt; - It’s time for my last meeting of the day. I head to another floor of my office building and get my laptop set up in a conference room. I await the arrival of several doctors. It will be my first time meeting most of them, and our task today is to discuss the data collection process for a future study involving both genetic mutation data from tumor biopsies and clinical data from electronic health records on thousands of patients with lung cancer.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;5:00PM&lt;/strong&gt; - The doctors arrive and, after introductions, we talk about the current stage of the project and what the goals are. We discuss the timing of starting chart reviews of patients, how we will upload the information to a database efficiently, and what might be the best way to condense the highly detailed genetics data into useful information for an analysis. Our solution will likely involve a series of iterative searches through the columns containing genetic information.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/data_dict.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/data_dict.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;&lt;span&gt;&lt;em&gt;The start of a database I am helping researchers build to collect data for their study. This is not my favorite part of my job, but it is a crucial step for good scientific research.&lt;/em&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;6:00PM&lt;/strong&gt; - The meeting ends, and I go back to my desk to record more handwritten notes. I log the hours I spent on each project that day into Toggl, which is the time-tracking application our team uses. This is so we know how much time we’re spending on each project, and is as much for our own sake as it is anyone else’s. I update my to-do list, which is a giant color-coded excel spreadsheet, and eat a few chocolate covered raisins as my reward for a productive day.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;6:30PM&lt;/strong&gt; - I leave work! I typically have some kind of activity, like happy hour (see my cute cubicle buddies below), a sports game, or Spanish class that I’m heading off to. Some days I attend coding workshops hosted by groups such as R-ladies. On nights when I’m feeling especially nerdy, I’ll go home and read a statistics paper or sift through the #rstats tips on twitter.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;/img/ditl/coworkers.jpg&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://khstats.com/img/ditl/coworkers.jpg&#34; width=&#34;500px&#34; height=&#34;375px&#34;&gt;&lt;/p&gt;
 &lt;p&gt;…So, there you have it. One average daily experience as an early career masters-level statistician. All in all, I have an excellent work-life balance and overall work environment. Every day I get to learn more about science, medicine, statistics, and the intersection of these wonderful ideas. Although it varies quite a bit, approximately 10% of each day involves writing, 20% interacting with other researchers, and the rest of it is spent thinking critically and finding answers to problems I am passionate about.&lt;/p&gt;
 &lt;p&gt;I hope if there are any 22, 42, or 14 year-olds out there considering a career in biostatistics and struggling to figure out what on earth we actually do, that you find this post and it lessens your confusion!&lt;/p&gt;
-&lt;p&gt;All the best,
-Kat&lt;/p&gt;
+&lt;p&gt;All the best,&lt;/p&gt;
+&lt;p&gt;Kat&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;If you found this post useful, you might be interested in a &lt;a href=&#34;https://www.khstats.com/blog/ditl/ditl-followup/&#34;&gt;follow up post&lt;/a&gt; I wrote answering common email questions I’ve received. I also interviewed my friend from grad school who is a Biostatistician for a pharmaceutical CRO in a &lt;a href=&#34;https://www.khstats.com/blog/ditl/pharma-cro/&#34;&gt;separate blog post&lt;/a&gt;.&lt;/p&gt;
+&lt;hr /&gt;
 &lt;p&gt;*Not a real statistic.&lt;/p&gt;
 &lt;p&gt;**Exact details and diseases of the studies I am currently working on have been generalized or altered to protect the research interests of my collaborators.&lt;/p&gt;
 </description>

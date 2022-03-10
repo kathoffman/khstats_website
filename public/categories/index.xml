@@ -2,61 +2,61 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories | KHstats</title>
-    <link>/categories/</link>
-      <atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <link>https://khstats.com/categories/</link>
+      <atom:link href="https://khstats.com/categories/index.xml" rel="self" type="application/rss+xml" />
     <description>Categories</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 27 Nov 2020 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Fri, 15 Jan 2021 21:13:14 -0500</lastBuildDate>
     <image>
-      <url>/img/icon-192.png</url>
+      <url>https://khstats.com/img/icon-192.png</url>
       <title>Categories</title>
-      <link>/categories/</link>
+      <link>https://khstats.com/categories/</link>
     </image>
     
     <item>
+      <title>career</title>
+      <link>https://khstats.com/categories/career/</link>
+      <pubDate>Fri, 15 Jan 2021 21:13:14 -0500</pubDate>
+      <guid>https://khstats.com/categories/career/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>R</title>
-      <link>/categories/r/</link>
-      <pubDate>Fri, 27 Nov 2020 21:13:14 -0500</pubDate>
-      <guid>/categories/r/</guid>
+      <link>https://khstats.com/categories/r/</link>
+      <pubDate>Fri, 11 Dec 2020 02:13:14 -0500</pubDate>
+      <guid>https://khstats.com/categories/r/</guid>
       <description></description>
     </item>
     
     <item>
       <title>statistics</title>
-      <link>/categories/statistics/</link>
-      <pubDate>Fri, 27 Nov 2020 21:13:14 -0500</pubDate>
-      <guid>/categories/statistics/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>career</title>
-      <link>/categories/career/</link>
-      <pubDate>Wed, 30 Sep 2020 01:13:14 -0500</pubDate>
-      <guid>/categories/career/</guid>
+      <link>https://khstats.com/categories/statistics/</link>
+      <pubDate>Fri, 11 Dec 2020 02:13:14 -0500</pubDate>
+      <guid>https://khstats.com/categories/statistics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>data visualization</title>
-      <link>/categories/data-visualization/</link>
+      <link>https://khstats.com/categories/data-visualization/</link>
       <pubDate>Mon, 24 Aug 2020 21:13:14 -0500</pubDate>
-      <guid>/categories/data-visualization/</guid>
+      <guid>https://khstats.com/categories/data-visualization/</guid>
       <description></description>
     </item>
     
     <item>
       <title>blog</title>
-      <link>/categories/blog/</link>
+      <link>https://khstats.com/categories/blog/</link>
       <pubDate>Sat, 01 Jun 2019 21:13:14 -0500</pubDate>
-      <guid>/categories/blog/</guid>
+      <guid>https://khstats.com/categories/blog/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Rmarkdown</title>
-      <link>/categories/rmarkdown/</link>
+      <link>https://khstats.com/categories/rmarkdown/</link>
       <pubDate>Tue, 16 Apr 2019 00:00:00 +0000</pubDate>
-      <guid>/categories/rmarkdown/</guid>
+      <guid>https://khstats.com/categories/rmarkdown/</guid>
       <description></description>
     </item>
     
