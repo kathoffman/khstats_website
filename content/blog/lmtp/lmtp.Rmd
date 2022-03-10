@@ -3,8 +3,8 @@ title: "An Illustrated Guide to Modified Treatment Policies, Pt. 1: Introduction
 author: "Katherine Hoffman"
 date: 2021-03-01T21:13:14-05:00
 categories: ["statistics"]
-draft: true
 tags: ["causal inference"]
+draft: true
 output: 
   html_document:
     toc: true
