@@ -13,17 +13,24 @@ output:
     print_df: paged
 ---
 
+
+This post provides an **introduction to Modified Treatment Policies (MTPs)**, **motivation** for adding them to your **data analysis toolbox**, and several **examples of research questions** that can be answered using MTPs. It is organized as follows:
+ 
+1. [An Overview of Existing Methodology](#an-overview-of-existing-methodology)
+2. [Explanation and examples of Modified Treatment Policies](#modified-treatment-policies-mtps)
+3. [Capabilities of the Longitudinal Modified Treatment Policy (LMTP) framework](#a-general-and-unifying-framework-extending-to-longitudinal-settings)
+
+Although this series is for an audience of applied statisticians and data scientists, I hope the introductory post is useful to those looking for a conceptual understanding of MTPs.
+
+
 <html>
    <head>
-      <title>HTML Image as link</title>
    </head>
    <body>
       <a href="">
          <img alt="" src="/img/mtp_summary.jpg"
                style="border:1px solid black;" width=100%" >
-              
-
-               
+             
       </a>
    </body>
 </html>
@@ -37,14 +44,6 @@ output:
 
 ***
 
-
-This post provides an **introduction to MTPs**, **motivation** for adding them to your **data analysis toolbox**, and several **examples of research questions** that can be answered using MTPs. It is organized as follows:
- 
-<!-- Although it is written for an audience of applied statisticians and data scientists, I hope the introductory post is useful to those looking for a conceptual understanding of MTPs. -->
-
-1. [An Overview of Existing Methodology](#an-overview-of-existing-methodology)
-2. [Explanation and examples of Modified Treatment Policies](#modified-treatment-policies-mtps)
-3. [Capabilities of the Longitudinal Modified Treatment Policy (LMTP) framework](#a-general-and-unifying-framework-extending-to-longitudinal-settings)
 
 <!-- Lastly, before I begin, please note a few sets of words I’ll use interchangeably: -->
 
@@ -116,17 +115,17 @@ We can try getting around these issues by evaluating a dynamic intervention that
 
 <html>
    <head>
-      <title>HTML Image as link</title>
    </head>
    <body>
       <a href="">
          <img alt="" src="/img/dynamic_graph.jpg"
                style="" width=100%" >
       </a>
+      <figcaption>An example of a naturally observed exposure of AQI in the US (left) and what it would look like under a hypothetical dynamic intervention in which all urban counties have an AQI of 40 and rural counties have an AQI of 20 (right).</figcaption>
    </body>
 </html>
 
-This intervention may reduce positivity violations and lead to a more realistic study, yet there are many other interesting questions about air pollution we still cannot answer with dynamic treatment policies.
+This intervention may **reduce positivity violations** and **lead to a more realistic study**, yet there are **many other interesting questions** about air pollution **we still cannot answer** with dynamic treatment policies.
 
 <h3 style="color: #C41E3A;">Problem #3: Static and dynamic interventions cannot depend on the observed exposure</h3>
 
@@ -142,15 +141,16 @@ Another **key limitation** with both static and dynamic interventions is that th
 We can solve all three problems mentioned above with **Modified Treatment Policies (MTPs)**. MTPs describe **hypothetical interventions which depend on the observed value of treatment**, possibly in addition to baseline characteristics. We already mentioned two potential MTPs for our pollution example: "*what if we reduced everyone’s AQI exposure by 20%?*" and "*what if we reduced individuals living in an area with a daily AQI > 100 by 20 units?*"
 
 
+
 <html>
    <head>
-      <title>HTML Image as link</title>
    </head>
    <body>
       <a href="">
          <img alt="" src="/img/modified_graph.jpg"
                style="" width=100%" >
       </a>
+      <figcaption>An example of a naturally observed exposure of AQI in the US (left) and what it would look like under a hypothetical modified treatment policy in which all observations have an AQI exposure 20% less than what was actually observed (right).</figcaption>
    </body>
 </html>
 
@@ -214,9 +214,9 @@ MTPs for cross-sectional, or point-treatment, studies have actually been **gener
 - *How would asthma rates change if we reduced two pollutants (fine particulate matter and ozone) by 10% every day for a year?*
 - *How would drug overdose numbers change if Naloxone access laws were implemented one year later?*
 - *How would length of intubation for intubated COVID-19 patients change if patients who never received steroids were given a standard dose of steroids upon intubation? (Death of other causes is a competing risk and discharge is an informative loss to follow up.)*
-- *How would your maximum climbing grade have changed by the end of the year if you had gone to the climbing gym one hour more every week?*
+<!-- - *How would your maximum climbing grade have changed by the end of the year if you had gone to the climbing gym one hour more every week?* -->
 
-<p align="center"><iframe src="https://giphy.com/embed/SIJiRqIcb6CJVLs9CX" width="480" height="270" frameBorder="0" allowFullScreen></iframe><p></p>
+<!-- <p align="center"><iframe src="https://giphy.com/embed/SIJiRqIcb6CJVLs9CX" width="480" height="270" frameBorder="0" allowFullScreen></iframe><p></p> -->
 
 ## An important note on longitudinal studies 
 

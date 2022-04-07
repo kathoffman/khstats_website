@@ -15,11 +15,15 @@ output:
 
 
 
+<p>This post provides an <strong>introduction to Modified Treatment Policies (MTPs)</strong>, <strong>motivation</strong> for adding them to your <strong>data analysis toolbox</strong>, and several <strong>examples of research questions</strong> that can be answered using MTPs. It is organized as follows:</p>
+<ol style="list-style-type: decimal">
+<li><a href="#an-overview-of-existing-methodology">An Overview of Existing Methodology</a></li>
+<li><a href="#modified-treatment-policies-mtps">Explanation and examples of Modified Treatment Policies</a></li>
+<li><a href="#a-general-and-unifying-framework-extending-to-longitudinal-settings">Capabilities of the Longitudinal Modified Treatment Policy (LMTP) framework</a></li>
+</ol>
+<p>Although this series is for an audience of applied statisticians and data scientists, I hope the introductory post is useful to those looking for a conceptual understanding of MTPs.</p>
 <html>
 <head>
-<title>
-HTML Image as link
-</title>
 </head>
 <body>
 <p><a href="">
@@ -36,13 +40,6 @@ HTML Image as link
 <li>This flexibility enables us to <strong>answer more realistic scientific questions</strong> in both <strong>cross-sectional and longitudinal settings</strong>, with <strong>multivariate, categorical, or continuous exposures</strong>.</li>
 </ul>
 <hr />
-<p>This post provides an <strong>introduction to MTPs</strong>, <strong>motivation</strong> for adding them to your <strong>data analysis toolbox</strong>, and several <strong>examples of research questions</strong> that can be answered using MTPs. It is organized as follows:</p>
-<!-- Although it is written for an audience of applied statisticians and data scientists, I hope the introductory post is useful to those looking for a conceptual understanding of MTPs. -->
-<ol style="list-style-type: decimal">
-<li><a href="#an-overview-of-existing-methodology">An Overview of Existing Methodology</a></li>
-<li><a href="#modified-treatment-policies-mtps">Explanation and examples of Modified Treatment Policies</a></li>
-<li><a href="#a-general-and-unifying-framework-extending-to-longitudinal-settings">Capabilities of the Longitudinal Modified Treatment Policy (LMTP) framework</a></li>
-</ol>
 <!-- Lastly, before I begin, please note a few sets of words I’ll use interchangeably: -->
 <!-- - Exposure and treatment -->
 <!-- - Treatment policy and intervention -->
@@ -105,18 +102,18 @@ Problem #2: Unrealistic Interventions
 <p>We can try getting around these issues by evaluating a dynamic intervention that depends on baseline characteristics of the person or environment. For example, “<em>if a person lives in an urban area, make their AQI exposure 40, and if a person lives in a residential area, make their AQI exposure 20.</em>”</p>
 <html>
 <head>
-<title>
-HTML Image as link
-</title>
 </head>
 <body>
 <a href="">
 <img alt="" src="/img/dynamic_graph.jpg"
                style="" width=100%" >
 </a>
+<figcaption>
+An example of a naturally observed exposure of AQI in the US (left) and what it would look like under a hypothetical dynamic intervention in which all urban counties have an AQI of 40 and rural counties have an AQI of 20 (right).
+</figcaption>
 </body>
 </html>
-<p>This intervention may reduce positivity violations and lead to a more realistic study, yet there are many other interesting questions about air pollution we still cannot answer with dynamic treatment policies.</p>
+<p>This intervention may <strong>reduce positivity violations</strong> and <strong>lead to a more realistic study</strong>, yet there are <strong>many other interesting questions</strong> about air pollution <strong>we still cannot answer</strong> with dynamic treatment policies.</p>
 <h3 style="color: #C41E3A;">
 Problem #3: Static and dynamic interventions cannot depend on the observed exposure
 </h3>
@@ -132,15 +129,15 @@ Problem #3: Static and dynamic interventions cannot depend on the observed expos
 <p>We can solve all three problems mentioned above with <strong>Modified Treatment Policies (MTPs)</strong>. MTPs describe <strong>hypothetical interventions which depend on the observed value of treatment</strong>, possibly in addition to baseline characteristics. We already mentioned two potential MTPs for our pollution example: “<em>what if we reduced everyone’s AQI exposure by 20%?</em>” and “<em>what if we reduced individuals living in an area with a daily AQI &gt; 100 by 20 units?</em>”</p>
 <html>
 <head>
-<title>
-HTML Image as link
-</title>
 </head>
 <body>
 <a href="">
 <img alt="" src="/img/modified_graph.jpg"
                style="" width=100%" >
 </a>
+<figcaption>
+An example of a naturally observed exposure of AQI in the US (left) and what it would look like under a hypothetical modified treatment policy in which all observations have an AQI exposure 20% less than what was actually observed (right).
+</figcaption>
 </body>
 </html>
 <p>Other interesting MTPs unrelated to pollution might be questions along the lines of:</p>
@@ -195,14 +192,10 @@ HTML Image as link
 <ul>
 <li><em>How would asthma rates change if we reduced two pollutants (fine particulate matter and ozone) by 10% every day for a year?</em></li>
 <li><em>How would drug overdose numbers change if Naloxone access laws were implemented one year later?</em></li>
-<li><em>How would length of intubation for intubated COVID-19 patients change if patients who never received steroids were given a standard dose of steroids upon intubation? (Death of other causes is a competing risk and discharge is an informative loss to follow up.)</em></li>
-<li><em>How would your maximum climbing grade have changed by the end of the year if you had gone to the climbing gym one hour more every week?</em></li>
+<li><em>How would length of intubation for intubated COVID-19 patients change if patients who never received steroids were given a standard dose of steroids upon intubation? (Death of other causes is a competing risk and discharge is an informative loss to follow up.)</em>
+<!-- - *How would your maximum climbing grade have changed by the end of the year if you had gone to the climbing gym one hour more every week?* --></li>
 </ul>
-<p align="center">
-<iframe src="https://giphy.com/embed/SIJiRqIcb6CJVLs9CX" width="480" height="270" frameBorder="0" allowFullScreen>
-</iframe>
-<p>
-</p>
+<!-- <p align="center"><iframe src="https://giphy.com/embed/SIJiRqIcb6CJVLs9CX" width="480" height="270" frameBorder="0" allowFullScreen></iframe><p></p> -->
 </div>
 <div id="an-important-note-on-longitudinal-studies" class="section level2">
 <h2>An important note on longitudinal studies</h2>
