@@ -61,7 +61,7 @@ Although this series is for an audience of applied statisticians and data scient
    <body>
       <a href="">
          <img alt="" src="/img/universe_comic.jpeg"
-               style="float:right; padding-left:30px;" width=50%">
+               style="float:right; padding-left:10px;" width=70%">
       </a>
    </body>
 </html>
