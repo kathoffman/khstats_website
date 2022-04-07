@@ -114,9 +114,9 @@ A second problem arises with static interventions: there are many situations in 
    </body>
 </html>
 
-## One possible solution to these problems is Dynamic Treatment Policies.
+## One possible solution to the problems posed by Static Interventions is Dynamic Interventions.
 
-**Dynamic treatment policies** ask what would have happened in a hypothetical world where **exposure is assigned based on each observation’s covariate history**.
+**Dynamic treatment policies** or interventions ask what would have happened in a hypothetical world where **exposure is assigned based on each observation’s covariate history**.
 
 For example, let’s say we want to study the effect of pollution on asthma attacks in the United States. A simple study design could be to find a representative sample of individuals living with asthma, measure their pollution exposure via the [Air Quality Index (AQI)](https://www.airnow.gov/aqi/aqi-basics/) on one calendar day (along with other confounders), and record whether an asthma attack occurs within a specified time frame.
 
