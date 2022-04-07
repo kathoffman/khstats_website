@@ -160,20 +160,20 @@ Other interesting MTPs unrelated to pollution might be questions along the lines
 - *How would diabetes incidence rates change if everyone with a Body Mass Index (BMI) >30 lowered their BMI by 2 units?*
 - *How would medical school admission rates change if all students with MCAT scores less than 500 increased their score by 5 points?*
 
+<html>
+   <head>
+   </head>
+   <body>
+      <a href="">
+         <img alt="" src="/img/climbing_comic.JPG"
+               style="float:right" width=40%">
+      </a>
+   </body>
+</html>
+
 
 **MTPs are an excellent solution** for getting around positivity issues to analyze **more feasible and realistic interventions**. Hopefully this list inspires you to think of MTPs relevant to your own field of study!
 
-<!-- <html> -->
-<!--    <head> -->
-<!--       <title>HTML Image as link</title> -->
-<!--    </head> -->
-<!--    <body> -->
-<!--       <a href=""> -->
-<!--          <img alt="" src="/img/climbing_dag_comic.jpg" -->
-<!--                style="float:right" width=45%"> -->
-<!--       </a> -->
-<!--    </body> -->
-<!-- </html> -->
 
 
 
