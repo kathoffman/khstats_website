@@ -13,9 +13,6 @@ output:
     print_df: paged
 ---
 
-> The first of a multi-post series on Modified Treatment Policies (MTPs).
-
-
 <html>
    <head>
       <title>HTML Image as link</title>
@@ -226,6 +223,8 @@ MTPs for cross-sectional, or point-treatment, studies have actually been **gener
 Longitudinal studies pose certain crucial and often-overlooked issues, most notably time-dependent confounders. **Time-dependent confounders are variables which change over time, affect the likelihood of both future exposure and the outcome, and are affected by previous exposure.**
 
 A key time-dependent confounder for the relationship between pollution and asthma attacks could be weather. Hot, humid air causes air quality to decrease, and it also aggravates pulmonary conditions like asthma.  I will explain time-dependent confounders more in later posts of this series, but for now, note that **LMTP** (the method and `R` package) **properly accommodates time-dependent confounders.**
+
+***
 
 # Resources to learn more
 
