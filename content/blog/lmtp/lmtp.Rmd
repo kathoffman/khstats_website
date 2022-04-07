@@ -1,10 +1,10 @@
 ---
 title: "An Illustrated Guide to Modified Treatment Policies, Pt. 1: Introduction and Motivation"
 author: "Katherine Hoffman"
-date: 2021-03-01T21:13:14-05:00
+date: 2021-04-07T21:13:14-05:00
 categories: ["statistics"]
-tags: ["causal inference"]
-draft: true
+tags: ["causal inference", "time-dependent confounding", "biostatistics", "modified treatment policy", "dynamic treatment policy", "causal intervention"]
+draft: false
 output: 
   html_document:
     toc: true
@@ -17,12 +17,24 @@ output:
 
 ```
 
-
->The first of a multi-post series to help applied statisticians and data scientists understand and implement Modified Treatment Policies (MTPs).
-
 <!-- This section provides an introduction to MTPs, motivation for adding them to your data analysis toolbox, and several examples of research questions that can be answered using MTPs. -->
 
-***
+
+<html>
+   <head>
+      <title>HTML Image as link</title>
+   </head>
+   <body>
+      <a href="">
+         <img alt="" src="/img/mtp_summary.jpg"
+               style="border:1px solid black;" width=100%" >
+              
+
+               
+      </a>
+   </body>
+</html>
+
 
 # TLDR
 
@@ -30,8 +42,8 @@ output:
 - The unifying theme in this collection of methods is that they allow us to study hypothetical interventions, or treatment policies, that are **extremely flexible**.
 - This flexibility enables us to **answer more realistic scientific questions** in both **cross-sectional and longitudinal settings**, with **multivariate, categorical, or continuous exposures**. 
 
-
 ***
+
 
 This post provides an **introduction to MTPs**, **motivation** for adding them to your **data analysis toolbox**, and several **examples of research questions** that can be answered using MTPs. It is organized as follows:
  
@@ -56,7 +68,7 @@ This post provides an **introduction to MTPs**, **motivation** for adding them t
    </head>
    <body>
       <a href="">
-         <img alt="" src="/img/universe_comic.jpg"
+         <img alt="" src="/img/universe_comic.jpeg"
                style="float:right; padding-left:30px;" width=50%">
       </a>
    </body>
@@ -80,7 +92,7 @@ A key requirement for causal inference is the **positivity assumption**. This me
    </head>
    <body>
       <a href="">
-         <img alt="" src="/img/positivity_comic.jpg"
+         <img alt="" src="/img/positivity_comic.jpeg"
                style="float:right; padding-left:20px;" width=55%">
       </a>
    </body>
@@ -106,7 +118,20 @@ For example, let’s say we want to study the effect of pollution on asthma atta
 
 Although I don’t study pollution, I know it is **scientifically impossible** for everyone in the US to receive the same air quality exposure, even in a world with countless environmental regulations. Natural and geographical forces such as wind, wildfires, elevation, proximity to the ocean, etc. make it **unrealistic to study a single air quality exposure value for everyone**. 
 
-We can try getting around these issues by evaluating a dynamic intervention that depends on baseline characteristics of the person or environment. For example, "*if a person lives in an industrial area, make their AQI exposure 75, and if a person lives in a residential area, make their AQI exposure 25.*"
+We can try getting around these issues by evaluating a dynamic intervention that depends on baseline characteristics of the person or environment. For example, "*if a person lives in an urban area, make their AQI exposure 40, and if a person lives in a residential area, make their AQI exposure 20.*"
+
+
+<html>
+   <head>
+      <title>HTML Image as link</title>
+   </head>
+   <body>
+      <a href="">
+         <img alt="" src="/img/dynamic_graph.jpg"
+               style="" width=100%" >
+      </a>
+   </body>
+</html>
 
 This intervention may reduce positivity violations and lead to a more realistic study, yet there are many other interesting questions about air pollution we still cannot answer with dynamic treatment policies.
 
@@ -121,7 +146,20 @@ Another **key limitation** with both static and dynamic interventions is that th
 
 # Modified Treatment Policies (MTPs)
 
-We can solve all three problems mentioned above with **Modified Treatment Policies (MTPs)**. MTPs describe **hypothetical interventions which depend on the observed value of treatment**, possibly in addition to baseline characteristics. We already mentioned two potential MTPs for our pollution example: "*what if we reduced everyone’s AQI exposure by 10%?*" and "*what if we reduced individuals living in an area with a daily AQI > 100 by 20 units?*"
+We can solve all three problems mentioned above with **Modified Treatment Policies (MTPs)**. MTPs describe **hypothetical interventions which depend on the observed value of treatment**, possibly in addition to baseline characteristics. We already mentioned two potential MTPs for our pollution example: "*what if we reduced everyone’s AQI exposure by 20%?*" and "*what if we reduced individuals living in an area with a daily AQI > 100 by 20 units?*"
+
+
+<html>
+   <head>
+      <title>HTML Image as link</title>
+   </head>
+   <body>
+      <a href="">
+         <img alt="" src="/img/modified_graph.jpg"
+               style="" width=100%" >
+      </a>
+   </body>
+</html>
 
 Other interesting MTPs unrelated to pollution might be questions along the lines of:
 
