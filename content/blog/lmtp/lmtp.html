@@ -15,13 +15,13 @@ output:
 
 
 
-<p>This post provides an <strong>introduction to Modified Treatment Policies (MTPs)</strong>, <strong>motivation</strong> for adding them to your <strong>data analysis toolbox</strong>, and several <strong>examples of research questions</strong> that can be answered using MTPs. It is organized as follows:</p>
+<p>This post provides an <strong>introduction to Modified Treatment Policies (MTPs)</strong>, <strong>motivation</strong> for learning about them, and several <strong>examples of research questions</strong> that can be answered using MTPs. It is organized as follows:</p>
 <ol style="list-style-type: decimal">
 <li><a href="#an-overview-of-existing-methodology">An Overview of Existing Methodology</a></li>
 <li><a href="#modified-treatment-policies-mtps">Explanation and examples of Modified Treatment Policies</a></li>
 <li><a href="#a-general-and-unifying-framework-extending-to-longitudinal-settings">Capabilities of the Longitudinal Modified Treatment Policy (LMTP) framework</a></li>
 </ol>
-<p>Although this series is for an audience of applied statisticians and data scientists, I hope the introductory post is useful to those looking for a conceptual understanding of MTPs.</p>
+<p>Although this series is for an audience of applied statisticians and data scientists, I hope the introductory post is useful to anyone looking for a conceptual understanding of MTPs.</p>
 <html>
 <head>
 </head>
@@ -162,6 +162,11 @@ An example of a naturally observed exposure of AQI in the US (left) and what it 
 <div id="a-general-and-unifying-framework-extending-to-longitudinal-settings" class="section level1">
 <h1>A general and unifying framework extending to longitudinal settings</h1>
 <p>MTPs for cross-sectional, or point-treatment, studies have actually been <strong>generalized to exposures and covariates measured at multiple time points</strong>, i.e. longitudinal studies. We will refer to this generalization as <strong>Longitudinal Modified Treatment Policies (LMTPs)</strong>, to which there is a corresponding <code>R</code> package called <code>lmtp</code>.</p>
+<div id="longitudinal-data-analysis-complexities" class="section level2">
+<h2>Longitudinal data analysis complexities</h2>
+<p>Longitudinal studies pose certain crucial and often-overlooked issues, most notably time-dependent confounders. <strong>Time-dependent confounders are variables which change over time, affect the likelihood of both future exposure and the outcome, and are affected by previous exposure.</strong></p>
+<p>A key time-dependent confounder for the relationship between pollution and asthma attacks could be weather. Hot, humid air causes air quality to decrease, and it also aggravates pulmonary conditions like asthma. I will explain time-dependent confounders more in later posts of this series, but for now, note that <strong>LMTP</strong> (the method and <code>R</code> package) <strong>properly accommodates time-dependent confounders.</strong></p>
+</div>
 <div id="lmtp-methodology-and-software-capabilities" class="section level2">
 <h2>LMTP methodology and software capabilities</h2>
 <p><strong>This LMTP methodology and <code>lmtp</code> software allows the user to handle:</strong></p>
@@ -196,11 +201,6 @@ HTML Image as link
 <!-- - *How would your maximum climbing grade have changed by the end of the year if you had gone to the climbing gym one hour more every week?* --></li>
 </ul>
 <!-- <p align="center"><iframe src="https://giphy.com/embed/SIJiRqIcb6CJVLs9CX" width="480" height="270" frameBorder="0" allowFullScreen></iframe><p></p> -->
-</div>
-<div id="an-important-note-on-longitudinal-studies" class="section level2">
-<h2>An important note on longitudinal studies</h2>
-<p>Longitudinal studies pose certain crucial and often-overlooked issues, most notably time-dependent confounders. <strong>Time-dependent confounders are variables which change over time, affect the likelihood of both future exposure and the outcome, and are affected by previous exposure.</strong></p>
-<p>A key time-dependent confounder for the relationship between pollution and asthma attacks could be weather. Hot, humid air causes air quality to decrease, and it also aggravates pulmonary conditions like asthma. I will explain time-dependent confounders more in later posts of this series, but for now, note that <strong>LMTP</strong> (the method and <code>R</code> package) <strong>properly accommodates time-dependent confounders.</strong></p>
 <hr />
 </div>
 </div>

@@ -14,13 +14,13 @@ output:
 ---
 
 
-This post provides an **introduction to Modified Treatment Policies (MTPs)**, **motivation** for adding them to your **data analysis toolbox**, and several **examples of research questions** that can be answered using MTPs. It is organized as follows:
+This post provides an **introduction to Modified Treatment Policies (MTPs)**, **motivation** for learning about them, and several **examples of research questions** that can be answered using MTPs. It is organized as follows:
  
 1. [An Overview of Existing Methodology](#an-overview-of-existing-methodology)
 2. [Explanation and examples of Modified Treatment Policies](#modified-treatment-policies-mtps)
 3. [Capabilities of the Longitudinal Modified Treatment Policy (LMTP) framework](#a-general-and-unifying-framework-extending-to-longitudinal-settings)
 
-Although this series is for an audience of applied statisticians and data scientists, I hope the introductory post is useful to those looking for a conceptual understanding of MTPs.
+Although this series is for an audience of applied statisticians and data scientists, I hope the introductory post is useful to anyone looking for a conceptual understanding of MTPs.
 
 
 <html>
@@ -181,11 +181,15 @@ Other interesting MTPs unrelated to pollution might be questions along the lines
 
 MTPs for cross-sectional, or point-treatment, studies have actually been **generalized to exposures and covariates measured at multiple time points**, i.e. longitudinal studies. We will refer to this generalization as **Longitudinal Modified Treatment Policies (LMTPs)**, to which there is a corresponding `R` package called `lmtp`.
 
+## Longitudinal data analysis complexities
+
+Longitudinal studies pose certain crucial and often-overlooked issues, most notably time-dependent confounders. **Time-dependent confounders are variables which change over time, affect the likelihood of both future exposure and the outcome, and are affected by previous exposure.**
+
+A key time-dependent confounder for the relationship between pollution and asthma attacks could be weather. Hot, humid air causes air quality to decrease, and it also aggravates pulmonary conditions like asthma.  I will explain time-dependent confounders more in later posts of this series, but for now, note that **LMTP** (the method and `R` package) **properly accommodates time-dependent confounders.**
+
 ## LMTP methodology and software capabilities
 
-
 **This LMTP methodology and `lmtp` software allows the user to handle:**
-
 
 <html>
    <head>
@@ -218,11 +222,6 @@ MTPs for cross-sectional, or point-treatment, studies have actually been **gener
 
 <!-- <p align="center"><iframe src="https://giphy.com/embed/SIJiRqIcb6CJVLs9CX" width="480" height="270" frameBorder="0" allowFullScreen></iframe><p></p> -->
 
-## An important note on longitudinal studies 
-
-Longitudinal studies pose certain crucial and often-overlooked issues, most notably time-dependent confounders. **Time-dependent confounders are variables which change over time, affect the likelihood of both future exposure and the outcome, and are affected by previous exposure.**
-
-A key time-dependent confounder for the relationship between pollution and asthma attacks could be weather. Hot, humid air causes air quality to decrease, and it also aggravates pulmonary conditions like asthma.  I will explain time-dependent confounders more in later posts of this series, but for now, note that **LMTP** (the method and `R` package) **properly accommodates time-dependent confounders.**
 
 ***
 
