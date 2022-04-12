@@ -186,11 +186,9 @@ Other interesting MTPs unrelated to pollution might be questions along the lines
 **MTPs are an excellent solution** for getting around positivity issues to analyze **more feasible and realistic interventions**. Hopefully this list inspires you to think of MTPs relevant to your own field of study!
 
 
-
-
 # A general and unifying framework extending to longitudinal settings
 
-MTPs for cross-sectional, or point-treatment, studies have actually been **generalized to exposures and covariates measured at multiple time points**, i.e. longitudinal studies. We will refer to this generalization as **Longitudinal Modified Treatment Policies (LMTPs)**, to which there is a corresponding `R` package called `lmtp`.
+MTPs for cross-sectional, or point-treatment, studies have actually been **generalized to exposures and covariates measured at multiple time points**, i.e. longitudinal studies. We will refer to this generalization as **Longitudinal Modified Treatment Policies (LMTPs)**, for which there is a corresponding `R` package called `lmtp`.
 
 ## Longitudinal data analysis complexities
 
@@ -243,7 +241,6 @@ Future posts will walk through examples of applications like these using the `R`
 
 - Nick Williams’ (author of the `lmtp` package) [blog post](https://towardsdatascience.com/an-introduction-to-estimating-the-causal-effects-of-feasible-interventions-e07ed45136ff) introducing MTPs and using `lmtp` for an example with LSAT scores and law school admission rates.
 - [*What If*](https://cdn1.sph.harvard.edu/wp-content/uploads/sites/1268/2021/03/ciwhatif_hernanrobins_30mar21.pdf) by Miguel Hernán and James Robins, a freely available book, has an entire section on longitudinal data and time-dependent confounding (see Part III, Chapters 19-21).
-- [*Estimation of the effect of interventions that modify the received treatment*](https://pubmed.ncbi.nlm.nih.gov/23913589/) by Sebastian Haneuse and Andrea Rotnitzky
 - *Effects of multiple interventions.* is a section in the book *Comparative quantification of health risks: global and regional burden of disease attributable to selected major risk factors* by Robins et al. which brings up many of the issues which are later solved by MTPs.
 - [*Estimation of the effect of interventions that modify the received treatment*](https://pubmed.ncbi.nlm.nih.gov/23913589/) by Haneuse and Rotnitzky and [*Population intervention causal effects based on stochastic interventions*](https://pubmed.ncbi.nlm.nih.gov/21977966/) by Diaz and van der Laan both describe the problem well, contain helpful examples, and make advances in the methodology for MTPs.
 - [*Identification, Estimation and Approximation of Risk under Interventions that Depend on the Natural Value of Treatment Using Observational Data*](https://www.degruyter.com/document/doi/10.1515/em-2012-0001/html?lang=en) by Young et. al (2014) is a publicly available paper that also provides a good summary of the literature and fundamental progress to the methods of MTPs (in this paper they are "interventions which depend on the natural value of treatment").
