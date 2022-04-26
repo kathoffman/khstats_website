@@ -1,0 +1,280 @@
+---
+title: "Visualizing Timelines in R"
+author: "Katherine Hoffman"
+date: 2022-04-22T21:13:14-05:00
+draft: true
+categories: ["R","data visualization"]
+tags: ["R","ggplot2","swimmer plots","treatment timelines","longitudinal survival"]
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = "asis")
+```
+
+
+
+> This post walks through code to create a timeline in `R` using `ggplot2`. These types of plots can help visualize **treatment or measurement patterns**, **time-varying covariates**, **outcomes**, and **loss to follow-up** in longitudinal data settings.
+
+
+<figure>
+    <img src="/img/swimmer.jpg"
+    width= 90%
+         alt="Hospitalization course timeline using ggplot2 in R"> 
+</figure>
+
+```{r, echo=F, warning=F, message=F, fig.height=8, fig.width=7}
+library(tidyverse, warn.conflicts = F)
+
+df <- readRDS(here::here("content/blog/trt-timelines/swimmer_data.rds"))
+
+dat_to_clean <-
+  df %>%
+  mutate(steroids = factor(case_when(!is.na(steroid_this_day) ~ 1,
+                              TRUE ~ 0)),
+         death = factor(case_when(!is.na(death_this_day) ~ 1,
+                           TRUE ~ 0)),
+         severe = factor(case_when(o2_crit_this_day == day ~ 1,
+                            TRUE ~ 0))
+         ) %>%
+  select(id, day, intubation_status, steroids, death, severe)
+
+
+
+```
+
+This blog post uses a toy dataset on hospitalized COVID-19 patients, available to download on my Github. It is derived from a real dataset compiled using Electronic Health Record data on COVID-19 patients from Spring 2020. This is a time period when there was large variation in provider practice in administering corticosteroids, a type of drug that combats hyper-inflammation.
+
+In this post we will look at the treatment patterns of corticosteroids as it relates to the timing of patients (1) reaching severe hypoxia criteria and (2) being put on a ventilator. We will also include whether patients died or were discharged.
+
+The data set is in long format with one row per patient. Let's load the data set and libraries we'll need, then look the first 20 rows:
+
+```{r}
+library(tidyverse)
+library(gt)
+
+dat_to_clean %>%
+  head(n=20) %>%
+  gt()
+```
+
+
+If we look at the first patient, we can see they were in the hospital for `r dat_to_clean %>% filter(id==1) %>% nrow()` days, never intubated, never receive steroids, and ultimately die (`death` is `1` on the last day).
+
+
+We can plot all patients' hospital length of stay, colored by intubation status using `ggplot2`'s `geom_line()`:
+
+```{r}
+dat_to_clean %>%
+  ggplot(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_line()
+```
+
+We can try to add our `steroids` column to the plot by adding a point designating whether `steroids` exposure was `1` (yes) or `0` (no) that day. We can see this results in points of two different colors on the lines of our plot.
+
+```{r}
+dat_to_clean %>%
+  ggplot(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_line() +
+  geom_point(aes(day, id, col = steroids)) 
+```
+
+We could edit the colors of the dots we don't want so that they're transparent (using `NA`), but when you have other non-mutually exclusive dots you want to show, it's simpler to just edit the data instead. We will edit our data so that our three binary columns are turned into three `*_this_day` column, where:
+
+- The value is `NA` if the observation did not experience that exposure/outcome that day (remember each day is a new row)
+
+- The value is the `day` if the observation *did* experience the exposure/outcome. This is to make our `x` axis easy to specify in `ggplot2`.
+
+```{r, results="asis"}
+dat_swim <-
+  dat_to_clean %>%
+  mutate(severe_this_day = case_when(severe == 1 ~ day),
+         steroids_this_day = case_when(steroids == 1 ~ day),
+         death_this_day = case_when(death == 1 ~ day))
+
+```
+
+
+```{r}
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids")) 
+```
+
+```{r}
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids")) +
+  geom_point(aes(x=severe_this_day, y=id, col="Severe Hypoxia")) +
+  geom_point(aes(x=death_this_day, y=id, col="Death")) 
+
+```
+
+Once all our data is on the graph, we can begin changing our color and shape scales. We can change colors using `scale_color_manual()` and and filling in the `values` argument with a vector where the **names of the vector match the names in the `col` in our `geom_point()` aesthetics.** I define my `cols` in a vector outside the plotting code to keep everything cleaner.
+
+```{r}
+# define colors for all geometries with a color argument
+cols <- c("Death" = "black",
+          "Severe hypoxia" = "#b24745", # red
+          "Intubated" = "darkslateblue", # navy
+          "Not intubated" = "#74aaff", # lighter blue
+          "Steroids"="#ffd966") # gold
+
+
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids")) +
+  geom_point(aes(x=severe_this_day, y=id, col="Severe hypoxia")) +
+  geom_point(aes(x=death_this_day, y=id, col="Death")) +
+  scale_color_manual(values = cols, name="Patient Status") 
+```
+We can do the same to change shapes with `scale_shape_manual()`. To do this we additionally need to add the name to call the shape in the `geom_point(aes(shape=*))` argument.
+
+```{r}
+# define shapes for all geometries with a shape argument (geom_point)
+shapes <- c("Steroids" = 15, # square
+            "Death" = 4, # cross
+            "Severe hypoxia" = 21) # empty circle (control inside with fill argument if desired)
+
+
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids", shape="Steroids")) +
+  geom_point(aes(x=severe_this_day, y=id, col="Severe hypoxia", shape="Severe hypoxia")) +
+  geom_point(aes(x=death_this_day, y=id, col="Death", shape="Death")) +
+  scale_color_manual(values = cols, name="Patient Status") +
+  scale_shape_manual(values = shapes, name="Patient Status")
+```
+
+
+You'll notice that our legend does not match the changes we made to the colors and shapes right now. This is because we're breaking grammar of graphics (the "gg" of `ggplot2`) rules by assigning a bunch of different colors and shape. Although `ggplot2` wasn't designed to do what we're doing, we can override the legend aesthetics and still create a plot that shows correct and useful information.
+
+We will do this by using the `guides()` function. We can control each aesthetic here. We will first override the `colors` legend with the code `guide_legend(override.aes = list(...))`. We can change the shapes by specifying a vector with the shapes we want in the order the labels appear in the legend. If we don't want a shape to appear on the legend, we will use `NA`.
+
+```{r}
+# define shapes for all geometries with a shape argument (geom_point)
+shapes <- c("Steroids" = 15, # square
+            "Death" = 4, # cross
+            "Severe hypoxia" = 21) # empty circle (control inside with fill argument if desired)
+
+
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids", shape="Steroids")) +
+  geom_point(aes(x=severe_this_day, y=id, col="Severe hypoxia", shape="Severe hypoxia")) +
+  geom_point(aes(x=death_this_day, y=id, col="Death", shape="Death")) +
+  scale_color_manual(values = cols, name="Patient Status") +
+  scale_shape_manual(values = shapes, name="Patient Status") +
+  # order is death, hypoxia, intubated, not intubated, steorids
+  guides(color = guide_legend(override.aes = list(shape = c(4,21,NA,NA,15))))# modify the color legend to include shapes
+```
+
+
+
+Since all the shapes are now shown in the original colors legend, we can hide the second legend for shapes using `shapes = F`.
+
+```{r}
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids", shape="Steroids")) +
+  geom_point(aes(x=severe_this_day, y=id, col="Severe hypoxia", shape="Severe hypoxia")) +
+  geom_point(aes(x=death_this_day, y=id, col="Death", shape="Death")) +
+  scale_color_manual(values = cols, name="Patient Status") +
+  scale_shape_manual(values = shapes, name="Patient Status") +
+  # order is death, hypoxia, intubated, not intubated, steorids
+  guides(color = guide_legend(override.aes = list(
+    shape = c(4,21,NA,NA,15))), # modify the color legend to include shapes
+         shape = F) # remove shape legend
+```
+
+To remove the line through Death, Severe hypoxia, and Steroids in our legend, we can override the aesthetics for `linetype` with NA's for those three labels. We will specify the default, `linetype=1`, for our intubation status color labels. 
+
+```{r}
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids", shape="Steroids")) +
+  geom_point(aes(x=severe_this_day, y=id, col="Severe hypoxia", shape="Severe hypoxia")) +
+  geom_point(aes(x=death_this_day, y=id, col="Death", shape="Death")) +
+  scale_color_manual(values = cols, name="Patient Status") +
+  scale_shape_manual(values = shapes, name="Patient Status") +
+  # order is death, hypoxia, intubated, not intubated, steorids
+  guides(color = guide_legend(override.aes = list(
+    shape = c(4,21,NA,NA,15),
+    linetype = c(NA,NA,1,1,NA))), # modify the color legend to include shapes
+         shape = F)  # remove shape legend
+```
+
+Ok, the challenging parts are done! Now we can make some minor aesthetic edits using theme.
+
+```{r}
+dat_swim %>% 
+  ggplot() +
+  geom_line(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id, col="Steroids", shape="Steroids")) +
+  geom_point(aes(x=severe_this_day, y=id, col="Severe hypoxia", shape="Severe hypoxia")) +
+  geom_point(aes(x=death_this_day, y=id, col="Death", shape="Death")) +
+  scale_color_manual(values = cols, name="Patient Status") +
+  scale_shape_manual(values = shapes, name="Patient Status") +
+  # order is death, hypoxia, intubated, not intubated, steorids
+  guides(color = guide_legend(override.aes = list(
+    shape = c(4,21,NA,NA,15),
+    linetype = c(NA,NA,1,1,NA))), # modify the color legend to include shapes
+         shape = F)  # remove shape legend
+```
+
+
+
+
+```{r, eval=F}
+dat_swim %>%
+  ggplot(aes(x = day, y = id, group = id, col = intubation_status)) +
+  geom_line(linewidth=1.8, size=1.8)  +
+  geom_point(shape = 15, size=.1) +
+  geom_point(aes(steroids_this_day, id, col="Corticosteroids", shape="Corticosteroids"),  stroke=2) +
+  geom_point(aes(severe_this_day, id, col="Severe hypoxia",shape="Severe hypoxia"),  stroke=1, size=2) +
+  geom_point(aes(death_this_day,id,col="Death", shape="Death"),  size=2, stroke=1.5) +
+  scale_x_continuous(limits=c(0,28), minor_breaks=0:28, breaks=seq(0,28,2), expand=c(0,0)) +
+  labs(x="Days since hospitalization", y="ID"#y="Patient ID",
+      # title="Hospitalization courses for N=50 patients"
+       ) +
+  scale_y_discrete(labels=1:50)+
+  theme_bw() +
+  theme(text=element_text(family="Poppins", size=11),
+        axis.title.y = element_text(angle = 0, vjust=.5, size=12, face="bold"),
+        #legend.spacing.y = unit(1, 'cm'),
+        axis.title.x = element_text(size=15, face="bold", vjust=-0.5, hjust=0),
+        # axis.title.y = element_text(size=12, face="bold"),
+        legend.position = c(0.8, 0.24),
+        legend.title = element_text(colour="black", size=13, face=4),
+        legend.text = element_text(colour="black", size=10), #, face="bold")
+        legend.background = element_rect(size=0.5, linetype="solid", colour ="gray30"),
+        axis.ticks.y = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.text.y = element_text(size=6, hjust=1.5)
+
+  ) +
+  scale_color_manual(name="Patient status",values=cols)+ # control colors
+  scale_shape_manual(name="Patient status",values=shapes)   +
+  # order is death, hypoxia, intubated, not intubated, steorids
+  guides(color = guide_legend(override.aes = list(shape = c(4,21,NA,NA,15),
+                                                  linetype = c(0,0,2,2,0), # controls whether there is a line thru legened
+                                                  stroke=c(1.5,1,1,1,1),
+                                                  size = c(2.5,2.5,2,2,2.5)),
+                              ncol=1),
+         shape = F)
+
+```
+
+

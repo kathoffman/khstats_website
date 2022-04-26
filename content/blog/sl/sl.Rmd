@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Background
 
-In September 2019, I gave an R-Ladies NYC presentation about using the package `sl3` to implement the superlearner algorithm for predictions. You can download the slides for it [here](https://github.com/hoffmakl/sl3-demo/raw/master/superlearning_slides_no_animation.pdf). This post is a modification to the original demo I gave.
+In September 2019, I gave an R-Ladies NYC presentation about using the package `sl3` to implement the superlearner algorithm for predictions. You can download the slides for it [here](https://github.com/kathoffman/sl3-demo/raw/master/superlearning_slides_no_animation.pdf). This post is a modification to the original demo I gave.
 
 For a better background on what the superlearner algorithm is, please see my more [recent blog post](khstats.com/blog/sl/sl).
 

@@ -29,7 +29,7 @@ social:
   link: https://twitter.com/kat_hoffman_
 - icon: github
   icon_pack: fab
-  link: https://github.com/hoffmakl
+  link: https://github.com/kathoffman
 superuser: true
 user_groups:
 - Researchers

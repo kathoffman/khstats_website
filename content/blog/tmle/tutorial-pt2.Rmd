@@ -20,14 +20,14 @@ knitr::opts_chunk$set(echo = TRUE)
     <link rel="stylesheet" href="/style.css" />
 </html>
 
-> The second post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section walks through the **TMLE algorithm for the mean difference in outcomes for a binary treatment and binary outcome**. <br> <br> This post is an expansion of a printable "visual guide" available on my [Github](https://github.com/hoffmakl/causal-inference-visual-guides). I hope it helps analysts who feel out-of-practice reading mathematical notation follow along with the TMLE algorithm. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).
+> The second post of a three-part series to help beginners and/or visual learners understand Targeted Maximum Likelihood Estimation (TMLE). This section walks through the **TMLE algorithm for the mean difference in outcomes for a binary treatment and binary outcome**. <br> <br> This post is an expansion of a printable "visual guide" available on my [Github](https://github.com/kathoffman/causal-inference-visual-guides). I hope it helps analysts who feel out-of-practice reading mathematical notation follow along with the TMLE algorithm. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).
 
 <html>
    <head>
       <title>HTML Image as link</title>
    </head>
    <body>
-      <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+      <a href="https://github.com/kathoffman/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
          <img alt="cheatsheet" src="/img/tmle.jpg"
          width=100%">
       </a>
@@ -75,7 +75,7 @@ I am a very applied thinker, and I've tried to write this tutorial in the way I 
 3. in-line `R` code
 4. a small graphic representing the computation on a data frame or vector
 
-This last piece is super important for me, because I remember best when I associate an image with what I've learned. If the graphics are also useful to you, it may be helpful to open this [corresponding key](https://khstats.com/blog/tmle/visual-key) in another browser or print the [visual guide](https://github.com/hoffmakl/causal-inference-visual-guides) for reference.
+This last piece is super important for me, because I remember best when I associate an image with what I've learned. If the graphics are also useful to you, it may be helpful to open this [corresponding key](https://khstats.com/blog/tmle/visual-key) in another browser or print the [visual guide](https://github.com/kathoffman/causal-inference-visual-guides) for reference.
 
 This tutorial is not meant to replace the resources I used to learn TMLE, but rather to supplement them. I use the same mathematical notation as the TMLE literature to make it easier to move back and forth. I hope you find the way I think about the algorithm useful, but if not, consider checking out the references I've listed in [*Part III*](https://khstats.com/blog/tmle/tutorial-pt3/#resources-to-learn-more). TMLE is a very powerful method and will undoubtedly only grow in popularity in statistics and data science.
 

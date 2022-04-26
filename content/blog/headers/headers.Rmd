@@ -4,7 +4,7 @@ author: Katherine Hoffman
 date: 2019-04-16
 draft: false
 slug: headers-in-functions
-#http://127.0.0.1:6906external_link: "https://github.com/hoffmakl/reporting/blob/master/headerFuns.Rmd"
+#http://127.0.0.1:6906external_link: "https://github.com/kathoffman/reporting/blob/master/headerFuns.Rmd"
 categories: [Rmarkdown]
 tags: [R, Rmarkdown, "headers in functions"]
 excerpt: "Create organized Rmarkdown output for long, identical analyses of different data sets and/or variables."

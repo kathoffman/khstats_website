@@ -24,12 +24,12 @@ knitr::opts_chunk$set(echo = TRUE)
       <title>HTML Image as link</title>
    </head>
    <body>
-      <a href="https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
+      <a href="https://github.com/kathoffman/CI-visual-guides/blob/master/visual-guides/TMLE.pdf">
          <img alt="cheatsheet" src="/img/TMLE.jpg"
          width=100%">
          <figcaption>
          
-*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my [Github](https://github.com/hoffmakl/causal-inference-visual-guides) in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).*
+*[T]()here is a condensed version of this tutorial as an 8.5x11" pdf on my [Github](https://github.com/kathoffman/causal-inference-visual-guides) in case you would like to print it out for reference as you read more formal TMLE explanations. A web-based key without explanations is also available [here](https://khstats.com/blog/tmle/visual-key).*
          </figcaption>
       </a>
    </body>
@@ -108,7 +108,7 @@ TMLE can be used to estimate various statistical estimands (odds ratio, risk rat
 
 # TMLE, Step-by-Step 🚶🏽‍♂️
 
-Let's look at the algorithm step-by-step. I describe each in words, mathematical notation, a graphic, and `R` code. If the graphics are helpful to you, it may be helpful to open this [corresponding key](https://khstats.com/blog/tmle/visual-key) in another browser or print the [visual guide](https://github.com/hoffmakl/causal-inference-visual-guides) for reference.
+Let's look at the algorithm step-by-step. I describe each in words, mathematical notation, a graphic, and `R` code. If the graphics are helpful to you, it may be helpful to open this [corresponding key](https://khstats.com/blog/tmle/visual-key) in another browser or print the [visual guide](https://github.com/kathoffman/causal-inference-visual-guides) for reference.
 
 As you're reading, keep in mind that there are `R` packages that will do this for you as easily as running a `glm()` or `coxph()` function. This tutorial is to help understand what's going on behind-the-scenes.
 

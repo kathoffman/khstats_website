@@ -163,6 +163,6 @@ Once we have that standard error, we can easily get the 95% confidence interval 
 
 ***
 
-*A visual guide designed as a printable reference is available on my [Github](https://github.com/hoffmakl/CI-visual-guides/blob/master/visual-guides/TMLE.pdf):*
+*A visual guide designed as a printable reference is available on my [Github](https://github.com/kathoffman/CI-visual-guides/blob/master/visual-guides/TMLE.pdf):*
 
 ![](/img/TMLE.jpg)
