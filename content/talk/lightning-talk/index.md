@@ -10,11 +10,11 @@ featured: false
 links:
   -icon:
     name: Github
-    url: https://github.com/hoffmakl/Rproj-here-tutorial
+    url: https://github.com/kathoffman/Rproj-here-tutorial
 #- icon: twitter
 #  icon_pack: fab
 #  name: Follow
-#  url: https://twitter.com/Rkatlady
+#  url: https://twitter.com/kat_hoffman_
 location: New York, NY
 math: true
 #projects: "https://github.com/hoffmakl/Rproj-here-tutorial"

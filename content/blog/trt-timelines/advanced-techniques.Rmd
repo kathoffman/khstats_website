@@ -1,7 +1,7 @@
 ---
 title: "Visualizing Timelines in R"
 author: "Katherine Hoffman"
-date: 2022-04-22T21:13:14-05:00
+date: 2022-07-22T21:13:14-05:00
 draft: true
 categories: ["R","data visualization"]
 tags: ["R","ggplot2","swimmer plots","treatment timelines","longitudinal survival"]
