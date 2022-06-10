@@ -123,7 +123,6 @@ I'll use a toy dataset on hospitalized COVID-19 patients, available to download 
 
 We will look at the treatment patterns of steroids as it relates to the timing of patients (1) reaching severe hypoxia and (2) being put on a ventilator (intubation). We will also include whether patients died. I used a similar figure in a [recent manuscript](https://www.medrxiv.org/content/10.1101/2022.05.27.22275037v3) on this topic, if you're interested in learning more!
 
-
 # Exploring the data
 
 The data set is in long format with one row per patient. Let's first load the data set and libraries we'll need, then look at the first 20 rows:
