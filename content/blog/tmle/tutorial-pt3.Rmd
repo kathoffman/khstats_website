@@ -82,11 +82,20 @@ I could only cover so much in this post, but here are the resources I've used th
 
   - His introductory paper on [Semiparametric Theory](https://arxiv.org/pdf/1709.06418.pdf)
 
-  - His [slideshow tutorial](http://www.ehkennedy.com/uploads/5/8/4/5/58450265/unc_2019_cirg.pdf) *Nonparametric efficiency theory and machine learning in causal inference*
+  - His [slideshow tutorial](https://www.ehkennedy.com/uploads/5/8/4/5/58450265/tutorial.pdf) *Nonparametric efficiency theory and machine learning in causal inference*
 
 - My favorite resource so far for learning specifically about influence functions has been [Visually Communicating Influence Functions](https://www.tandfonline.com/doi/full/10.1080/00031305.2020.1717620) by Aaron Fisher and Edward Kennedy. However, this paper didn't make sense to me until I worked through this [interactive tutorial](https://observablehq.com/@herbps10/one-step-estimators-and-pathwise-derivatives) by Herb Susmann. I suggest playing around with the interactive examples first, and then trying to work through the paper.
 
-- The derivation of the Efficient Influence Function (EIF) in TMLE is in the Appendix of [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1).
+- Since I wrote this post in fall 2020, other walkthroughs that seem useful for beginner-to-intermediate learning include:
+
+  - Alejandro Schuler's [Modern Causal Inference online book](https://alejandroschuler.github.io/mci/index.html) which includes [a section on deriving EIFs](https://alejandroschuler.github.io/mci/0cb2ffe5e5cc4cf59a5fe6d896d221d1.html). His tutorial is a condensed version of the next two resources:
+  
+  - Oliver Hines et al.'s [Demystifying statistical learning based on efficient influence functions](https://arxiv.org/abs/2107.00681) 
+  
+  - Edward Kennedy's comprehensive review [Semiparametric Doubly Robust Targeted
+Double Machine Learning: A Review](https://arxiv.org/pdf/2203.06469.pdf)
+
+<!-- - The derivation of the Efficient Influence Function (EIF) in TMLE is in the Appendix of [*Targeted Learning*](https://link.springer.com/book/10.1007/978-1-4419-9782-1). -->
 
 ### Causal Inference
 
