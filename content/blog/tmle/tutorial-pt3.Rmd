@@ -88,7 +88,7 @@ I could only cover so much in this post, but here are the resources I've used th
 
 - Additonal walkthroughs to learn about EIFs include the following:
 
-  - Alejandro Schuler's [Modern Causal Inference online book](https://alejandroschuler.github.io/mci/index.html) which includes [a section on deriving EIFs](https://alejandroschuler.github.io/mci/0cb2ffe5e5cc4cf59a5fe6d896d221d1.html). His tutorial is a condensed version of the next two resources:
+  - Alejandro Schuler's [Modern Causal Inference online book](https://alejandroschuler.github.io/mci/index.html) which includes [a section on deriving EIFs](https://alejandroschuler.github.io/mci/0cb2ffe5e5cc4cf59a5fe6d896d221d1.html). His tutorial is a similar, shorter version of the next two resources:
   
   - Oliver Hines et al.'s [Demystifying statistical learning based on efficient influence functions](https://arxiv.org/abs/2107.00681) 
   
