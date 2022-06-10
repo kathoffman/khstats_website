@@ -22,7 +22,9 @@ library(tidyverse, warn.conflicts = F)
 # internal set up
 
 set.seed(7)
+```
 
+```{r include=F, echo=F}
 dat_long <- readRDS(here::here("content/blog/trt-timelines/trt_timeline_data.rds"))
 
 id_key  <- data.frame(new_id = factor(sample(100:999, size=length(unique(dat_long$id)))), id = 1:length(unique(dat_long$id))) %>%
@@ -35,7 +37,12 @@ write_csv(dat_long, here::here("content/blog/trt-timelines/dat_trt_timeline.csv"
 
 ```
 
-```{r, echo=F, message=F, warning=F}
+```{r, echo=F, warning=F, message=F, fig.height=8, fig.width=7}
+library(tidyverse)
+library(gt)
+
+dat_long <- read_csv("https://raw.githubusercontent.com/kathoffman/steroids-trial-emulation/main/data/dat_trt_timeline.csv", col_types = list(id  = "c", steroids = "c", death = "c", severe = "c"))
+
 # define colors for all geometries with a color argument
 cols <- c("Severe hypoxia" = "#b24745", # red
           "Intubated" = "darkslateblue", # navy
@@ -146,7 +153,7 @@ dat_long |>
   theme_bw()
 ```
 
-We can add our `steroids` column to the plot by adding a point designating whether `steroids` exposure was `1` (yes) or `0` (no) that day. We can see this results in points of two different colors on the lines of our plot. That is what I do in [this post](https://www.khstats.com/blog/trt-timelines/trt-timelines/), and it works fine! ...unless you want to add another variable to the timeline.
+We can add our `steroids` column to the plot by adding a point designating whether `steroids` exposure was `1` (yes) or `0` (no) that day. We can see this results in points of two different colors on the lines of our plot. [This can work just fine](https://www.khstats.com/blog/trt-timelines/trt-timelines/)! ...unless you want to add another variable to the timeline.
 
 ```{r}
 dat_long |>
@@ -352,7 +359,12 @@ Hope this is helpful! As always let me know if you have any feedback or suggesti
 
 # Just the Code
 
-```{r}
+```{r, eval=F}
+library(tidyverse)
+library(gt)
+
+dat_long <- read_csv("https://raw.githubusercontent.com/kathoffman/steroids-trial-emulation/main/data/dat_trt_timeline.csv", col_types = list(id  = "c", steroids = "c", death = "c", severe = "c"))
+
 # define colors for all geometries with a color argument
 cols <- c("Severe hypoxia" = "#b24745", # red
           "Intubated" = "darkslateblue", # navy
@@ -368,7 +380,7 @@ line_override <- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (ye
 stroke_override <- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
 size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
 
-
+# modify swimmer data to 1) only show events if yes 2) have an id ordered by max follow up
 dat_swim <- 
    dat_long |>
   mutate(severe_this_day = case_when(severe == 1 ~ day),

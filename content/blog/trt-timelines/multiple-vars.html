@@ -13,7 +13,7 @@ output:
 
 
 
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <blockquote>
 <p>This post walks through code to create a timeline in <code>R</code> using <code>ggplot2</code>. These types of plots can help visualize <strong>treatment or measurement patterns</strong>, <strong>time-varying covariates</strong>, <strong>outcomes</strong>, and <strong>loss to follow-up</strong> in longitudinal data settings.</p>
 </blockquote>
@@ -591,14 +591,14 @@ dat_long &lt;- read_csv(&quot;https://raw.githubusercontent.com/kathoffman/stero
   ggplot(aes(x=day, y=id, col = intubation_status, group=id)) +
   geom_line() +
   theme_bw()</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>We can add our <code>steroids</code> column to the plot by adding a point designating whether <code>steroids</code> exposure was <code>1</code> (yes) or <code>0</code> (no) that day. We can see this results in points of two different colors on the lines of our plot. That is what I do in <a href="https://www.khstats.com/blog/trt-timelines/trt-timelines/">this post</a>, and it works fine! …unless you want to add another variable to the timeline.</p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>We can add our <code>steroids</code> column to the plot by adding a point designating whether <code>steroids</code> exposure was <code>1</code> (yes) or <code>0</code> (no) that day. We can see this results in points of two different colors on the lines of our plot. <a href="https://www.khstats.com/blog/trt-timelines/trt-timelines/">This can work just fine</a>! …unless you want to add another variable to the timeline.</p>
 <pre class="r"><code>dat_long |&gt;
   ggplot(aes(x=day, y=id, col = intubation_status, group=id)) +
   geom_point(aes(day, id, col = steroids)) +
   geom_line() +
   theme_bw() </code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="modify-the-data" class="section level1">
 <h1>Modify the data</h1>
@@ -1138,7 +1138,7 @@ dat_long &lt;- read_csv(&quot;https://raw.githubusercontent.com/kathoffman/stero
   geom_point(aes(x=steroids_this_day, y=id_sorted, col=&quot;Steroids&quot;, shape=&quot;Steroids&quot;)) +
   theme_bw()</code></pre>
 <pre><code>## Warning: Removed 387 rows containing missing values (geom_point).</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>From this point on I’ll save the plot as <code>p</code> and just keep adding onto it so you can see the new step.</p>
 <p>We’ll see why we’re doing this in a second, but in creating this first iteration of <code>p</code> using <code>geom_line()</code> and <code>geom_point()</code>, we also want to set the <code>col</code> and <code>shape</code> to match how we want the marker for steroids to appear in the legend. I’m also going to make minor edits to the <code>size</code> of the point geometry right now, as well as the width of each timeline itself (also using the <code>size</code> argument). Lastly, we are now going to use <code>id_sorted</code>.</p>
 <pre class="r"><code>p &lt;- 
@@ -1150,7 +1150,7 @@ dat_long &lt;- read_csv(&quot;https://raw.githubusercontent.com/kathoffman/stero
   theme_bw()
 p</code></pre>
 <pre><code>## Warning: Removed 387 rows containing missing values (geom_point).</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Let’s add hypoxia and death to the figure. We’ll use <code>geom_point()</code> again, and again specify legend names for the <code>col</code> and <code>shape</code> arguments, and modify the <code>size</code> and <code>stroke</code> of our point geometries.</p>
 <pre class="r"><code>p &lt;- p +
   geom_point(aes(x=severe_this_day, y=id_sorted, col=&quot;Severe hypoxia&quot;, shape=&quot;Severe hypoxia&quot;), size=2, stroke=1.5) +
@@ -1159,7 +1159,7 @@ p</code></pre>
 <pre><code>## Warning: Removed 387 rows containing missing values (geom_point).</code></pre>
 <pre><code>## Warning: Removed 403 rows containing missing values (geom_point).</code></pre>
 <pre><code>## Warning: Removed 414 rows containing missing values (geom_point).</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 <p>Note that we get warning messages that values with <code>NA</code> are removed. This is fine since we just created all those <code>NA</code>s! I’m going to set my options so that warnings are suppressed for future code outputs to keep this post tidy.</p>
 <pre class="r"><code>knitr::opts_chunk$set(message=F, warning=F)</code></pre>
 </div>
@@ -1177,7 +1177,7 @@ cols &lt;- c(&quot;Severe hypoxia&quot; = &quot;#b24745&quot;, # red
 <pre class="r"><code>p &lt;- p +
   scale_color_manual(values = cols, name=&quot;Patient Status&quot;) 
 p</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>We can do the same to change shapes with <code>scale_shape_manual()</code>. If you don’t want a shape for a certain status (e.g. intubation status), just leave it out of your vector.</p>
 <pre class="r"><code># define shapes for all geometries with a shape argument (geom_point)
 shapes &lt;- c(&quot;Severe hypoxia&quot; = 21,
@@ -1186,7 +1186,7 @@ shapes &lt;- c(&quot;Severe hypoxia&quot; = 21,
 
 p &lt;- p + scale_shape_manual(values = shapes, name = &quot;Patient Status&quot;)
 p</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 <div id="fix-the-legend" class="section level1">
 <h1>Fix the Legend</h1>
@@ -1202,7 +1202,7 @@ p +
                           shape = shape_override) # modify the color legend to include shapes
                       )
          ) </code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>To remove the line through Death, Severe hypoxia, and Steroids in our legend, we can override the aesthetics for <code>linetype</code> with NA’s for those three labels. We will specify the default, <code>linetype=1</code>, for our intubation status color labels.</p>
 <p>We can additionally override the stroke and size arguments to correspond to our point geometries.</p>
 <pre class="r"><code>line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
@@ -1215,7 +1215,7 @@ p +  guides(color = guide_legend(
                                 linetype = line_override)
                                 )
              )</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Now that our color legend contains all necessary information, we can remove the shape legend using the argument <code>shape = "none"</code> in <code>guides()</code>.</p>
 <pre class="r"><code>p &lt;- p + 
   guides(color = guide_legend(
@@ -1227,7 +1227,7 @@ p +  guides(color = guide_legend(
              )
 
 p</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>Ok, the challenging parts are done! Now we can make some minor aesthetic edits using <code>labs</code>, <code>scale_x_continuous()</code>, and <code>theme()</code>. I won’t go into detail on these edits because they’re fairly self-explanatory, but check out the help files if you’re unsure what these arguments in theme do!</p>
 <pre class="r"><code>p &lt;- p +
   labs(x=&quot;Days since hospitalization&quot;,y=&quot;Patient\nnumber&quot;,title=&quot;Treatment Timelines for N=30 Patients&quot;) +
@@ -1246,12 +1246,17 @@ p</code></pre>
         panel.grid.major.x = element_blank()
   ) 
 p</code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <p>Hope this is helpful! As always let me know if you have any feedback or suggestions. If you’d like to copy-paste the code, here it is:</p>
 </div>
 <div id="just-the-code" class="section level1">
 <h1>Just the Code</h1>
-<pre class="r"><code># define colors for all geometries with a color argument
+<pre class="r"><code>library(tidyverse)
+library(gt)
+
+dat_long &lt;- read_csv(&quot;https://raw.githubusercontent.com/kathoffman/steroids-trial-emulation/main/data/dat_trt_timeline.csv&quot;, col_types = list(id  = &quot;c&quot;, steroids = &quot;c&quot;, death = &quot;c&quot;, severe = &quot;c&quot;))
+
+# define colors for all geometries with a color argument
 cols &lt;- c(&quot;Severe hypoxia&quot; = &quot;#b24745&quot;, # red
           &quot;Intubated&quot; = &quot;darkslateblue&quot;, # navy
           &quot;Not intubated&quot; = &quot;#74aaff&quot;, # lighter blue
@@ -1312,7 +1317,6 @@ dat_swim |&gt;
         panel.grid.minor = element_blank(),
         panel.grid.major.x = element_blank()
   ) </code></pre>
-<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 </div>
 <div id="session-info" class="section level1">
 <h1>Session Info</h1>
