@@ -1230,7 +1230,7 @@ p</code></pre>
 <p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
 <p>Ok, the challenging parts are done! Now we can make some minor aesthetic edits using <code>labs</code>, <code>scale_x_continuous()</code>, and <code>theme()</code>. I won’t go into detail on these edits because they’re fairly self-explanatory, but check out the help files if you’re unsure what these arguments in theme do!</p>
 <pre class="r"><code>p &lt;- p +
-  labs(x=&quot;Days since hospitalization&quot;,y=&quot;Patient\nnumber&quot;,title=&quot;Treatment Timelines for N=30 Patients&quot;) +
+  labs(x=&quot;Days since hospitalization&quot;,y=&quot;Patient\nnumber&quot;,title=&quot;Treatment Timeline for N=30 Patients&quot;) +
   scale_x_continuous(expand=c(0,0)) + # remove extra white space 
   theme(text=element_text(family=&quot;Poppins&quot;, size=11),
         title = element_text(angle = 0, vjust=.5, size=12, face=&quot;bold&quot;),
@@ -1271,7 +1271,7 @@ line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation 
 stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
 size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
 
-
+# modify swimmer data to 1) only show events if yes 2) have an id ordered by max follow up
 dat_swim &lt;- 
    dat_long |&gt;
   mutate(severe_this_day = case_when(severe == 1 ~ day),
@@ -1302,7 +1302,7 @@ dat_swim |&gt;
                                 ),
          shape = &quot;none&quot;
              )+
-  labs(x=&quot;Days since hospitalization&quot;,y=&quot;Patient\nnumber&quot;,title=&quot;Treatment Timelines for N=30 Patients&quot;) +
+  labs(x=&quot;Days since hospitalization&quot;,y=&quot;Patient\nnumber&quot;,title=&quot;Treatment Timeline for N=30 Patients&quot;) +
   scale_x_continuous(expand=c(0,0)) + # remove extra white space 
   theme(text=element_text(family=&quot;Poppins&quot;, size=11),
         title = element_text(angle = 0, vjust=.5, size=12, face=&quot;bold&quot;),

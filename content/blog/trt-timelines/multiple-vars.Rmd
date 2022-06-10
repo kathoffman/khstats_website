@@ -88,7 +88,7 @@ dat_swim |>
                                 ),
          shape = "none"
              )+
-  labs(x="Days since hospitalization",y="Patient\nnumber",title="Treatment Timelines for N=30 Patients") +
+  labs(x="Days since hospitalization",y="Patient\nnumber",title="Treatment Timeline for N=30 Patients") +
   scale_x_continuous(expand=c(0,0)) + # remove extra white space 
   theme(text=element_text(family="Poppins"),
         title = element_text(angle = 0, vjust=.5, size=14, face="bold"),
@@ -337,7 +337,7 @@ Ok, the challenging parts are done! Now we can make some minor aesthetic edits u
 
 ```{r}
 p <- p +
-  labs(x="Days since hospitalization",y="Patient\nnumber",title="Treatment Timelines for N=30 Patients") +
+  labs(x="Days since hospitalization",y="Patient\nnumber",title="Treatment Timeline for N=30 Patients") +
   scale_x_continuous(expand=c(0,0)) + # remove extra white space 
   theme(text=element_text(family="Poppins", size=11),
         title = element_text(angle = 0, vjust=.5, size=12, face="bold"),
@@ -411,7 +411,7 @@ dat_swim |>
                                 ),
          shape = "none"
              )+
-  labs(x="Days since hospitalization",y="Patient\nnumber",title="Treatment Timelines for N=30 Patients") +
+  labs(x="Days since hospitalization",y="Patient\nnumber",title="Treatment Timeline for N=30 Patients") +
   scale_x_continuous(expand=c(0,0)) + # remove extra white space 
   theme(text=element_text(family="Poppins", size=11),
         title = element_text(angle = 0, vjust=.5, size=12, face="bold"),
@@ -419,7 +419,7 @@ dat_swim |>
         axis.title.x = element_text(size=15, face="bold", vjust=-0.5, hjust=0),
         axis.text.y = element_text(size=6, hjust=1.5),
         axis.ticks.y = element_blank(),
-        legend.position = c(0.8, 0.24),
+        legend.position = c(0.8, 0.3),
         legend.title = element_text(colour="black", size=13, face=4),
         legend.text = element_text(colour="black", size=10),
         legend.background = element_rect(size=0.5, linetype="solid", colour ="gray30"),
