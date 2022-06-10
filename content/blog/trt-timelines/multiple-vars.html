@@ -1,0 +1,1333 @@
+---
+title: "Using ggplot2 to create Treatment Timelines with Multiple Variables"
+author: "Katherine Hoffman"
+date: 2022-06-05T21:13:14-05:00
+draft: true
+categories: ["R","data visualization"]
+tags: ["R","ggplot2","swimmer plots","treatment timelines","longitudinal survival"]
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+---
+
+
+
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<blockquote>
+<p>This post walks through code to create a timeline in <code>R</code> using <code>ggplot2</code>. These types of plots can help visualize <strong>treatment or measurement patterns</strong>, <strong>time-varying covariates</strong>, <strong>outcomes</strong>, and <strong>loss to follow-up</strong> in longitudinal data settings.</p>
+</blockquote>
+<p><a href="#just-the-code"><strong><em>Skip the step-by-step, just the code, please!</em></strong></a></p>
+<div id="background" class="section level1">
+<h1>Background</h1>
+<p>Treatment timelines, or “swimmer plots”, are a visualization technique I’ve found useful in exploring longitudinal data structures. A few years ago I shared how I make treatment timelines for a single treatment (categorical or continuous) in the post <a href="https://www.khstats.com/blog/trt-timelines/trt-timelines/"><strong>Patient Treatment Timelines for Longitudinal Survival Data</strong></a>.</p>
+<p>After I started sharing these timelines with collaborators, I began getting requests to <strong>add additional variables to the timelines</strong>. This post shows how to do that.</p>
+<p>I’ll use a toy dataset on hospitalized COVID-19 patients, available to download on this Github repository. It is derived from a dataset on COVID-19 patients from Spring 2020. This is a time period when there was large variation in provider practice in administering steroids, a type of drug that combats hyper-inflammation. Steroids are usually given to patients which exhibit an inflammtory profile; we will identify this using a threshold for low oxygen levels (severe hypoxia).</p>
+<p>We will look at the treatment patterns of steroids as it relates to the timing of patients (1) reaching severe hypoxia and (2) being put on a ventilator (intubation). We will also include whether patients died. I used a similar figure in a <a href="https://www.medrxiv.org/content/10.1101/2022.05.27.22275037v3">recent manuscript</a> on this topic, if you’re interested in learning more!</p>
+</div>
+<div id="exploring-the-data" class="section level1">
+<h1>Exploring the data</h1>
+<p>The data set is in long format with one row per patient. Let’s first load the data set and libraries we’ll need, then look at the first 20 rows:</p>
+<pre class="r"><code>library(tidyverse)
+library(gt)
+
+#load from GH</code></pre>
+<p>If we look at the first patient (id = 397), we can see they were in the hospital for 17 days, never intubated, never receive steroids, and ultimately die (<code>death</code> is <code>1</code> on the last day).</p>
+<pre class="r"><code>head(dat_long, n=20) |&gt;
+  gt()</code></pre>
+<div id="pqkmlwwraq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#pqkmlwwraq .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#pqkmlwwraq .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#pqkmlwwraq .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#pqkmlwwraq .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#pqkmlwwraq .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#pqkmlwwraq .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#pqkmlwwraq .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#pqkmlwwraq .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pqkmlwwraq .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#pqkmlwwraq .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#pqkmlwwraq .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#pqkmlwwraq .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#pqkmlwwraq .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqkmlwwraq .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#pqkmlwwraq .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#pqkmlwwraq .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqkmlwwraq .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#pqkmlwwraq .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqkmlwwraq .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#pqkmlwwraq .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqkmlwwraq .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#pqkmlwwraq .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#pqkmlwwraq .gt_left {
+  text-align: left;
+}
+
+#pqkmlwwraq .gt_center {
+  text-align: center;
+}
+
+#pqkmlwwraq .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#pqkmlwwraq .gt_font_normal {
+  font-weight: normal;
+}
+
+#pqkmlwwraq .gt_font_bold {
+  font-weight: bold;
+}
+
+#pqkmlwwraq .gt_font_italic {
+  font-style: italic;
+}
+
+#pqkmlwwraq .gt_super {
+  font-size: 65%;
+}
+
+#pqkmlwwraq .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#pqkmlwwraq .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#pqkmlwwraq .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#pqkmlwwraq .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#pqkmlwwraq .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">id</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">day</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">intubation_status</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">steroids</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">death</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">severe</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">0</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">1</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">3</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">4</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">5</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">6</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">7</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">8</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">9</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">10</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">11</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">12</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">13</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">14</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">15</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_right">16</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">1</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">575</td>
+<td class="gt_row gt_right">0</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+    <tr><td class="gt_row gt_center">575</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">1</td></tr>
+    <tr><td class="gt_row gt_center">575</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_left">Intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+<p>We can plot all patients’ hospital length of stay, colored by intubation status using <code>ggplot2</code>’s <code>geom_line()</code>:</p>
+<pre class="r"><code>dat_long |&gt;
+  ggplot(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_line() +
+  theme_bw()</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>We can add our <code>steroids</code> column to the plot by adding a point designating whether <code>steroids</code> exposure was <code>1</code> (yes) or <code>0</code> (no) that day. We can see this results in points of two different colors on the lines of our plot. That is what I do in <a href="https://www.khstats.com/blog/trt-timelines/trt-timelines/">this post</a>, and it works fine! …unless you want to add another variable to the timeline.</p>
+<pre class="r"><code>dat_long |&gt;
+  ggplot(aes(x=day, y=id, col = intubation_status, group=id)) +
+  geom_point(aes(day, id, col = steroids)) +
+  geom_line() +
+  theme_bw() </code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="modify-the-data" class="section level1">
+<h1>Modify the data</h1>
+<p>We <em>could</em> edit the colors of the dots we don’t want so that they’re transparent (using <code>NA</code>), but when you have other non-mutually exclusive dots you want to show, it’s simpler to just edit the data instead. So, we will now edit our data so that our three binary columns are turned into three <code>*_this_day</code> column, where:</p>
+<ul>
+<li><p>The value is <code>NA</code> if the observation did not experience that exposure/outcome that day (remember each day is a new row)</p></li>
+<li><p>The value is the <code>day</code> if the observation <em>did</em> experience the exposure/outcome. This is to make our <code>x</code> axis easy to specify in <code>ggplot2</code>.</p></li>
+</ul>
+<pre class="r"><code>dat_swim &lt;-
+  dat_long |&gt;
+  mutate(severe_this_day = case_when(severe == 1 ~ day),
+         steroids_this_day = case_when(steroids == 1 ~ day),
+         death_this_day = case_when(death == 1 ~ day))</code></pre>
+<p>While we’re at it, let’s modify the patient’s IDs so that we can rearrange our plot by length of each individual’s timeline. To do this, we will refactor the <code>id</code> variable by a new variable <code>id_sorted</code>.</p>
+<p>There are probably other ways to do this, but this is what I do. I first make a new variable called <code>max_day</code> that is the maximum day that the patient is in the study. I then <code>nest()</code> the data by <code>id</code> (by calling all the other columns).</p>
+<p>I then make my new column using <code>row_number()</code>, and <code>unnest()</code> the data, which gives me clean IDs in a sorted fashion:</p>
+<pre class="r"><code>dat_swim &lt;- 
+  dat_swim |&gt;
+  group_by(id) |&gt;
+  mutate(max_day = max(day)) |&gt;
+  ungroup() |&gt;
+  nest(cols = day:death_this_day) |&gt;
+  arrange(max_day) |&gt;
+  mutate(id_sorted = factor(row_number())) |&gt;
+  unnest()</code></pre>
+<pre><code>## Warning: `cols` is now required when using unnest().
+## Please use `cols = c(cols)`</code></pre>
+<pre class="r"><code>head(dat_swim) |&gt; gt()</code></pre>
+<div id="alkpbizqhi" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#alkpbizqhi .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#alkpbizqhi .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#alkpbizqhi .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#alkpbizqhi .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#alkpbizqhi .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#alkpbizqhi .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#alkpbizqhi .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#alkpbizqhi .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#alkpbizqhi .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#alkpbizqhi .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#alkpbizqhi .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#alkpbizqhi .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#alkpbizqhi .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#alkpbizqhi .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#alkpbizqhi .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#alkpbizqhi .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#alkpbizqhi .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#alkpbizqhi .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#alkpbizqhi .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#alkpbizqhi .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#alkpbizqhi .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#alkpbizqhi .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#alkpbizqhi .gt_left {
+  text-align: left;
+}
+
+#alkpbizqhi .gt_center {
+  text-align: center;
+}
+
+#alkpbizqhi .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#alkpbizqhi .gt_font_normal {
+  font-weight: normal;
+}
+
+#alkpbizqhi .gt_font_bold {
+  font-weight: bold;
+}
+
+#alkpbizqhi .gt_font_italic {
+  font-style: italic;
+}
+
+#alkpbizqhi .gt_super {
+  font-size: 65%;
+}
+
+#alkpbizqhi .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#alkpbizqhi .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#alkpbizqhi .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#alkpbizqhi .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#alkpbizqhi .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
+}
+</style>
+<table class="gt_table">
+  
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">id</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">max_day</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">day</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">intubation_status</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">steroids</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">death</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">severe</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">severe_this_day</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">steroids_this_day</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">death_this_day</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">id_sorted</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td class="gt_row gt_center">270</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_right">0</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_center">1</td></tr>
+    <tr><td class="gt_row gt_center">270</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_center">1</td></tr>
+    <tr><td class="gt_row gt_center">714</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_right">0</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_center">2</td></tr>
+    <tr><td class="gt_row gt_center">714</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_center">2</td></tr>
+    <tr><td class="gt_row gt_center">714</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_center">2</td></tr>
+    <tr><td class="gt_row gt_center">317</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_right">0</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_center">3</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+<div id="back-to-plotting" class="section level1">
+<h1>Back to plotting</h1>
+<p>Now, we can re-plot the steroids and intubation statuses using our new data. This time without all the <code>0</code> values for steroids showing.</p>
+<pre class="r"><code>dat_swim |&gt; 
+  ggplot() +
+  geom_line(aes(x=day, y=id_sorted, col = intubation_status, group=id)) +
+  geom_point(aes(x=steroids_this_day, y=id_sorted, col=&quot;Steroids&quot;, shape=&quot;Steroids&quot;)) +
+  theme_bw()</code></pre>
+<pre><code>## Warning: Removed 355 rows containing missing values (geom_point).</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>From this point on I’ll save the plot as <code>p</code> and just keep adding onto it so you can see the new step.</p>
+<p>We’ll see why we’re doing this in a second, but in creating this first iteration of <code>p</code> using <code>geom_line()</code> and <code>geom_point()</code>, we also want to set the <code>col</code> and <code>shape</code> to match how we want the marker for steroids to appear in the legend. I’m also going to make minor edits to the <code>size</code> of the point geometry right now, as well as the width of each timeline itself (also using the <code>size</code> argument). Lastly, we are now going to use <code>id_sorted</code>.</p>
+<pre class="r"><code>p &lt;- 
+  dat_swim |&gt; 
+  ggplot() +
+  geom_line(aes(x=day, y=id_sorted, col = intubation_status, group=id_sorted),
+            size=1.8) +
+  geom_point(aes(x=steroids_this_day, y=id_sorted, col=&quot;Steroids&quot;, shape=&quot;Steroids&quot;), stroke=2) +
+  theme_bw()
+p</code></pre>
+<pre><code>## Warning: Removed 355 rows containing missing values (geom_point).</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Let’s add hypoxia and death to the figure. We’ll use <code>geom_point()</code> again, and again specify legend names for the <code>col</code> and <code>shape</code> arguments, and modify the <code>size</code> and <code>stroke</code> of our point geometries.</p>
+<pre class="r"><code>p &lt;- p +
+  geom_point(aes(x=severe_this_day, y=id_sorted, col=&quot;Severe hypoxia&quot;, shape=&quot;Severe hypoxia&quot;), size=2, stroke=1.5) +
+  geom_point(aes(x=death_this_day, y=id_sorted, col=&quot;Death&quot;, shape=&quot;Death&quot;), size=2, stroke=1.5) 
+p</code></pre>
+<pre><code>## Warning: Removed 355 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 365 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 376 rows containing missing values (geom_point).</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Note that we get warning messages that values with <code>NA</code> are removed. This is fine since we just created all those <code>NA</code>s! I’m going to set my options so that warnings are suppressed for future code outputs to keep this post tidy.</p>
+<pre class="r"><code>knitr::opts_chunk$set(message=F, warning=F)</code></pre>
+</div>
+<div id="modify-the-colors-and-shapes" class="section level1">
+<h1>Modify the colors and shapes</h1>
+<p>Next let’s start changing our color and shape scales. We can change colors using <code>scale_color_manual()</code> and and filling in the <code>values</code> argument with a vector where the <strong>names of the vector match the names in the <code>col</code> in our <code>geom_point()</code> aesthetics.</strong></p>
+<p>I define my <code>cols</code> in a vector outside the plotting code to keep everything cleaner. Note that the order we’re specifying here will continue throughout the rest of the plotting code!</p>
+<pre class="r"><code># define colors for all geometries with a color argument
+cols &lt;- c(&quot;Severe hypoxia&quot; = &quot;#b24745&quot;, # red
+          &quot;Intubated&quot; = &quot;darkslateblue&quot;, # navy
+          &quot;Not intubated&quot; = &quot;#74aaff&quot;, # lighter blue
+          &quot;Steroids&quot;=&quot;#ffd966&quot;, # gold
+          &quot;Death&quot; = &quot;black&quot;) </code></pre>
+<p>After we set <code>values = cols</code>, the <code>name</code> argument is simply the title we want for our legend (I chose “Patient Status”).</p>
+<pre class="r"><code>p &lt;- p +
+  scale_color_manual(values = cols, name=&quot;Patient Status&quot;) 
+p</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>We can do the same to change shapes with <code>scale_shape_manual()</code>. If you don’t want a shape for a certain status (e.g. intubation status), just leave it out of your vector.</p>
+<pre class="r"><code># define shapes for all geometries with a shape argument (geom_point)
+shapes &lt;- c(&quot;Severe hypoxia&quot; = 21,
+            &quot;Steroids&quot; = 15, # square
+            &quot;Death&quot; = 4) # cross # empty circle (control inside with fill argument if desired)
+
+p &lt;- p + scale_shape_manual(values = shapes, name = &quot;Patient Status&quot;)
+p</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+<div id="fix-the-legend" class="section level1">
+<h1>Fix the Legend</h1>
+<p>You’ll notice that our legend does not match the changes we made to the colors and shapes right now. This is because we’re stretching (possibly breaking) the grammar of graphics (the “gg” of <code>ggplot2</code>) rules by assigning different colors and shapes across variables. Although <code>ggplot2</code> wasn’t designed to do what we’re doing, we can override the legend aesthetics and still create a plot that shows correct and useful information.</p>
+<p>We will do this by using the <code>guides()</code> function. We can control each aesthetic here. We will first override the <code>colors</code> legend with the code <code>guide_legend(override.aes = list(...))</code>.</p>
+<p>This allows us to <em>change the shapes of the color legend</em> by specifying a vector with the shapes we want in the order the labels appear in the legend. If we don’t want a shape to appear on the legend, we will use <code>NA</code>.</p>
+<p>I only want to show shapes for certain statuses (severe hypoxia, steroid administration, death), and not the intubation status of a patient, so I’ll set up my shape override vector accordingly. Note that the order in the legend follows the order of my color specification vector (<code>cols</code>).</p>
+<pre class="r"><code>shape_override &lt;- c(21, NA, NA, 15, 4) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+
+p +
+  guides(color = guide_legend(
+                      override.aes = list(
+                          shape = shape_override) # modify the color legend to include shapes
+                      )
+         ) </code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>To remove the line through Death, Severe hypoxia, and Steroids in our legend, we can override the aesthetics for <code>linetype</code> with NA’s for those three labels. We will specify the default, <code>linetype=1</code>, for our intubation status color labels.</p>
+<p>We can additionally override the stroke and size arguments to correspond to our point geometries.</p>
+<pre class="r"><code>line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+
+p +  guides(color = guide_legend(
+                        override.aes = list(
+                                shape = shape_override,
+                                linetype = line_override)
+                                )
+             )</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Now that our color legend contains all necessary information, we can remove the shape legend using the argument <code>shape = "none"</code> in <code>guides()</code>.</p>
+<pre class="r"><code>p &lt;- p + 
+  guides(color = guide_legend(
+                        override.aes = list(
+                                shape = shape_override,
+                                linetype = line_override)
+                                ),
+         shape = &quot;none&quot;
+             )
+
+p</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Ok, the challenging parts are done! Now we can make some minor aesthetic edits using <code>labs</code>, <code>scale_x_continuous()</code>, and <code>theme()</code>. I won’t go into detail on these edits because they’re fairly self-explanatory, but check out the help files if you’re unsure what these arguments in theme do!</p>
+<pre class="r"><code>p &lt;- p +
+  labs(x=&quot;Days since hospitalization&quot;,y=&quot;Patient\nnumber&quot;,title=&quot;Treatment Timelines for N=30 Patients&quot;) +
+  scale_x_continuous(expand=c(0,0)) + # remove extra white space 
+  theme(text=element_text(family=&quot;Poppins&quot;, size=11),
+        title = element_text(angle = 0, vjust=.5, size=12, face=&quot;bold&quot;),
+        axis.title.y = element_text(angle = 0, vjust=.5, size=12, face=&quot;bold&quot;),
+        axis.title.x = element_text(size=15, face=&quot;bold&quot;, vjust=-0.5, hjust=0),
+        axis.text.y = element_text(size=6, hjust=1.5),
+        axis.ticks.y = element_blank(),
+        legend.position = c(0.8, 0.24),
+        legend.title = element_text(colour=&quot;black&quot;, size=13, face=4),
+        legend.text = element_text(colour=&quot;black&quot;, size=10),
+        legend.background = element_rect(size=0.5, linetype=&quot;solid&quot;, colour =&quot;gray30&quot;),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank()
+  ) 
+p</code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>Hope this is helpful! As always let me know if you have any feedback or suggestions. If you’d like to copy-paste the code, here it is:</p>
+</div>
+<div id="just-the-code" class="section level1">
+<h1>Just the Code</h1>
+<pre class="r"><code># define colors for all geometries with a color argument
+cols &lt;- c(&quot;Severe hypoxia&quot; = &quot;#b24745&quot;, # red
+          &quot;Intubated&quot; = &quot;darkslateblue&quot;, # navy
+          &quot;Not intubated&quot; = &quot;#74aaff&quot;, # lighter blue
+          &quot;Steroids&quot;=&quot;#ffd966&quot;, # gold
+          &quot;Death&quot; = &quot;black&quot;) 
+shapes &lt;- c(&quot;Severe hypoxia&quot; = 21,
+            &quot;Steroids&quot; = 15, # square
+            &quot;Death&quot; = 4) # cross # empty circle (control inside with fill argument if desired)
+
+shape_override &lt;- c(21, NA, NA, 15, 4) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+
+
+dat_swim &lt;- 
+   dat_long |&gt;
+  mutate(severe_this_day = case_when(severe == 1 ~ day),
+         steroids_this_day = case_when(steroids == 1 ~ day),
+         death_this_day = case_when(death == 1 ~ day)) %&gt;%
+  group_by(id) |&gt;
+  mutate(max_day = max(day)) |&gt;
+  ungroup() |&gt;
+  nest(cols = day:death_this_day) |&gt;
+  arrange(max_day) |&gt;
+  mutate(id_sorted = factor(row_number())) |&gt;
+  unnest()
+
+dat_swim |&gt;
+  ggplot() +
+  geom_line(aes(x=day, y=id_sorted, col = intubation_status, group=id_sorted),
+            size=1.8) +
+  geom_point(aes(x=steroids_this_day, y=id_sorted, col=&quot;Steroids&quot;, shape=&quot;Steroids&quot;), stroke=2) +
+  geom_point(aes(x=severe_this_day, y=id_sorted, col=&quot;Severe hypoxia&quot;, shape=&quot;Severe hypoxia&quot;), size=2, stroke=1.5) +
+  geom_point(aes(x=death_this_day, y=id_sorted, col=&quot;Death&quot;, shape=&quot;Death&quot;), size=2, stroke=1.5) +
+  theme_bw() +
+  scale_color_manual(values = cols, name=&quot;Patient Status&quot;) +
+  scale_shape_manual(values = shapes, name = &quot;Patient Status&quot;) +
+  guides(color = guide_legend(
+                        override.aes = list(
+                                shape = shape_override,
+                                linetype = line_override)
+                                ),
+         shape = &quot;none&quot;
+             )+
+  labs(x=&quot;Days since hospitalization&quot;,y=&quot;Patient\nnumber&quot;,title=&quot;Treatment Timelines for N=30 Patients&quot;) +
+  scale_x_continuous(expand=c(0,0)) + # remove extra white space 
+  theme(text=element_text(family=&quot;Poppins&quot;, size=11),
+        title = element_text(angle = 0, vjust=.5, size=12, face=&quot;bold&quot;),
+        axis.title.y = element_text(angle = 0, vjust=.5, size=12, face=&quot;bold&quot;),
+        axis.title.x = element_text(size=15, face=&quot;bold&quot;, vjust=-0.5, hjust=0),
+        axis.text.y = element_text(size=6, hjust=1.5),
+        axis.ticks.y = element_blank(),
+        legend.position = c(0.8, 0.24),
+        legend.title = element_text(colour=&quot;black&quot;, size=13, face=4),
+        legend.text = element_text(colour=&quot;black&quot;, size=10),
+        legend.background = element_rect(size=0.5, linetype=&quot;solid&quot;, colour =&quot;gray30&quot;),
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank()
+  ) </code></pre>
+<p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session Info</h1>
+<pre class="r"><code>sessionInfo()</code></pre>
+<p>R version 4.1.3 (2022-03-10)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Catalina 10.15.7</p>
+<p>Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</p>
+<p>locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</p>
+<p>attached base packages:
+[1] stats graphics grDevices utils datasets methods base</p>
+<p>other attached packages:
+[1] gt_0.4.0 forcats_0.5.1 stringr_1.4.0 dplyr_1.0.9<br />
+[5] purrr_0.3.4 readr_2.1.2 tidyr_1.2.0 tibble_3.1.6<br />
+[9] ggplot2_3.3.5 tidyverse_1.3.1</p>
+<p>loaded via a namespace (and not attached):
+[1] lubridate_1.8.0 here_1.0.1 assertthat_0.2.1 rprojroot_2.0.3
+[5] digest_0.6.29 utf8_1.2.2 R6_2.5.1 cellranger_1.1.0
+[9] backports_1.4.1 reprex_2.0.1 evaluate_0.15 highr_0.9<br />
+[13] httr_1.4.2 blogdown_1.9 pillar_1.7.0 rlang_1.0.2<br />
+[17] readxl_1.4.0 rstudioapi_0.13 jquerylib_0.1.4 checkmate_2.0.0
+[21] rmarkdown_2.13 labeling_0.4.2 munsell_0.5.0 broom_0.8.0<br />
+[25] compiler_4.1.3 modelr_0.1.8 xfun_0.30 pkgconfig_2.0.3
+[29] htmltools_0.5.2 tidyselect_1.1.2 bookdown_0.26 fansi_1.0.3<br />
+[33] crayon_1.5.1 tzdb_0.3.0 dbplyr_2.1.1 withr_2.5.0<br />
+[37] cabinets_0.6.0 grid_4.1.3 jsonlite_1.8.0 gtable_0.3.0<br />
+[41] lifecycle_1.0.1 DBI_1.1.2 magrittr_2.0.3 scales_1.2.0<br />
+[45] cli_3.3.0 stringi_1.7.6 farver_2.1.0 fs_1.5.2<br />
+[49] xml2_1.3.3 bslib_0.3.1 ellipsis_0.3.2 generics_0.1.2<br />
+[53] vctrs_0.4.1 tools_4.1.3 glue_1.6.2 hms_1.1.1<br />
+[57] fastmap_1.1.0 yaml_2.3.5 colorspace_2.0-3 rvest_1.0.2<br />
+[61] knitr_1.38 haven_2.5.0 sass_0.4.1</p>
+</div>
