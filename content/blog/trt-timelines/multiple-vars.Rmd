@@ -53,10 +53,10 @@ shapes <- c("Severe hypoxia" = 21,
             "Steroids" = 15, # square
             "Death" = 4) # cross # empty circle (control inside with fill argument if desired)
 
-shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-line_override <- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-stroke_override <- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`: severe, intubation (yes/no), steroids, death
+line_override <- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override <- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 dat_swim <- 
    dat_long |>
@@ -289,7 +289,7 @@ This allows us to *change the shapes of the color legend* by specifying a vector
 I only want to show shapes for certain statuses (severe hypoxia, steroid administration, death), and not the intubation status of a patient, so I'll set up my shape override vector accordingly. Note that the order in the legend follows the order of my color specification vector (`cols`).
 
 ```{r}
-shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 p +
   guides(color = guide_legend(
@@ -306,9 +306,9 @@ To remove the line through Death, Severe hypoxia, and Steroids in our legend, we
 We can additionally override the stroke and size arguments to correspond to our point geometries.
 
 ```{r}
-line_override <- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-stroke_override <- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+line_override <- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override <- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 p +  guides(color = guide_legend(
                         override.aes = list(
@@ -375,10 +375,10 @@ shapes <- c("Severe hypoxia" = 21,
             "Steroids" = 15, # square
             "Death" = 4) # cross # empty circle (control inside with fill argument if desired)
 
-shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-line_override <- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-stroke_override <- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`:severe, intubation (yes/no), steroids, death
+line_override <- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override <- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 # modify swimmer data to 1) only show events if yes 2) have an id ordered by max follow up
 dat_swim <- 

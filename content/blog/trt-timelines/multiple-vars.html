@@ -1194,7 +1194,7 @@ p</code></pre>
 <p>We will do this by using the <code>guides()</code> function. We can control each aesthetic here. We will first override the <code>colors</code> legend with the code <code>guide_legend(override.aes = list(...))</code>.</p>
 <p>This allows us to <em>change the shapes of the color legend</em> by specifying a vector with the shapes we want in the order the labels appear in the legend. If we don’t want a shape to appear on the legend, we will use <code>NA</code>.</p>
 <p>I only want to show shapes for certain statuses (severe hypoxia, steroid administration, death), and not the intubation status of a patient, so I’ll set up my shape override vector accordingly. Note that the order in the legend follows the order of my color specification vector (<code>cols</code>).</p>
-<pre class="r"><code>shape_override &lt;- c(21, NA, NA, 15, 4) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+<pre class="r"><code>shape_override &lt;- c(21, NA, NA, 15, 4) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 p +
   guides(color = guide_legend(
@@ -1205,9 +1205,9 @@ p +
 <p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 <p>To remove the line through Death, Severe hypoxia, and Steroids in our legend, we can override the aesthetics for <code>linetype</code> with NA’s for those three labels. We will specify the default, <code>linetype=1</code>, for our intubation status color labels.</p>
 <p>We can additionally override the stroke and size arguments to correspond to our point geometries.</p>
-<pre class="r"><code>line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+<pre class="r"><code>line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 p +  guides(color = guide_legend(
                         override.aes = list(
@@ -1266,10 +1266,10 @@ shapes &lt;- c(&quot;Severe hypoxia&quot; = 21,
             &quot;Steroids&quot; = 15, # square
             &quot;Death&quot; = 4) # cross # empty circle (control inside with fill argument if desired)
 
-shape_override &lt;- c(21, NA, NA, 15, 4) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
-size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`: hypoxia, intubation (yes/no), steroids, death
+shape_override &lt;- c(21, NA, NA, 15, 4) # order matches `cols`:severe, intubation (yes/no), steroids, death
+line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 # modify swimmer data to 1) only show events if yes 2) have an id ordered by max follow up
 dat_swim &lt;- 
