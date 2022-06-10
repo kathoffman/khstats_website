@@ -20,9 +20,9 @@ output:
 <p><a href="#just-the-code"><strong><em>Skip the step-by-step, just the code, please!</em></strong></a></p>
 <div id="background" class="section level1">
 <h1>Background</h1>
-<p>Treatment timelines, or “swimmer plots”, are a visualization technique I’ve found useful in exploring longitudinal data structures. A few years ago I shared how I make treatment timelines for a single treatment (categorical or continuous) in the post <a href="https://www.khstats.com/blog/trt-timelines/trt-timelines/"><strong>Patient Treatment Timelines for Longitudinal Survival Data</strong></a>.</p>
-<p>After I started sharing these timelines with collaborators, I began getting requests to <strong>add additional variables to the timelines</strong>. This post shows how to do that.</p>
-<p>I’ll use a toy dataset on hospitalized COVID-19 patients, available to download on this Github repository. It is derived from a dataset on COVID-19 patients from Spring 2020. This is a time period when there was large variation in provider practice in administering steroids, a type of drug that combats hyper-inflammation. Steroids are usually given to patients which exhibit an inflammtory profile; we will identify this using a threshold for low oxygen levels (severe hypoxia).</p>
+<p>Treatment timelines, or “swimmer plots”, are a visualization technique I find useful in exploring longitudinal data structures. A few years ago I shared how I make treatment timelines for a single treatment (categorical or continuous) in the post <a href="https://www.khstats.com/blog/trt-timelines/trt-timelines/"><strong>Patient Treatment Timelines for Longitudinal Survival Data</strong></a>.</p>
+<p>I’ve since received requests to <strong>add additional variables to the timelines</strong>. This post shows how to do that.</p>
+<p>I’ll use a toy dataset on hospitalized COVID-19 patients, available to download on this <a href="https://github.com/kathoffman/steroids-trial-emulation">Github repository</a>. It is derived from a dataset from Electronic Health Record data Spring 2020. This is a time period when there was large variation in provider practice in administering steroids, a type of drug that combats hyper-inflammation. Steroids are usually given to patients which exhibit an inflammtory profile; we will identify this using a threshold for low oxygen levels (severe hypoxia).</p>
 <p>We will look at the treatment patterns of steroids as it relates to the timing of patients (1) reaching severe hypoxia and (2) being put on a ventilator (intubation). We will also include whether patients died. I used a similar figure in a <a href="https://www.medrxiv.org/content/10.1101/2022.05.27.22275037v3">recent manuscript</a> on this topic, if you’re interested in learning more!</p>
 </div>
 <div id="exploring-the-data" class="section level1">
@@ -1206,8 +1206,8 @@ p +
 <p>To remove the line through Death, Severe hypoxia, and Steroids in our legend, we can override the aesthetics for <code>linetype</code> with NA’s for those three labels. We will specify the default, <code>linetype=1</code>, for our intubation status color labels.</p>
 <p>We can additionally override the stroke and size arguments to correspond to our point geometries.</p>
 <pre class="r"><code>line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
-stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
-size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override &lt;- c(.8,1,1,1,1) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override &lt;- c(2.5,2.5,2.6,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 p +  guides(color = guide_legend(
                         override.aes = list(
@@ -1268,8 +1268,8 @@ shapes &lt;- c(&quot;Severe hypoxia&quot; = 21,
 
 shape_override &lt;- c(21, NA, NA, 15, 4) # order matches `cols`:severe, intubation (yes/no), steroids, death
 line_override &lt;- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
-stroke_override &lt;- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
-size_override &lt;- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override &lt;- c(.8,1,1,1,1) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override &lt;- c(2.5,2.5,2.6,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 # modify swimmer data to 1) only show events if yes 2) have an id ordered by max follow up
 dat_swim &lt;- 

@@ -55,8 +55,8 @@ shapes <- c("Severe hypoxia" = 21,
 
 shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`: severe, intubation (yes/no), steroids, death
 line_override <- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
-stroke_override <- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
-size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override <- c(.8,1,1,1,1) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override <- c(2.5,2.5,2.6,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 dat_swim <- 
    dat_long |>
@@ -115,11 +115,11 @@ dat_swim |>
 
 # Background
 
-Treatment timelines, or "swimmer plots", are a visualization technique I've found useful in exploring longitudinal data structures. A few years ago I shared how I make treatment timelines for a single treatment (categorical or continuous) in the post [**Patient Treatment Timelines for Longitudinal Survival Data**](https://www.khstats.com/blog/trt-timelines/trt-timelines/).
+Treatment timelines, or "swimmer plots", are a visualization technique I find useful in exploring longitudinal data structures. A few years ago I shared how I make treatment timelines for a single treatment (categorical or continuous) in the post [**Patient Treatment Timelines for Longitudinal Survival Data**](https://www.khstats.com/blog/trt-timelines/trt-timelines/).
 
-After I started sharing these timelines with collaborators, I began getting requests to **add additional variables to the timelines**. This post shows how to do that.
+I've since received requests to **add additional variables to the timelines**. This post shows how to do that.
 
-I'll use a toy dataset on hospitalized COVID-19 patients, available to download on this Github repository. It is derived from a dataset on COVID-19 patients from Spring 2020. This is a time period when there was large variation in provider practice in administering steroids, a type of drug that combats hyper-inflammation. Steroids are usually given to patients which exhibit an inflammtory profile; we will identify this using a threshold for low oxygen levels (severe hypoxia).
+I'll use a toy dataset on hospitalized COVID-19 patients, available to download on this [Github repository](https://github.com/kathoffman/steroids-trial-emulation). It is derived from a dataset from Electronic Health Record data Spring 2020. This is a time period when there was large variation in provider practice in administering steroids, a type of drug that combats hyper-inflammation. Steroids are usually given to patients which exhibit an inflammtory profile; we will identify this using a threshold for low oxygen levels (severe hypoxia).
 
 We will look at the treatment patterns of steroids as it relates to the timing of patients (1) reaching severe hypoxia and (2) being put on a ventilator (intubation). We will also include whether patients died. I used a similar figure in a [recent manuscript](https://www.medrxiv.org/content/10.1101/2022.05.27.22275037v3) on this topic, if you're interested in learning more!
 
@@ -307,8 +307,8 @@ We can additionally override the stroke and size arguments to correspond to our 
 
 ```{r}
 line_override <- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
-stroke_override <- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
-size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override <- c(.8,1,1,1,1) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override <- c(2.5,2.5,2.6,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 p +  guides(color = guide_legend(
                         override.aes = list(
@@ -377,8 +377,8 @@ shapes <- c("Severe hypoxia" = 21,
 
 shape_override <- c(21, NA, NA, 15, 4) # order matches `cols`:severe, intubation (yes/no), steroids, death
 line_override <- c(NA,1,1,NA,NA) # order matches `cols`:severe, intubation (yes/no), steroids, death
-stroke_override <- c(1,1,1,1,1.5) # order matches `cols`:severe, intubation (yes/no), steroids, death
-size_override <- c(2.5,2.5,2.5,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
+stroke_override <- c(.8,1,1,1,1) # order matches `cols`:severe, intubation (yes/no), steroids, death
+size_override <- c(2.5,2.5,2.6,2,2) # order matches `cols`:severe, intubation (yes/no), steroids, death
 
 # modify swimmer data to 1) only show events if yes 2) have an id ordered by max follow up
 dat_swim <- 
