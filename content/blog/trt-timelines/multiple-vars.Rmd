@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, results = "asis")
 ```
 
 
-```{r, echo=F, warning=F, message=F, fig.height=8, fig.width=7}
+```{r, echo=F, warning=F, message=F}
 library(tidyverse, warn.conflicts = F)
 
 # internal set up
@@ -37,7 +37,7 @@ write_csv(dat_long, here::here("content/blog/trt-timelines/dat_trt_timeline.csv"
 
 ```
 
-```{r, echo=F, warning=F, message=F, fig.height=8, fig.width=7}
+```{r, echo=F, warning=F, message=F}
 library(tidyverse)
 library(gt)
 
