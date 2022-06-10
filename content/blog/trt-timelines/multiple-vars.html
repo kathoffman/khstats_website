@@ -1,8 +1,7 @@
 ---
 title: "Using ggplot2 to create Treatment Timelines with Multiple Variables"
 author: "Katherine Hoffman"
-date: 2022-06-05T21:13:14-05:00
-draft: true
+date: 2022-06-08T21:13:14-05:00
 categories: ["R","data visualization"]
 tags: ["R","ggplot2","swimmer plots","treatment timelines","longitudinal survival"]
 output: 
@@ -29,11 +28,12 @@ output:
 <div id="exploring-the-data" class="section level1">
 <h1>Exploring the data</h1>
 <p>The data set is in long format with one row per patient. Let’s first load the data set and libraries we’ll need, then look at the first 20 rows:</p>
-<pre class="r"><code>library(tidyverse)
+<pre class="r"><code># install.packages(c(&quot;tidyverse&quot;,&quot;gt&quot;,&quot;RCurl&quot;))
+library(tidyverse)
 library(gt)
 
-#load from GH</code></pre>
-<p>If we look at the first patient (id = 397), we can see they were in the hospital for 17 days, never intubated, never receive steroids, and ultimately die (<code>death</code> is <code>1</code> on the last day).</p>
+dat_long &lt;- read_csv(&quot;https://raw.githubusercontent.com/kathoffman/steroids-trial-emulation/main/data/dat_trt_timeline.csv&quot;, col_types = list(id  = &quot;c&quot;, steroids = &quot;c&quot;, death = &quot;c&quot;, severe = &quot;c&quot;))</code></pre>
+<p>If we look at the first patient (id = 797), we can see they were in the hospital for 17 days, never intubated, never receive steroids, and ultimately die (<code>death</code> is <code>1</code> on the last day).</p>
 <pre class="r"><code>head(dat_long, n=20) |&gt;
   gt()</code></pre>
 <div id="pqkmlwwraq" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
@@ -409,6 +409,15 @@ library(gt)
   font-size: 65%;
 }
 
+#pqkmlwwraq .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
 #pqkmlwwraq .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
@@ -443,135 +452,135 @@ library(gt)
   
   <thead class="gt_col_headings">
     <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">id</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">id</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">day</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">intubation_status</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">steroids</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">death</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">severe</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">steroids</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">death</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">severe</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td class="gt_row gt_center">397</td>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">0</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">1</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">2</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">1</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">1</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">3</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">4</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">5</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">6</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">7</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">8</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">9</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">10</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">11</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">12</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">13</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">14</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">15</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">397</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">797</td>
 <td class="gt_row gt_right">16</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">1</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">575</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">1</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">285</td>
 <td class="gt_row gt_right">0</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
-    <tr><td class="gt_row gt_center">575</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">285</td>
 <td class="gt_row gt_right">1</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">1</td></tr>
-    <tr><td class="gt_row gt_center">575</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
+    <tr><td class="gt_row gt_left">285</td>
 <td class="gt_row gt_right">2</td>
-<td class="gt_row gt_left">Intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td></tr>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td></tr>
   </tbody>
   
   
@@ -991,6 +1000,15 @@ library(gt)
   font-size: 65%;
 }
 
+#alkpbizqhi .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
 #alkpbizqhi .gt_footnote_marks {
   font-style: italic;
   font-weight: normal;
@@ -1025,13 +1043,13 @@ library(gt)
   
   <thead class="gt_col_headings">
     <tr>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">id</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">id</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">max_day</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">day</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">intubation_status</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">steroids</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">death</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1">severe</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">steroids</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">death</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1">severe</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">severe_this_day</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">steroids_this_day</th>
       <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1">death_this_day</th>
@@ -1039,68 +1057,68 @@ library(gt)
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr><td class="gt_row gt_center">270</td>
+    <tr><td class="gt_row gt_left">767</td>
 <td class="gt_row gt_right">1</td>
 <td class="gt_row gt_right">0</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_center">1</td></tr>
-    <tr><td class="gt_row gt_center">270</td>
+    <tr><td class="gt_row gt_left">767</td>
 <td class="gt_row gt_right">1</td>
 <td class="gt_row gt_right">1</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_center">1</td></tr>
-    <tr><td class="gt_row gt_center">714</td>
-<td class="gt_row gt_right">2</td>
+    <tr><td class="gt_row gt_left">156</td>
+<td class="gt_row gt_right">1</td>
 <td class="gt_row gt_right">0</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_center">2</td></tr>
-    <tr><td class="gt_row gt_center">714</td>
+    <tr><td class="gt_row gt_left">156</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">1</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">1</td>
+<td class="gt_row gt_center">2</td></tr>
+    <tr><td class="gt_row gt_left">804</td>
+<td class="gt_row gt_right">2</td>
+<td class="gt_row gt_right">0</td>
+<td class="gt_row gt_left">Not intubated</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_right">NA</td>
+<td class="gt_row gt_center">3</td></tr>
+    <tr><td class="gt_row gt_left">804</td>
 <td class="gt_row gt_right">2</td>
 <td class="gt_row gt_right">1</td>
 <td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_right">NA</td>
-<td class="gt_row gt_right">NA</td>
-<td class="gt_row gt_right">NA</td>
-<td class="gt_row gt_center">2</td></tr>
-    <tr><td class="gt_row gt_center">714</td>
-<td class="gt_row gt_right">2</td>
-<td class="gt_row gt_right">2</td>
-<td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_right">NA</td>
-<td class="gt_row gt_right">NA</td>
-<td class="gt_row gt_right">NA</td>
-<td class="gt_row gt_center">2</td></tr>
-    <tr><td class="gt_row gt_center">317</td>
-<td class="gt_row gt_right">2</td>
-<td class="gt_row gt_right">0</td>
-<td class="gt_row gt_left">Not intubated</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
-<td class="gt_row gt_center">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
+<td class="gt_row gt_left">0</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
 <td class="gt_row gt_right">NA</td>
@@ -1119,7 +1137,7 @@ library(gt)
   geom_line(aes(x=day, y=id_sorted, col = intubation_status, group=id)) +
   geom_point(aes(x=steroids_this_day, y=id_sorted, col=&quot;Steroids&quot;, shape=&quot;Steroids&quot;)) +
   theme_bw()</code></pre>
-<pre><code>## Warning: Removed 355 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 387 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>From this point on I’ll save the plot as <code>p</code> and just keep adding onto it so you can see the new step.</p>
 <p>We’ll see why we’re doing this in a second, but in creating this first iteration of <code>p</code> using <code>geom_line()</code> and <code>geom_point()</code>, we also want to set the <code>col</code> and <code>shape</code> to match how we want the marker for steroids to appear in the legend. I’m also going to make minor edits to the <code>size</code> of the point geometry right now, as well as the width of each timeline itself (also using the <code>size</code> argument). Lastly, we are now going to use <code>id_sorted</code>.</p>
@@ -1131,16 +1149,16 @@ library(gt)
   geom_point(aes(x=steroids_this_day, y=id_sorted, col=&quot;Steroids&quot;, shape=&quot;Steroids&quot;), stroke=2) +
   theme_bw()
 p</code></pre>
-<pre><code>## Warning: Removed 355 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 387 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <p>Let’s add hypoxia and death to the figure. We’ll use <code>geom_point()</code> again, and again specify legend names for the <code>col</code> and <code>shape</code> arguments, and modify the <code>size</code> and <code>stroke</code> of our point geometries.</p>
 <pre class="r"><code>p &lt;- p +
   geom_point(aes(x=severe_this_day, y=id_sorted, col=&quot;Severe hypoxia&quot;, shape=&quot;Severe hypoxia&quot;), size=2, stroke=1.5) +
   geom_point(aes(x=death_this_day, y=id_sorted, col=&quot;Death&quot;, shape=&quot;Death&quot;), size=2, stroke=1.5) 
 p</code></pre>
-<pre><code>## Warning: Removed 355 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 365 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 376 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 387 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 403 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 414 rows containing missing values (geom_point).</code></pre>
 <p><img src="/blog/trt-timelines/multiple-vars_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Note that we get warning messages that values with <code>NA</code> are removed. This is fine since we just created all those <code>NA</code>s! I’m going to set my options so that warnings are suppressed for future code outputs to keep this post tidy.</p>
 <pre class="r"><code>knitr::opts_chunk$set(message=F, warning=F)</code></pre>
@@ -1220,7 +1238,7 @@ p</code></pre>
         axis.title.x = element_text(size=15, face=&quot;bold&quot;, vjust=-0.5, hjust=0),
         axis.text.y = element_text(size=6, hjust=1.5),
         axis.ticks.y = element_blank(),
-        legend.position = c(0.8, 0.24),
+        legend.position = c(0.8, 0.3),
         legend.title = element_text(colour=&quot;black&quot;, size=13, face=4),
         legend.text = element_text(colour=&quot;black&quot;, size=10),
         legend.background = element_rect(size=0.5, linetype=&quot;solid&quot;, colour =&quot;gray30&quot;),
@@ -1310,7 +1328,7 @@ LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dy
 <p>attached base packages:
 [1] stats graphics grDevices utils datasets methods base</p>
 <p>other attached packages:
-[1] gt_0.4.0 forcats_0.5.1 stringr_1.4.0 dplyr_1.0.9<br />
+[1] gt_0.6.0 forcats_0.5.1 stringr_1.4.0 dplyr_1.0.9<br />
 [5] purrr_0.3.4 readr_2.1.2 tidyr_1.2.0 tibble_3.1.6<br />
 [9] ggplot2_3.3.5 tidyverse_1.3.1</p>
 <p>loaded via a namespace (and not attached):
@@ -1318,16 +1336,17 @@ LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dy
 [5] digest_0.6.29 utf8_1.2.2 R6_2.5.1 cellranger_1.1.0
 [9] backports_1.4.1 reprex_2.0.1 evaluate_0.15 highr_0.9<br />
 [13] httr_1.4.2 blogdown_1.9 pillar_1.7.0 rlang_1.0.2<br />
-[17] readxl_1.4.0 rstudioapi_0.13 jquerylib_0.1.4 checkmate_2.0.0
-[21] rmarkdown_2.13 labeling_0.4.2 munsell_0.5.0 broom_0.8.0<br />
-[25] compiler_4.1.3 modelr_0.1.8 xfun_0.30 pkgconfig_2.0.3
-[29] htmltools_0.5.2 tidyselect_1.1.2 bookdown_0.26 fansi_1.0.3<br />
-[33] crayon_1.5.1 tzdb_0.3.0 dbplyr_2.1.1 withr_2.5.0<br />
-[37] cabinets_0.6.0 grid_4.1.3 jsonlite_1.8.0 gtable_0.3.0<br />
-[41] lifecycle_1.0.1 DBI_1.1.2 magrittr_2.0.3 scales_1.2.0<br />
-[45] cli_3.3.0 stringi_1.7.6 farver_2.1.0 fs_1.5.2<br />
-[49] xml2_1.3.3 bslib_0.3.1 ellipsis_0.3.2 generics_0.1.2<br />
-[53] vctrs_0.4.1 tools_4.1.3 glue_1.6.2 hms_1.1.1<br />
-[57] fastmap_1.1.0 yaml_2.3.5 colorspace_2.0-3 rvest_1.0.2<br />
-[61] knitr_1.38 haven_2.5.0 sass_0.4.1</p>
+[17] curl_4.3.2 readxl_1.4.0 rstudioapi_0.13 jquerylib_0.1.4
+[21] checkmate_2.0.0 rmarkdown_2.13 labeling_0.4.2 bit_4.0.4<br />
+[25] munsell_0.5.0 broom_0.8.0 compiler_4.1.3 modelr_0.1.8<br />
+[29] xfun_0.30 pkgconfig_2.0.3 htmltools_0.5.2 tidyselect_1.1.2
+[33] bookdown_0.26 fansi_1.0.3 crayon_1.5.1 tzdb_0.3.0<br />
+[37] dbplyr_2.1.1 withr_2.5.0 cabinets_0.6.0 grid_4.1.3<br />
+[41] jsonlite_1.8.0 gtable_0.3.0 lifecycle_1.0.1 DBI_1.1.2<br />
+[45] magrittr_2.0.3 scales_1.2.0 cli_3.3.0 stringi_1.7.6<br />
+[49] vroom_1.5.7 farver_2.1.0 fs_1.5.2 xml2_1.3.3<br />
+[53] bslib_0.3.1 ellipsis_0.3.2 generics_0.1.2 vctrs_0.4.1<br />
+[57] tools_4.1.3 bit64_4.0.5 glue_1.6.2 hms_1.1.1<br />
+[61] parallel_4.1.3 fastmap_1.1.0 yaml_2.3.5 colorspace_2.0-3
+[65] rvest_1.0.2 knitr_1.38 haven_2.5.0 sass_0.4.1</p>
 </div>

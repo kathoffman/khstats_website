@@ -1,7 +1,7 @@
 ---
 title: "Using ggplot2 to create Treatment Timelines with Multiple Variables"
 author: "Katherine Hoffman"
-date: 2022-06-09T21:13:14-05:00
+date: 2022-06-08T21:13:14-05:00
 categories: ["R","data visualization"]
 tags: ["R","ggplot2","swimmer plots","treatment timelines","longitudinal survival"]
 output: 
@@ -125,7 +125,7 @@ The data set is in long format with one row per patient. Let's first load the da
 library(tidyverse)
 library(gt)
 
-dat_long <- read_csv(RCurl::getURL("https://github.com/kathoffman/steroids-trial-emulation/blob/main/data/dat_trt_timeline.csv")) 
+dat_long <- read_csv("https://raw.githubusercontent.com/kathoffman/steroids-trial-emulation/main/data/dat_trt_timeline.csv", col_types = list(id  = "c", steroids = "c", death = "c", severe = "c"))
 ```
 
 
@@ -134,7 +134,6 @@ If we look at the first patient (id = `r slice(dat_long, 1) |> pull(id)`), we ca
 ```{r}
 head(dat_long, n=20) |>
   gt()
-
 ```
 
 
