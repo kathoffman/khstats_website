@@ -74,7 +74,13 @@ I could only cover so much in this post, but here are the resources I've used th
 
 - Miguel Angel Luque-Fernandez wrote an [excellent bookdown tutorial on TMLE](https://migariane.github.io/TMLE.nb.html), also with step-by-step `R` code. It is more technical and thorough than my post, but still aimed at an applied audience. He also has a tutorial on the [functional delta method](https://migariane.github.io/DeltaMethodEpiTutorial.nb.html) which is part of the theory behind the way we compute the standard errors (see [*Part II, Step 6*](https://khstats.com/blog/tmle/tutorial-pt2/#step-6-calculate-the-standard-errors-for-confidence-intervals-and-p-values)).
 
-- Other code-based web-based tutorials on TMLE include David Benkeser and Antoine Chambaz' [A Ride in Targeted Learning Territory](https://achambaz.github.io/tlride/) and the authors of the `R` package suite [`tlverse`](https://tlverse.org/)'s [Hitchhiker's Guide to Targeted Learning: The TMLE Framework](https://tlverse.org/tlverse-handbook/tmle3.html).
+- Other code-based web-based tutorials on TMLE that are more recent (or recently discovered by me!) include:
+
+  - David Benkeser and Antoine Chambaz' [A Ride in Targeted Learning Territory](https://achambaz.github.io/tlride/)
+  
+  - The authors of the `R` package suite [`tlverse`](https://tlverse.org/)'s [Hitchhiker's Guide to Targeted Learning: The TMLE Framework](https://tlverse.org/tlverse-handbook/tmle3.html).
+  
+  - Stitch Fix's Jasmine Nettiksimmons AND Molly Davies' blog post: ["Gimme a robust estimator - and make it a double!"](https://multithreaded.stitchfix.com/blog/2021/07/23/double-robust-estimator/)
 
 ### Semiparametric Theory and Influence Functions
 

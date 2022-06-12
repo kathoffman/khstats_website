@@ -1,9 +1,9 @@
 ---
-title: "Biostatician Builds: Mechanical Keyboard"
+title: "Lessons Learned from Building my Mechanical Keyboard"
 author: "Katherine Hoffman"
-date: 2021-12-01T21:13:14-05:00
+date: 2022-06-11T21:13:14-05:00
 categories: ["miscellaneous"]
-draft: true
+draft: false
 tags: ["mechanical keyboard","diy"]
 output: 
   html_document:
@@ -17,13 +17,17 @@ output:
 
 ```
 
-Hello, it's been a while! I hope you're all doing well and staying healthy. I was feeling pretty burnt out last year, thus a hiatus from posts^[I also got a bit behind answering emails -- I've tried to respond to all emails I've received but please reach out if I missed yours! Sometimes messages go into junk and I don't check them before they're auto-deleted :(], but I hope you'll enjoy this non-stats one.
 
-It's about a project I did last fall -- building a mechanical keyboard. I'm no expert, but I enjoyed the process so much that I thought I would share some helpful resources and lessons learned. Even if you have no interest in building your own mechanical keyboard right now, I hope it encourages you to learn something new that you may have initially felt intimidated by!
+> This blog post details a DIY project I did last summer -- building a mechanical keyboard. I'm no expert, but I enjoyed the process of building the keyboard so much that I thought I would share some helpful resources and lessons learned. Even if you have no interest in building your own, I hope it encourages you to learn something new that you may have initially felt intimidated by!
+
+<!-- ![](/img/keyboard/IMG_7027.png) -->
 
 # What's a mechanical keyboard?
 
-A mechanical keyboard is the typing tool that comes with a desktop computer as opposed to a laptop. The keys are taller and provide more feedback in feel and sound when you hit them. Gamers, typists, and coders are the types of people most likely to use a mechanical keyboard with their laptop.
+<!-- <iframe src="https://giphy.com/embed/2IGcITcJg09VK" width="700" frameBorder="0" allowFullScreen></iframe><p></p> -->
+
+
+A mechanical keyboard is the keyboard that comes with a desktop computer, as opposed to a laptop. The keys are taller and provide more feedback in feel and sound when you hit them. Gamers, typists, and coders are more likely to use a mechanical keyboard.
 
 # Why would I want to build a mechanical keyboard?
 
@@ -54,7 +58,7 @@ The **PCB** is the electronic circuitry of your keyboard. You will need to choos
 
 ## Key switches
 
-This is a fun choice! **Key switches** are what go below the keys to provide the majority of sound and feel. You can choose from many different brands, e.g. Cherry MX or Gateron, and types of switch feels, e.g. tactile, linear, clicky. I won't go into all the differences here, but you should know that *switch colors correspond to certain sounds/feels*. The color of the switch won't be seen unless you have translucent key caps.
+This is a fun choice! **Key switches** are what go below the keys to provide the majority of sound and feel. You can choose from many different brands, e.g. Cherry MX or Gateron, and types of switch feels, e.g. tactile, linear, clicky. I won't go into all the differences here, but you should know that switch colors correspond to certain sounds/feels. The color of the switch won't be seen unless you have translucent key caps.
 
 ## Key stabilizers
 
@@ -64,7 +68,26 @@ This is a fun choice! **Key switches** are what go below the keys to provide the
 
 **Key caps** are, in my opinion, the most exciting part! They go on top of the switches and are the most visible part of the keyboard. You can choose the material and colors, and either buy as a set or pick out unique single keycaps.
 
-# My build
+# My Build
+
+![](/img/keyboard/IMG_9073.png)
+
+These were the components I used. If I were to do it again I would pick another type of switch besides Cherry Brown... they work great but they're so common and boring!
+
+- [Blue aluminum KBD75 V2 Case with acrylic midlayer to show RBG lighting](https://kbdfans.com/products/kbd75v2-custom-keyboard-diy-kit-1)
+
+- [KBD75 Rev 2.0 Solderable PCB](https://kbdfans.com/products/kbdfans-75-pcb-75)
+
+- [KBD75 Brass plate](https://kbdfans.com/products/kbd75-brass-plate)
+
+- [KBD75 Foam pad](https://kbdfans.com/products/kbd75-pcb-foam)
+
+- [Cherry screw in stabilizers](https://www.amazon.com/Genuine-Cherry-GMK-Screw-Stabilizers/dp/B082Z5P769)
+
+- [Cherry RGB Brown switches](https://www.amazon.com/Cherry-Switches-MX1A-L1NA-Mechanical-Keyboard/dp/B0852QJ8PJ?th=1)
+
+- [Retro blue and red keycaps](https://www.amazon.com/TAI-HAO-Profile-Keycaps-Compatible-Keyboards/dp/B08W56W35R/ref=sr_1_58?crid=1A8BUF5OB84RB&keywords=red+blue+keycaps+retro&qid=1655008111&sprefix=red+blue+keycaps+retro%2Caps%2C55&sr=8-58)
+
 
 # The steps
 
@@ -74,29 +97,52 @@ I'll briefly outline the steps to building the keyboard below. If you're actuall
 
 First you'll want to download a keyboard programming app like VIA, plug your keyboard into your computer, take a pair of tweezers, and test each point of key circuitry on your PCB plate.
 
+<video width="320" height="240" controls>
+  <source src="/img/keyboard/testing_keys.mp4" type="video/mp4">
+</video>
+
 ## 2. Lubricate the stabilizers
 
-If your PCB plate is working properly, go ahead and add lubricant and put together your stabilizers. I found the whole process a bit tricky, but this Youtube video helped a lot.
+If your PCB plate is working properly, go ahead and add lubricant and put together your stabilizers. I found the whole process a bit tricky, but Youtube helped a lot.
+
+![](/img/keyboard/IMG_9074.png)
 
 ## 3. Place your stabilizers on the PCB
 
 Don't be nervous, click those stabilizers into place! You can put the respective keycaps on and make sure you like the feel at this point.
 
-## 4. Add the plate and solder click the key switches into the PCB
+<video width="320" height="240" controls>
+  <source src="/img/keyboard/test_stabs.mp4" type="video/mp4">
+</video>
+
+## 4. Add the plate and click the key switches into the PCB
 
 You can now overlay your plate on the PCB and start clicking each key switch's metal prongs into the small holes on the PCB. You should feel a click when it locks into place, and the switches should not fall out if you flip the board over. 
 
+<video width="320" height="240" controls>
+  <source src="/img/keyboard/clicking_switches.mp4" type="video/mp4">
+</video>
+
 ## 5. Soldering
 
-This was hands-down my favorite part of the entire process. Soldering (pronounced soddering) is SO much fun. There's a ton of videos online about it, and you can buy a kit to practice if you want, but honestly I just went for it. You basically melt a piece of metal (flux) and then place the soldering iron right next to the key switch prongs and PCB ring of metal to create an electrical conduction.
+This was hands-down my favorite part of the entire process. Soldering (pronounced saw-der-ing, according to my Midwest father) is SO much fun. There's a ton of videos online about it, and you can buy a kit to practice if you want, but honestly I just went for it. You basically melt a piece of metal (flux) and then place the soldering iron right next to the key switch prongs and PCB ring of metal to create an electrical conduction.
 
-One important note with soldering is that you should wait a day and retest your keys to make sure the conduction stayed. I had an issue where I would successfully test the keys about five minutes after soldering, but the next day the same keys would no longer work.
 
-One other tip is to pay attention to the temperature of where you're soldering. The fumes are a bit intense (and can be toxic) so I was soldering outside on a summer night. As the sun went down, I realized that my soldering iron was no longer as hot as it said it was (~400 degrees Fareignheit) because the wind/outside air was cooling it down. This contributed to the faulty conduction noted in my previous paragraph.
+<video width="200" height="400" controls>
+  <source src="/img/keyboard/soldering.mp4" type="video/mp4">
+</video>
 
-## 6. 
+One important note with soldering is that you should wait a day and retest your keys to make sure the conduction stayed. I had an issue where I would successfully test the keys about five minutes after soldering, but the next day the same keys would no longer work. I finally realized this was because I was soldering outside on a summer night (to avoid the fumes). As the sun went down, my soldering iron was no longer as hot as it said it was (~400 degrees Fareignheit) because the wind/outside air was cooling it down. This contributed to the faulty conduction noted in my previous paragraph.
 
-# My Build
+This is what my final soldering job looked like:
+
+![](/img/keyboard/final_solder.png)
+
+## 6. Stack and screw
+
+Once all your keys' electrical connections work, you can add your key caps. Finally, stack all the pieces together (case, foam plate, plate/PCB/switches) and screw in the necessary screws.
+
+![](/img/keyboard/IMG_9129.png)
 
 # Lessons learned
 
