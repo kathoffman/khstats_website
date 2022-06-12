@@ -22,7 +22,7 @@ output:
 
 <!-- ![](/img/keyboard/IMG_7027.png) -->
 
-<iframe src="https://giphy.com/embed/2IGcITcJg09VK" width="480" height="379" frameBorder="0"  allowFullScreen></iframe><p><a href="https://giphy.com/gifs/2IGcITcJg09VK"></a></p>
+<!-- <iframe src="https://giphy.com/embed/2IGcITcJg09VK" width="480" height="379" frameBorder="0"  allowFullScreen></iframe><p><a href="https://giphy.com/gifs/2IGcITcJg09VK"></a></p> -->
 
 # What's a mechanical keyboard?
 
@@ -72,7 +72,7 @@ This is a fun choice! **Key switches** are what go below the keys to provide the
 
 # My Build
 
-![](/img/keyboard/IMG_9073.png)
+
 
 These were the components I used. If I were to do it again I would pick another type of switch besides Cherry Brown... they work great but they're so common and boring!
 
@@ -90,6 +90,7 @@ These were the components I used. If I were to do it again I would pick another 
 
 - [Retro blue and red keycaps](https://www.amazon.com/TAI-HAO-Profile-Keycaps-Compatible-Keyboards/dp/B08W56W35R/ref=sr_1_58?crid=1A8BUF5OB84RB&keywords=red+blue+keycaps+retro&qid=1655008111&sprefix=red+blue+keycaps+retro%2Caps%2C55&sr=8-58)
 
+![*All my components and tools, from left to right: a rag for touching up lubricant/flux, silicone lubricant, brass sponge for removing flux, flux (resin core solder), Hakko soldering iron, scissors, tweezers, toothpicks, switches, stabilizers (black platic feet), screws, soft feet stickers, stabilizers (metal rods), case, key caps, PCB, brass plate, and foam pad.*](/img/keyboard/IMG_9073.png)
 
 # The steps
 
@@ -100,7 +101,7 @@ I'll briefly outline the steps to building the keyboard below. If you're actuall
 First you'll want to download a keyboard programming app like VIA, plug your keyboard into your computer, take a pair of tweezers, and test each point of key circuitry on your PCB plate.
 
 <video width="320" height="240" controls>
-  <source src="/img/keyboard/testing_keys.mp4" type="video/mp4">
+  <source src="/img/keyboard/testing_keys.mp4#t=0.1" type="video/mp4">
 </video>
 
 ## 2. Lubricate the stabilizers
@@ -114,7 +115,7 @@ If your PCB plate is working properly, go ahead and add lubricant and put togeth
 Don't be nervous, click those stabilizers into place! You can put the respective keycaps on and make sure you like the feel at this point.
 
 <video width="320" height="240" controls>
-  <source src="/img/keyboard/test_stabs.mp4" type="video/mp4">
+  <source src="/img/keyboard/test_stabs.mp4#t=0.1" type="video/mp4">
 </video>
 
 ## 4. Add the plate and click the key switches into the PCB
@@ -122,7 +123,7 @@ Don't be nervous, click those stabilizers into place! You can put the respective
 You can now overlay your plate on the PCB and start clicking each key switch's metal prongs into the small holes on the PCB. You should feel a click when it locks into place, and the switches should not fall out if you flip the board over. 
 
 <video width="320" height="240" controls>
-  <source src="/img/keyboard/clicking_switches.mp4" type="video/mp4">
+  <source src="/img/keyboard/clicking_switches.mp4#t=0.1" type="video/mp4">
 </video>
 
 ## 5. Soldering
@@ -131,7 +132,7 @@ This was hands-down my favorite part of the entire process. Soldering (pronounce
 
 
 <video width="200" height="400" controls>
-  <source src="/img/keyboard/soldering.mp4" type="video/mp4">
+  <source src="/img/keyboard/soldering.mp4#t=0.1" type="video/mp4">
 </video>
 
 One important note with soldering is that you should wait a day and retest your keys to make sure the conduction stayed. I had an issue where I would successfully test the keys about five minutes after soldering, but the next day the same keys would no longer work. I finally realized this was because I was soldering outside on a summer night (to avoid the fumes). As the sun went down, my soldering iron was no longer as hot as it said it was (~400 degrees Fareignheit) because the wind/outside air was cooling it down. This contributed to the faulty conduction noted in my previous paragraph.
