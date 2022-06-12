@@ -22,6 +22,8 @@ output:
 
 <!-- ![](/img/keyboard/IMG_7027.png) -->
 
+<iframe src="https://giphy.com/embed/2IGcITcJg09VK" width="480" height="379" frameBorder="0"  allowFullScreen></iframe><p><a href="https://giphy.com/gifs/2IGcITcJg09VK"></a></p>
+
 # What's a mechanical keyboard?
 
 <!-- <iframe src="https://giphy.com/embed/2IGcITcJg09VK" width="700" frameBorder="0" allowFullScreen></iframe><p></p> -->
