@@ -1,10 +1,10 @@
 ---
-title: "Biostatistician Builds: Mechanical Keyboard"
+title: "You're just my type! Lessons learned from building a mechanical keyboard"
 author: "Katherine Hoffman"
 date: 2022-06-11T21:13:14-05:00
 categories: ["miscellaneous"]
 draft: false
-tags: ["mechanical keyboard","diy","building","keyboards","kbdfans"]
+tags: ["mechanical keyboard","diy","building","keyboards","kbdfans","data science", "computer keyboard", "coding"]
 output: 
   html_document:
     toc: true
@@ -23,17 +23,17 @@ output:
 <div id="whats-a-mechanical-keyboard" class="section level1">
 <h1>What’s a mechanical keyboard?</h1>
 <!-- <iframe src="https://giphy.com/embed/2IGcITcJg09VK" width="700" frameBorder="0" allowFullScreen></iframe><p></p> -->
-<p>A mechanical keyboard is the keyboard that comes with a desktop computer, as opposed to a laptop. The keys are taller and provide more feedback in feel and sound when you hit them. Gamers, typists, and coders are more likely to use a mechanical keyboard.</p>
+<p>A mechanical keyboard is the typing unit that comes with a desktop computer, as opposed to a laptop. The keys are taller and provide more feedback in feel and sound when you hit them. Gamers, typists, and coders are more likely to use a mechanical keyboard.</p>
 </div>
 <div id="why-would-i-want-to-build-a-mechanical-keyboard" class="section level1">
 <h1>Why would I want to build a mechanical keyboard?</h1>
-<p>You can buy a mechanical keyboard, and to be honest, it’s a much cheaper monetary and time investment. Practically, the reason to build your own keyboard is customizability. Picking out your own components provides freedom in colors, layout, feel/sound of the keys, and more. Yet the primary reason people do it, in my opinion, is that it’s fun. If you enjoy DIY projects, you’ll probably enjoy the challenge that comes with building your own keyboard.</p>
-<p>Personally, I impulsively decided to build my mechanical keyboard because I was bored during quarantine after catching COVID-19 last summer. I texted my dad at 1AM to see if I could use his soldering iron, and the rest is history.</p>
+<p>You can buy a mechanical keyboard, and to be honest, it’s a much cheaper monetary and time investment. Practically, the reason to build your own keyboard is customizability. Picking out the components provides freedom in colors, layout, feel/sound of the keys, and more. Yet the primary reason people do it is that it’s fun. If you enjoy DIY projects, you’ll probably enjoy the challenge that comes with building your own keyboard.</p>
+<p>Personally, I decided to build my mechanical keyboard because I was bored during quarantine after catching COVID-19 last summer. I texted my dad at 1AM to see if I could use his soldering iron, and the rest is history.</p>
 <p><img src="/img/keyboard/ss_dad.jpeg" style="width:75.0%" /></p>
 </div>
 <div id="what-components-do-i-need-to-buy" class="section level1">
 <h1>What components do I need to buy?</h1>
-<p>Picking out the components can be overwhelming! Yet it all boils down to six pieces you’ll need:</p>
+<p>Picking out the components can be overwhelming! Yet it boils down to six main pieces you’ll need:</p>
 <ol style="list-style-type: decimal">
 <li><a href="#case">Case</a></li>
 <li><a href="#pcb">Printed Circuit Board (PCB)</a></li>
@@ -48,20 +48,20 @@ output:
 </div>
 <div id="pcb" class="section level2">
 <h2>PCB</h2>
-<p>The <strong>PCB</strong> is the electronic circuitry of your keyboard. You will need to choose a PCB that fits into whatever size case you’ve picked. One option with a PCB is whether it has RGB underglow on it, which means it has tiny lights on it that you can program to display different colors. If you want these lights to show, you’ll want to have either a case or key caps which allow for the colors to shine through.</p>
+<p>The Printed Circuit Board <strong>(PCB)</strong> is the electronic circuitry of your keyboard. You will need to choose a PCB that fits into whatever size case you’ve picked. One option with a PCB is whether it has RGB underglow on it, which means it has tiny lights on it that you can program to display different colors. If you want these lights to show, you should find a case and/or key caps with some aspect of transparency.</p>
 <p>Another option for the PCB is whether you attach the keys via “hot swap” or “soldering”. If you choose hot swap, you just click the keys into place. However, most PCBs require you to solder the key switches (discussed below) to the circuitry on the board.</p>
 </div>
 <div id="keyboard-plate" class="section level2">
 <h2>Keyboard plate</h2>
-<p><strong>Keyboard plates</strong> are what you put on top of PCBs to hold your keys in place. You can choose from aluminum, brass, or steel. In my humble first-time-builder opinion, if you’re feeling overwhelmed, this isn’t something you should stress about. You can barely see it below the keys, so color doesn’t matter much, and the differences in sound/material from the material seem minimal to me. You should make sure to get one that matches the layout of the keys that you want, though.</p>
+<p><strong>Keyboard plates</strong> are what you put on top of PCBs to hold your keys in place. You can choose from aluminum, brass, or steel. If you’re feeling overwhelmed, this isn’t something you should stress about. You can barely see it below the keys, so color doesn’t matter much, and the differences in sound/material from the material seem minimal to me. You should make sure to get one that matches the layout of the keys that you want, though.</p>
 </div>
 <div id="key-switches" class="section level2">
 <h2>Key switches</h2>
-<p>This is a fun choice! <strong>Key switches</strong> are what go below the keys to provide the majority of sound and feel. You can choose from many different brands, e.g. Cherry MX or Gateron, and types of switch feels, e.g. tactile, linear, clicky. I won’t go into all the differences here, but you should know that switch colors correspond to certain sounds/feels. The color of the switch won’t be seen unless you have translucent key caps. I discovered the world of <a href="https://www.youtube.com/watch?v=yXfysGqNLeE">typing demo videos</a> while I was picking out key switches.</p>
+<p>This is a fun choice! <strong>Key switches</strong> are what go below the keys to provide the majority of sound and feel. You can choose from many different brands, e.g. Cherry MX or Gateron, and types of switch feels, e.g. tactile, linear, clicky. I won’t go into all the differences here, but you should know that switch colors correspond to certain sounds/feels. The color of the switch won’t be seen unless you have translucent key caps. I discovered the world of <a href="https://www.youtube.com/watch?v=yXfysGqNLeE">typing test videos</a> while I was picking out key switches.</p>
 </div>
 <div id="key-stabilizers" class="section level2">
 <h2>Key stabilizers</h2>
-<p><strong>Key stabilizers</strong> are necessary but a bit boring. They go beneath the wider keys like space bar and shift to help distribute the weight of your finger to press the button. It is common to lubricate the key stabilizers before you install them, so that these keys are easier to press.</p>
+<p><strong>Key stabilizers</strong> are necessary but a bit boring. They go beneath the wider keys like space bar and shift to help distribute the weight of your finger to press the button. It is common to lubricate the key stabilizers before you install them so that these keys are easier to press.</p>
 </div>
 <div id="key-caps" class="section level2">
 <h2>Key caps</h2>
@@ -74,7 +74,7 @@ output:
 </div>
 <div id="my-build" class="section level1">
 <h1>My Build</h1>
-<p>These were the components I used. If I were to do it again I would pick another type of switch besides Cherry Brown… they work great but they’re so common and boring! I spent some time purusing builds on <a href="https://www.reddit.com/r/MechanicalKeyboards/">reddit (r/Mechanical Keybards)</a> before I decided what I wanted.</p>
+<p>These were the components I used. If I were to do it again I would pick another type of switch besides Cherry MX Brown… they work great but they’re a bit boring. I spent some time perusing builds on <a href="https://www.reddit.com/r/MechanicalKeyboards/">reddit (r/Mechanical Keybards)</a> before I bought my components.</p>
 <ul>
 <li><p><a href="https://kbdfans.com/products/kbd75v2-custom-keyboard-diy-kit-1">Blue aluminum KBD75 V2 Case with acrylic midlayer to show RBG lighting</a></p></li>
 <li><p><a href="https://kbdfans.com/products/kbdfans-75-pcb-75">KBD75 Rev 2.0 Solderable PCB</a></p></li>
