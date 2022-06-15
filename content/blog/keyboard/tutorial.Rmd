@@ -1,5 +1,5 @@
 ---
-title: "You're just my type! Lessons learned from building a mechanical keyboard"
+title: "You're just my type! A beginner's guide to building a mechanical keyboard"
 author: "Katherine Hoffman"
 date: 2022-06-11T21:13:14-05:00
 categories: ["miscellaneous"]
@@ -155,8 +155,14 @@ This is what my final soldered PCB and switches looked like. Each of the keys ha
 
 Once all your keys' electrical connections work, you can add your key caps. Finally, stack all the pieces together (case, foam plate, plate/PCB/switches/keys) and tighten the necessary screws.
 
-![](/img/keyboard/IMG_9129.png)
+<video width="200" height="400" controls>
+  <source src="/img/keyboard/screws.mp4#t=0.1" type="video/mp4">
+</video>
+
 
 # Lessons learned
 
 In the end, the process of learning to build a mechanical keyboard felt just like learning any new concept in statistics/data science. The knowledge took some time to find, and the jargon was a bit intimidating, but after spending some time sifting through information I could always find what I needed. The entire process was very enjoyable, and I'm already looking forward to my next build!
+
+![](/img/keyboard/IMG_7195.png)
+
