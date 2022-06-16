@@ -18,7 +18,7 @@ output:
 ```
 
 
-> This blog post details a DIY project I did last summer -- building a mechanical keyboard. I'm no expert, but I enjoyed the process of building the keyboard so much that I thought I would share some helpful resources and lessons learned. Even if you have no interest in building your own, I hope it encourages you to learn something new that you may have initially felt intimidated by!
+> This blog post details a DIY project I did last summer -- building a mechanical keyboard. I'm no expert, but I enjoyed the process of building the keyboard so much that I thought I would briefly walk through the steps and share helpful resources. Even if you have no interest in building your own, I hope it encourages you to learn something new that you may have initially felt intimidated by!
 
 
 ![](/img/keyboard/IMG_2826.JPG)
@@ -101,7 +101,7 @@ These were the components I used. If I were to do it again I would pick another 
 
 - Soldering equipment: I borrowed my dad's [Hakko FX-601 iron](https://www.amazon.com/Hakko-FX601-02-Adjustable-Temperature-Controlled/dp/B00FZPSX3G) and used a [sharp cone-shaped tip](https://www.amazon.com/gp/product/B00B4T9KBG/ref=ppx_yo_dt_b_asin_title_o08_s00?ie=UTF8&psc=1). I also used [rosin core solder wire](https://www.homedepot.com/p/Forney-1-16-in-1-4-lb-Rosin-Core-60-40-Solder-38073/206471634), a [solder wick](https://www.amazon.com/Lesnow-No-Clean-Desoldering-Removal-Dispenser/dp/B094GZ6CPZ/ref=sr_1_1_sspa?keywords=solder+wick&qid=1655225989&sr=8-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExUjlQTklXM1c4MTNEJmVuY3J5cHRlZElkPUEwNzYyODczMlZYVjQ4TzhSSVlXUCZlbmNyeXB0ZWRBZElkPUEwNjQ5NzAyMlpES0gxR05GM0o5JndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==) and [brass sponge]() for removing solder. I later purchased a [solder sucker](https://www.amazon.com/gp/product/B002MJMXD4/ref=ppx_yo_dt_b_asin_title_o07_s04?ie=UTF8&psc=1), which I recommend for removing soldering.
 
-![*My components and tools, from left to right: a rag for touching up lubricant/flux, silicone lubricant, brass sponge for removing solder, solder wire, soldering iron with stand, scissors, tweezers, toothpicks, switches, stabilizers (black platic feet), screws, soft feet stickers, stabilizers (metal rods), case, key caps, PCB, brass plate, and foam pad. Not pictured: solder sucker that I purchased later.*](/img/keyboard/IMG_9073.png)
+![*My components and tools, from left to right: a rag for touching up lubricant/solder, silicone lubricant, brass sponge for removing solder, solder wire, soldering iron with stand, scissors, tweezers, toothpicks, switches, stabilizers (black platic feet), screws, soft feet stickers, stabilizers (metal rods), case, key caps, PCB, brass plate, and foam pad. Not pictured: solder sucker that I purchased later.*](/img/keyboard/IMG_9073.png)
 
 # The steps
 
@@ -139,7 +139,7 @@ You can now overlay your plate on the PCB and start clicking each key switch's m
 
 ## 5. Soldering
 
-This was hands-down my favorite part of the entire process. Soldering (pronounced saw-der-ing) is SO much fun. There's a ton of videos online about it, and you can buy a kit to practice if you want, but honestly I just went for it. You basically melt a piece of metal (flux) and then place the soldering iron right next to the key switch prongs and PCB ring of metal to create an electrical conduction.
+This was hands-down my favorite part of the entire process. Soldering (pronounced saw-der-ing) is SO much fun. There's a ton of videos online about it, and you can buy a kit to practice if you want, but honestly I just went for it. You basically melt a piece of metal (solder) and then place the soldering iron right next to the key switch prongs and PCB ring of metal to create an electrical conduction.
 
 <video width="200" height="400" controls>
   <source src="/img/keyboard/soldering.mp4#t=0.1" type="video/mp4">
@@ -147,7 +147,7 @@ This was hands-down my favorite part of the entire process. Soldering (pronounce
 
 One important note with soldering is that you should wait a day and retest your keys to make sure the conduction stayed. I had an issue where I would successfully test the keys about five minutes after soldering, but the next day the same keys would no longer work. I finally realized this was because I was soldering outside on a summer night (to avoid the fumes). As the sun went down, my soldering iron was no longer as hot as it said it was (~400° Fahrenheit) because the wind/outside air was cooling it down.
 
-This is what my final soldered PCB and switches looked like. Each of the keys has two small areas of flux creating an electrical conduction between the switch and the PCB. These look like small silver mounds.
+This is what my final soldered PCB and switches looked like. Each of the keys has two small mounds of solder creating an electrical conduction between the switch and the PCB. These look like small silver balls.
 
 ![](/img/keyboard/final_solder.png)
 
