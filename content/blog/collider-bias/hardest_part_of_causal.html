@@ -1,5 +1,5 @@
 ---
-title: "Beginner's Guide to Reading a Causal Inference Paper"
+title: "A Beginner's Guide to Reading a Causal Inference Paper"
 author: "Katherine Hoffman"
 date: 2020-12-25T21:13:14-05:00
 categories: ["statistics"]
@@ -14,19 +14,22 @@ output:
     print_df: paged
 ---
 
-<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
 
 
 <blockquote>
 <p>This post outlines the difference between two distinct parts of causal inference – <em>identification</em> and <em>estimation</em> – and provides a strategy for reading a new paper on causal inference.</p>
 </blockquote>
-<div id="first-things-first-learning-causal-inference-is-hard" class="section level2">
-<h2>First things first, learning causal inference is hard</h2>
-<p>It’s no secret that causal inference, or the study of what <em>would</em> have happened if a certain variable in a system were manipulated, is a rapidly expanding field. I love to read new (and old!) papers in the causal inference literature because it helps me do better medical research as an applied biostatistician. However, for a long time my goal in reading almost any causal inference paper was simply “try not to get too lost.” It wasn’t the jargon that overwhelmed me (although that’s definitely a barrier for learning causal inference), but rather that I had no clear “big picture” view of causal inference. I was collecting a lot of small pieces of information, but I was missing how they all fit together.</p>
-<p>In this post I want to share a strategy that really helped me improve my ability to read a new causal inference paper.</p>
-<p>Some of the reasons the causal inference literature is difficult to just pick up and learn is because . Even within the field of statistics, there are some very distinct “lineages” of methodology (e.g. Robins, Pearl, and Rubin), which makes even the starting frameworks really hard to translate when you’re a beginner.</p>
-<p>It’s no secret that causal inference is a rapidly developing field. If you’re tried to learn pieces of causal inference already (rightly so!) that it can be pretty difficult.</p>
+<p>I love to read new (and old!) papers in the causal inference literature because it helps me do better medical research as an applied biostatistician. However, a few years ago I was really struggling to make headway when I’d pick up new papers. I had no big picture understanding of the causal inference literature.</p>
+<!-- It wasn't the jargon or notation that specifically overwhelmed me (although that's definitely a barrier for beginners learning about causal inference!), but rather I had no clear "big picture" view. I was collecting a lot of small pieces of information, but I was missing how they all fit together. -->
+<p>In this post I want to share a strategy that greatly improved my ability to read a new causal inference paper. The framework I’ll discuss contains none of my own thoughts or opinions, I’ve just tried to summarize it in a way that I would have understood best as a new learner. Please see my references at the end for a formal description of all of these topics.</p>
+<p>The key idea is that causal inference can be thought of as two very distinct halves: <strong>identification</strong> and <strong>estimation.</strong></p>
+<div id="identification-and-estimation-keep-em-separate" class="section level1">
+<h1>Identification and Estimation: Keep ’em Separate!</h1>
+<div class="figure">
+<img src="" alt="" />
+<p class="caption">identification figure</p>
+</div>
+<p>Identification is the process of using</p>
 <p>really easy point to miss when you’re first learning causal inference. It is the idea that you should always <strong>keep identification separate from estimation</strong> when you’re reading a new topic in causal inference.</p>
 <p>Of course there are exceptions. Notably, Miguel Hernan and James Robins recently published <em>What If</em> book is written for a beginner audience.</p>
 <ol style="list-style-type: decimal">
@@ -36,7 +39,6 @@ output:
 <li><p>How does this estimator <strong>compare</strong> to other estimators to estimate the same statistical estimand?</p></li>
 </ol>
 <!-- ![](/img/causal_at_beach.jpg) -->
-</div>
 <div id="causal-estimand" class="section level2">
 <h2>Causal Estimand</h2>
 <p><strong>Causal estimand:</strong> a quantity that exists in some hypothetical world where you can administer multiple interventions, or treatments, and then observe the outcome under all of those interventions.</p>
@@ -64,4 +66,10 @@ Now what does <em>that</em> mean!? Broadly, <strong>identification means figurin
 <p><span class="math inline">\(Odds ratio = E[Y]\)</span></p>
 <p><span class="math inline">\(Relative risk = E[Y]\)</span></p>
 <p><span class="math inline">\(\mathrm{ATE} = E[Y]\)</span></p>
+<!-- # An aside: working through the different notation -->
+<!-- Causal inference is a rapidly developing field, and there are people working on methods in many different domains (statistics, epidemiology, economics, computer science, to name a few) speaking different jargons. Even *within* fields people call the same idea by many different names, and there is no common mathematical notation, making it really hard for a beginner to know where to start. -->
+<!-- Anyways, if you think learning causal inference is hard, it's because it is :-) Luckily I think that will change in the coming years as more books aimed at beginners start to get published. In the meantime, I thought I'd share a high-level organizational map of causal inference that's really helped me learn. -->
+<!-- Some of the reasons the causal inference literature is difficult to just pick up and learn is because . Even within the field of statistics, there are some very distinct "lineages" of methodology (e.g. Robins, Pearl, and Rubin), which makes even the starting frameworks really hard to translate when you're a beginner. -->
+<!-- It's no secret that causal inference is a rapidly developing field. If you're tried to learn pieces of causal inference already (rightly so!) that it can be pretty difficult.  -->
+</div>
 </div>
