@@ -95,6 +95,8 @@ $$\argmax_d E[Y(d)]$$
 
 5. We'll call whatever function $d$, or $d(W)$, that maximizes this expected counterfactual outcome for the population $d^*(W)$. **This $d^*(W)$ is our Optimal Treatment Rule.**
 
+![](/img/otr/dstar.png){width=85%}
+
 
 # 📈 Estimating the OTR
 
