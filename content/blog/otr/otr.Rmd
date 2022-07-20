@@ -1,7 +1,7 @@
 ---
 title: "Visual and Statistical Intuition for Optimal Treatment Rules"
 author: "Katherine Hoffman"
-date: 2022-20-10T00:01:14-05:00
+date: 2022-07-20T00:01:14-05:00
 draft: false
 categories: ["statistics","R"]
 math: true
