@@ -1,5 +1,5 @@
 ---
-title: "Visual and Statistical Intuition for Optimal Treatment Rules"
+title: "An Illustrated Introduction to Optimal Treatment Rules"
 author: "Katherine Hoffman"
 date: 2022-07-19T00:01:14-02:00
 draft: false
@@ -15,12 +15,12 @@ output:
 
 
 <blockquote>
-<p>This post walks through the basic statistical intuition for optimizing Optimal Treatment Rules (OTRs) for applied scientists. Each concept is accompanied by a small visual to aid in comprehension.</p>
+<p>This post walks through the basic statistical intuition for Optimal Treatment Rules (OTRs) for applied scientists. Each concept is accompanied by a small visual to aid in comprehension.</p>
 </blockquote>
 <p><strong>Optimal treatment rules (OTRs)</strong> is a fast-growing topic in the medical research community. A treatment rule is a <strong>decision for treatment based upon a patient’s characteristics</strong>. The intuition behind this is that not all patients will respond to a treatment in the same way. We can exploit these <strong>heterogeneous effects</strong> and develop personalized rules which provide benefit to the most individuals.</p>
 <p>Developing and optimizing treatment rules is rooted in <strong>principles of causal inference</strong>, or using data to inform us about what would have happened in a hypothetical world in which different interventions had occurred.</p>
 <blockquote>
-<p>Although this post is introductory, it assumes basic knowledge in causal inference, such as <em>counterfactual outcomes</em>, <em>assumptions for causal identification</em>, <em>Average Treatment Effect</em>, and <em>G-computation</em>. If you’re rusty on these concepts, I recommend reading the freely available introductory chapters of Miguel Hernan and James Robins’ <em>What If</em> book.</p>
+<p>Although this post is introductory, it assumes basic knowledge in causal inference, such as <em>counterfactual outcomes</em>, <em>assumptions for causal identification</em>, <em>Average Treatment Effect</em>, and <a href="https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf"><em>G-computation</em></a>. If you’re rusty on these concepts, I recommend reading the freely available introductory chapters of Miguel Hernan and James Robins’ <a href="https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"><em>What If</em></a> book.</p>
 </blockquote>
 <div id="table-of-contents" class="section level1">
 <h1>Table of Contents</h1>
@@ -76,7 +76,7 @@ output:
 <ol start="5" style="list-style-type: decimal">
 <li>We’ll call whatever function <span class="math inline">\(d\)</span>, or <span class="math inline">\(d(W)\)</span>, that maximizes this expected counterfactual outcome for the population <span class="math inline">\(d^*(W)\)</span>. <strong>This <span class="math inline">\(d^*(W)\)</span> is our Optimal Treatment Rule.</strong></li>
 </ol>
-<p><img src="/img/otr/dstar.png" style="width:85.0%" /></p>
+<p><img src="/img/otr/d_star.png" style="width:50.0%" /></p>
 </div>
 <div id="estimating-the-otr" class="section level1">
 <h1>📈 Estimating the OTR</h1>
@@ -87,7 +87,7 @@ output:
 <p><span class="math display">\[\mathrm{CATE}(W) = E[Y|A=1, W] - E[Y|A=0, W]\]</span>
 <!-- Compare this to the ATE after identification to clearly see the formula for CATE is the same, minus the outer expectation: --></p>
 <!-- $$\mathrm{ATE}(W) = E[E[Y|A=1, W] - E[Y|A=0, W]]$$ -->
-<p>We could estimate the CATE using <strong>G-computation</strong>:</p>
+<p>We could estimate the CATE using <strong>G-computation</strong>. If you’d like a review on G-computation, check out this <a href="https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf">visual guide</a>.</p>
 <ol style="list-style-type: decimal">
 <li>Fit a regression for <span class="math inline">\(E[Y|A,W]\)</span>.</li>
 </ol>
@@ -139,14 +139,14 @@ data.frame(CATE) |&gt;
 </div>
 <div id="further-reading" class="section level1">
 <h1>Further reading</h1>
-<p>These concepts are quite introductory, so any paper on “optimal treatment regimes”, “optimal treatment rules”, “individualized treatment rules”, or “heterogeneous treatment effects” should review the ideas discussed here quickly.</p>
+<p>These concepts are introductory, so any paper on “optimal treatment rules”, “individualized treatment rules”, or “heterogeneous treatment effects” should review the ideas discussed here in their introductions.</p>
 <ul>
-<li><p>This <a href="https://arxiv.org/pdf/2004.14497.pdf">recent paper</a> by Edward Kennedy discusses one way to evaluate the CATE using doubly robust methods, and gives several other foundational papers in the introduction.</p></li>
-<li><p>There is also <a href="https://egap.org/resource/10-things-to-know-about-heterogeneous-treatment-effects/">this <code>R</code> blog post</a> on heterogeneous treatment effects that is useful for thinking through these issues with real data.</p></li>
+<li><p>For example, this <a href="https://arxiv.org/pdf/2004.14497.pdf">recent paper</a> by Edward Kennedy discusses one way to evaluate the CATE using doubly robust methods, and gives several other foundational papers in the introduction.</p></li>
+<li><p><a href="https://egap.org/resource/10-things-to-know-about-heterogeneous-treatment-effects/">This <code>R</code> blog post</a> about heterogeneous treatment effects also may be useful for thinking through these issues with real data.</p></li>
 </ul>
-<p>Please reach out if you have resource recommendations (yours or others!) to add to this list.</p>
-<div id="acknowledgments" class="section level3">
-<h3>Acknowledgments</h3>
+<p>I’ll continue to add resources to this list as I discover them. Please reach out if you have recommendations of papers or tutorials (yours or others!) to add to this list.</p>
+<div id="acknowledgments" class="section level2">
+<h2>Acknowledgments</h2>
 <p>Thanks to my colleague <a href="https://twitter.com/ildiazm">Iván Díaz</a> for explaining OTRs to me and reviewing this post.</p>
 </div>
 </div>

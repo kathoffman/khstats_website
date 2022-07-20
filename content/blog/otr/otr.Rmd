@@ -1,5 +1,5 @@
 ---
-title: "Visual and Statistical Intuition for Optimal Treatment Rules"
+title: "An Illustrated Introduction to Optimal Treatment Rules"
 author: "Katherine Hoffman"
 date: 2022-07-19T00:01:14-02:00
 draft: false
@@ -20,13 +20,13 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-> This post walks through the basic statistical intuition for optimizing Optimal Treatment Rules (OTRs) for applied scientists. Each concept is accompanied by a small visual to aid in comprehension.
+> This post walks through the basic statistical intuition for Optimal Treatment Rules (OTRs) for applied scientists. Each concept is accompanied by a small visual to aid in comprehension.
 
 **Optimal treatment rules (OTRs)** is a fast-growing topic in the medical research community. A treatment rule is a **decision for treatment based upon a patient's characteristics**. The intuition behind this is that not all patients will respond to a treatment in the same way. We can exploit these **heterogeneous effects** and develop personalized rules which provide benefit to the most individuals.
 
 Developing and optimizing treatment rules is rooted in **principles of causal inference**, or using data to inform us about what would have happened in a hypothetical world in which different interventions had occurred. 
 
-> Although this post is introductory, it assumes basic knowledge in causal inference, such as *counterfactual outcomes*, *assumptions for causal identification*, *Average Treatment Effect*, and *G-computation*. If you're rusty on these concepts, I recommend reading the freely available introductory chapters of Miguel Hernan and James Robins' *What If* book.
+> Although this post is introductory, it assumes basic knowledge in causal inference, such as *counterfactual outcomes*, *assumptions for causal identification*, *Average Treatment Effect*, and [*G-computation*](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf). If you're rusty on these concepts, I recommend reading the freely available introductory chapters of Miguel Hernan and James Robins' [*What If*](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/) book.
 
 # Table of Contents
 
@@ -95,7 +95,7 @@ $$\argmax_d E[Y(d)]$$
 
 5. We'll call whatever function $d$, or $d(W)$, that maximizes this expected counterfactual outcome for the population $d^*(W)$. **This $d^*(W)$ is our Optimal Treatment Rule.**
 
-![](/img/otr/dstar.png){width=85%}
+![](/img/otr/d_star.png){width=50%}
 
 
 # 📈 Estimating the OTR
@@ -115,7 +115,7 @@ $$\mathrm{CATE}(W) = E[Y|A=1, W] - E[Y|A=0, W]$$
 
 
 
-We could estimate the CATE using **G-computation**:
+We could estimate the CATE using **G-computation**. If you'd like a review on G-computation, check out this [visual guide](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf).
 
 1. Fit a regression for $E[Y|A,W]$.
 
@@ -190,14 +190,14 @@ We could also estimate $d^*(W)$ directly instead of first estimating $CATE(W)$. 
 
 # Further reading
 
-These concepts are quite introductory, so any paper on "optimal treatment regimes", "optimal treatment rules", "individualized treatment rules", or "heterogeneous treatment effects" should review the ideas discussed here quickly.
+These concepts are introductory, so any paper on "optimal treatment rules", "individualized treatment rules", or "heterogeneous treatment effects" should review the ideas discussed here in their introductions.
 
-- This [recent paper](https://arxiv.org/pdf/2004.14497.pdf) by Edward Kennedy discusses one way to evaluate the CATE using doubly robust methods, and gives several other foundational papers in the introduction.
+- For example, this [recent paper](https://arxiv.org/pdf/2004.14497.pdf) by Edward Kennedy discusses one way to evaluate the CATE using doubly robust methods, and gives several other foundational papers in the introduction.
 
-- There is also [this `R` blog post](https://egap.org/resource/10-things-to-know-about-heterogeneous-treatment-effects/) on heterogeneous treatment effects that is useful for thinking through these issues with real data.
+- [This `R` blog post](https://egap.org/resource/10-things-to-know-about-heterogeneous-treatment-effects/) about heterogeneous treatment effects also may be useful for thinking through these issues with real data.
 
-Please reach out if you have resource recommendations (yours or others!) to add to this list.
+I'll continue to add resources to this list as I discover them. Please reach out if you have recommendations of papers or tutorials (yours or others!) to add to this list.
 
-### Acknowledgments
+## Acknowledgments
 
 Thanks to my colleague [Iván Díaz](https://twitter.com/ildiazm) for explaining OTRs to me and reviewing this post.

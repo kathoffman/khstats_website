@@ -33,8 +33,13 @@
   url = "#talks"
   weight = 80
   
+  [[main]]
+  name = "Illustrations"
+  url = "https://github.com/kathoffman/causal-inference-visual-guides"
+  weight = 90
+  
    [[main]]
-  name = "CV"
+  name = "Resume"
   url = "resume.pdf"
   weight = 100
 
