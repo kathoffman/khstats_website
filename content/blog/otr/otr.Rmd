@@ -1,5 +1,5 @@
 ---
-title: "An Illustrated Introduction to Optimal Treatment Rules"
+title: "Visual and Statistical Intuition for Optimal Treatment Rules"
 author: "Katherine Hoffman"
 date: 2022-07-19T00:01:14-02:00
 draft: false
@@ -184,7 +184,7 @@ data.frame(CATE) |>
 
 # Improving estimation of $d^*(W)$
 
-There are much more advanced ways to estimate $CATE(W)$ using data-adaptive machine learning techniques and improved robustness properties. Of particular interest is creating **doubly-robust estimators** which do not rely on getting both the estimation of $d(W)$ and $E[Y|W,A]$ correct for the final $d^*(W)$ to be correct.
+There are much more advanced ways to estimate $CATE(W)$ using data-adaptive machine learning techniques and improved statistical properties, e.g. **double robustness**.
 
 We could also estimate $d^*(W)$ directly instead of first estimating $CATE(W)$. We can extend either of these ideas to longitudinal settings, studies with clustering, etc. I've listed some of the resources I am reading to learn about OTRs below. As always I welcome feedback and/or suggestions of additional resources I can include.
 
