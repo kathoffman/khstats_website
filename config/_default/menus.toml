@@ -39,8 +39,8 @@
   weight = 90
   
    [[main]]
-  name = "Resume"
-  url = "resume.pdf"
+  name = "CV"
+  url = "KatherineHoffman_CV_August2022.pdf"
   weight = 100
 
 #[[main]]
