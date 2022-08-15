@@ -36,9 +36,18 @@ library(patchwork)
 
 ## load data
 
+githubURL <- ("https://raw.githubusercontent.com/kathoffman/steroids-trial-emulation/main/output/model-first-results-log.rds")
+download.file(githubURL,"model-first-results-log.rds", method="curl")
+res_log <- readRDS("model-first-results-log.rds")
+
+githubURL <- ("https://raw.githubusercontent.com/kathoffman/steroids-trial-emulation/main/output/model-first-results.rds")
+download.file(githubURL,"model-first-results.rds", method="curl")
+res <- readRDS("model-first-results.rds")
+
+
 # load in results generated from Cox PH hazards models
-res_log <- read_rds(here::here('content', "blog","forest_plots","model-first-results-log.rds"))
-res <- read_rds(here::here('content', "blog","forest_plots","output/model-first-results.rds"))
+#res_log <- read_rds(here::here('content', "blog","forest_plots","model-first-results-log.rds"))
+#res <- read_rds(here::here('content', "blog","forest_plots","output/model-first-results.rds"))
 
 ## plotting
 
