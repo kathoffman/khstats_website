@@ -89,14 +89,14 @@ Let's denote this vector of counterfactual outcomes as $Y(d)$.
 
 ![](/img/otr/Y_d.png){width=100%}
 
-4. The optimal treatment rule will **maximize the expected counterfactual outcome**, or $\mathrm{E}[Y(d)]$, across the entire population. We can write that using $\argmax$, which means we want to know which argument will return the highest value of a function. In this use-case, we want to know what treatment rule $d$ returns the highest expected value of the counterfactual outcome, $\mathrm{E}[Y(d)]$.
+4. The optimal ITR will **maximize the expected counterfactual outcome**, or $\mathrm{E}[Y(d)]$, across the entire population. We can write that using $\argmax$, which means we want to know which argument will return the highest value of a function. In this use-case, we want to know what treatment rule $d$ returns the highest expected value of the counterfactual outcome, $\mathrm{E}[Y(d)]$.
 
 $$\argmax_d \mathrm{E}[Y(d)]$$
 
 ![](/img/otr/argmax.png){width=70%}
 
 
-5. We'll call whatever function $d$, or $d(W)$, that maximizes this expected counterfactual outcome for the population $d^*(W)$. **This $d^*(W)$ is our Optimal Treatment Rule.**
+5. We'll call whatever function $d$, or $d(W)$, that maximizes this expected counterfactual outcome for the population $d^*(W)$. **This $d^*(W)$ is our optimal ITR.**
 
 ![](/img/otr/d_star.png){width=50%}
 
@@ -205,4 +205,4 @@ I'll continue to add resources to this list as I discover them. Please reach out
 
 ## Acknowledgments
 
-Thanks to my colleague [Iván Díaz](https://twitter.com/ildiazm) for explaining optimal treatment rules to me in this way, and for reviewing this post.
+Thanks to my colleague [Iván Díaz](https://twitter.com/ildiazm) for explaining optimal individualized treatment rules to me in this way, and for reviewing this post.
