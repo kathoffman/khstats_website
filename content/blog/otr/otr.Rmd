@@ -1,0 +1,203 @@
+---
+title: "Visual and Statistical Intuition for Optimal Treatment Rules"
+author: "Katherine Hoffman"
+date: 2022-07-19T00:01:14-02:00
+draft: false
+categories: ["statistics","R"]
+math: true
+tags: ["statistics","R","personalized medicine","heterogenous treatment effects"]
+output:
+  blogdown::html_page:
+    toc: false
+    toc_depth: 1
+---
+
+
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+> This post walks through the basic statistical intuition for Optimal Treatment Rules (OTRs) for applied scientists. Each concept is accompanied by a small visual to aid in comprehension.
+
+**Optimal treatment rules (OTRs)** is a fast-growing topic in the medical research community. A treatment rule is a **decision for treatment based upon a patient's characteristics**. The intuition behind this is that not all patients will respond to a treatment in the same way. We can exploit these **heterogeneous effects** and develop personalized rules which provide benefit to the most individuals.
+
+Developing and optimizing treatment rules is rooted in **principles of causal inference**, or using data to inform us about what would have happened in a hypothetical world in which different interventions had occurred. 
+
+> Although this post is introductory, it assumes basic knowledge in causal inference, such as *counterfactual outcomes*, *assumptions for causal identification*, *Average Treatment Effect*, and [*G-computation*](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf). If you're rusty on these concepts, I recommend reading the freely available introductory chapters of Miguel Hernan and James Robins' [*What If*](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/) book.
+
+# Table of Contents
+
+1. 🗺️ [The big-picture approach to OTRs](#the-big-picture-of-otrs)
+
+2. 📈 [A simple estimation example](#estimating-the-otr)
+
+3. 🖥️ [`R` code for a simple estimation example](#r-simulation)
+
+<!-- # This post builds on the following concepts: -->
+
+<!-- - **Counterfactual outcome**: the outcome in a hypothetical world where a unit received a certain intervention or treatment, which might be different from the treatment they actually received. -->
+
+<!-- - Average Treatment Effect:  -->
+
+<!-- - **G-computation:** a form of substitution estimation. In its simplest form for computing the ATE for a binary treatment, the G-comp procedure is: -->
+<!--   1. fit a regression for $E[Y|A,W]$ -->
+<!--   2. obtain predictions for $\hat{E}[Y|A,W]$ when $A=1$ and $A=0$ -->
+<!--   3. take the average difference between $\hat{E}[Y|A=1,W]$ and $\hat{E}[Y|A=0,W]$ -->
+
+<!-- # The FUTURE of Medicine -->
+
+# 🗺️ The Big Picture of OTRs
+
+Let's first think through the concepts of OTRs using mathematical notation.
+
+1. We will start with a matrix of observed data $O$ which includes our **outcome** $Y$, the **exposure** (i.e. treatment, medicine, etc.) we want to study $A$, and other **covariates** $W$. We can denote these random variables as $O = (W, A, Y)$.
+
+![](/img/otr/data_structure.png){width=80%}
+
+<!-- , and visualize it as the following data set. *Note that we are considering a binary exposure for simplicity.* -->
+
+<!-- ![](/img/tmle/1_data_structure.png){width=80%} -->
+
+2. Now consider that we've created some function, $d$, which takes baseline confounders $W$ and outputs a treatment assignment $A$. We can write this mapping function, or **treatment rule**, as: 
+
+<!-- <p style="margin-left: 40px"> -->
+
+$$d: W \rightarrow A$$
+
+![](/img/otr/input_output.png){width=80%}
+
+<!-- <p style="margin-left: 40px">An example in `R` code could be this:</p>  -->
+
+<!-- <p style="margin-left: 40px"> -->
+<!-- ```{r} -->
+<!-- d <- function(W){ -->
+<!--   # assigned treatment A is a vector of length nrow(W) and depends on values of W -->
+<!--   # for example, the treatment rule could be if W1 is greater than 5, treat, otherwise, don't treat -->
+<!--   A <- ifelse(W[[1]] > 5, 1, 0) -->
+<!--   return(A) -->
+<!-- } -->
+<!-- ``` -->
+<!-- </p>  -->
+
+3. We can then think about the **counterfactual outcome**^[Recall that a counterfactual describes a hypothetical world where a unit received a certain intervention or treatment, which might be different from the treatment they actually received] for each observation under the treatment rule $d$. Let's denote this vector of counterfactual outcomes as $Y(d)$.
+
+![](/img/otr/Y_d.png){width=100%}
+
+4. The best treatment rule will **maximize the expected counterfactual outcome**, or $E[Y(d)]$, across the entire population. We can write that using $\argmax$, which means we want to know which argument will return the highest value of a function. In this case, we want to know what treatment rule $d$ returns the highest expected value of the counterfactual outcome, $E[Y(d)]$.
+
+$$\argmax_d E[Y(d)]$$
+
+![](/img/otr/argmax.png){width=70%}
+
+
+5. We'll call whatever function $d$, or $d(W)$, that maximizes this expected counterfactual outcome for the population $d^*(W)$. **This $d^*(W)$ is our Optimal Treatment Rule.**
+
+![](/img/otr/d_star.png){width=50%}
+
+
+# 📈 Estimating the OTR
+
+There are many ways to estimate $d^*(W)$. One of the most common ways begins by estimating the **Conditional Average Treatment Effect (CATE)**.
+
+You have probably heard of the Average Treatment Effect (ATE), which is the mean difference in outcomes in a world in which every unit receives the exposure compared to a world in which no unit receives the exposure. In potential outcomes notation, $ATE = E[Y^1-Y^0]$. The CATE is the same formula and description, but within covariate strata $W$.
+
+$$CATE = E[Y^1-Y^0|W]$$
+
+Under standard causal assumptions^[This post is focused on estimation and therefore does not detail the requirements for causal identification, but here I refer to the assumptions of consistency, exchangeability, and positivity.], the CATE for a binary exposure is identifiable under the following formula:
+
+$$\mathrm{CATE}(W) = E[Y|A=1, W] - E[Y|A=0, W]$$
+<!-- Compare this to the ATE after identification to clearly see the formula for CATE is the same, minus the outer expectation: -->
+
+<!-- $$\mathrm{ATE}(W) = E[E[Y|A=1, W] - E[Y|A=0, W]]$$ -->
+
+
+
+We could estimate the CATE using **G-computation**. If you'd like a review on G-computation, check out this [visual guide](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf).
+
+1. Fit a regression for $E[Y|A,W]$.
+
+![](/img/tmle/2_outcome_fit.png){width=70%}
+
+2. Obtain predicted estimates for $Y$ on datasets where all observations are changed to have $A=1$ and $A=0$ using the model fit from Step 1.
+
+$$\hat{E}[Y|A=1, W]$$
+
+![](/img/tmle/4_Q1.png){width=80%}
+
+$$\hat{E}[Y|A=0, W]$$
+
+![](/img/tmle/5_Q1.png){width=80%}
+
+3. Compute the difference in the predicted $Y$'s for the two datasets from Step 2.
+
+$$\widehat{CATE}(W) = \hat{E}[Y|A=1, W] - \hat{E}[Y|A=0, W]$$
+
+![](/img/otr/cate.png){width=32%}
+
+Then, we could say our OTR is to **give treatment if the value of $CATE(W)$ for that person is positive**, indicating a positive effect of treatment on the outcome $Y$. Likewise, if the value is negative or 0, indicating a negative or neutral effect on the outcome $Y$, that unit would not receive treatment under the OTR.
+
+\usepackage{bbm}
+
+$$ \mathrm{OTR}(W) = \mathbb{1}{ \{\mathrm{CATE}(W) > 0} \}$$
+
+![](/img/otr/cate_assign_legend.png){width=50%}
+
+
+
+# 🖥️ `R` simulation
+
+Let's take a look an `R` simulation for the simple estimation of $d^*(W)$ we just described. We can first simulate data of `n` = 500 rows, where we have only one confounder `W`, a binary treatment `A` which depends on `W`, and an outcome `Y` which is continuous and depends on `W` and `A`.
+
+```{r}
+n <- 500
+W <- runif(n, 1, 99)
+A <- rbinom(n, 1, prob = abs(W/100))
+Y <- rnorm(n, 10) + rnorm(n, 2*A) + rnorm(n, 50*W) - rnorm(n, .1*A*W)
+df <- data.frame(W, A, Y)
+```
+
+We'll run a regression for a saturated linear regression model of $E[Y|A,W]$, then obtain predictions on datasets where `A` is changed to `1` and `0` for all rows. We can then compute the CATE as the difference between these predictions.
+
+```{r, results="asis", warning=F, message=F}
+fit <- glm(Y~A*W)
+E_Y1 <- predict(fit, newdata = data.frame(A = 1, W))
+E_Y0 <- predict(fit, newdata = data.frame(A = 0, W))
+CATE <- E_Y1 - E_Y0
+```
+
+Finally, our optimal treatment rule will be to treat any unit with `CATE > 1`. We can visually see there is benefit for about 1/4 of units in our simulated population.
+
+```{r, warning=F, message=F}
+library(tidyverse)
+data.frame(CATE) |>
+  mutate(d_star = ifelse(CATE > 0, "Treat", "Do not treat")) |>
+  ggplot(aes(CATE, fill=d_star)) +
+  geom_histogram(binwidth=.2) +
+  theme_bw() +
+  scale_fill_manual(values = c("#f2696f","#4984b0")) +
+  labs(x="CATE(W)", y = "Count", fill = "Treatment Rule", title="Distribution of CATE(W)")
+```
+
+
+# Improving estimation of $d^*(W)$
+
+There are much more advanced ways to estimate $CATE(W)$ using data-adaptive machine learning techniques and improved statistical properties, e.g. **double robustness**.
+
+We could also estimate $d^*(W)$ directly instead of first estimating $CATE(W)$. We can extend either of these ideas to longitudinal settings, studies with clustering, etc. I've listed some of the resources I am reading to learn about OTRs below. As always I welcome feedback and/or suggestions of additional resources I can include.
+
+# Further reading
+
+These concepts are introductory, so any paper on "optimal treatment rules", "individualized treatment rules", or "heterogeneous treatment effects" should review the ideas discussed here in their introductions.
+
+- For example, this [recent paper](https://arxiv.org/pdf/2004.14497.pdf) by Edward Kennedy discusses one way to evaluate the CATE using doubly robust methods, and gives several other foundational papers in the introduction.
+
+- [This `R` blog post](https://egap.org/resource/10-things-to-know-about-heterogeneous-treatment-effects/) about heterogeneous treatment effects also may be useful for thinking through these issues with real data.
+
+I'll continue to add resources to this list as I discover them. Please reach out if you have recommendations of papers or tutorials (yours or others!) to add to this list.
+
+## Acknowledgments
+
+Thanks to my colleague [Iván Díaz](https://twitter.com/ildiazm) for explaining OTRs to me and reviewing this post.

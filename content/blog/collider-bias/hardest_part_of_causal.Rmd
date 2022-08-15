@@ -1,5 +1,5 @@
 ---
-title: "Beginner's Guide to Reading a Causal Inference Paper"
+title: "A Beginner's Guide to Reading a Causal Inference Paper"
 author: "Katherine Hoffman"
 date: 2020-12-25T21:13:14-05:00
 categories: ["statistics"]
@@ -16,29 +16,19 @@ output:
 
 > This post outlines the difference between two distinct parts of causal inference --  *identification* and *estimation* -- and provides a strategy for reading a new paper on causal inference.
 
-## First things first, learning causal inference is hard
+I love to read new (and old!) papers in the causal inference literature because it helps me do better medical research as an applied biostatistician. However, a few years ago I was really struggling to make headway when I'd pick up new papers. I had no big picture understanding of the causal inference literature.
 
-It's no secret that causal inference, or the study of what *would* have happened if a certain variable in a system were manipulated, is a rapidly expanding field. I love to read new (and old!) papers in the causal inference literature because it helps me do better medical research as an applied biostatistician.
+<!-- It wasn't the jargon or notation that specifically overwhelmed me (although that's definitely a barrier for beginners learning about causal inference!), but rather I had no clear "big picture" view. I was collecting a lot of small pieces of information, but I was missing how they all fit together. -->
 
-However, I struggled for several months to make *any* headway when I'd pick up th. It wasn't the jargon that overwhelmed me (although that's definitely a barrier for learning causal inference), but rather that I had no clear "big picture" view of causal inference. I was collecting a lot of small pieces of information, but I was missing how they all fit together.
+In this post I want to share a strategy that greatly improved my ability to read a new causal inference paper. The framework I'll discuss contains none of my own thoughts or opinions, I've just tried to summarize it in a way that I would have understood best as a new learner. Please see my references at the end for a formal description of all of these topics.
 
-In this post I want to share a strategy that really helped me improve my ability to read a new causal inference paper.
+The key idea is that causal inference can be thought of as two very distinct halves: **identification** and **estimation.** 
 
-The main barrier I have when I'm learning causal inference is that its always really hard for me to figure out where the piece of information I'm learning belongs in the vast field of causal inference.
+# Identification and Estimation: Keep 'em Separate!
 
-Causal inference is a rapidly developing field, and there are people working on methods in many different domains (statistics, epidemiology, economics, computer science, to name a few) speaking different jargons. Even *within* fields people call the same idea by many different names, and there is no common mathematical notation, making it really hard for a beginner to know where to start.
-
-Anyways, if you think learning causal inference is hard, it's because it is :-) Luckily I think that will change in the coming years as more books aimed at beginners start to get published. In the meantime, I thought I'd share a high-level organizational map of causal inference that's really helped me learn.
-
-The framework I'll soon discuss contains none of my own thoughts or opinions, I've just tried to summarize it in a way that I would have understood best as a new learner. Please see my references at the end for a formal description of all of these topics -- **this post is only intended to provide a conceptual map so that you can go learn more!**
-
-Anyways, the first and most important idea is that causal inference can be thought of as two very distinct halves, only one of which deals with actually running code to analyze data. I'll call these two halves **identification** and **estimation.**
+![identification figure]()
 
 Identification is the process of using 
-
-Some of the reasons the causal inference literature is difficult to just pick up and learn is because . Even within the field of statistics, there are some very distinct "lineages" of methodology (e.g. Robins, Pearl, and Rubin), which makes even the starting frameworks really hard to translate when you're a beginner.
-
-It's no secret that causal inference is a rapidly developing field. If you're tried to learn pieces of causal inference already (rightly so!) that it can be pretty difficult. 
 
 really easy point to miss when you're first learning causal inference. It is the idea that you should always **keep identification separate from estimation** when you're reading a new topic in causal inference.
 
@@ -101,4 +91,15 @@ $Relative risk = E[Y]$
 
 $\mathrm{ATE} = E[Y]$
 
+
+<!-- # An aside: working through the different notation -->
+
+<!-- Causal inference is a rapidly developing field, and there are people working on methods in many different domains (statistics, epidemiology, economics, computer science, to name a few) speaking different jargons. Even *within* fields people call the same idea by many different names, and there is no common mathematical notation, making it really hard for a beginner to know where to start. -->
+
+<!-- Anyways, if you think learning causal inference is hard, it's because it is :-) Luckily I think that will change in the coming years as more books aimed at beginners start to get published. In the meantime, I thought I'd share a high-level organizational map of causal inference that's really helped me learn. -->
+
+
+<!-- Some of the reasons the causal inference literature is difficult to just pick up and learn is because . Even within the field of statistics, there are some very distinct "lineages" of methodology (e.g. Robins, Pearl, and Rubin), which makes even the starting frameworks really hard to translate when you're a beginner. -->
+
+<!-- It's no secret that causal inference is a rapidly developing field. If you're tried to learn pieces of causal inference already (rightly so!) that it can be pretty difficult.  -->
 
