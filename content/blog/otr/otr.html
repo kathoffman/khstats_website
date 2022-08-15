@@ -68,12 +68,12 @@ This is equivalent to a function you could write in R or Python which takes a da
 <p>Let’s denote this vector of counterfactual outcomes as <span class="math inline">\(Y(d)\)</span>.</p>
 <p><img src="/img/otr/Y_d.png" style="width:100.0%" /></p>
 <ol start="4" style="list-style-type: decimal">
-<li>The optimal treatment rule will <strong>maximize the expected counterfactual outcome</strong>, or <span class="math inline">\(\mathrm{E}[Y(d)]\)</span>, across the entire population. We can write that using <span class="math inline">\(\mathop{\mathrm{arg\,max}}\)</span>, which means we want to know which argument will return the highest value of a function. In this use-case, we want to know what treatment rule <span class="math inline">\(d\)</span> returns the highest expected value of the counterfactual outcome, <span class="math inline">\(\mathrm{E}[Y(d)]\)</span>.</li>
+<li>The optimal ITR will <strong>maximize the expected counterfactual outcome</strong>, or <span class="math inline">\(\mathrm{E}[Y(d)]\)</span>, across the entire population. We can write that using <span class="math inline">\(\mathop{\mathrm{arg\,max}}\)</span>, which means we want to know which argument will return the highest value of a function. In this use-case, we want to know what treatment rule <span class="math inline">\(d\)</span> returns the highest expected value of the counterfactual outcome, <span class="math inline">\(\mathrm{E}[Y(d)]\)</span>.</li>
 </ol>
 <p><span class="math display">\[\mathop{\mathrm{arg\,max}}_d \mathrm{E}[Y(d)]\]</span></p>
 <p><img src="/img/otr/argmax.png" style="width:70.0%" /></p>
 <ol start="5" style="list-style-type: decimal">
-<li>We’ll call whatever function <span class="math inline">\(d\)</span>, or <span class="math inline">\(d(W)\)</span>, that maximizes this expected counterfactual outcome for the population <span class="math inline">\(d^*(W)\)</span>. <strong>This <span class="math inline">\(d^*(W)\)</span> is our Optimal Treatment Rule.</strong></li>
+<li>We’ll call whatever function <span class="math inline">\(d\)</span>, or <span class="math inline">\(d(W)\)</span>, that maximizes this expected counterfactual outcome for the population <span class="math inline">\(d^*(W)\)</span>. <strong>This <span class="math inline">\(d^*(W)\)</span> is our optimal ITR.</strong></li>
 </ol>
 <p><img src="/img/otr/d_star.png" style="width:50.0%" /></p>
 </div>
@@ -147,7 +147,7 @@ data.frame(CATE) |&gt;
 <p>I’ll continue to add resources to this list as I discover them. Please reach out if you have recommendations of papers or tutorials (yours or others!) to add to this list.</p>
 <div id="acknowledgments" class="section level2">
 <h2>Acknowledgments</h2>
-<p>Thanks to my colleague <a href="https://twitter.com/ildiazm">Iván Díaz</a> for explaining optimal treatment rules to me in this way, and for reviewing this post.</p>
+<p>Thanks to my colleague <a href="https://twitter.com/ildiazm">Iván Díaz</a> for explaining optimal individualized treatment rules to me in this way, and for reviewing this post.</p>
 </div>
 </div>
 <div class="footnotes footnotes-end-of-document">

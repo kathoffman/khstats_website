@@ -4,7 +4,7 @@ author: "Katherine Hoffman"
 date: 2022-06-15T21:13:14-05:00
 categories: ["statistics"]
 tags: ["causal inference", "time-dependent confounding", "biostatistics", "modified treatment policy", "dynamic treatment policy", "causal intervention"]
-draft: false
+draft: true
 output: 
   html_document:
     toc: true
