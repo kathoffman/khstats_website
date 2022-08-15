@@ -1,5 +1,5 @@
 ---
-title: "Rethinking Conditional and Iterated Expectations with Linear Regression Models"
+title: "If hearing Conditional Iterated Expectations has ever stressed you out, try this exercise!"
 author: "Katherine Hoffman"
 date: 2020-07-31T21:13:14-05:00
 categories: ["R", "statistics"]
@@ -14,16 +14,14 @@ output:
 
 <link href="/rmarkdown-libs/pagedtable/css/pagedtable.css" rel="stylesheet" />
 <script src="/rmarkdown-libs/pagedtable/js/pagedtable.js"></script>
-<link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
-<script src="/rmarkdown-libs/anchor-sections/anchor-sections.js"></script>
 
 
 <blockquote>
-<p>An “aha!” moment: the day I realized I should rethink all the probability theorems using linear regressions.</p>
+<p>This post walks through an “aha!” moment I had the day I realized I could rethink many probability theorems using linear regressions.</p>
 </blockquote>
 <hr />
 <div id="tldr" class="section level1">
-<h1>TL;DR</h1>
+<h1>TLDR</h1>
 <ul>
 <li><p>You can a regress an outcome on a grouping variable <em>plus any other variable(s)</em> and the unadjusted and adjusted group means will be identical.</p></li>
 <li><p>We can see this in a simple example using the <a href="https://github.com/allisonhorst/palmerpenguins"><code>palmerpenguins</code></a> data:</p></li>
@@ -45,11 +43,12 @@ penguins %&gt;%
   summarise(mean_bill_length = mean(bill_length_mm),
             mean_predicted_bill_length = mean(preds)) %&gt;%
   gt()</code></pre>
+<div id="oywpjulenh" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#albqohbuls .gt_table {
+#oywpjulenh .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -74,7 +73,7 @@ penguins %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#albqohbuls .gt_heading {
+#oywpjulenh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -86,33 +85,37 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#albqohbuls .gt_title {
+#oywpjulenh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#albqohbuls .gt_subtitle {
+#oywpjulenh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#albqohbuls .gt_bottom_border {
+#oywpjulenh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#albqohbuls .gt_col_headings {
+#oywpjulenh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -127,7 +130,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#albqohbuls .gt_col_heading {
+#oywpjulenh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -147,7 +150,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#albqohbuls .gt_column_spanner_outer {
+#oywpjulenh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -159,28 +162,31 @@ penguins %&gt;%
   padding-right: 4px;
 }
 
-#albqohbuls .gt_column_spanner_outer:first-child {
+#oywpjulenh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#albqohbuls .gt_column_spanner_outer:last-child {
+#oywpjulenh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#albqohbuls .gt_column_spanner {
+#oywpjulenh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   vertical-align: bottom;
   padding-top: 5px;
-  padding-bottom: 6px;
+  padding-bottom: 5px;
   overflow-x: hidden;
   display: inline-block;
   width: 100%;
 }
 
-#albqohbuls .gt_group_heading {
-  padding: 8px;
+#oywpjulenh .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -201,7 +207,7 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#albqohbuls .gt_empty_group_heading {
+#oywpjulenh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -216,15 +222,15 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#albqohbuls .gt_from_md > :first-child {
+#oywpjulenh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#albqohbuls .gt_from_md > :last-child {
+#oywpjulenh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#albqohbuls .gt_row {
+#oywpjulenh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -243,7 +249,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#albqohbuls .gt_stub {
+#oywpjulenh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -252,10 +258,29 @@ penguins %&gt;%
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#albqohbuls .gt_summary_row {
+#oywpjulenh .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#oywpjulenh .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#oywpjulenh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -265,17 +290,26 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#albqohbuls .gt_first_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
+#oywpjulenh .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#albqohbuls .gt_grand_summary_row {
+#oywpjulenh .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#oywpjulenh .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#oywpjulenh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -285,7 +319,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#albqohbuls .gt_first_grand_summary_row {
+#oywpjulenh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -295,11 +329,11 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#albqohbuls .gt_striped {
+#oywpjulenh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#albqohbuls .gt_table_body {
+#oywpjulenh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -308,7 +342,7 @@ penguins %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#albqohbuls .gt_footnotes {
+#oywpjulenh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -322,13 +356,16 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#albqohbuls .gt_footnote {
+#oywpjulenh .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#albqohbuls .gt_sourcenotes {
+#oywpjulenh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -342,46 +379,83 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#albqohbuls .gt_sourcenote {
+#oywpjulenh .gt_sourcenote {
   font-size: 90%;
-  padding: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#albqohbuls .gt_left {
+#oywpjulenh .gt_left {
   text-align: left;
 }
 
-#albqohbuls .gt_center {
+#oywpjulenh .gt_center {
   text-align: center;
 }
 
-#albqohbuls .gt_right {
+#oywpjulenh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#albqohbuls .gt_font_normal {
+#oywpjulenh .gt_font_normal {
   font-weight: normal;
 }
 
-#albqohbuls .gt_font_bold {
+#oywpjulenh .gt_font_bold {
   font-weight: bold;
 }
 
-#albqohbuls .gt_font_italic {
+#oywpjulenh .gt_font_italic {
   font-style: italic;
 }
 
-#albqohbuls .gt_super {
+#oywpjulenh .gt_super {
   font-size: 65%;
 }
 
-#albqohbuls .gt_footnote_marks {
+#oywpjulenh .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
+#oywpjulenh .gt_footnote_marks {
   font-style: italic;
-  font-size: 65%;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#oywpjulenh .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#oywpjulenh .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#oywpjulenh .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#oywpjulenh .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
 }
 </style>
-<div id="albqohbuls" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -391,25 +465,20 @@ penguins %&gt;%
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr>
-      <td class="gt_row gt_center">Adelie</td>
-      <td class="gt_row gt_right">38.82397</td>
-      <td class="gt_row gt_right">38.82397</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_center">Chinstrap</td>
-      <td class="gt_row gt_right">48.83382</td>
-      <td class="gt_row gt_right">48.83382</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_center">Gentoo</td>
-      <td class="gt_row gt_right">47.56807</td>
-      <td class="gt_row gt_right">47.56807</td>
-    </tr>
+    <tr><td class="gt_row gt_center">Adelie</td>
+<td class="gt_row gt_right">38.82397</td>
+<td class="gt_row gt_right">38.82397</td></tr>
+    <tr><td class="gt_row gt_center">Chinstrap</td>
+<td class="gt_row gt_right">48.83382</td>
+<td class="gt_row gt_right">48.83382</td></tr>
+    <tr><td class="gt_row gt_center">Gentoo</td>
+<td class="gt_row gt_right">47.56807</td>
+<td class="gt_row gt_right">47.56807</td></tr>
   </tbody>
   
   
-</table></div>
+</table>
+</div>
 <ul>
 <li><p>This is because <span class="math inline">\(E[E[Y|X,Z]|Z=z]=E[Y|Z=z]\)</span>.</p></li>
 <li><p>We can view a fitted value from the regression, <span class="math inline">\(E[Y|X,Z]\)</span>, as a random variable to help us see this.</p></li>
@@ -417,7 +486,7 @@ penguins %&gt;%
 </ul>
 <hr />
 <p><img src="/img/expectations.png" /></p>
-<p>I’ll admit I spent many weeks of my first probability theory course struggling to understand when and why my professor was writing <span class="math inline">\(X\)</span> versus <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
+<p>I spent many weeks of my first probability theory course struggling to understand when and why my professor was writing <span class="math inline">\(X\)</span> versus <span class="math inline">\(x\)</span>. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.</p>
 <p>I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in <code>R</code>. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions – a framework I’m very comfortable with – to rethink some of the properties I learned in my probability theory courses.</p>
 <p>In the function, I was regressing an outcome on a few variables plus a grouping variable, and then returning the group means of the fitted values. My function kept outputting adjusted group means that were <em>identical</em> to the unadjusted group means.</p>
 <p>I soon realized that for what I needed to do, my grouping variable should not be in the regression model. However, I was still perplexed as to how the adjusted and unadjusted group means could be the same.</p>
@@ -431,11 +500,12 @@ penguins %&gt;%
   summarise(mean_bill_length = mean(bill_length_mm),
             mean_predicted_bill_length = mean(preds)) %&gt;%
   gt()</code></pre>
+<div id="rauhapprts" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
 }
 
-#yqntzeljkj .gt_table {
+#rauhapprts .gt_table {
   display: table;
   border-collapse: collapse;
   margin-left: auto;
@@ -460,7 +530,7 @@ penguins %&gt;%
   border-left-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_heading {
+#rauhapprts .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -472,33 +542,37 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_title {
+#rauhapprts .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
   padding-top: 4px;
   padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
 
-#yqntzeljkj .gt_subtitle {
+#rauhapprts .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
   padding-top: 0;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
 
-#yqntzeljkj .gt_bottom_border {
+#rauhapprts .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_col_headings {
+#rauhapprts .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -513,7 +587,7 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_col_heading {
+#rauhapprts .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -533,7 +607,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#yqntzeljkj .gt_column_spanner_outer {
+#rauhapprts .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -545,28 +619,31 @@ penguins %&gt;%
   padding-right: 4px;
 }
 
-#yqntzeljkj .gt_column_spanner_outer:first-child {
+#rauhapprts .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#yqntzeljkj .gt_column_spanner_outer:last-child {
+#rauhapprts .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#yqntzeljkj .gt_column_spanner {
+#rauhapprts .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
   vertical-align: bottom;
   padding-top: 5px;
-  padding-bottom: 6px;
+  padding-bottom: 5px;
   overflow-x: hidden;
   display: inline-block;
   width: 100%;
 }
 
-#yqntzeljkj .gt_group_heading {
-  padding: 8px;
+#rauhapprts .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -587,7 +664,7 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#yqntzeljkj .gt_empty_group_heading {
+#rauhapprts .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -602,15 +679,15 @@ penguins %&gt;%
   vertical-align: middle;
 }
 
-#yqntzeljkj .gt_from_md > :first-child {
+#rauhapprts .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#yqntzeljkj .gt_from_md > :last-child {
+#rauhapprts .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#yqntzeljkj .gt_row {
+#rauhapprts .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -629,7 +706,7 @@ penguins %&gt;%
   overflow-x: hidden;
 }
 
-#yqntzeljkj .gt_stub {
+#rauhapprts .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -638,10 +715,29 @@ penguins %&gt;%
   border-right-style: solid;
   border-right-width: 2px;
   border-right-color: #D3D3D3;
-  padding-left: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#yqntzeljkj .gt_summary_row {
+#rauhapprts .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rauhapprts .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rauhapprts .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -651,17 +747,26 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#yqntzeljkj .gt_first_summary_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 5px;
-  padding-right: 5px;
+#rauhapprts .gt_first_summary_row {
   border-top-style: solid;
-  border-top-width: 2px;
   border-top-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_grand_summary_row {
+#rauhapprts .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rauhapprts .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rauhapprts .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -671,7 +776,7 @@ penguins %&gt;%
   padding-right: 5px;
 }
 
-#yqntzeljkj .gt_first_grand_summary_row {
+#rauhapprts .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -681,11 +786,11 @@ penguins %&gt;%
   border-top-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_striped {
+#rauhapprts .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#yqntzeljkj .gt_table_body {
+#rauhapprts .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -694,7 +799,7 @@ penguins %&gt;%
   border-bottom-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_footnotes {
+#rauhapprts .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -708,13 +813,16 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_footnote {
+#rauhapprts .gt_footnote {
   margin: 0px;
   font-size: 90%;
-  padding: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#yqntzeljkj .gt_sourcenotes {
+#rauhapprts .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -728,46 +836,83 @@ penguins %&gt;%
   border-right-color: #D3D3D3;
 }
 
-#yqntzeljkj .gt_sourcenote {
+#rauhapprts .gt_sourcenote {
   font-size: 90%;
-  padding: 4px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-#yqntzeljkj .gt_left {
+#rauhapprts .gt_left {
   text-align: left;
 }
 
-#yqntzeljkj .gt_center {
+#rauhapprts .gt_center {
   text-align: center;
 }
 
-#yqntzeljkj .gt_right {
+#rauhapprts .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#yqntzeljkj .gt_font_normal {
+#rauhapprts .gt_font_normal {
   font-weight: normal;
 }
 
-#yqntzeljkj .gt_font_bold {
+#rauhapprts .gt_font_bold {
   font-weight: bold;
 }
 
-#yqntzeljkj .gt_font_italic {
+#rauhapprts .gt_font_italic {
   font-style: italic;
 }
 
-#yqntzeljkj .gt_super {
+#rauhapprts .gt_super {
   font-size: 65%;
 }
 
-#yqntzeljkj .gt_footnote_marks {
+#rauhapprts .gt_two_val_uncert {
+  display: inline-block;
+  line-height: 1em;
+  text-align: right;
+  font-size: 60%;
+  vertical-align: -0.25em;
+  margin-left: 0.1em;
+}
+
+#rauhapprts .gt_footnote_marks {
   font-style: italic;
-  font-size: 65%;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#rauhapprts .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rauhapprts .gt_slash_mark {
+  font-size: 0.7em;
+  line-height: 0.7em;
+  vertical-align: 0.15em;
+}
+
+#rauhapprts .gt_fraction_numerator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: 0.45em;
+}
+
+#rauhapprts .gt_fraction_denominator {
+  font-size: 0.6em;
+  line-height: 0.6em;
+  vertical-align: -0.05em;
 }
 </style>
-<div id="yqntzeljkj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table">
+<table class="gt_table">
   
   <thead class="gt_col_headings">
     <tr>
@@ -777,25 +922,20 @@ penguins %&gt;%
     </tr>
   </thead>
   <tbody class="gt_table_body">
-    <tr>
-      <td class="gt_row gt_center">Adelie</td>
-      <td class="gt_row gt_right">38.82397</td>
-      <td class="gt_row gt_right">38.82397</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_center">Chinstrap</td>
-      <td class="gt_row gt_right">48.83382</td>
-      <td class="gt_row gt_right">48.83382</td>
-    </tr>
-    <tr>
-      <td class="gt_row gt_center">Gentoo</td>
-      <td class="gt_row gt_right">47.56807</td>
-      <td class="gt_row gt_right">47.56807</td>
-    </tr>
+    <tr><td class="gt_row gt_center">Adelie</td>
+<td class="gt_row gt_right">38.82397</td>
+<td class="gt_row gt_right">38.82397</td></tr>
+    <tr><td class="gt_row gt_center">Chinstrap</td>
+<td class="gt_row gt_right">48.83382</td>
+<td class="gt_row gt_right">48.83382</td></tr>
+    <tr><td class="gt_row gt_center">Gentoo</td>
+<td class="gt_row gt_right">47.56807</td>
+<td class="gt_row gt_right">47.56807</td></tr>
   </tbody>
   
   
-</table></div>
+</table>
+</div>
 <p>I saw the same strange output, even in my simple example. I realized this must be some statistics property I’d learned about and since forgotten, so I decided to write out what I was doing in expectations.</p>
 <p>First, I wrote down the unadjusted group means in the form of an expectation. I wrote down a conditional expectation, since we are looking at the mean of <code>bill_length_mm</code> when <code>species</code> is restricted to a certain category. We can explicitly show this by taking the expectation of a random variable, <span class="math inline">\(\mathrm{Bill Length}\)</span>, while setting another random variable, <span class="math inline">\(\mathrm{Species}\)</span>, equal to only one category at a time.</p>
 <p><span class="math inline">\(E[\mathrm{BillLength}|\mathrm{Species}=Adelie]\)</span></p>
@@ -855,7 +995,7 @@ penguins %&gt;%
 <p>Gorman KB, Williams TD, Fraser WR (2014) Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis). PLoS ONE 9(3): e90081. <a href="https://doi.org/10.1371/journal.pone.0090081" class="uri">https://doi.org/10.1371/journal.pone.0090081</a></p>
 <p><a href="https://www.math.arizona.edu/~tgk/464_07/cond_exp.pdf">A Conditional Expectation - Arizona Math</a></p>
 </div>
-<div class="footnotes">
+<div class="footnotes footnotes-end-of-document">
 <hr />
 <ol>
 <li id="fn1"><p>Because we’re making our outer expectation conditional on <span class="math inline">\(Z=z\)</span>, we can also move <span class="math inline">\(Z=z\)</span> into our inner expectation. This becomes obvious in the <code>penguins</code> example, since we only use the fitted values from one category of <code>species</code> to get the adjusted group mean for that category.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>

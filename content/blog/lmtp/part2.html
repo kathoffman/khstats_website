@@ -1,0 +1,55 @@
+---
+title: "An Illustrated Guide to Modified Treatment Policies, Part 2: Examples of point-treatment policies"
+author: "Katherine Hoffman"
+date: 2022-06-15T21:13:14-05:00
+categories: ["statistics"]
+tags: ["causal inference", "time-dependent confounding", "biostatistics", "modified treatment policy", "dynamic treatment policy", "causal intervention"]
+draft: false
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+    print_df: paged
+---
+
+
+
+<p>This post provides <strong>examples of Static, Dynamic, and Modified Treatment Policies (MTPs)</strong> for point (as opposed to time-varying) exposures using the open source R package <code>lmtp</code>. The examples include:</p>
+<ol style="list-style-type: decimal">
+<li>[Binary exposure, continuous outcome, static intervention]</li>
+<li>[Binary expsoure, dynamic intervention]</li>
+<li>Continuous exposure, modified treatment policy</li>
+</ol>
+<p>If you’re not sure what the differences between these types of interventions are, check out Part 1: Introduction and Motivation.</p>
+<html>
+<head>
+</head>
+<body>
+<p><a href="https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/Types_of_Interventions.jpg">
+<img alt="" src="/img/mtp_summary.jpg"
+               style="border:1px solid black;" width=100%" ></p>
+</a>
+</body>
+</html>
+<div id="general-data-preparation-notes" class="section level1">
+<h1>General Data Preparation Notes</h1>
+<p>You’ll want your data to be friendly to machine learning algorithms. This includes:</p>
+<ul>
+<li><p>Creating dummy variables for categorical variables</p></li>
+<li><p>Deciding on methods for missingness (e.g. mean substitution, multiple imputation, etc.)</p></li>
+</ul>
+</div>
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<p>I usually use the <code>lmtp</code> package which is compatible with the superlearning ensemble package <code>sl3</code>. Although <code>lmtp</code> is on CRAN, <code>sl3</code> is not (and prevents <code>lmtp</code>’s <code>sl3</code>-compatible version from being on CRAN), so you have to download the <code>sl3</code>-compatible version of <code>lmtp</code> directly from Github.</p>
+<pre class="r"><code># devtools::install_github(&quot;nt-williams/lmtp@sl3&quot;) # uncomment to install
+library(lmtp)</code></pre>
+<pre><code>## NOT MAIN VERSION OF LMTP! THIS IS THE SL3 COMPATIBLE VERSION.</code></pre>
+</div>
+<div id="static-treatment-policies" class="section level1">
+<h1>Static Treatment Policies</h1>
+<p>As we learned in Part 1, static treatment policies, or interventions, set every observation’s hypothetical exposure to the same value.</p>
+<p>There are many scientific questions we can think of to answer.</p>
+<p>Let’s use toy data on N=2000 patients</p>
+</div>

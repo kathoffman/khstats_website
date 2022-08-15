@@ -1,0 +1,68 @@
+---
+title: "An Illustrated Guide to Modified Treatment Policies, Part 2: Examples of point-treatment policies"
+author: "Katherine Hoffman"
+date: 2022-06-15T21:13:14-05:00
+categories: ["statistics"]
+tags: ["causal inference", "time-dependent confounding", "biostatistics", "modified treatment policy", "dynamic treatment policy", "causal intervention"]
+draft: false
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    smart: false
+    print_df: paged
+---
+
+
+This post provides **examples of Static, Dynamic, and Modified Treatment Policies (MTPs)** for point (as opposed to time-varying) exposures using the open source R package `lmtp`. The examples include:
+ 
+1. [Binary exposure, continuous outcome, static intervention]
+2. [Binary expsoure, dynamic intervention]
+3. Continuous exposure, modified treatment policy
+
+If you're not sure what the differences between these types of interventions are, check out Part 1: Introduction and Motivation.
+
+<html>
+   <head>
+   </head>
+   <body>
+      <a href="https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/Types_of_Interventions.jpg">
+         <img alt="" src="/img/mtp_summary.jpg"
+               style="border:1px solid black;" width=100%" >
+             
+      </a>
+   </body>
+</html>
+
+# General Data Preparation Notes
+
+You'll want your data to be friendly to machine learning algorithms. This includes:
+
+- Creating dummy variables for categorical variables
+
+- Deciding on methods for missingness (e.g. mean substitution, multiple imputation, etc.)
+
+
+# Setup
+
+I usually use the `lmtp` package which is compatible with the superlearning ensemble package `sl3`. Although `lmtp` is on CRAN, `sl3` is not (and prevents `lmtp`'s `sl3`-compatible version from being on CRAN), so you have to download the `sl3`-compatible version of `lmtp` directly from Github.
+
+```{r}
+# devtools::install_github("nt-williams/lmtp@sl3") # uncomment to install
+library(lmtp)
+```
+
+
+
+# Static Treatment Policies
+
+As we learned in Part 1, static treatment policies, or interventions, set every observation's hypothetical exposure to the same value.
+
+There are many scientific questions we can think of to answer.
+
+Let's use toy data on N=2000 patients 
+
+```{r}
+
+```
+

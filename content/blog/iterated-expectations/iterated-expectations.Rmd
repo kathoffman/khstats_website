@@ -1,5 +1,5 @@
 ---
-title: "Rethinking Conditional and Iterated Expectations with Linear Regression Models"
+title: "If hearing Conditional Iterated Expectations has ever stressed you out, try this exercise!"
 author: "Katherine Hoffman"
 date: 2020-07-31T21:13:14-05:00
 categories: ["R", "statistics"]
@@ -18,11 +18,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE, results="asis", message=F, warning=F)
 ```
 
-> An "aha!" moment: the day I realized I should rethink all the probability theorems using linear regressions.
+> This post walks through an "aha!" moment I had the day I realized I could rethink many probability theorems using linear regressions.
 
 ***
 
-# TL;DR
+# TLDR
 
 - You can a regress an outcome on a grouping variable *plus any other variable(s)* and the unadjusted and adjusted group means will be identical.
 
@@ -58,8 +58,7 @@ penguins %>%
 
 ![](/img/expectations.png)
 
-
-I'll admit I spent many weeks of my first probability theory course struggling to understand when and why my professor was writing $X$ versus $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
+I spent many weeks of my first probability theory course struggling to understand when and why my professor was writing $X$ versus $x$. When I finally learned all the rules for expectations of random variables, I still had zero appreciation for their implications in my future work as an applied statistician.
 
 I recently found myself in a rabbit hole of expectation properties while trying to write a seemingly simple function in `R`. Now that I have the output of my function all sorted out, I have a newfound appreciation for how I can use regressions -- a framework I'm very comfortable with -- to rethink some of the properties I learned in my probability theory courses.
 
