@@ -35,22 +35,10 @@ The methods of ITRs are rooted in **principles of causal inference**, or using d
 3. 🖥️ [`R` code for a simple estimation example](#r-simulation)
 
 
-<!-- # This post builds on the following concepts: -->
-
-<!-- - **Counterfactual outcome**: the outcome in a hypothetical world where a unit received a certain intervention or treatment, which might be different from the treatment they actually received. -->
-
-<!-- - Average Treatment Effect:  -->
-
-<!-- - **G-computation:** a form of substitution estimation. In its simplest form for computing the ATE for a binary treatment, the G-comp procedure is: -->
-<!--   1. fit a regression for $\mathrm{E}[Y|A,W]$ -->
-<!--   2. obtain predictions for $\hat{E}[Y|A,W]$ when $A=1$ and $A=0$ -->
-<!--   3. take the average difference between $\hat{E}[Y|A=1,W]$ and $\hat{E}[Y|A=0,W]$ -->
-
-<!-- # The FUTURE of Medicine -->
 
 # 🗺️ The Big Picture of ITRs
 
-In this first section, we will translate the concept of developing and optimizing an ITRs into mathematical notation.
+In this first section, we will translate the concept of developing and optimizing an ITR into mathematical notation.
 
 1. We will start with a standard set-up: we have a matrix of observed data $O$ which includes our **outcome** $Y$, the **exposure** (i.e. treatment, medicine, etc.) we want to study $A$, and other **covariates** $\textbf{W}$. Each row is an observation. We can denote these columns of data, which are random variables, as $O = (\textbf{W}, A, Y)$.
 
@@ -117,13 +105,13 @@ $$\mathrm{CATE}(W) = \mathrm{E}[Y|A=1, \textbf{W}] - \mathrm{E}[Y|A=0, \textbf{W
 
 
 
-We could estimate the CATE using **G-computation**. If you'd like a review on G-computation, check out this [visual guide](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf).
+We could estimate the CATE using **G-computation**^[If you'd like a review on G-computation, check out this [**visual guide**](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf).]:
 
 1. Fit a regression for $\mathrm{E}[Y|A,\textbf{W}]$.
 
 ![](/img/tmle/2_outcome_fit.png){width=70%}
 
-2. Obtain predicted estimates for $Y$ on datasets where all observations are changed to have $A=1$ and $A=0$ using the model fit from Step 1.
+2. Use the model fit from Step 1 to obtain predicted estimates for $Y$. Use two different datasets: one where all observations are changed to have $A=1$, and one where all observations are changed to have $A=0$.
 
 $$\hat{E}[Y|A=1, \textbf{W}]$$
 
@@ -133,13 +121,13 @@ $$\hat{E}[Y|A=0, \textbf{W}]$$
 
 ![](/img/tmle/5_Q1.png){width=80%}
 
-3. Compute the difference in the predicted $Y$'s for the two datasets from Step 2.
+3. Compute the difference of the quantities from Step 2.
 
 $$\widehat{CATE} = \hat{E}[Y|A=1, \textbf{W}] - \hat{E}[Y|A=0, \textbf{W}]$$
 
 ![](/img/otr/cate.png){width=32%}
 
-Then, we could say our optimal ITR is to **give treatment if the value of $CATE$ for that person is positive**, indicating a positive effect of treatment on the outcome $Y$. Likewise, if the value is negative or 0, indicating a negative or neutral effect on the outcome $Y$, that unit would not receive treatment under the ITR.
+Now, we could say our optimal ITR is to **give treatment if the value of $CATE$ for that person is positive**, indicating a positive effect of treatment on the outcome $Y$. Likewise, if the value is negative or 0, indicating a negative or neutral effect on the outcome $Y$, that unit would not receive treatment under the ITR.
 
 \usepackage{bbm}
 
@@ -169,17 +157,19 @@ E_Y0 <- predict(fit, newdata = data.frame(A = 0, W))
 CATE <- E_Y1 - E_Y0
 ```
 
-Finally, our optimal treatment rule will be to treat any unit with `CATE > 1`. We can visually see there is benefit for about 1/4 of units in our simulated population.
+Finally, our optimal treatment rule will be to treat any unit with `CATE > 1`. If we plot the distribution of CATE in intervals of length 1, we can visually see there is benefit for about 1/4 of units in our simulated population.
 
 ```{r, warning=F, message=F}
 library(tidyverse)
+
 data.frame(CATE) |>
   mutate(d_star = ifelse(CATE > 0, "Treat", "Do not treat")) |>
-  ggplot(aes(CATE, fill=d_star)) +
-  geom_histogram(binwidth=.2) +
+  ggplot(aes(CATE,fill=d_star)) +
+  geom_bar() +
+  scale_x_binned() +
   theme_bw() +
   scale_fill_manual(values = c("#f2696f","#4984b0")) +
-  labs(x="CATE(W)", y = "Count", fill = "Treatment Rule", title="Distribution of CATE(W)")
+  labs(x="CATE", y = "Count", fill = "Treatment Rule", title="Distribution of CATE")
 ```
 
 
@@ -187,7 +177,7 @@ data.frame(CATE) |>
 
 There are many other ways to estimate the $CATE$ with improved statistical properties, e.g. **double robustness**. We could also estimate $d^*$ directly instead of first estimating the $CATE$.
 
-We can extend either of these ideas to longitudinal settings, studies with clustering, etc. I've listed some of the resources I've read learn about optimizing ITRs below. As always, I welcome feedback and/or suggestions of additional resources I can include.
+We can extend either of these ideas to longitudinal settings, studies with clustering, etc. I've listed some of the resources I've used to learn about optimizing ITRs below. As always, I welcome feedback and/or suggestions of additional resources I can include.
 
 ***
 
@@ -195,11 +185,13 @@ We can extend either of these ideas to longitudinal settings, studies with clust
 
 These concepts are introductory, so any paper on "optimal treatment rules", "individualized treatment rules", or "heterogeneous treatment effects" should review the ideas discussed here in their introductions.
 
-- This [Wang et al. paper](https://www.bios.unc.edu/~dzeng/Pub/EHROLearning1.pdf) offers a clear introduction on ITRs.
+- This [Wang et al. paper](https://www.bios.unc.edu/~dzeng/Pub/EHROLearning1.pdf) offers a clear mathematical introduction on ITRs.
 
 - [Brady Neal's causal course Youtube series](https://www.youtube.com/watch?v=-0-RYxQ0zqM) (Chapter 6.2) discusses Conditional Outcome Modeling (what the CATE estimator falls under) over a 10 minute video.
 
-- Lately I've been interested in [this recent paper](https://arxiv.org/pdf/2004.14497.pdf) by Edward Kennedy. It discusses a way to evaluate the CATE using doubly robust estimation, and gives several other foundational papers in the introduction.
+- This [Angus and Chang *JAMA* Statistics and Research Methods paper](https://jamanetwork.com/journals/jama/fullarticle/2787131) gives an overview of a few ways to compute heterogeneous treatment effects for individualized treatment rules.
+
+- Lately I've been interested in [this recent methods paper](https://arxiv.org/pdf/2004.14497.pdf) by Edward Kennedy. It discusses a way to evaluate the CATE using doubly robust estimation, and gives several other foundational papers in the introduction.
 
 - [This `R` blog post](https://egap.org/resource/10-things-to-know-about-heterogeneous-treatment-effects/) about heterogeneous treatment effects also may be useful for thinking through these issues with real data.
 
