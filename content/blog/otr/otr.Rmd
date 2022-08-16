@@ -1,5 +1,5 @@
 ---
-title: "Building Statistical Intuition for Optimal Individualized Treatment Rules"
+title: "Building Statistical Intuition for Individualized Treatment Rules"
 author: "Katherine Hoffman"
 date: 2022-07-19T00:01:14-02:00
 draft: fale
@@ -20,12 +20,11 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Individualized treatment rules (ITRs)** is a fast-growing topic in the medical research community. A treatment rule is a **decision for treatment based upon a patient's characteristics**. The intuition behind this is that not all patients will respond to a treatment in the same way. We can exploit these **heterogeneous effects** and develop personalized rules which provide benefit to the most individuals.
+Developing and optimizing **individualized treatment rules (ITRs)** is a fast-growing topic in the medical research community. A treatment rule is a **decision for treatment based upon a person's characteristics**. The intuition behind this is that not all individuals will respond to a treatment in the same way. We can exploit these **heterogeneous effects** and develop personalized rules which provide benefit a greater number of people.
 
-Developing and optimizing treatment rules is rooted in **principles of causal inference**, or using data to inform us about what would have happened in a hypothetical world in which different interventions had occurred. This post walks through the basic statistical intuition for ITRs. Each explanation is accompanied by mathematical notation and a small graphic to convey equivalent meanings.
+The methods of ITRs are rooted in **principles of causal inference**, or using data to inform us about what would have happened in a hypothetical world in which different interventions had occurred. This post walks through the basic statistical intuition for ITRs. Each explanation is accompanied by mathematical notation and a small graphic to convey equivalent meaning.
 
-> Although this post is introductory, it assumes basic knowledge in causal inference, such as *counterfactual outcomes*, *assumptions for causal identification*, *Average Treatment Effect*, and [*G-computation*](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf). If you're rusty on these concepts, I recommend reading the freely available introductory chapters of Miguel Hernan and James Robins' [*What If*](https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/) book.
-
+> Although this post is introductory, it assumes basic knowledge in causal inference, such as *counterfactual outcomes*, *assumptions for causal identification*, *Average Treatment Effect*, and [*G-computation*/*g-formula*](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf).
 
 # Table of Contents
 
@@ -51,9 +50,9 @@ Developing and optimizing treatment rules is rooted in **principles of causal in
 
 # 🗺️ The Big Picture of ITRs
 
-Let's first think through the general concept of developing and optimizing an ITR.
+In this first section, we will translate the concept of developing and optimizing an ITRs into mathematical notation.
 
-1. We will start with a standard set-up: we have a matrix of observed data $O$ which includes our **outcome** $Y$, the **exposure** (i.e. treatment, medicine, etc.) we want to study $A$, and other **covariates** $W$. We can denote these random variables as $O = (W, A, Y)$.
+1. We will start with a standard set-up: we have a matrix of observed data $O$ which includes our **outcome** $Y$, the **exposure** (i.e. treatment, medicine, etc.) we want to study $A$, and other **covariates** $\textbf{W}$. Each row is an observation. We can denote these columns of data, which are random variables, as $O = (\textbf{W}, A, Y)$.
 
 ![](/img/otr/data_structure.png){width=80%}
 
@@ -61,12 +60,12 @@ Let's first think through the general concept of developing and optimizing an IT
 
 <!-- ![](/img/tmle/1_data_structure.png){width=80%} -->
 
-2. Now, consider that we've created some function, $d$, which takes baseline confounders $W$ and outputs a treatment assignment $A$. We can write this mapping function, or **treatment rule**, in mathematical notation as: 
+2. Now, consider we create some function, $d$, which takes baseline confounders $\textbf{W}$ and outputs a treatment assignment $A$. We can write this mapping function, or **treatment rule**, in mathematical notation as:
 
 <!-- <p style="margin-left: 40px"> -->
 
-$$d: W \rightarrow A$$
-This is equivalent to a function you could write in R or Python which takes a data frame `W` and outputs a vector of treatment assignments `A`.
+$$d: \textbf{W} \rightarrow A$$
+This is equivalent to a function you could write in R or Python which takes a matrix `W` and outputs a vector of treatment assignments `A`, which may or may not be the same treatment assignment as what each observation actually received.
 
 ![](/img/otr/input_output.png){width=80%}
 
@@ -83,7 +82,7 @@ This is equivalent to a function you could write in R or Python which takes a da
 <!-- ``` -->
 <!-- </p>  -->
 
-3. We can then think about the **counterfactual outcome**^[Recall that a counterfactual describes a hypothetical world where a unit received a certain intervention or treatment, which might be different from the treatment they actually received] for each row, or observation, under the treatment rule $d$. In other words, we are asking *what would have happened in the hypothetical world in which the treatment rule $d$ was applied?*
+3. We can then think about the **counterfactual outcome**^[Recall that a counterfactual describes a hypothetical world where a unit received a certain intervention or treatment, which might be different from the treatment they actually received] for each row, or observation, under the treatment rule $d$. In other words, we ask, *"what would have happened in a hypothetical world where the treatment rule $d$ was applied?"*
 
 Let's denote this vector of counterfactual outcomes as $Y(d)$.
 
@@ -96,22 +95,22 @@ $$\argmax_d \mathrm{E}[Y(d)]$$
 ![](/img/otr/argmax.png){width=70%}
 
 
-5. We'll call whatever function $d$, or $d(W)$, that maximizes this expected counterfactual outcome for the population $d^*(W)$. **This $d^*(W)$ is our optimal ITR.**
+5. We can call whatever function $d$, or $d(\textbf{W})$, that maximizes this expected counterfactual outcome for the population $d^*$. **This $d^*$ is our optimal ITR.**
 
 ![](/img/otr/d_star.png){width=50%}
 
 
 # 📈 Estimating the ITR
 
-There are many ways to estimate $d^*(W)$. One of the most common ways begins by estimating the **Conditional Average Treatment Effect (CATE)**.
+There are many ways to estimate $d^*$. One of the most common ways begins by estimating the **Conditional Average Treatment Effect (CATE)**.
 
 You have probably heard of the Average Treatment Effect (ATE), which is the mean difference in outcomes in a world in which every unit receives the exposure compared to a world in which no unit receives the exposure. In potential outcomes notation, $ATE = \mathrm{E}[Y^1-Y^0]$. The CATE is the same formula and description, but within covariate strata $W$.
 
-$$CATE = \mathrm{E}[Y^1-Y^0|W]$$
+$$CATE = \mathrm{E}[Y^1-Y^0|\textbf{W}]$$
 
 Under standard causal assumptions^[This post is focused on estimation and therefore does not detail the requirements for causal identification, but here I refer to the assumptions of consistency, exchangeability, and positivity.], the CATE for a binary exposure is identifiable under the following formula:
 
-$$\mathrm{CATE}(W) = \mathrm{E}[Y|A=1, W] - \mathrm{E}[Y|A=0, W]$$
+$$\mathrm{CATE}(W) = \mathrm{E}[Y|A=1, \textbf{W}] - \mathrm{E}[Y|A=0, \textbf{W}]$$
 <!-- Compare this to the ATE after identification to clearly see the formula for CATE is the same, minus the outer expectation: -->
 
 <!-- $$\mathrm{ATE}(W) = \mathrm{E}[\mathrm{E}[Y|A=1, W] - \mathrm{E}[Y|A=0, W]]$$ -->
@@ -120,39 +119,38 @@ $$\mathrm{CATE}(W) = \mathrm{E}[Y|A=1, W] - \mathrm{E}[Y|A=0, W]$$
 
 We could estimate the CATE using **G-computation**. If you'd like a review on G-computation, check out this [visual guide](https://github.com/kathoffman/causal-inference-visual-guides/blob/master/visual-guides/G-Computation.pdf).
 
-1. Fit a regression for $\mathrm{E}[Y|A,W]$.
+1. Fit a regression for $\mathrm{E}[Y|A,\textbf{W}]$.
 
 ![](/img/tmle/2_outcome_fit.png){width=70%}
 
 2. Obtain predicted estimates for $Y$ on datasets where all observations are changed to have $A=1$ and $A=0$ using the model fit from Step 1.
 
-$$\hat{E}[Y|A=1, W]$$
+$$\hat{E}[Y|A=1, \textbf{W}]$$
 
 ![](/img/tmle/4_Q1.png){width=80%}
 
-$$\hat{E}[Y|A=0, W]$$
+$$\hat{E}[Y|A=0, \textbf{W}]$$
 
 ![](/img/tmle/5_Q1.png){width=80%}
 
 3. Compute the difference in the predicted $Y$'s for the two datasets from Step 2.
 
-$$\widehat{CATE}(W) = \hat{E}[Y|A=1, W] - \hat{E}[Y|A=0, W]$$
+$$\widehat{CATE} = \hat{E}[Y|A=1, \textbf{W}] - \hat{E}[Y|A=0, \textbf{W}]$$
 
 ![](/img/otr/cate.png){width=32%}
 
-Then, we could say our optimal ITR is to **give treatment if the value of $CATE(W)$ for that person is positive**, indicating a positive effect of treatment on the outcome $Y$. Likewise, if the value is negative or 0, indicating a negative or neutral effect on the outcome $Y$, that unit would not receive treatment under the ITR.
+Then, we could say our optimal ITR is to **give treatment if the value of $CATE$ for that person is positive**, indicating a positive effect of treatment on the outcome $Y$. Likewise, if the value is negative or 0, indicating a negative or neutral effect on the outcome $Y$, that unit would not receive treatment under the ITR.
 
 \usepackage{bbm}
 
-$$ \mathrm{ITR}(W) = \mathbb{1}{ \{\mathrm{CATE}(W) > 0} \}$$
+$$ITR = \mathbb{1}{ \{CATE > 0} \}$$
 
 ![](/img/otr/cate_assign_legend.png){width=50%}
 
 
-
 # 🖥️ `R` simulation
 
-Let's take a look an `R` simulation for the simple estimation of $d^*(W)$ we just described. We can first simulate data of `n` = 500 rows, where we have only one confounder `W`, a binary treatment `A` which depends on `W`, and an outcome `Y` which is continuous and depends on `W` and `A`.
+Let's take a look an `R` simulation for the simple estimation of the $d^*$ we just described. We can first simulate data of `n` = 500 rows, where we have only one confounder `W`, a binary treatment `A` which depends on `W`, and an outcome `Y` which is continuous and depends on `W` and `A`.
 
 ```{r}
 n <- 500
@@ -162,7 +160,7 @@ Y <- rnorm(n, 10) + rnorm(n, 2*A) + rnorm(n, 50*W) - rnorm(n, .1*A*W)
 df <- data.frame(W, A, Y)
 ```
 
-We'll run a regression for a saturated linear regression model of $\mathrm{E}[Y|A,W]$, then obtain predictions on datasets where `A` is changed to `1` and `0` for all rows. We can then compute the CATE as the difference between these predictions.
+We'll run a regression for a saturated linear regression model of $\mathrm{E}[Y|A,\textbf{W}]$, then obtain predictions on datasets where `A` is changed to `1` and `0` for all rows. We can then compute the CATE as the difference between these predictions.
 
 ```{r, results="asis", warning=F, message=F}
 fit <- glm(Y~A*W)
@@ -185,24 +183,30 @@ data.frame(CATE) |>
 ```
 
 
-# Improving estimation of $d^*(W)$
+# Improving estimation of $d^*$
 
-There are more advanced ways to estimate $CATE(W)$ using data-adaptive machine learning techniques and obtaining improved statistical properties, e.g. **double robustness**. We could also estimate $d^*(W)$ directly instead of first estimating $CATE(W)$.
+There are many other ways to estimate the $CATE$ with improved statistical properties, e.g. **double robustness**. We could also estimate $d^*$ directly instead of first estimating the $CATE$.
 
-We can extend either of these ideas to longitudinal settings, studies with clustering, etc. I've listed some of the resources I am reading to learn about optimizing ITRs below. As always I welcome feedback and/or suggestions of additional resources I can include.
+We can extend either of these ideas to longitudinal settings, studies with clustering, etc. I've listed some of the resources I've read learn about optimizing ITRs below. As always, I welcome feedback and/or suggestions of additional resources I can include.
+
+***
 
 # Further reading
 
 These concepts are introductory, so any paper on "optimal treatment rules", "individualized treatment rules", or "heterogeneous treatment effects" should review the ideas discussed here in their introductions.
 
-- This [Wang et al. paper](https://www.bios.unc.edu/~dzeng/Pub/EHROLearning1.pdf) offers a very clear introduction on ITRs.
+- This [Wang et al. paper](https://www.bios.unc.edu/~dzeng/Pub/EHROLearning1.pdf) offers a clear introduction on ITRs.
 
-- Lately I've been interested in [this recent paper](https://arxiv.org/pdf/2004.14497.pdf) by Edward Kennedy discusses one way to evaluate the CATE using doubly robust methods, and gives several other foundational papers in the introduction.
+- [Brady Neal's causal course Youtube series](https://www.youtube.com/watch?v=-0-RYxQ0zqM) (Chapter 6.2) discusses Conditional Outcome Modeling (what the CATE estimator falls under) over a 10 minute video.
+
+- Lately I've been interested in [this recent paper](https://arxiv.org/pdf/2004.14497.pdf) by Edward Kennedy. It discusses a way to evaluate the CATE using doubly robust estimation, and gives several other foundational papers in the introduction.
 
 - [This `R` blog post](https://egap.org/resource/10-things-to-know-about-heterogeneous-treatment-effects/) about heterogeneous treatment effects also may be useful for thinking through these issues with real data.
 
 I'll continue to add resources to this list as I discover them. Please reach out if you have recommendations of papers or tutorials (yours or others!) to add to this list.
 
+***
+
 ## Acknowledgments
 
-Thanks to my colleague [Iván Díaz](https://twitter.com/ildiazm) for explaining optimal individualized treatment rules to me in this way, and for reviewing this post.
+Thanks to my colleague [Iván Díaz](https://twitter.com/ildiazm) for explaining individualized treatment rules to me in this way, and for reviewing this post.
